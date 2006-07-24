@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
+<svg
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   id="svg548"
+   sodipodi:version="0.34"
+   width="20mm"
+   height="20mm"
+   sodipodi:docbase="/home/toon/unief/doctoraat/code/zeobuilder/src/scalable"
+   sodipodi:docname="/home/toon/unief/doctoraat/code/zeobuilder/src/scalable/property_array.svg">
+  <defs
+     id="defs550">
+    <linearGradient
+       id="linearGradient575">
+      <stop
+         style="stop-color:#191919;stop-opacity:1;"
+         offset="0"
+         id="stop576" />
+      <stop
+         style="stop-color:#ffffff;stop-opacity:1;"
+         offset="1"
+         id="stop577" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient572">
+      <stop
+         style="stop-color:#7f0000;stop-opacity:1;"
+         offset="0.000000"
+         id="stop573" />
+      <stop
+         style="stop-color:#ff0000;stop-opacity:1;"
+         offset="1.000000"
+         id="stop574" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient566">
+      <stop
+         style="stop-color:#007f00;stop-opacity:1;"
+         offset="0.000000"
+         id="stop567" />
+      <stop
+         style="stop-color:#00ff00;stop-opacity:1;"
+         offset="1.000000"
+         id="stop568" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient575"
+       id="linearGradient569"
+       x1="-0.16666675"
+       y1="-0.96875095"
+       x2="1.23611116"
+       y2="-1.0390619"
+       gradientUnits="objectBoundingBox" />
+    <radialGradient
+       xlink:href="#linearGradient566"
+       id="radialGradient570"
+       cx="0.50000006"
+       cy="0.50000030"
+       fx="0.50000006"
+       fy="0.50000030"
+       r="0.50000000"
+       gradientUnits="objectBoundingBox"
+       gradientTransform="scale(0.999991,1.000009)"
+       spreadMethod="pad" />
+    <linearGradient
+       xlink:href="#linearGradient575"
+       id="linearGradient571"
+       x1="-7.45356455e-2"
+       y1="2.02643609"
+       x2="0.55280578"
+       y2="1.9949919"
+       gradientTransform="scale(2.236068,0.447214)"
+       gradientUnits="objectBoundingBox" />
+    <linearGradient
+       xlink:href="#linearGradient575"
+       id="linearGradient578"
+       x1="-0.1178512"
+       y1="4.97184229"
+       x2="0.87406266"
+       y2="4.92212486"
+       gradientTransform="scale(1.414214,0.707107)"
+       gradientUnits="objectBoundingBox" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     showgrid="true"
+     snaptogrid="true"
+     gridspacingx="0.5mm"
+     gridspacingy="0.5mm" />
+  <rect
+     style="font-size:12;fill:#000000;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect618"
+     width="56.6929108"
+     height="63.7795296"
+     x="7.08661421"
+     y="3.54330659" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect619"
+     width="3.54330826"
+     height="3.5433054"
+     x="10.62992"
+     y="3.5433073" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect620"
+     width="3.54330826"
+     height="7.08661079"
+     x="10.6299198"
+     y="10.6299229" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect621"
+     width="3.54330826"
+     height="7.0866127"
+     x="10.6299198"
+     y="21.2598438" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect622"
+     width="3.54330826"
+     height="7.0866127"
+     x="10.6299198"
+     y="31.8897648" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect623"
+     width="3.54330826"
+     height="7.08661652"
+     x="10.6299198"
+     y="42.5196829" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect624"
+     width="3.54330826"
+     height="7.08661652"
+     x="10.629921"
+     y="53.1496077" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect625"
+     width="3.54330826"
+     height="3.54330171"
+     x="10.62992"
+     y="63.7795298" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect626"
+     width="3.54330826"
+     height="3.5433054"
+     x="56.6929159"
+     y="3.54330826" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect627"
+     width="3.54330826"
+     height="7.08661079"
+     x="56.6929159"
+     y="10.6299238" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect628"
+     width="3.54330826"
+     height="7.0866127"
+     x="56.6929159"
+     y="21.2598448" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect629"
+     width="3.54330826"
+     height="7.0866127"
+     x="56.6929159"
+     y="31.8897657" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect630"
+     width="3.54330826"
+     height="7.08661652"
+     x="56.6929121"
+     y="42.5196838" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect631"
+     width="3.54330826"
+     height="7.08661652"
+     x="56.6929121"
+     y="53.1496077" />
+  <rect
+     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke-width:1;fill-opacity:1;"
+     id="rect632"
+     width="3.54330826"
+     height="3.54330171"
+     x="56.6929131"
+     y="63.7795298" />
+  <rect
+     style="font-size:12;fill:url(#linearGradient578);fill-rule:evenodd;stroke-width:1;"
+     id="rect633"
+     width="35.4330673"
+     height="14.1732311"
+     x="17.7165356"
+     y="3.54330635" />
+  <rect
+     style="font-size:12;fill:url(#linearGradient571);fill-rule:evenodd;stroke-width:1;"
+     id="rect634"
+     width="35.4330673"
+     height="35.433075"
+     x="17.7165356"
+     y="21.2598343" />
+  <rect
+     style="font-size:12;fill:url(#linearGradient569);fill-rule:evenodd;stroke-width:1;"
+     id="rect635"
+     width="35.4330673"
+     height="7.08661652"
+     x="17.7165356"
+     y="60.2362213" />
+</svg>

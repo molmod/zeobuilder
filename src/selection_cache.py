@@ -1,0 +1,254 @@
+# Zeobuilder is an extensible GUI-toolkit for molecular model construction.
+# Copyright (C) 2005 Toon Verstraelen
+#
+# This file is part of Zeobuilder.
+#
+# Zeobuilder is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+# --
+
+
+from zeobuilder import context
+from zeobuilder.nodes.parent_mixin import ContainerMixin, ReferentMixin
+from zeobuilder.nodes.glmixin import GLTransformationMixin
+from zeobuilder.nodes.reference import Reference
+from zeobuilder.nodes.elementary import GLFrameBase
+from zeobuilder.transformations import Translation, Rotation
+import zeobuilder.nodes.analysis as analysis
+
+import gobject
+
+
+__all__ = ["SelectionCache"]
+
+
+class SelectionCache(gobject.GObject):
+    def __init__(self):
+        gobject.GObject.__init__(self)
+        self.waiting_to_emit = False
+        self.clear()
+        context.application.main.tree_selection.connect("changed", self.on_model_selection_changed)
+
+    def on_model_selection_changed(self, tree_selection):
+        #print "SELECTION CHANGED"
+        self.queue_invalidate()
+
+    def queue_invalidate(self):
+        self.clear()
+        if not self.waiting_to_emit:
+            self.waiting_to_emit = True
+            gobject.idle_add(self.emit_invalidate)
+
+    def emit_invalidate(self):
+        self.emit("cache-invalidated")
+        #print "EMIT: cache-invalidated"
+        self.waiting_to_emit = False
+
+    def clear(self):
+        self.items = {}
+
+    def __getattr__(self, name):
+        if name not in self.items:
+            if name.startswith("get_"): raise AttributeError, "Cached variables do not start with get_: %s" % name
+            result = eval("self.get_" + name + "()")
+            self.items[name] = result
+            return result
+        else:
+            return self.items[name]
+
+    #
+    # Elementary cached values
+    #
+
+    # nodes
+    def get_nodes(self):
+        #print "BEGIN print selection"
+        #print "COUNT: %i" % context.application.main.tree_selection.count_selected_rows()
+        #for path in context.application.main.tree_selection.get_selected_rows()[1]:
+        #    print path
+        #print "END print selection"
+        return [
+            context.application.model[path][0]
+            for path
+            in context.application.main.tree_selection.get_selected_rows()[1]
+        ]
+
+    def get_some_nodes_fixed(self):
+        return analysis.some_fixed(self.nodes)
+
+    def get_node(self):
+        # This one is tricky. Use it when you only want one model object to be selected
+        if len(self.nodes) == 1:
+            return self.nodes[0]
+        else:
+            return None
+
+    def get_containers(self):
+        return [node for node in self.nodes if isinstance(node, ContainerMixin)]
+
+    def get_containers_with_children(self):
+        return [container for container in self.containers if len(container.children) > 0]
+
+    def get_referents(self):
+        return [node for node in self.nodes if isinstance(node, ReferentMixin)]
+
+    def get_referents_with_children(self):
+        return [referent for referent in self.referents if len(referent.children) > 0]
+
+    def get_classes(self):
+        return analysis.list_classes(self.nodes)
+
+    # parents
+    def get_parents(self):
+        return analysis.list_parents(self.nodes)
+
+    def get_parent(self):
+        if len(self.parents) == 1:
+            return self.parents[0]
+        else:
+            return None
+
+    # children
+    def get_children(self):
+        return analysis.list_children(self.containers_with_children) + analysis.list_children(self.referents_with_children)
+
+    def get_some_children_fixed(self):
+        return analysis.some_fixed(self.children)
+
+    def get_child_classes(self):
+        return analysis.list_classes(self.nodes)
+
+    # neighbours (the children of the parents of the selected nodes)
+    def get_neighbours(self):
+        return analysis.list_children(self.parents)
+
+    def get_some_neighbours_fixed(self):
+        return analysis.some_fixed(self.neighbours)
+
+
+    #
+    # Transformation related
+    #
+
+    # nodes
+    def get_transformed_nodes(self):
+        return [node for node in self.nodes if isinstance(node, GLTransformationMixin)]
+
+    def get_translated_nodes(self):
+        return [node for node in self.transformed_nodes if isinstance(node.transformation, Translation)]
+
+    def get_rotated_nodes(self):
+        return [node for node in self.transformed_nodes if isinstance(node.transformation, Rotation)]
+
+    def get_translations(self):
+        return [node.transformation for node in self.translated_nodes]
+
+    # children
+    def get_transformed_children(self):
+        return [child for child in self.children if isinstance(child, GLTransformationMixin)]
+
+    def get_translated_children(self):
+        return [child for child in self.transformed_children if isinstance(child.transformation, Translation)]
+
+    def get_rotated_children(self):
+        return [child for child in self.transformed_children if isinstance(child.transformation, Rotation)]
+
+    def get_child_translations(self):
+        return [child.transformation for child in self.translated_children]
+
+    # neighbours
+    def get_transformed_neighbours(self):
+        return [neighbour for neighbour in self.neighbours if isinstance(neighbour, GLTransformationMixin)]
+
+    def get_translated_neighbours(self):
+        return [neighbour for neighbour in self.transformed_neighbours if isinstance(neighbour.transformation, Translation)]
+
+    def get_rotated_neighbours(self):
+        return [neighbour for neighbour in self.transformed_neighbours if isinstance(neighbour.transformation, Rotation)]
+
+    def get_neighbour_translations(self):
+        return [neighbour.transformation for neighbour in self.translated_neighbours]
+
+    #
+    # Drag related
+    #
+
+    def get_recursive_drag(self):
+        return len(set(self.drag_destination.trace()) & set(self.nodes)) > 0
+
+    #
+    # Index related
+    #
+
+    def get_indices(self):
+        return [node.get_index() for node in self.nodes]
+
+    def get_lowest_index(self):
+        return min(self.indices)
+
+    def get_highest_index(self):
+        return max(self.indices)
+
+    #
+    # Advanced
+    #
+
+    def get_traces_by_parent(self):
+        return analysis.list_traces_by(self.parents)
+
+    def get_nodes_by_parent(self):
+        return analysis.list_by_parent(self.nodes)
+
+    def get_nodes_without_indirect_children(self):
+        #print "DEBUG self.nodes_by_parent:", self.nodes_by_parent
+        #print "DEBUG self.traces_by_parent:", self.traces_by_parent
+        return analysis.list_without_indirect_children(self.nodes_by_parent, self.traces_by_parent)
+
+    def get_some_nodes_without_indirect_children_fixed(self):
+        #print "DEBUG self.nodes_without_indirect_children:", self.nodes_without_indirect_children
+        return analysis.some_fixed(self.nodes_without_indirect_children)
+
+    def get_common_parent(self):
+        return analysis.common_parent(self.parents)
+
+    def get_common_root(self):
+        return analysis.common_parent(self.nodes)
+
+    def get_local_problem(self):
+        class LocalProblem:
+            actors = {}
+            variables = []
+        result = LocalProblem()
+        parent = self.parent
+        if parent == None: return None
+        for node in self.nodes:
+            variables = {}
+            for child in node.children:
+                if isinstance(child, Reference):
+                    trace = child.target.trace()
+                    if parent not in trace: return None
+                    parent_pos = trace.index(parent)
+                    if parent_pos == len(trace) - 1: return None
+                    involved_frame = trace[parent_pos + 1]
+                    if not isinstance(involved_frame, GLFrameBase): return None
+                    variables[child.target] = involved_frame
+            if len(variables) > 0:
+                result.actors[node] = variables
+                for variable in variables.itervalues():
+                    if variable not in result.variables: result.variables.append(variable)
+        return result
+
+
+gobject.signal_new("cache-invalidated", SelectionCache, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())

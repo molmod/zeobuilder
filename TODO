@@ -1,0 +1,181 @@
+
+
+TODO LISTS
+==========
+
+
+TODO core
+---------
+
+### New/Updated actions
+
+    * UnitCellToCluster (with number of repetitions)
+    * Mirror/Reflection transformations
+
+
+### User interface
+
+    * Rewrite the invalid messages in the dialogs
+    * default values for fieldsdialog and last used values
+    * A history for the selection filters (saved in a config file)
+    * Invert action that pops an inversion center dialog
+    * Read-only-fields, that can be coppied in to clipboard
+    * A generic read only field (apply to the interpretation of a reference)
+
+
+### New/updated dialog fields
+
+    * field ElementSimple and popup ElementSimplePopup
+    * A nicer color field (with colors)
+
+
+### Implementation
+
+    * Python 2.4 dependencies:
+        - Use generator expression where possible (sum, min, max, tuple, list, dict, enumerate)
+        - Use sets instead of lists where uniqueness and fast "x in set"
+          operations are required (TODO: CONVERT LIST TO SET)
+        - check all sort methods of sequences and use key and reverse where
+          possible
+    * Some ideas
+        - separate a MutableAttributeMixin from the field classes
+        - separate the common parts of InteractiveRotateObject and
+          InteractiveTranslateObject
+	* Code documentation + revision of each module
+ 
+
+
+TODO before first release
+-------------------------
+
+### Priority
+
+	* import al the (remaining) old zeobuilder code in this new tree in the form
+	  of plugins (and as external modules).
+	    - dialog field that can select between a standard and a user value
+	      (for the radius and the color of an atom)
+	  	- databases and tables as model objects (in folder)
+	  	- import and export database
+	  	- fsi that also depends and external coordinates
+	  	- fsi that rotates and translates like a frame
+	  	- an action button who's sensitivity depends on the selection cache
+	  	- that atoms that are candidates for connections in the connections
+	  	  scanner must be made configurable. (a la selection filter)
+
+
+### Bugs
+
+	* Correct face culling for inverted objects
+    * apply lint tools on code to find extra bugs
+    * do manual tests in addition to the unit tests.
+
+
+### New/Updated actions
+
+    * Create an action for the transformations that the scanresults dialog does
+    * Action for changing visualization of sets of atoms and bonds (children)
+        -> should be done maybe with representations
+
+
+### New/Updated model objects
+
+    * Atom: dot visualization
+    * Bond: 
+        - alternative visualization for double, triple and hybrid
+        - lines visualization
+        - parameterize stick width
+        - menu actions to make style changes on groups
+
+
+### Speed optimizations
+
+    * Try to reduce the number of invalidate calls
+    * What makes unframe so slow? (tip: when applying unframe fast enough after
+      each other, this delay goes away) -> profiling
+    * Optimize the export pov files for rendering time
+
+
+### Design and implementation changes
+
+    * Fields: read/write(instance) -> read/write(attribute) ??
+    * Simplify the transformation calculus
+    * cursor.execute with parameters for optimized large data transfer
+    * A default action associated with each node type. (double click)
+
+
+### More data files with zeolite unit cells
+    
+    * Transform those found on the atlas of zeolite frameworks
+
+
+### Non-programming
+
+    * Define future milestones in more detail
+    * Create a version numbering scheme
+    * Document the source so that it is ready for automatic generation of
+      reference documentation
+    * Create a user documentation with howto's
+    * Create a zeobuilder website: apache, a good content manager using modern
+      technologies
+        - a phpBB forum (Installation, Tips and Howto's, Applications,
+          Feature request, ...)
+        - darcs browser
+        - screen shots
+        - downloads + release notes
+        - news
+        - about
+        - features (future and history)
+        - links
+        - plugin database, without warranty
+        - documentation (user + implementation)
+        - Bugs, the bugtracker
+        - FAQ
+        
+
+### Marketing
+    
+    * Publication in JCC
+    * post on mailinglists: 
+        gentoo-science
+        pygtk
+        ccl
+    * post on forums
+    * talks and posters
+
+
+
+TODO following releases
+-----------------------
+
+### Big items
+
+    * A built in python command line
+        - logical operations on SavedSelections
+        - define plugins and selected instances as locals
+    * Full support for periodic an symmetric unit cells
+        - clipping planes
+        - implementation of all two dimensional and three dimensional
+          crystal lattices
+    * An interactive feedback connection to/from computational tools
+
+
+### New/Update actions
+
+    * Dragging between two zeobuilder processes
+    * Dragging multiple selections + Copydrag function
+    * MergeAtomsConnectedWithMinimiser
+    * Interactive Action for creating connections of any type
+    * Interactive WalkTrough
+    * Small molecule creation tool (ala Z-matrix but easier and better)
+    * More import and export filters (connection to openbabel)
+    * LookAt Action (space bar)
+
+        
+### New model objects
+    
+    * the RepresentationFrame: a frame that interprets it's children and
+      gives an alternative visualization based on these children (goal is to
+      eliminate the use of abstractions)
+        -> This must be linked with the TransformedImage object
+           (saves memory)
+    * The camera modelobject / Multiple views
