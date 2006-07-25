@@ -40,24 +40,24 @@ ambiguous = Ambiguous()
 class ReadMixin(object):
     mutable_attribute = False
 
-    def __init__(self, attribute=None):
-        assert self.mutable_attribute or attribute != None, "%s requires an immutable attribute." % self.__class__
-        self.attribute = attribute
+    def __init__(self, attribute_name=None):
+        assert self.mutable_attribute or attribute_name is not None, "%s requires an immutable attribute." % self.__class__
+        self.attribute_name = attribute_name
 
     def applicable(self, instance):
-        #print self.attribute
-        if (self.attribute is not None) and (self.attribute not in instance.__dict__):
+        #print self.attribute_name
+        if (self.attribute_name is not None) and (self.attribute_name not in instance.__dict__):
             return False
         else:
             if self.mutable_attribute:
-                if self.attribute is None:
+                if self.attribute_name is None:
                     return self.applicable_attribute(instance)
                 else:
-                    return self.applicable_attribute(eval("instance.%s" % self.attribute))
+                    return self.applicable_attribute(eval("instance.%s" % self.attribute_name))
             else:
-                return self.attribute is not None
+                return self.attribute_name is not None
 
-    def applicable_attribute(self, instance):
+    def applicable_attribute(self, attribute):
         raise NotImplementedError
 
     def read(self, instance=None):
@@ -94,12 +94,12 @@ class ReadMixin(object):
 
     def read_from_instance(self, instance):
         if self.mutable_attribute:
-            if self.attribute == None:
+            if self.attribute_name == None:
                 return self.read_from_attribute(instance)
             else:
-                return self.read_from_attribute(eval("instance.%s" % self.attribute))
+                return self.read_from_attribute(eval("instance.%s" % self.attribute_name))
         else:
-            return eval("instance.%s" % self.attribute)
+            return eval("instance.%s" % self.attribute_name)
 
     def read_from_attribute(self, attribute):
         return attribute
@@ -114,8 +114,8 @@ class ReadMixin(object):
 class EditMixin(ReadMixin):
     Popup = None
 
-    def __init__(self, attribute=None, show_popup=True):
-        ReadMixin.__init__(self, attribute)
+    def __init__(self, attribute_name=None, show_popup=True):
+        ReadMixin.__init__(self, attribute_name)
         self.original = None
         self.show_popup = show_popup
         self.bu_popup = None
@@ -152,7 +152,7 @@ class EditMixin(ReadMixin):
 
     def changed_names(self):
         if self.get_active() and self.changed():
-            return [self.attribute]
+            return [self.attribute_name]
         else:
             return []
 
@@ -171,12 +171,12 @@ class EditMixin(ReadMixin):
 
     def write_to_instance(self, value, instance):
         if self.mutable_attribute:
-            if self.attribute == None:
+            if self.attribute_name is None:
                 self.write_to_attribute(value, instance)
             else:
-                self.write_to_attribute(value, eval("instance.%s" % self.attribute))
+                self.write_to_attribute(value, eval("instance.%s" % self.attribute_name))
         else:
-            exec "instance.%s = value" % self.attribute
+            exec "instance.%s = value" % self.attribute_name
 
     def write_to_attribute(self, value, attribute):
         # Yo only want to implement this if self.mutable_attribute == True
@@ -214,8 +214,8 @@ class InvalidField(Exception):
 
 
 class FaultyMixin(EditMixin):
-    def __init__(self, invalid_message, attribute=None, show_popup=True):
-        EditMixin.__init__(self, attribute, show_popup)
+    def __init__(self, invalid_message, attribute_name=None, show_popup=True):
+        EditMixin.__init__(self, attribute_name, show_popup)
         self.invalid_message = invalid_message
 
     def check(self):

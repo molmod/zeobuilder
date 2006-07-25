@@ -76,8 +76,8 @@ class Add(Base):
 
 
 class SetAttribute(Base):
-    def __init__(self, victim, attribute, value, done=False):
-        self.attribute = attribute
+    def __init__(self, victim, attribute_name, value, done=False):
+        self.attribute_name = attribute_name
         if done:
             self.new_value = None
             self.old_value = value
@@ -89,14 +89,14 @@ class SetAttribute(Base):
     def redo(self):
         Base.redo(self)
         if self.old_value == None:
-            self.old_value = eval("self.victim.%s" % self.attribute)
-        exec("self.victim.%s = self.new_value" % self.attribute)
+            self.old_value = eval("self.victim.%s" % self.attribute_name)
+        exec("self.victim.%s = self.new_value" % self.attribute_name)
 
     def undo(self):
         Base.undo(self)
         if self.new_value == None:
-            self.new_value = eval("self.victim.%s" % self.attribute)
-        exec("self.victim.%s = self.old_value" % self.attribute)
+            self.new_value = eval("self.victim.%s" % self.attribute_name)
+        exec("self.victim.%s = self.old_value" % self.attribute_name)
 
 
 class Delete(Base):

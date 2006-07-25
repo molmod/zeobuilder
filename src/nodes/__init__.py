@@ -41,7 +41,7 @@ def init_nodes(nodes):
                 gtk.gdk.INTERP_BILINEAR, 255
             )
         for dialog_field_info in node.dialog_fields:
-            key = (dialog_field_info.category, dialog_field_info.order, dialog_field_info.field.attribute)
+            key = (dialog_field_info.category, dialog_field_info.order, dialog_field_info.field.attribute_name)
             if key not in dialog_fields:
                 dialog_fields[key] = dialog_field_info
             categories.add(dialog_field_info.category)
@@ -58,7 +58,7 @@ def init_nodes(nodes):
     #for category, field_infos in fields_by_category:
     #    print "C", category
     #    for dialog_field_info in field_infos:
-    #        print "DFI", dialog_field_info.order, dialog_field_info.field.attribute, dialog_field_info.field.label_text
+    #        print "DFI", dialog_field_info.order, dialog_field_info.field.attribute_name, dialog_field_info.field.label_text
 
     main_field = fields.group.Notebook([
         (category, fields.group.Table([

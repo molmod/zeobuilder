@@ -28,18 +28,18 @@ __all__ = ["Read", "Edit", "Faulty", "Composed", "Group"]
 
 
 class Read(Single, ReadMixin):
-    def __init__(self, label_text=None, attribute=None):
+    def __init__(self, label_text=None, attribute_name=None):
         Single.__init__(self, label_text)
-        ReadMixin.__init__(self, attribute)
+        ReadMixin.__init__(self, attribute_name)
 
     def applicable(self, instance):
         return ReadMixin.applicable(self, instance)
 
 
 class Edit(Single, EditMixin):
-    def __init__(self, label_text=None, attribute=None, show_popup=True):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True):
         Single.__init__(self, label_text)
-        EditMixin.__init__(self, attribute, show_popup)
+        EditMixin.__init__(self, attribute_name, show_popup)
 
     def applicable(self, instance):
         return EditMixin.applicable(self, instance)
@@ -54,9 +54,9 @@ class Edit(Single, EditMixin):
 
 
 class Faulty(Single, FaultyMixin):
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True):
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True):
         Single.__init__(self, label_text)
-        FaultyMixin.__init__(self, invalid_message, attribute, show_popup)
+        FaultyMixin.__init__(self, invalid_message, attribute_name, show_popup)
 
     def applicable(self, instance):
         return FaultyMixin.applicable(self, instance)
@@ -74,9 +74,9 @@ class Composed(Multiple, FaultyMixin):
     self_containing = True
     mutable_attribute = True
 
-    def __init__(self, fields, invalid_message, label_text=None, attribute=None, show_popup=True, show_field_popups=False, table_border_width=6, vertical=True):
+    def __init__(self, fields, invalid_message, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False, table_border_width=6, vertical=True):
         Multiple.__init__(self, fields, label_text)
-        FaultyMixin.__init__(self, invalid_message, attribute, show_popup)
+        FaultyMixin.__init__(self, invalid_message, attribute_name, show_popup)
         self.show_field_popups = show_field_popups
         self.table_border_width = table_border_width
         self.vertical = vertical

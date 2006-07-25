@@ -75,8 +75,8 @@ class ComboBox(Edit):
     Popup = popups.Default
     self_containing = False
 
-    def __init__(self, choices, label_text=None, attribute=None, show_popup=True):
-        Edit.__init__(self, label_text, attribute, show_popup)
+    def __init__(self, choices, label_text=None, attribute_name=None, show_popup=True):
+        Edit.__init__(self, label_text, attribute_name, show_popup)
         self.choices = choices
         self.paths = {}
 
@@ -138,8 +138,8 @@ class List(Edit):
     Popup = popups.Default
     self_containing = False
 
-    def __init__(self, fields, label_text=None, attribute=None, show_popup=True):
-        Edit.__init__(self, label_text, attribute, show_popup)
+    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True):
+        Edit.__init__(self, label_text, attribute_name, show_popup)
         self.fields = fields
         self.paths = {}
         self.records = []
@@ -169,7 +169,7 @@ class List(Edit):
         self.list_selection.connect('changed', self.on_widget_changed)
 
         for record in self.records:
-            value = record.__dict__[self.attribute]
+            value = record.__dict__[self.attribute_name]
             iter = self.list_store.append([value, [record.__dict__[field_name] for field_name in field_names]])
             self.paths[id(value)] = self.list_store.get_path(iter)
 
@@ -220,8 +220,8 @@ class Element(Edit):
                         (0, 1, "1 K"), (0, 2, "2 L"), (0, 3, "3 M"), (0, 4, "4 N"), (0, 5, "5 O"),  (0, 6, "6 P"),
                         (0, 7, "7 Q"), (3, 9, "6 P"), (3, 10, "7 Q")]
 
-    def __init__(self, label_text=None, attribute=None, show_popup=True, border_width=6):
-        Edit.__init__(self, label_text, attribute, show_popup)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, border_width=6):
+        Edit.__init__(self, label_text, attribute_name, show_popup)
         self.border_width = border_width
 
     def create_widgets(self):
@@ -298,8 +298,8 @@ class TextView(Edit):
     yoptions = gtk.FILL | gtk.EXPAND
     xoptions = gtk.FILL
 
-    def __init__(self, label_text=None, attribute=None, show_popup=True, border_width=6, line_breaks=False):
-        Edit.__init__(self, label_text, attribute, show_popup)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, border_width=6, line_breaks=False):
+        Edit.__init__(self, label_text, attribute_name, show_popup)
         self.border_width = border_width
         self.line_breaks = line_breaks
         self.attribute_is_stream = False

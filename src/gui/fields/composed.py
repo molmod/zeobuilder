@@ -41,7 +41,7 @@ __all__ = ["Vector", "Translation", "Rotation", "Box", "Color",
 class Vector(Composed):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, vector_name="r", show_field_popups=False, table_border_width=6):
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, vector_name="r", show_field_popups=False, table_border_width=6):
         if length: FieldClass = Length
         else: FieldClass = Float
         fields = [
@@ -49,7 +49,7 @@ class Vector(Composed):
             FieldClass("Invalid %s.y" % vector_name, "   %s.y" % vector_name, "?", show_field_popups, low, high, low_inclusive, high_inclusive, scientific, decimals),
             FieldClass("Invalid %s.z" % vector_name, "   %s.z" % vector_name, "?", show_field_popups, low, high, low_inclusive, high_inclusive, scientific, decimals)
         ]
-        Composed.__init__(self, fields, invalid_message, label_text, attribute, show_popup, show_field_popups, table_border_width)
+        Composed.__init__(self, fields, invalid_message, label_text, attribute_name, show_popup, show_field_popups, table_border_width)
 
     def create_widgets(self):
         Composed.create_widgets(self)
@@ -68,8 +68,8 @@ class Vector(Composed):
 class Translation(Vector):
     Popup = popups.Translation
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, scientific=False, decimals=5, vector_name="t", show_field_popups=False, table_border_width=6):
-        Vector.__init__(self, invalid_message, label_text, attribute, show_popup, None, None, True, True, scientific, decimals, True, vector_name, show_field_popups, table_border_width)
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, scientific=False, decimals=5, vector_name="t", show_field_popups=False, table_border_width=6):
+        Vector.__init__(self, invalid_message, label_text, attribute_name, show_popup, None, None, True, True, scientific, decimals, True, vector_name, show_field_popups, table_border_width)
 
     def applicable_attribute(self, attribute):
         return isinstance(attribute, MathTranslation) and Vector.applicable_attribute(self, attribute.translation_vector)
@@ -84,7 +84,7 @@ class Translation(Vector):
 class Rotation(Composed):
     Popup = popups.Rotation
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, decimals=5, scientific=False, axis_name="n", show_field_popups=False, table_border_width=6):
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, decimals=5, scientific=False, axis_name="n", show_field_popups=False, table_border_width=6):
         fields = [
             Float("Invalid component for the x-axis rotation.", "   " + axis_name + ".x", "?", show_popup=show_field_popups, decimals=decimals, scientific=scientific),
             Float("Invalid component for the y-axis rotation.", "   " + axis_name + ".y", "?", show_popup=show_field_popups, decimals=decimals, scientific=scientific),
@@ -92,7 +92,7 @@ class Rotation(Composed):
             Float("Invalid rotation angle.", "   angle", "?", show_popup=show_field_popups),
             CheckButton("Inversion", "?", show_popup=show_field_popups)
         ]
-        Composed.__init__(self, fields, invalid_message, label_text, attribute, show_popup, show_field_popups, table_border_width)
+        Composed.__init__(self, fields, invalid_message, label_text, attribute_name, show_popup, show_field_popups, table_border_width)
 
     def create_widgets(self):
         Composed.create_widgets(self)
@@ -113,37 +113,37 @@ class Rotation(Composed):
 
     def instance_applicable(self, instance):
         if not Edit.instance_applicable(self, instance): return False
-        if self.attribute == None:
+        if self.attribute_name is None:
             Class = instance.__class__
         else:
-            Class = eval("instance." + self.attribute).__class__
+            Class = eval("instance." + self.attribute_name).__class__
         return issubclass(Class, Rotation)
 
 
 class Box(Vector):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, scientific=False, decimals=5, show_field_popups=False, table_border_width=6):
-        Vector.__init__(self, invalid_message, label_text, attribute, show_popup, None, None, True, True, scientific, decimals, True, "box", show_field_popups, table_border_width)
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, scientific=False, decimals=5, show_field_popups=False, table_border_width=6):
+        Vector.__init__(self, invalid_message, label_text, attribute_name, show_popup, None, None, True, True, scientific, decimals, True, "box", show_field_popups, table_border_width)
 
 
 class Color(Vector):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, decimals=5, show_field_popups=False, table_border_width=6):
-        Vector.__init__(self, invalid_message, label_text, attribute, show_popup, 0.0, 1.0, True, True, False, decimals, False, "color", show_field_popups, table_border_width)
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, decimals=5, show_field_popups=False, table_border_width=6):
+        Vector.__init__(self, invalid_message, label_text, attribute_name, show_popup, 0.0, 1.0, True, True, False, decimals, False, "color", show_field_popups, table_border_width)
 
 
 class CellMatrix(Composed):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, scientific=False, decimals=5, show_field_popups=False, table_border_width=6):
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, scientific=False, decimals=5, show_field_popups=False, table_border_width=6):
         fields = [
             Vector("A component of ridge A has a wrong syntax.", "Ridge A", "?", show_popup, None, None, True, True, scientific, decimals, True, "A", show_field_popups, table_border_width),
             Vector("A component of ridge B has a wrong syntax.", "Ridge B", "?", show_popup, None, None, True, True, scientific, decimals, True, "B", show_field_popups, table_border_width),
             Vector("A component of ridge C has a wrong syntax.", "Ridge C", "?", show_popup, None, None, True, True, scientific, decimals, True, "C", show_field_popups, table_border_width)
         ]
-        Composed.__init__(self, fields, invalid_message, label_text, attribute, show_popup, show_field_popups, table_border_width, False)
+        Composed.__init__(self, fields, invalid_message, label_text, attribute_name, show_popup, show_field_popups, table_border_width, False)
 
     def create_widgets(self):
         Composed.create_widgets(self)
@@ -183,13 +183,13 @@ class CellMatrix(Composed):
 class CellActive(Composed):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, show_field_popups=False, table_border_width=6):
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False, table_border_width=6):
         fields = [
             CheckButton("Active in A direction", "?", show_field_popups),
             CheckButton("Active in B direction", "?", show_field_popups),
             CheckButton("Active in C direction", "?", show_field_popups)
         ]
-        Composed.__init__(self, fields, invalid_message, label_text, attribute, show_popup, show_field_popups, table_border_width)
+        Composed.__init__(self, fields, invalid_message, label_text, attribute_name, show_popup, show_field_popups, table_border_width)
 
     def create_widgets(self):
         Composed.create_widgets(self)
@@ -209,13 +209,13 @@ class CellActive(Composed):
 class Repetitions(Composed):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute=None, show_popup=True, show_field_popups=False, table_border_width=6):
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False, table_border_width=6):
         fields = [
             Int("Please enter a vilad repetition value along A.", "A", "?", show_field_popups, minimum=1),
             Int("Please enter a vilad repetition value along B.", "B", "?", show_field_popups, minimum=1),
             Int("Please enter a vilad repetition value along C.", "C", "?", show_field_popups, minimum=1)
         ]
-        Composed.__init__(self, fields, invalid_message, label_text, attribute, show_popup, show_field_popups, table_border_width)
+        Composed.__init__(self, fields, invalid_message, label_text, attribute_name, show_popup, show_field_popups, table_border_width)
 
     def create_widgets(self):
         Composed.create_widgets(self)
@@ -235,7 +235,7 @@ class Repetitions(Composed):
 class Units(Composed):
     Popup = popups.Translation
 
-    def __init__(self, label_text=None, attribute=None, show_popup=True, show_field_popups=False, table_border_width=6):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False, table_border_width=6):
         fields = [
             ComboBox(
                 [(UNIT, suffices[UNIT]) for UNIT in measures[measure]],
@@ -246,7 +246,7 @@ class Units(Composed):
             in measure_names.iteritems()
         ]
         Composed.__init__(
-            self, fields, "", label_text, attribute, show_popup,
+            self, fields, "", label_text, attribute_name, show_popup,
             show_field_popups, table_border_width
         )
 

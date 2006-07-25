@@ -252,7 +252,7 @@ class RoundRotation(Immediate):
 
     select_quaternion = FieldsDialogSimple(
         "Select a rotation",
-        fields.edit.List({"cost_function": "Fit", "name": "Rotation"}, attribute="quaternion", show_popup=False),
+        fields.edit.List({"cost_function": "Fit", "name": "Rotation"}, attribute_name="quaternion", show_popup=False),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
