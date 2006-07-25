@@ -78,12 +78,11 @@ class Table(Group):
                         first_radio_button = toggle_button
                     else:
                         toggle_button = gtk.RadioButton(first_radio_button)
-                    #toggle_button.remove(toggle_button.get_child())
-                    toggle_button.set_alignment(1.0, 0.0)
+                if self.buttons != NO_BUTTONS:
                     self.container.attach(toggle_button, first_edit-1, first_edit, last_row, last_row+1, xoptions=gtk.FILL, yoptions=gtk.FILL)
-                    toggle_button.connect("toggled", self.on_button_toggled, field)
                     field.old_representation = ambiguous
                     field.sensitive_button = toggle_button
+                    toggle_button.connect("toggled", self.on_button_toggled, field)
                 last_row += 1
         if self.label is not None:
             da = gtk.DrawingArea()
