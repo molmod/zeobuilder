@@ -283,7 +283,7 @@ class EditConfiguration(Immediate):
     edit_config = FieldsDialogSimple(
         "Zeobuilder configuration",
         fields.composed.Units(
-            label_text="Default units", 
+            label_text="Default units",
             attribute_name="default_units",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))

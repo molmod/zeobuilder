@@ -182,9 +182,9 @@ class List(Edit):
         for record in self.records:
             value = record.__dict__[self.attribute_name]
             iter = self.list_store.append([
-                value, 
+                value,
                 [
-                    record.__dict__[column_attribute] 
+                    record.__dict__[column_attribute]
                     for column_title, column_attribute
                     in self.columns
                 ]

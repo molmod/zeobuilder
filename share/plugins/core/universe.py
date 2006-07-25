@@ -87,16 +87,16 @@ class PeriodicBox(UnitCell):
 
     dialog_fields = set([
         DialogFieldInfo("Unit cell", (5, 0), fields.composed.CellMatrix(
-            label_text="Cell dimensions", 
-            attribute_name="cell", 
-            invalid_message="Invalid unit cell dimensions", 
+            label_text="Cell dimensions",
+            attribute_name="cell",
+            invalid_message="Invalid unit cell dimensions",
         )),
         DialogFieldInfo("Unit cell", (5, 1), fields.composed.CellActive(
-            label_text="Active directions", 
-            attribute_name="cell_active", 
+            label_text="Active directions",
+            attribute_name="cell_active",
         )),
         DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
-            label_text="Show periodic box (if active)", 
+            label_text="Show periodic box (if active)",
             attribute_name="box_visible",
         ))
     ])
@@ -333,9 +333,9 @@ class Universe(GLPeriodicContainer, FrameAxes):
 
     dialog_fields = set([
         DialogFieldInfo("Unit cell", (5, 2), fields.composed.Repetitions(
-            label_text="Repetitions", 
+            label_text="Repetitions",
             attribute_name="repetitions",
-            invalid_message="Please enter valid repetitions", 
+            invalid_message="Please enter valid repetitions",
         ))
     ])
 
@@ -401,8 +401,8 @@ class UnitCellToCluster(ImmediateWithMemory):
                     length=False,
                 )
                 for ridge in ["A", "B", "C"]
-            ], 
-            buttons=fields.group.CHECK_BUTTONS, 
+            ],
+            buttons=fields.group.CHECK_BUTTONS,
             label_text="The cutoff region in fractional coordinates:"
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))

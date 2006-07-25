@@ -92,21 +92,21 @@ class FrameAxes(object):
 
     dialog_fields = set([
         DialogFieldInfo("Geometry", (2, 0), fields.faulty.Length(
-            label_text="Axis thickness", 
-            attribute_name="axis_thickness", 
-            invalid_message="Invalid axis thickness.", 
-            low=0.0, 
+            label_text="Axis thickness",
+            attribute_name="axis_thickness",
+            invalid_message="Invalid axis thickness.",
+            low=0.0,
             low_inclusive=False,
         )),
         DialogFieldInfo("Geometry", (2, 1), fields.faulty.Length(
-            label_text="Axes length", 
-            attribute_name="axis_length", 
-            invalid_message="Invalid axis length.", 
-            low=0.0, 
+            label_text="Axes length",
+            attribute_name="axis_length",
+            invalid_message="Invalid axis length.",
+            low=0.0,
             low_inclusive=False,
         )),
         DialogFieldInfo("Markup", (1, 4), fields.edit.CheckButton(
-            label_text="Show frame axes", 
+            label_text="Show frame axes",
             attribute_name="axes_visible",
         )),
     ])

@@ -93,9 +93,9 @@ class ModelObject(Base):
 
     dialog_fields = set([
         DialogFieldInfo("Basic", (0, 0), fields.faulty.Name(
-            label_text="Name", 
+            label_text="Name",
             attribute_name="name",
-            invalid_message="Invalid name.", 
+            invalid_message="Invalid name.",
         )),
     ])
 

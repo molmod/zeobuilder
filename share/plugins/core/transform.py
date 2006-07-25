@@ -116,7 +116,7 @@ class RotateDialog(ImmediateWithMemory):
     rotation = FieldsDialogSimple(
         "Rotation",
         fields.composed.Rotation(
-            invalid_message="Make sure that the fields that describe the rotation, are correct.", 
+            invalid_message="Make sure that the fields that describe the rotation, are correct.",
             label_text="Rotate around axis n",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
@@ -151,11 +151,11 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         "Rotation around Center",
         fields.group.Notebook([
             ("Center", fields.composed.Translation(
-                invalid_message="Make sure that the fields that describe the translation, are correct.", 
+                invalid_message="Make sure that the fields that describe the translation, are correct.",
                 label_text="Rotation center t",
             )),
             ("Rotation", fields.composed.Rotation(
-                invalid_message="Make sure that the fields that describe the rotation, are correct.", 
+                invalid_message="Make sure that the fields that describe the rotation, are correct.",
                 label_text="Rotate around axis n",
             ))
         ]),
@@ -220,7 +220,7 @@ class TranslateDialog(ImmediateWithMemory):
     translation = FieldsDialogSimple(
         "Translation",
         fields.composed.Translation(
-            invalid_message="Make sure that the fields that describe the translation, are correct.", 
+            invalid_message="Make sure that the fields that describe the translation, are correct.",
             label_text="Translate with vector t",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
@@ -265,8 +265,8 @@ class RoundRotation(Immediate):
     select_quaternion = FieldsDialogSimple(
         "Select a rotation",
         fields.edit.List(
-            columns=[("Fit", "cost_function"), ("Rotation", "name")], 
-            attribute_name="quaternion", 
+            columns=[("Fit", "cost_function"), ("Rotation", "name")],
+            attribute_name="quaternion",
             show_popup=False
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))

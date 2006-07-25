@@ -147,7 +147,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
                 ),
                 fields.edit.TextView(
                     label_text="Expression",
-                    attribute_name="expression", 
+                    attribute_name="expression",
                     show_popup=False
                 )
             ],
@@ -293,13 +293,13 @@ class EditSelectionFilter(Immediate):
         "Selection filter",
         fields.group.Table(fields=[
             fields.edit.CheckButton(
-                label_text="Filter active", 
-                attribute_name="filter_active", 
+                label_text="Filter active",
+                attribute_name="filter_active",
                 show_popup=False,
             ),
             fields.edit.TextView(
-                label_text="Filter expression", 
-                attribute_name="filter_expression", 
+                label_text="Filter expression",
+                attribute_name="filter_expression",
                 show_popup=False,
             )
         ]),
