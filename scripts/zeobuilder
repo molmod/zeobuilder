@@ -70,4 +70,4 @@ else:
     sys.exit(1)
 
 from zeobuilder.application import Application
-Application([init_fn])
+Application(init_fn)
