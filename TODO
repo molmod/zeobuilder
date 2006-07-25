@@ -10,7 +10,6 @@ TODO core
 ### New/Updated actions
 
     * UnitCellToCluster (with number of repetitions)
-    * Mirror/Reflection transformations
 
 
 ### User interface
@@ -21,6 +20,7 @@ TODO core
     * Invert action that pops an inversion center dialog
     * Read-only-fields, that can be coppied in to clipboard
     * A generic read only field (apply to the interpretation of a reference)
+    * optional fields: check buttons and option buttons
 
 
 ### New/updated dialog fields
@@ -169,10 +169,12 @@ TODO following releases
     * Small molecule creation tool (ala Z-matrix but easier and better)
     * More import and export filters (connection to openbabel)
     * LookAt Action (space bar)
+    * Mirror/Reflection transformations
 
         
 ### New model objects
-    
+
+	* planes and angles    
     * the RepresentationFrame: a frame that interprets it's children and
       gives an alternative visualization based on these children (goal is to
       eliminate the use of abstractions)
