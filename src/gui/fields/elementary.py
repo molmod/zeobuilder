@@ -28,8 +28,8 @@ __all__ = ["Read", "Edit", "Faulty", "Composed", "Group"]
 
 
 class Read(Single, ReadMixin):
-    def __init__(self, label_text=None, attribute_name=None):
-        Single.__init__(self, label_text)
+    def __init__(self, label_text=None, border_width=None, attribute_name=None):
+        Single.__init__(self, label_text, border_width)
         ReadMixin.__init__(self, attribute_name)
 
     def applicable(self, instance):
@@ -37,9 +37,12 @@ class Read(Single, ReadMixin):
 
 
 class Edit(Single, EditMixin):
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True):
-        Single.__init__(self, label_text)
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True):
+        Single.__init__(self, label_text, border_width)
         EditMixin.__init__(self, attribute_name, show_popup)
+
+    def get_widgets_separate(self):
+        return self.label, self.data_widget, self.bu_popup
 
     def applicable(self, instance):
         return EditMixin.applicable(self, instance)
@@ -54,9 +57,12 @@ class Edit(Single, EditMixin):
 
 
 class Faulty(Single, FaultyMixin):
-    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True):
-        Single.__init__(self, label_text)
-        FaultyMixin.__init__(self, invalid_message, attribute_name, show_popup)
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None):
+        Single.__init__(self, label_text, border_width)
+        FaultyMixin.__init__(self, attribute_name, show_popup, invalid_message)
+
+    def get_widgets_separate(self):
+        return self.label, self.data_widget, self.bu_popup
 
     def applicable(self, instance):
         return FaultyMixin.applicable(self, instance)
@@ -71,40 +77,52 @@ class Faulty(Single, FaultyMixin):
 
 
 class Composed(Multiple, FaultyMixin):
-    self_containing = True
-    mutable_attribute = True
+    high_widget = True
 
-    def __init__(self, fields, invalid_message, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False, table_border_width=6, vertical=True):
-        for field in fields:
-            field.on_widget_changed = self.on_widget_changed
-            field.update_label = self.update_label
-            field.changed = self.changed
-        Multiple.__init__(self, fields, label_text)
-        FaultyMixin.__init__(self, invalid_message, attribute_name, show_popup)
+    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False):
+        Multiple.__init__(self, fields, label_text, border_width)
+        FaultyMixin.__init__(self, attribute_name, show_popup, invalid_message)
         self.show_field_popups = show_field_popups
-        self.table_border_width = table_border_width
-        self.vertical = vertical
+
+    def get_widgets_separate(self):
+        return self.label, self.data_widget, self.bu_popup
 
     def applicable(self, instance):
         return FaultyMixin.applicable(self, instance)
 
     def create_widgets(self):
-        #def on_widget_changed_substitude(widget):
-        #    self.on_widget_change(widget)
-
         for field in self.fields:
-            # to make the subfields also believe they are active
+            field.on_widget_changed = self.on_widget_changed
+            field.update_label = self.update_label
+            field.changed = self.changed
+            # make the subfields also believe they are active
             field.instance = self.instance
             field.instances = self.instances
             field.create_widgets()
         Multiple.create_widgets(self)
         FaultyMixin.create_widgets(self)
 
-    def tabulate_widgets(self):
+
+class TabulateComposed(Composed):
+    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, vertical=True, horizontal_flat=False):
+        Composed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups)
+        self.vertical = vertical
+        self.horizontal_flat = horizontal_flat
+        if not vertical and horizontal_flat:
+            high = False
+            for field in fields:
+                if field.high_widget:
+                    high = True
+                    break
+            if not high:
+                self.high_widget = False
+
+    def create_widgets(self):
+        Composed.create_widgets(self)
         if self.vertical:
             self.tabulate_widgets_vertical()
         else:
-            self.tabulate_widgets_horizontal()
+            self.tabulate_widgets_horizontal(flat=self.horizontal_flat)
 
     def tabulate_widgets_vertical(self):
         if self.show_field_popups:
@@ -112,52 +130,31 @@ class Composed(Multiple, FaultyMixin):
         else:
             cols = 2
 
-        if (self.label is not None) or (self.bu_popup is not None):
-            hbox = gtk.HBox(spacing=6)
-            if self.label is not None: hbox.pack_start(self.label, expand=False, fill=False)
-            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False, fill=False)
-            self.container = gtk.Table(4, cols)
-            self.container.attach(hbox, 0, cols, 0, 1, yoptions=0)
-            first_edit = 1
-        else:
-            self.container = gtk.Table(3, cols)
-            first_edit = 0
-        self.container.set_row_spacings(6)
-        self.container.set_col_spacings(6)
-        self.container.set_border_width(self.table_border_width)
+        self.data_widget = gtk.Table(3, cols)
+        self.data_widget.set_row_spacings(6)
+        self.data_widget.set_col_spacings(6)
         for index, field in enumerate(self.fields):
-            if field.self_containing:
-                self.container.attach(field.container, 0, cols, first_edit + index, first_edit + index + 1, xoptions=field.xoptions, yoptions=field.yoptions)
-            else:
-                self.container.attach(field.label, 0, 1, first_edit + index, first_edit + index + 1, xoptions=gtk.FILL, yoptions=0)
-                self.container.attach(field.container, 1, 2, first_edit + index, first_edit + index + 1, xoptions=field.xoptions, yoptions=field.yoptions)
-                if self.show_field_popups:
-                    self.container.attach(field.popup, 2, 3, first_edit + index, first_edit + index + 1, xoptions=gtk.FILL, yoptions=0)
+            data_widget_left = 0
+            data_widget_right = 3
+            label, data_widget, bu_popup = field.get_widgets_separate()
+            if label is not None:
+                self.data_widget.attach(label, 0, 1, index, index+1, xoptions=gtk.FILL, yoptions=0)
+                data_widget_left += 1
+            if self.show_field_popups and bu_popup is not None:
+                data_widget_right -= 1
+                self.data_widget.attach(bu_popup, 2, 3, index, index + 1, xoptions=0, yoptions=0)
+            self.data_widget.attach(data_widget, data_widget_left, data_widget_right, index, index+1, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
 
-    def tabulate_widgets_horizontal(self):
+    def tabulate_widgets_horizontal(self, flat):
         cols = len(self.fields)
-        if (self.label is not None) or (self.bu_popup is not None):
-            hbox = gtk.HBox(spacing=6)
-            if self.label is not None: hbox.pack_start(self.label, expand=False, fill=False)
-            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False, fill=False)
-            self.container = gtk.Table(2, cols)
-            self.container.attach(hbox, 0, cols, 0, 1, yoptions=0)
-            first_edit = 1
-        else:
-            self.container = gtk.Table(1, cols)
-            first_edit = 0
-        self.container.set_row_spacings(6)
-        self.container.set_col_spacings(6)
-        self.container.set_border_width(self.table_border_width)
+        self.data_widget = gtk.HBox()
+        self.data_widget.set_spacing(6)
         for index, field in enumerate(self.fields):
-            assert field.self_containing, "In the horizontal table layout the fields must be self-containing."
-            self.container.attach(
-                field.container,
-                index, index+1,
-                first_edit, first_edit+1,
-                xoptions=field.xoptions,
-                yoptions=field.yoptions
-            )
+            if flat:
+                container = field.get_widgets_flat_container(self.show_field_popups)
+            else:
+                container = field.get_widgets_short_container(self.show_field_popups)
+            self.data_widget.pack_start(container)
 
     def destroy_widgets(self):
         Multiple.destroy_widgets(self)

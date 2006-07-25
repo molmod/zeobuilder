@@ -73,6 +73,7 @@ class Length(Default):
     def __init__(self, field, parent_window):
         Default.__init__(self, field, parent_window)
         representation = self.field.read_from_widget()
+        from mixin import ambiguous
         if representation == ambiguous: return
         self.add_separator()
         try:
@@ -89,21 +90,18 @@ class Translation(Default):
     def __init__(self, field, parent_window):
         Default.__init__(self, field, parent_window)
         self.add_item("Reset", self.write_to_widget, ('0.0', '0.0', '0.0'))
-        representation = self.field.read_from_widget()
-        if representation == ambiguous: return
 
 
 class Rotation(Default):
     def __init__(self, field, parent_window):
         Default.__init__(self, field, parent_window)
         self.add_item("Reset", self.write_to_widget, ('0.0', '0.0', '1.0', '0.0', False))
-        representation = self.field.read_from_widget()
-        if representation == ambiguous: return
 
 
 class Element(Base):
     def __init__(self, field, parent_window):
         Base.__init__(self, field, parent_window)
+        from mixin import ambiguous
         if field.original == ambiguous:
             str_original = str(field.original)
         else:

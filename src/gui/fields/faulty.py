@@ -32,14 +32,13 @@ __all__ = ["Entry", "Float", "Int", "Length", "Name", "Password"]
 
 class Entry(Faulty):
     Popup = popups.Default
-    self_containing = False
 
     def create_widgets(self):
         Faulty.create_widgets(self)
         self.entry = gtk.Entry()
         self.entry.connect("changed", self.on_widget_changed)
         self.entry.set_activates_default(True)
-        self.container = self.entry
+        self.data_widget = self.entry
 
     def destroy_widgets(self):
         self.entry = None
@@ -73,8 +72,8 @@ class Entry(Faulty):
 class Float(Entry):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
-        Entry.__init__(self, invalid_message, label_text, attribute_name, show_popup)
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
+        Entry.__init__(self, label_text, border_width, attribute_name, show_popup, invalid_message)
         self.low = low
         self.high = high
         self.low_inclusive = low_inclusive
@@ -107,8 +106,8 @@ class Float(Entry):
 class Int(Entry):
     Popup = popups.Default
 
-    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, minimum=None, maximum=None):
-        Entry.__init__(self, invalid_message, label_text, attribute_name, show_popup)
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, minimum=None, maximum=None):
+        Entry.__init__(self, label_text, border_width, attribute_name, show_popup, invalid_message)
         self.minimum = minimum
         self.maximum = maximum
 

@@ -31,13 +31,11 @@ __all__ = ["Label", "Handedness", "BBox", "Distance", "VectorLength",
 
 
 class Label(Read):
-    self_containing = False
-
     def create_widgets(self):
         Read.create_widgets(self)
-        self.container = gtk.Label()
-        self.container.set_alignment(0.0, 0.5)
-        self.container.set_use_markup(True)
+        self.data_widget = gtk.Label()
+        self.data_widget.set_alignment(0.0, 0.5)
+        self.data_widget.set_use_markup(True)
 
     def convert_to_representation(self, value):
         if value == ambiguous:
@@ -47,18 +45,16 @@ class Label(Read):
 
     def write_to_widget(self, representation, original=False):
         if representation == insensitive:
-            self.container.set_sensitive(False)
+            self.data_widget.set_sensitive(False)
         else:
-            self.container.set_sensitive(True)
+            self.data_widget.set_sensitive(True)
             if representation == ambiguous:
-                self.container.set_label("<span foreground=\"gray\">%s</span>" % ambiguous)
+                self.data_widget.set_label("<span foreground=\"gray\">%s</span>" % ambiguous)
             else:
-                self.container.set_label(representation)
+                self.data_widget.set_label(representation)
 
 
 class Handedness(Label):
-    mutable_attribute = True
-
     def read_from_attribute(self):
         return (numpy.linalg.det(self.attribute.get_absolute_frame().rotation_matrix) > 0)
 
@@ -78,8 +74,6 @@ class Handedness(Label):
 
 
 class BBox(Label):
-    mutable_attribute = True
-
     def convert_to_representation(self, value):
         return (express_measure(value.corners[1][0] - value.corners[0][0], LENGTH),
                 express_measure(value.corners[1][1] - value.corners[0][1], LENGTH),
@@ -102,8 +96,6 @@ class Distance(Label):
 
 
 class VectorLength(Distance):
-    mutable_attribute = True
-
     def read_from_instance(self, instance):
         attribute = Distance.read_from_instance(self, instance)
         d = attribute.shortest_vector_relative_to(attribute.parent)

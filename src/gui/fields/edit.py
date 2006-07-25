@@ -33,8 +33,6 @@ __all__ = ["CheckButton", "ComboBox", "Element", "TextView"]
 
 class CheckButton(Edit):
     Popup = popups.Default
-    self_containing = True
-    xoptions = gtk.FILL
 
     def create_widgets(self):
         Edit.create_widgets(self)
@@ -42,14 +40,14 @@ class CheckButton(Edit):
         self.check_button.connect("toggled", self.on_widget_changed)
         self.check_button.connect("clicked", self.on_cb_clicked)
         self.check_button.add(self.label)
-        self.container = gtk.HBox(spacing=6)
-        self.container.pack_start(self.check_button)
-        if self.bu_popup is not None:
-            self.container.pack_start(self.bu_popup, expand=False, fill=False)
+        self.data_widget = self.check_button
 
     def destroy_widgets(self):
         self.check_button = None
         Edit.destroy_widgets(self)
+
+    def get_widgets_separate(self):
+        return None, self.data_widget, self.bu_popup
 
     def read_from_widget(self):
         if not self.check_button.get_property("sensitive"):
@@ -81,10 +79,9 @@ class CheckButton(Edit):
 
 class ComboBox(Edit):
     Popup = popups.Default
-    self_containing = False
 
-    def __init__(self, choices, label_text=None, attribute_name=None, show_popup=True):
-        Edit.__init__(self, label_text, attribute_name, show_popup)
+    def __init__(self, choices, label_text=None, border_width=6, attribute_name=None, show_popup=True):
+        Edit.__init__(self, label_text, border_width, attribute_name, show_popup)
         self.choices = choices
         self.paths = {}
 
@@ -97,7 +94,7 @@ class ComboBox(Edit):
         self.combo_box.pack_start(text_cell_renderer)
         self.combo_box.add_attribute(text_cell_renderer, "text", 1)
         self.combo_box.connect('changed', self.on_widget_changed)
-        self.container = self.combo_box
+        self.data_widget = self.combo_box
         self.can_ambiguous = False
         for value, label in self.choices:
             iter = self.combo_model.append([value, label])
@@ -151,11 +148,11 @@ class ComboBox(Edit):
 
 class List(Edit):
     Popup = popups.Default
-    self_containing = False
+    high_widget = True
 
-    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True):
-        Edit.__init__(self, label_text, attribute_name, show_popup)
-        self.fields = fields
+    def __init__(self, columns, label_text=None, border_width=6, attribute_name=None, show_popup=True):
+        Edit.__init__(self, label_text, border_width, attribute_name, show_popup)
+        self.columns = columns
         self.paths = {}
         self.records = []
 
@@ -166,26 +163,32 @@ class List(Edit):
         self.list_view = gtk.TreeView(self.list_store)
         self.list_selection = self.list_view.get_selection()
 
-        field_names = self.fields.keys()
-        for index, field_name in enumerate(field_names):
-            field_label = self.fields[field_name]
+        for index, (column_title, column_attribute) in enumerate(self.columns):
             text_cell_renderer = gtk.CellRendererText()
-            column = gtk.TreeViewColumn(field_label, text_cell_renderer)
-            def data_func_field(column, cell, model, iter, field):
-                cell.set_property("text", model.get_value(iter, 1)[field])
-            column.set_cell_data_func(text_cell_renderer, data_func_field, index)
+            column = gtk.TreeViewColumn(column_title, text_cell_renderer)
+            def data_func(column, cell, model, iter, i):
+                cell.set_property("text", model.get_value(iter, 1)[i])
+            column.set_cell_data_func(text_cell_renderer, data_func, index)
             self.list_view.append_column(column)
 
-        self.container = gtk.ScrolledWindow()
-        self.container.add(self.list_view)
-        self.container.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
-        self.container.set_size_request(-1, 250)
+        self.data_widget = gtk.ScrolledWindow()
+        self.data_widget.set_shadow_type(gtk.SHADOW_IN)
+        self.data_widget.add(self.list_view)
+        self.data_widget.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
+        self.data_widget.set_size_request(-1, 250)
         self.can_ambiguous = False
         self.list_selection.connect('changed', self.on_widget_changed)
 
         for record in self.records:
             value = record.__dict__[self.attribute_name]
-            iter = self.list_store.append([value, [record.__dict__[field_name] for field_name in field_names]])
+            iter = self.list_store.append([
+                value, 
+                [
+                    record.__dict__[column_attribute] 
+                    for column_title, column_attribute
+                    in self.columns
+                ]
+            ])
             self.paths[id(value)] = self.list_store.get_path(iter)
 
     def destroy_widgets(self):
@@ -236,15 +239,16 @@ class List(Edit):
 
 class Element(Edit):
     Popup = popups.Element
+    high_widget = True
+
     mendeljev_labels = [(1, 0, "1"), (2, 1, "2"), (3, 3, "3"), (4, 3, "4"), (5, 3, "5"),  (6, 3, "6"),
                         (7, 3, "7"), (8, 3, "8"), (9, 3, "9"), (10, 3, "10"), (11, 3, "11"),  (12, 3, "12"),
                         (13, 1, "13"), (14, 1, "14"), (15, 1, "15"), (16, 1, "16"), (17, 1, "17"),  (18, 0, "18"),
                         (0, 1, "1 K"), (0, 2, "2 L"), (0, 3, "3 M"), (0, 4, "4 N"), (0, 5, "5 O"),  (0, 6, "6 P"),
                         (0, 7, "7 Q"), (3, 9, "6 P"), (3, 10, "7 Q")]
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, border_width=6):
-        Edit.__init__(self, label_text, attribute_name, show_popup)
-        self.border_width = border_width
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True):
+        Edit.__init__(self, label_text, border_width, attribute_name, show_popup)
 
     def create_widgets(self):
         Edit.create_widgets(self)
@@ -272,21 +276,13 @@ class Element(Edit):
             indicative = gtk.Label("<b>" + label_text + "</b>")
             indicative.set_use_markup(True)
             ta_elements.attach(indicative, c, c+1, r, r+1)
-        # put everything in a container
+
         self.bu_former = None
-        self.container = gtk.VBox(spacing=6)
-        self.container.set_border_width(self.border_width)
-        if (self.label is not None) and (self.bu_popup is not None):
-            hbox = gtk.HBox(spacing=6)
-            self.container.pack_start(hbox)
-            if self.label is not None: hbox.pack_start(self.label, expand=False)
-            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False)
-        self.container.pack_start(ta_elements)
+        self.data_widget = ta_elements
 
     def destroy_widgets(self):
         self.buttons = None
         self.bu_former = None
-        self.la_info = None
         Edit.destroy_widgets(self)
 
     def on_bu_element_toggled(self, widget, number):
@@ -325,34 +321,24 @@ class Element(Edit):
 
 class TextView(Edit):
     Popup = popups.Default
-    yoptions = gtk.FILL | gtk.EXPAND
-    xoptions = gtk.FILL
+    high_widget = True
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, border_width=6, line_breaks=False):
-        Edit.__init__(self, label_text, attribute_name, show_popup)
-        self.border_width = border_width
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, line_breaks=False):
+        Edit.__init__(self, label_text, border_width, attribute_name, show_popup)
         self.line_breaks = line_breaks
         self.attribute_is_stream = False
 
     def create_widgets(self):
         Edit.create_widgets(self)
-        self.container = gtk.VBox(spacing=6)
-        self.container.set_border_width(self.border_width)
-
-        if (self.label is not None) or (self.bu_popup is not None):
-            hbox = gtk.HBox(spacing=6)
-            self.container.pack_start(hbox, expand=False, fill=True)
-            if self.label is not None: hbox.pack_start(self.label, expand=False)
-            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False)
-
-        text_view = gtk.TextView()
-        self.text_buffer = text_view.get_buffer()
+        self.text_view = gtk.TextView()
+        self.text_buffer = self.text_view.get_buffer()
         self.text_buffer.connect("changed", self.on_widget_changed)
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        scrolled_window.set_shadow_type(gtk.SHADOW_IN)
         scrolled_window.set_size_request(350, 250)
-        scrolled_window.add(text_view)
-        self.container.pack_start(scrolled_window)
+        scrolled_window.add(self.text_view)
+        self.data_widget = scrolled_window
 
     def destroy_widgets(self):
         self.textview = None

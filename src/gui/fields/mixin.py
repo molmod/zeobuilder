@@ -70,15 +70,17 @@ class ReadMixin(object):
         self.attribute_name = attribute_name
 
     def applicable(self, instance):
-        #print self.attribute_name
         if self.attribute_name not in instance.__dict__:
+            #print "The attribute_name %s is not in the instance dictionary: %s." % (self.attribute_name, instance.__dict__)
             return False
         else:
             self.current_instance = instance
             if self.attribute is None:
+                #print "The attribute corresponding to the attribute_name %s is None." % self.attribute_name
                 result = True
             else:
                 result = self.applicable_attribute()
+                #print "The field-specific code for attribute_name %s said %s." % (self.attribute_name, result)
             del self.current_instance
             return result
 
@@ -228,9 +230,11 @@ class EditMixin(ReadMixin):
         if self.label is None:
             return
         if self.changed():
+            print "ON ", self.attribute_name, id(self), self.label_text
             if len(self.label.get_label()) == len(self.label_text):
                 self.label.set_label(self.label_text + changed_indicator)
         else:
+            print "OFF", self.attribute_name, id(self), self.label_text
             if len(self.label.get_label()) > len(self.label_text):
                 self.label.set_label(self.label_text)
 
@@ -246,7 +250,7 @@ class InvalidField(Exception):
 
 
 class FaultyMixin(EditMixin):
-    def __init__(self, invalid_message, attribute_name=None, show_popup=True):
+    def __init__(self, attribute_name=None, show_popup=True, invalid_message=None):
         EditMixin.__init__(self, attribute_name, show_popup)
         self.invalid_message = invalid_message
 

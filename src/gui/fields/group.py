@@ -19,7 +19,7 @@
 #
 # --
 
-from elementary import Group
+from elementary import Group, TabulateComposed
 from mixin import EditMixin, ambiguous, insensitive
 
 import gtk
@@ -33,43 +33,47 @@ RADIO_BUTTONS = 2
 
 
 class Table(Group):
-    self_containing = True
-
-    def __init__(self, fields, label_text=None, table_border_width=6, buttons=NO_BUTTONS):
-        Group.__init__(self, fields, label_text)
-        self.table_border_width = table_border_width
+    def __init__(self, fields, label_text=None, border_width=12, buttons=NO_BUTTONS):
+        Group.__init__(self, fields, label_text, border_width)
         self.buttons = buttons
 
     def create_widgets(self):
         Group.create_widgets(self)
-        self.container = gtk.Table(1, 3)
-        self.container.set_row_spacings(6)
-        self.container.set_col_spacings(6)
-        self.container.set_border_width(self.table_border_width)
         last_row = 0
         first_edit = 0
-        if self.label is not None:
-            self.container.resize(1, self.container.get_property("n-columns")+1)
-            self.container.attach(self.label, 0, 3, 0, 1, xoptions=gtk.FILL, yoptions=0)
+        if self.buttons == NO_BUTTONS:
+            self.data_widget = gtk.Table(1, 3)
+        else:
+            self.data_widget = gtk.Table(1, 4)
             first_edit += 1
-            last_row += 1
-        if self.buttons != NO_BUTTONS:
-            self.container.resize(1, self.container.get_property("n-columns")+1)
-            first_edit += 1
+        self.data_widget.set_row_spacings(6)
+        self.data_widget.set_col_spacings(6)
+
         first_radio_button = None
+
         for field in self.fields:
             if field.get_active():
-                self.container.resize(last_row + 1, 3)
-                container_left = first_edit
-                container_right = first_edit + 3
-                if not field.self_containing:
-                    if field.label is not None:
-                        self.container.attach(field.label, first_edit, first_edit+1, last_row, last_row+1, xoptions=gtk.FILL, yoptions=0)
-                        container_left += 1
-                    if isinstance(field, EditMixin) and field.bu_popup is not None:
-                        container_right -= 1
-                        self.container.attach(field.bu_popup, first_edit+2, first_edit+3, last_row, last_row+1, xoptions=0, yoptions=0)
-                self.container.attach(field.container, container_left, container_right, last_row, last_row+1, xoptions=field.xoptions, yoptions=field.yoptions)
+                data_widget_left = first_edit
+                data_widget_right = first_edit + 3
+                if field.high_widget:
+                    container = field.get_widgets_short_container()
+                    container.set_border_width(0)
+                    self.data_widget.attach(
+                        container,
+                        data_widget_left, data_widget_right,
+                        last_row, last_row+1,
+                        xoptions=gtk.EXPAND|gtk.FILL, yoptions=0
+                    )
+                else:
+                    label, data_widget, bu_popup = field.get_widgets_separate()
+                    if label is not None:
+                        self.data_widget.attach(label, first_edit, first_edit+1, last_row, last_row+1, xoptions=gtk.FILL, yoptions=0)
+                        data_widget_left += 1
+                    if bu_popup is not None:
+                        self.data_widget.attach(field.bu_popup, first_edit+2, first_edit+3, last_row, last_row+1, xoptions=0, yoptions=0)
+                        data_widget_right -= 1
+                    self.data_widget.attach(field.data_widget, data_widget_left, data_widget_right, last_row, last_row+1, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
+
                 if self.buttons == CHECK_BUTTONS:
                     toggle_button = gtk.CheckButton()
                 elif self.buttons == RADIO_BUTTONS:
@@ -79,15 +83,17 @@ class Table(Group):
                     else:
                         toggle_button = gtk.RadioButton(first_radio_button)
                 if self.buttons != NO_BUTTONS:
-                    self.container.attach(toggle_button, first_edit-1, first_edit, last_row, last_row+1, xoptions=gtk.FILL, yoptions=gtk.FILL)
+                    self.data_widget.attach(toggle_button, 0, 1, last_row, last_row+1, xoptions=gtk.FILL, yoptions=gtk.FILL)
                     field.old_representation = ambiguous
                     field.sensitive_button = toggle_button
                     toggle_button.connect("toggled", self.on_button_toggled, field)
                 last_row += 1
-        if self.label is not None:
-            da = gtk.DrawingArea()
-            da.set_size_request(10, 0)
-            self.container.attach(da, 0, 1, 1, last_row+1, xoptions=0)
+
+    def destroy_widgets(self):
+        if self.buttons != NO_BUTTONS:
+            for field in self.fields:
+                field.sensitive_button.destroy()
+                field.sensitive_button = None
 
     def read(self, instance=None):
         Group.read(self, instance=None)
@@ -114,38 +120,33 @@ class Table(Group):
 
 
 class HBox(Group):
-    self_containing = True
-
-    def __init__(self, fields, border_width=6):
-        Group.__init__(self, fields, "")
-        self.border_width = border_width
+    def __init__(self, fields, label_text=None, border_width=6):
+        Group.__init__(self, fields, label_text, border_width)
 
     def create_widgets(self):
         Group.create_widgets(self)
-        self.container = gtk.HBox()
-        self.container.set_spacing(6)
-        self.container.set_border_width(self.border_width)
+        self.data_widget = gtk.HBox()
+        self.data_widget.set_spacing(6)
         for field in self.fields:
             if field.get_active():
-                assert field.self_containing, "For the HBox, all the fields must be self-containing"
-                self.container.pack_start(field.container)
+                self.data_widget.pack_start(field.get_widgets_short_container())
 
 
 class Notebook(Group):
-    def __init__(self, named_fields, label_text=None):
-        Group.__init__(self, [field for (name, field) in named_fields], label_text)
+    def __init__(self, named_fields, label_text=None, border_width=6):
+        Group.__init__(self, [field for (name, field) in named_fields], label_text, border_width)
         self.named_fields = named_fields
-        self.self_containing = True
 
     def create_widgets(self):
         Group.create_widgets(self)
-        self.container = gtk.Notebook()
-        self.container.set_border_width(6)
+        self.data_widget = gtk.Notebook()
         for name, field in self.named_fields:
-            assert field.self_containing
             if field.get_active():
-                self.container.append_page(field.container, gtk.Label(name))
+                self.data_widget.append_page(
+                    field.get_widgets_short_container(),
+                    gtk.Label(name)
+                )
 
     def show(self, field):
         Group.show(self, field)
-        self.container.set_current_page(self.container.page_num(field.container))
+        self.data_widget.set_current_page(self.data_widget.page_num(field.container))

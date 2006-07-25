@@ -25,7 +25,10 @@ from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property, Dial
 from zeobuilder.nodes.elementary import GLContainerBase
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.helpers import FrameAxes
+from zeobuilder.actions.composed import ImmediateWithMemory
+from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui import load_image
+from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.transformations import Translation
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
@@ -34,7 +37,7 @@ from molmod.unit_cell import UnitCell
 from molmod.units import angstrom
 
 from OpenGL.GL import *
-import numpy
+import numpy, gtk
 
 import copy
 
@@ -83,9 +86,19 @@ class PeriodicBox(UnitCell):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Unit cell", (5, 0), fields.composed.CellMatrix("Invalid unit cell dimensions", "Cell dimensions", "cell", table_border_width=0)),
-        DialogFieldInfo("Unit cell", (5, 1), fields.composed.CellActive("", "Active directions", "cell_active", table_border_width=0)),
-        DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton("Show periodic box (if active)", "box_visible"))
+        DialogFieldInfo("Unit cell", (5, 0), fields.composed.CellMatrix(
+            label_text="Cell dimensions", 
+            attribute_name="cell", 
+            invalid_message="Invalid unit cell dimensions", 
+        )),
+        DialogFieldInfo("Unit cell", (5, 1), fields.composed.CellActive(
+            label_text="Active directions", 
+            attribute_name="cell_active", 
+        )),
+        DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
+            label_text="Show periodic box (if active)", 
+            attribute_name="box_visible",
+        ))
     ])
 
     #
@@ -319,7 +332,11 @@ class Universe(GLPeriodicContainer, FrameAxes):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Unit cell", (5, 2), fields.composed.Repetitions("Please enter valid repetitions", "Repetitions", "repetitions", table_border_width=0))
+        DialogFieldInfo("Unit cell", (5, 2), fields.composed.Repetitions(
+            label_text="Repetitions", 
+            attribute_name="repetitions",
+            invalid_message="Please enter valid repetitions", 
+        ))
     ])
 
     #
@@ -369,7 +386,54 @@ class Universe(GLPeriodicContainer, FrameAxes):
         FrameAxes.extend_bounding_box(self, self.bounding_box)
 
 
+class UnitCellToCluster(ImmediateWithMemory):
+    description = "Convert the unit cell to a cluster"
+    menu_info = MenuInfo("default/_Object:special", "_Unit cell to cluster", order=(0, 4, 2, 0))
+
+    cuttoff = FieldsDialogSimple(
+        "Unit cell to cluster",
+        fields.group.Table(
+            fields=[
+                fields.composed.Interval(
+                    attribute_name="interval_%s" % ridge.lower(),
+                    invalid_message="Please enter a valid interval for the fractional coordinates of ridge %s" % ridge,
+                    interval_name=ridge,
+                    length=False,
+                )
+                for ridge in ["A", "B", "C"]
+            ], 
+            buttons=fields.group.CHECK_BUTTONS, 
+            label_text="The cutoff region in fractional coordinates:"
+        ),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+    )
+
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters=None): return False
+        # B) validating
+        node = context.application.cache.node
+        if not isinstance(node, UnitCell): return False
+        if sum(node.cell_active) == 0: return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def ask_parameters(self):
+        self.parameters.interval_a = numpy.array([-0.5, 0.5], float)
+        self.parameters.interval_b = numpy.array([-0.5, 0.5], float)
+        self.parameters.interval_c = numpy.array([-0.5, 0.5], float)
+        if self.cuttoff.run(self.parameters) != gtk.RESPONSE_OK:
+            self.parameters.clear()
+
+    def do(self):
+        pass
+
 
 nodes = {
     "Universe": Universe
+}
+
+actions = {
+    "UnitCellToCluster": UnitCellToCluster
 }

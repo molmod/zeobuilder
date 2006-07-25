@@ -25,20 +25,17 @@ __all__ = ["Single", "Multiple"]
 
 
 class Single(object):
-    # self_containing indicates wether the self.container also contains
-    # the label or not.
-    self_containing = True
-    # this options are applied on the container when attached to a table
-    xoptions = gtk.FILL | gtk.EXPAND
-    yoptions = 0
+    high_widget = False
 
-    def __init__(self, label_text=None):
+    def __init__(self, label_text=None, border_width=6):
         self.label_text = label_text
-        self.container = None
+        self.data_widget = None
         self.label = None
+        self.container = None
         self.instance = None
         self.instances = None
         self.parent = None
+        self.border_width = border_width
 
     def get_active(self):
         return self.instance is not None or self.instances is not None
@@ -60,6 +57,57 @@ class Single(object):
         self.instances = instances
         self.create_widgets()
 
+    def get_widgets_separate(self):
+        assert self.data_widget is not None
+        return self.label, self.data_widget, None
+
+    def get_widgets_flat_container(self, show_popup=True):
+        label, data_widget, bu_popup = self.get_widgets_separate()
+        if not show_popup:
+            bu_popup = None
+        if label is None and bu_popup is None:
+            container = data_widget
+        else:
+            container = gtk.HBox()
+            container.set_spacing(6)
+            if label is not None:
+                container.pack_start(label)
+            container.pack_start(data_widget)
+            if bu_popup is not None:
+                container.pack_start(bu_popup)
+        self.container = container
+        self.container.set_border_width(self.border_width)
+        return container
+
+    def get_widgets_short_container(self, show_popup=True):
+        label, data_widget, bu_popup = self.get_widgets_separate()
+        if not show_popup:
+            bu_popup = None
+        if label is None and bu_popup is None:
+            container = data_widget
+        else:
+            container = gtk.VBox()
+            container.set_spacing(6)
+            if label is not None and bu_popup is not None:
+                hbox = gtk.HBox()
+                hbox.set_spacing(6)
+                hbox.pack_start(label)
+                hbox.pack_start(bu_popup, expand=False)
+                container.pack_start(hbox)
+            elif label is not None:
+                container.pack_start(label)
+            elif bu_popup is not None:
+                container.pack_start(bu_popup, expand=False)
+            hbox = gtk.HBox()
+            l = gtk.Label()
+            l.set_size_request(10, 1)
+            hbox.pack_start(l, expand=False)
+            hbox.pack_start(data_widget)
+            container.pack_start(hbox)
+        self.container = container
+        self.container.set_border_width(self.border_width)
+        return container
+
     def applicable(self, instance):
         raise NotImplementedError
 
@@ -70,12 +118,16 @@ class Single(object):
             self.label.set_use_markup(True)
 
     def destroy_widgets(self):
-        if self.label is not None:
-            self.label.destroy()
-            self.label = None
         if self.container is not None:
             self.container.destroy()
-            self.container = None
+        else:
+            if self.label is not None:
+                self.label.destroy()
+            if self.data_widget is not None:
+                self.data_widget.destroy()
+        self.data_widget = None
+        self.label = None
+        self.container = None
         self.instance = None
         self.instances = None
 
@@ -87,8 +139,8 @@ class Single(object):
 
 
 class Multiple(Single):
-    def __init__(self, fields, label_text=None):
-        Single.__init__(self, label_text)
+    def __init__(self, fields, label_text=None, border_width=6):
+        Single.__init__(self, label_text, border_width)
         self.fields = fields
         for field in self.fields:
             field.parent = self

@@ -70,8 +70,14 @@ class GLMixin(gobject.GObject):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Markup", (1, 2), fields.edit.CheckButton("Visible (also hides children)", "visible")),
-        DialogFieldInfo("Basic", (0, 3), fields.read.BBox("Bounding box", "bounding_box")),
+        DialogFieldInfo("Markup", (1, 2), fields.edit.CheckButton(
+            label_text="Visible (also hides children)",
+            attribute_name="visible",
+        )),
+        DialogFieldInfo("Basic", (0, 3), fields.read.BBox(
+            label_text="Bounding box",
+            attribute_name="bounding_box",
+        )),
     ])
 
     #
@@ -307,8 +313,16 @@ class GLTransformationMixin(GLMixin):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Translation", (3, 0), fields.composed.Translation("Make sure that the fields that describe the translation, are correct.", "Translation with vector t", "transformation", table_border_width=0)),
-        DialogFieldInfo("Rotation", (4, 0), fields.composed.Rotation("Make sure that the fields that describe the rotation, are correct.", "Rotation around axis n", "transformation", table_border_width=0)),
+        DialogFieldInfo("Translation", (3, 0), fields.composed.Translation(
+            label_text="Translation with vector t",
+            attribute_name="transformation",
+            invalid_message="Make sure that the fields that describe the translation, are correct.",
+        )),
+        DialogFieldInfo("Rotation", (4, 0), fields.composed.Rotation(
+            label_text="Rotation around axis n",
+            attribute_name="transformation",
+            invalid_message="Make sure that the fields that describe the rotation, are correct.",
+        )),
         DialogFieldInfo("Rotation", (4, 1), fields.read.Handedness()),
     ])
 

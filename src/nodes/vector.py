@@ -72,7 +72,9 @@ class Vector(GLReferentBase):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Basic", (0, 2), fields.read.VectorLength("Vector length")),
+        DialogFieldInfo("Basic", (0, 2), fields.read.VectorLength(
+            label_text="Vector length"
+        )),
     ])
 
     #

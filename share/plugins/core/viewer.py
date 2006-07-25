@@ -55,19 +55,50 @@ class ViewerConfiguration(Immediate):
 
     viewer_configuration = FieldsDialogSimple(
         "Viewer configuration",
-         fields.group.HBox([
+         fields.group.HBox(fields=[
             fields.group.Table([
-                fields.composed.Translation("Invalid rotation center.", "Rotation center", "center"),
-                fields.composed.Rotation("Invalid model rotation.", "Model rotation", "rotation"),
+                fields.composed.Translation(
+                    label_text="Rotation center", 
+                    attribute_name="center",
+                    invalid_message="Invalid rotation center.", 
+                ),
+                fields.composed.Rotation(
+                    label_text="Model rotation", 
+                    attribute_name="rotation",
+                    invalid_message="Invalid model rotation.", 
+                ),
             ]),
             fields.group.Table([
-                fields.composed.Translation("Invalid viewer position.", "Viewer position", "viewer"),
-                fields.faulty.Length("Invalid window size.", "Window size", "window_size", low=0.0, low_inclusive=False),
-                fields.faulty.Length("Invalid window depth.", "Window depth", "window_depth", low=0.0, low_inclusive=False),
-                fields.faulty.Float("Invalid eye opening angle.", "Opening angle", "opening_angle", low=0, low_inclusive=True, high=90, high_inclusive=False, show_popup=False),
-                #fields.faulty.Float("Invalid near/window ratio.", "Near/Window ratio", "near_over_window", low=0.0, low_inclusive=False),
-                #fields.faulty.Float("Invalid far/near ratio.", "Far/Near ratio", "far_over_near", low=1.0, low_inclusive=False),
-            ])
+                fields.composed.Translation(
+                    label_text="Viewer position", 
+                    attribute_name="viewer",
+                    invalid_message="Invalid viewer position.", 
+                ),
+                fields.faulty.Length(
+                    label_text="Window size", 
+                    attribute_name="window_size", 
+                    invalid_message="Invalid window size.", 
+                    low=0.0, 
+                    low_inclusive=False,
+                ),
+                fields.faulty.Length(
+                    label_text="Window depth", 
+                    attribute_name="window_depth", 
+                    invalid_message="Invalid window depth.", 
+                    low=0.0, 
+                    low_inclusive=False,
+                ),
+                fields.faulty.Float(
+                    label_text="Opening angle", 
+                    attribute_name="opening_angle", 
+                    invalid_message="Invalid eye opening angle.", 
+                    low=0, 
+                    low_inclusive=True, 
+                    high=90, 
+                    high_inclusive=False, 
+                    show_popup=False,
+                ),
+            ]),
         ]),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )

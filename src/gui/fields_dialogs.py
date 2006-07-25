@@ -53,7 +53,7 @@ class FieldsDialogBase(object):
         # build up the dialog
         self.init_widgets(data)
         self.create_dialog()
-        self.dialog.vbox.add(self.main_field.container)
+        self.dialog.vbox.add(self.main_field.get_widgets_short_container())
         self.main_field.container.show_all()
         self.valid = True
         # fill in the fields

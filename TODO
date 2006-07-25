@@ -7,6 +7,11 @@ TODO LISTS
 TODO core
 ---------
 
+### Bugs
+
+    * DragActions use model.selected_nodes
+
+
 ### New/Updated actions
 
     * UnitCellToCluster (with number of repetitions)
@@ -19,7 +24,6 @@ TODO core
     * default values for fieldsdialog and last used values
     * A history for the selection filters (saved in a config file)
     * Read-only-fields, that can be coppied in to clipboard
-    * A generic read only field (apply to the interpretation of a reference)
 
 
 ### New/updated dialog fields

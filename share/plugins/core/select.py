@@ -134,21 +134,25 @@ class SelectChildrenByExpression(ImmediateWithMemory):
     select_by_expression = FieldsDialogSimple(
         "Selection rules",
         fields.group.Table(
-            [
+            fields=[
                 fields.edit.ComboBox(
-                    [
+                    choices=[
                         (SELECT_PLAIN, "No"),
                         (SELECT_RECURSIVE, "Yes"),
                         (SELECT_RECURSIVE_IF_MATCH, "Yes if match")
-                    ], "Select matching children of an node",
-                    "recursive",
+                    ],
+                    label_text="Select matching children of an node",
+                    attribute_name="recursive",
                     show_popup=False
                 ),
                 fields.edit.TextView(
-                    "Expression", "expression", border_width=0, show_popup=False
+                    label_text="Expression",
+                    attribute_name="expression", 
+                    show_popup=False
                 )
             ],
-        label_text="Selection rules"),
+            label_text="Selection rules"
+        ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
@@ -287,9 +291,17 @@ class EditSelectionFilter(Immediate):
 
     selection_filter = FieldsDialogSimple(
         "Selection filter",
-        fields.group.Table([
-            fields.edit.CheckButton("Filter active", "filter_active", show_popup=False),
-            fields.edit.TextView("Filter expression", "filter_expression", show_popup=False, border_width=0)
+        fields.group.Table(fields=[
+            fields.edit.CheckButton(
+                label_text="Filter active", 
+                attribute_name="filter_active", 
+                show_popup=False,
+            ),
+            fields.edit.TextView(
+                label_text="Filter expression", 
+                attribute_name="filter_expression", 
+                show_popup=False,
+            )
         ]),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
