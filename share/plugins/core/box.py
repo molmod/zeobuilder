@@ -58,7 +58,7 @@ class Box(GLGeometricBase, ColorMixin):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Geometry", (2, 6), fields.composed.Box("Invalid box dimensions.", "Box size", "size", table_border_width=0))
+        DialogFieldInfo("Geometry", (2, 6), fields.composed.BoxSize("Invalid box dimensions.", "Box size", "size", table_border_width=0))
     ])
 
     #

@@ -20,7 +20,7 @@
 # --
 
 from base import Single, Multiple
-from mixin import ReadMixin, EditMixin, FaultyMixin, InvalidField, ambiguous
+from mixin import ReadMixin, EditMixin, FaultyMixin, InvalidField, ambiguous, insensitive
 
 import gtk
 
@@ -75,6 +75,10 @@ class Composed(Multiple, FaultyMixin):
     mutable_attribute = True
 
     def __init__(self, fields, invalid_message, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False, table_border_width=6, vertical=True):
+        for field in fields:
+            field.on_widget_changed = self.on_widget_changed
+            field.update_label = self.update_label
+            field.changed = self.changed
         Multiple.__init__(self, fields, label_text)
         FaultyMixin.__init__(self, invalid_message, attribute_name, show_popup)
         self.show_field_popups = show_field_popups
@@ -85,11 +89,13 @@ class Composed(Multiple, FaultyMixin):
         return FaultyMixin.applicable(self, instance)
 
     def create_widgets(self):
+        #def on_widget_changed_substitude(widget):
+        #    self.on_widget_change(widget)
+
         for field in self.fields:
             # to make the subfields also believe they are active
             field.instance = self.instance
             field.instances = self.instances
-            field.on_widget_changed = self.on_widget_changed
             field.create_widgets()
         Multiple.create_widgets(self)
         FaultyMixin.create_widgets(self)
@@ -170,34 +176,46 @@ class Composed(Multiple, FaultyMixin):
         FaultyMixin.write_multiplex(self)
 
     def check(self):
-        if self.get_active() != None:
+        if self.get_active():
             try:
                 Multiple.check(self)
             except InvalidField, e:
-                e.prepend_message(self.invalid_message)
+                if self.invalid_message is not None:
+                    e.prepend_message(self.invalid_message)
                 raise e
 
     def convert_to_representation(self, value):
-        return tuple([field.convert_to_representation(value[index]) for index, field in enumerate(self.fields)])
+        return tuple(field.convert_to_representation(value[index]) for index, field in enumerate(self.fields))
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous:
+        if representation == ambiguous or representation == insensitive:
             for field in self.fields:
-                field.write_to_widget(ambiguous, original)
+                field.write_to_widget(representation, original)
         else:
             for index, field in enumerate(self.fields):
                 field.write_to_widget(representation[index], original)
         FaultyMixin.write_to_widget(self, representation, original)
 
     def read_from_widget(self):
-        result = tuple([field.read_from_widget() for field in self.fields])
-        if ambiguous in result:
-            return ambiguous
+        result = tuple(field.read_from_widget() for field in self.fields)
+        if insensitive in result:
+            return insensitive # if one is insensitive, they all are. We know for sure.
+        elif ambiguous in result:
+            # if one is ambiguous, we have to test the all to be sure.
+            all_ambiguous = True
+            for item in result:
+                if item != ambiguous:
+                    all_ambiguous = False
+                    break
+            if all_ambiguous:
+                return ambiguous
+            else:
+                return result
         else:
             return result
 
     def convert_to_value(self, representation):
-        return tuple([field.convert_to_value(representation[index]) for index, field in enumerate(self.fields)])
+        return tuple(field.convert_to_value(representation[index]) for index, field in enumerate(self.fields))
 
 
 class Group(Multiple):

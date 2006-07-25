@@ -20,19 +20,25 @@
 # --
 
 from elementary import Group
-from mixin import EditMixin
+from mixin import EditMixin, ambiguous, insensitive
 
 import gtk
 
 __all__ = ["Table", "Notebook"]
 
 
+NO_BUTTONS = 0
+CHECK_BUTTONS = 1
+RADIO_BUTTONS = 2
+
+
 class Table(Group):
     self_containing = True
 
-    def __init__(self, fields, label_text=None, table_border_width=6):
+    def __init__(self, fields, label_text=None, table_border_width=6, buttons=NO_BUTTONS):
         Group.__init__(self, fields, label_text)
         self.table_border_width = table_border_width
+        self.buttons = buttons
 
     def create_widgets(self):
         Group.create_widgets(self)
@@ -40,14 +46,17 @@ class Table(Group):
         self.container.set_row_spacings(6)
         self.container.set_col_spacings(6)
         self.container.set_border_width(self.table_border_width)
+        last_row = 0
+        first_edit = 0
         if self.label is not None:
-            self.container.resize(1, 4)
+            self.container.resize(1, self.container.get_property("n-columns")+1)
             self.container.attach(self.label, 0, 3, 0, 1, xoptions=gtk.FILL, yoptions=0)
-            first_edit = 1
-            last_row = 1
-        else:
-            last_row = 0
-            first_edit = 0
+            first_edit += 1
+            last_row += 1
+        if self.buttons != NO_BUTTONS:
+            self.container.resize(1, self.container.get_property("n-columns")+1)
+            first_edit += 1
+        first_radio_button = None
         for field in self.fields:
             if field.get_active():
                 self.container.resize(last_row + 1, 3)
@@ -61,11 +70,49 @@ class Table(Group):
                         container_right -= 1
                         self.container.attach(field.bu_popup, first_edit+2, first_edit+3, last_row, last_row+1, xoptions=0, yoptions=0)
                 self.container.attach(field.container, container_left, container_right, last_row, last_row+1, xoptions=field.xoptions, yoptions=field.yoptions)
+                if self.buttons == CHECK_BUTTONS:
+                    toggle_button = gtk.CheckButton()
+                elif self.buttons == RADIO_BUTTONS:
+                    if first_radio_button is None:
+                        toggle_button = gtk.RadioButton()
+                        first_radio_button = toggle_button
+                    else:
+                        toggle_button = gtk.RadioButton(first_radio_button)
+                    #toggle_button.remove(toggle_button.get_child())
+                    toggle_button.set_alignment(1.0, 0.0)
+                    self.container.attach(toggle_button, first_edit-1, first_edit, last_row, last_row+1, xoptions=gtk.FILL, yoptions=gtk.FILL)
+                    toggle_button.connect("toggled", self.on_button_toggled, field)
+                    field.old_representation = ambiguous
+                    field.sensitive_button = toggle_button
                 last_row += 1
         if self.label is not None:
             da = gtk.DrawingArea()
             da.set_size_request(10, 0)
             self.container.attach(da, 0, 1, 1, last_row+1, xoptions=0)
+
+    def read(self, instance=None):
+        Group.read(self, instance=None)
+        if self.buttons != NO_BUTTONS:
+            for field in self.fields:
+                field.sensitive_button.set_active(field.read_from_widget() != insensitive)
+
+    def on_button_toggled(self, toggle_button, field):
+        if toggle_button.get_active():
+            #print "making sensitive"
+            #print "  current_representation =", field.read_from_widget()
+            if field.read_from_widget() == insensitive:
+                #print "  resetting to old_representation =", field.old_representation
+                field.write_to_widget(field.old_representation)
+        else:
+            #print "making insensitive"
+            old_representation = field.read_from_widget()
+            #print "  old_representation =", old_representation
+            if old_representation != insensitive:
+                #print "  saving old_representation"
+                field.old_representation = field.read_from_widget()
+            #print "  setting representation = %s" % insensitive
+            field.write_to_widget(insensitive)
+
 
 class HBox(Group):
     self_containing = True
@@ -83,6 +130,7 @@ class HBox(Group):
             if field.get_active():
                 assert field.self_containing, "For the HBox, all the fields must be self-containing"
                 self.container.pack_start(field.container)
+
 
 class Notebook(Group):
     def __init__(self, named_fields, label_text=None):

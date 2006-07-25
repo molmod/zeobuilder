@@ -20,7 +20,7 @@
 # --
 
 from elementary import Edit
-from mixin import ambiguous
+from mixin import ambiguous, insensitive
 from molmod.data import periodic
 from zeobuilder.conversion import express_measure
 from molmod.units import MASS, LENGTH
@@ -52,18 +52,26 @@ class CheckButton(Edit):
         Edit.destroy_widgets(self)
 
     def read_from_widget(self):
+        if not self.check_button.get_property("sensitive"):
+            return insensitive
         if self.check_button.get_inconsistent():
             return ambiguous
         else:
             return self.check_button.get_active()
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous:
+        if representation == insensitive:
             self.check_button.set_active(False)
             self.check_button.set_inconsistent(True)
+            self.check_button.set_sensitive(False)
         else:
-            self.check_button.set_inconsistent(False)
-            self.check_button.set_active(representation)
+            self.check_button.set_sensitive(True)
+            if representation == ambiguous:
+                self.check_button.set_active(False)
+                self.check_button.set_inconsistent(True)
+            else:
+                self.check_button.set_inconsistent(False)
+                self.check_button.set_active(representation)
         Edit.write_to_widget(self, representation, original)
 
     def on_cb_clicked(self, widget):
@@ -102,25 +110,32 @@ class ComboBox(Edit):
         Edit.destroy_widgets(self)
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous:
-            iter = self.combo_model.get_iter_first()
+        if representation == insensitive:
+            self.combo_box.set_sensitive(False)
         else:
-            iter = self.combo_model.get_iter(representation)
-        self.combo_box.set_active_iter(iter)
+            self.combo_box.set_sensitive(True)
+            if representation == ambiguous:
+                iter = self.combo_model.get_iter_first()
+            else:
+                iter = self.combo_model.get_iter(representation)
+            self.combo_box.set_active_iter(iter)
         Edit.write_to_widget(self, representation, original)
 
     def convert_to_representation(self, value):
         return self.paths.get(value)
 
     def read_from_widget(self):
-        iter = self.combo_box.get_active_iter()
-        if iter is None:
-            return ambiguous
-        representation = self.combo_model.get_path(iter)
-        if self.ambiguous and representation == self.combo_model.get_path(self.combo_model.get_iter_first()):
-            return ambiguous
+        if not self.combo_box.get_property("sensitive"):
+            return insensitive
         else:
-            return representation
+            iter = self.combo_box.get_active_iter()
+            if iter is None:
+                return ambiguous
+            representation = self.combo_model.get_path(iter)
+            if self.ambiguous and representation == self.combo_model.get_path(self.combo_model.get_iter_first()):
+                return ambiguous
+            else:
+                return representation
 
     def convert_to_value(self, representation):
         return self.combo_model.get_value(self.combo_model.get_iter(representation), 0)
@@ -180,25 +195,32 @@ class List(Edit):
         Edit.destroy_widgets(self)
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous:
-            iter = self.list_store.get_iter_first()
+        if representation == insensitive:
+            self.list_view.set_sensitive(False)
         else:
-            iter = self.list_store.get_iter(representation)
-        self.list_selection.select_iter(iter)
+            self.list_view.set_sensitive(True)
+            if representation == ambiguous:
+                iter = self.list_store.get_iter_first()
+            else:
+                iter = self.list_store.get_iter(representation)
+            self.list_selection.select_iter(iter)
         Edit.write_to_widget(self, representation, original)
 
     def convert_to_representation(self, value):
         return self.paths.get(id(value))
 
     def read_from_widget(self):
-        model, iter = self.list_selection.get_selected()
-        if iter is None:
-            return ambiguous
-        representation = self.list_store.get_path(iter)
-        if self.ambiguous and representation == self.list_store.get_path(self.list_store.get_iter_first()):
-            return ambiguous
+        if not self.list_view.get_property("sensitive"):
+            return insensitive
         else:
-            return representation
+            model, iter = self.list_selection.get_selected()
+            if iter is None:
+                return ambiguous
+            representation = self.list_store.get_path(iter)
+            if self.ambiguous and representation == self.list_store.get_path(self.list_store.get_iter_first()):
+                return ambiguous
+            else:
+                return representation
 
     def convert_to_value(self, representation):
         return self.list_store.get_value(self.list_store.get_iter(representation), 0)
@@ -279,18 +301,26 @@ class Element(Edit):
             if self.bu_former == widget:
                 widget.set_active(True)
 
-    def read_from_widget(self):
-        return self.number
-
     def write_to_widget(self, representation, original=False):
         self.number = None
         self.bu_former = None
-        for bu in self.buttons.itervalues():
-            bu.set_active(gtk.FALSE)
-        if representation in self.buttons.keys():
+        if representation == insensitive:
+            for bu in self.buttons.itervalues():
+                bu.set_sensitive(False)
+        else:
+            for bu in self.buttons.itervalues():
+                bu.set_sensitive(True)
+                bu.set_active(gtk.FALSE)
             self.bu_former = self.buttons[representation]
-            self.buttons[representation].set_active(True)
+            if representation in self.buttons.keys():
+                self.buttons[representation].set_active(True)
         Edit.write_to_widget(self, representation, original)
+
+    def read_from_widget(self):
+        if self.number is None:
+            return insensitive
+        else:
+            return self.number
 
 
 class TextView(Edit):
@@ -337,8 +367,12 @@ class TextView(Edit):
             return value
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous: representation = ""
-        self.text_buffer.set_text(representation)
+        if representation == insensitive:
+            self.text_view.set_sensitive(False)
+        else:
+            self.text_view.set_sensitive(True)
+            if representation == ambiguous: representation = ""
+            self.text_buffer.set_text(representation)
         Edit.write_to_widget(self, representation, original)
 
     def convert_to_value(self, representation):
@@ -348,12 +382,15 @@ class TextView(Edit):
             return representation
 
     def read_from_widget(self):
-        start, end = self.text_buffer.get_bounds()
-        representation = self.text_buffer.get_slice(start, end)
-        if not self.line_breaks:
-            representation = representation.replace("\n", " ")
-        if representation == "":
-            return ambiguous
+        if not self.text_view.get_property("sensitive"):
+            return insensitive
         else:
-            return representation
+            start, end = self.text_buffer.get_bounds()
+            representation = self.text_buffer.get_slice(start, end)
+            if not self.line_breaks:
+                representation = representation.replace("\n", " ")
+            if representation == "":
+                return ambiguous
+            else:
+                return representation
 

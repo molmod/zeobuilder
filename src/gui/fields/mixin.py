@@ -22,55 +22,79 @@
 
 import gtk
 
-__all__ = ["ReadMixin", "EditMixin", "InvalidField", "FaultyMixin"]
+__all__ = [
+    "ReadMixin", "EditMixin", "InvalidField", "FaultyMixin",
+    "SpecialState", "ambiguous", "insensitive"
+]
 
 
 changed_indicator = "<span foreground=\"red\">*</span>"
 
 
-class Ambiguous(object):
-    def __str__(self):
-        return "(ambiguous state)"
+class SpecialState(object):
+    pass
 
+
+class Ambiguous(SpecialState):
+    def __str__(self):
+        return ":::ambiguous:::"
 
 ambiguous = Ambiguous()
 
 
+class Insensitive(SpecialState):
+    def __str__(self):
+        return ":::insensitive:::"
+
+insensitive = Insensitive()
+
+
+class Attribute(object):
+    def __get__(self, owner, ownertype):
+        if owner.attribute_name is None:
+            return owner.current_instance
+        else:
+            return owner.current_instance.__dict__[owner.attribute_name]
+
+    def __set__(self, owner, value):
+        if owner.attribute_name is None:
+            raise AttributeError("Can not assign to an attribute when no attribute_name is given.")
+        else:
+            owner.current_instance.__dict__[owner.attribute_name] = value
+
 
 class ReadMixin(object):
-    mutable_attribute = False
+    attribute = Attribute()
 
     def __init__(self, attribute_name=None):
-        assert self.mutable_attribute or attribute_name is not None, "%s requires an immutable attribute." % self.__class__
         self.attribute_name = attribute_name
 
     def applicable(self, instance):
         #print self.attribute_name
-        if (self.attribute_name is not None) and (self.attribute_name not in instance.__dict__):
+        if self.attribute_name not in instance.__dict__:
             return False
         else:
-            if self.mutable_attribute:
-                if self.attribute_name is None:
-                    return self.applicable_attribute(instance)
-                else:
-                    return self.applicable_attribute(eval("instance.%s" % self.attribute_name))
+            self.current_instance = instance
+            if self.attribute is None:
+                result = True
             else:
-                return self.attribute_name is not None
+                result = self.applicable_attribute()
+            del self.current_instance
+            return result
 
-    def applicable_attribute(self, attribute):
-        raise NotImplementedError
+    def applicable_attribute(self):
+        return True
 
     def read(self, instance=None):
         if self.instance is not None:
             if instance is None: instance = self.instance
-            representation = self.convert_to_representation(self.read_from_instance(instance))
-            self.write_to_widget(representation, True)
+            self.write_to_widget(self.convert_to_representation_wrap(self.read_from_instance(instance)), True)
 
     def read_multiplex(self):
         if self.instances is not None:
-            common = self.convert_to_representation(self.read_from_instance(self.instances[0]))
+            common = self.convert_to_representation_wrap(self.read_from_instance(self.instances[0]))
             for instance in self.instances[1:]:
-                if common != self.convert_to_representation(self.read_from_instance(instance)):
+                if common != self.convert_to_representation_wrap(self.read_from_instance(instance)):
                     self.set_ambiguous_capability(True)
                     self.write_to_widget(ambiguous, True)
                     return
@@ -93,16 +117,20 @@ class ReadMixin(object):
         return []
 
     def read_from_instance(self, instance):
-        if self.mutable_attribute:
-            if self.attribute_name == None:
-                return self.read_from_attribute(instance)
-            else:
-                return self.read_from_attribute(eval("instance.%s" % self.attribute_name))
-        else:
-            return eval("instance.%s" % self.attribute_name)
+        self.current_instance = instance
+        if self.attribute is None: return None
+        result = self.read_from_attribute()
+        del self.current_instance
+        return result
 
-    def read_from_attribute(self, attribute):
-        return attribute
+    def read_from_attribute(self):
+        return self.attribute
+
+    def convert_to_representation_wrap(self, value):
+        if value is None:
+            return insensitive
+        else:
+            return self.convert_to_representation(value)
 
     def convert_to_representation(self, value):
         return value
@@ -138,16 +166,16 @@ class EditMixin(ReadMixin):
         if self.instance != None and (self.changed() or instance!=None):
             representation = self.read_from_widget()
             if instance == None:
-                self.write_to_instance(self.convert_to_value(representation), self.instance)
+                self.write_to_instance(self.convert_to_value_wrap(representation), self.instance)
                 #self.read()
             else:
-                self.write_to_instance(self.convert_to_value(representation), instance)
+                self.write_to_instance(self.convert_to_value_wrap(representation), instance)
 
     def write_multiplex(self):
         if self.instances != None and self.changed():
             representation = self.read_from_widget()
             for instance in self.instances:
-                self.write_to_instance(self.convert_to_value(representation), instance)
+                self.write_to_instance(self.convert_to_value_wrap(representation), instance)
             #self.read_multiplex()
 
     def changed_names(self):
@@ -157,6 +185,8 @@ class EditMixin(ReadMixin):
             return []
 
     def write_to_widget(self, representation, original=False):
+        if self.bu_popup is not None:
+            self.bu_popup.set_sensitive(representation != insensitive)
         if original: self.original = representation
         self.update_label()
 
@@ -165,22 +195,24 @@ class EditMixin(ReadMixin):
         # conversion.
         raise NotImplementedError
 
+    def convert_to_value_wrap(self, representation):
+        if representation is insensitive:
+            return None
+        else:
+            return self.convert_to_value(representation)
+
     def convert_to_value(self, representation):
         # This should convert a representation in a value
         return representation
 
     def write_to_instance(self, value, instance):
-        if self.mutable_attribute:
-            if self.attribute_name is None:
-                self.write_to_attribute(value, instance)
-            else:
-                self.write_to_attribute(value, eval("instance.%s" % self.attribute_name))
-        else:
-            exec "instance.%s = value" % self.attribute_name
+        self.current_instance = instance
+        if value is None: self.attribute = None
+        self.write_to_attribute(value)
+        del self.current_instance
 
-    def write_to_attribute(self, value, attribute):
-        # Yo only want to implement this if self.mutable_attribute == True
-        raise NotImplementedError
+    def write_to_attribute(self, value):
+        self.attribute = value
 
     def changed(self):
         representation = self.read_from_widget()
@@ -193,7 +225,7 @@ class EditMixin(ReadMixin):
         self.Popup(self, button.get_parent_window()).popup(event.button, event.time)
 
     def update_label(self):
-        if self.label == None:
+        if self.label is None:
             return
         if self.changed():
             if len(self.label.get_label()) == len(self.label_text):
@@ -222,9 +254,10 @@ class FaultyMixin(EditMixin):
         #print self.label_text, self.instances, self.instance, self.get_active()
         if self.get_active() and self.changed():
             try:
-                self.convert_to_value(self.read_from_widget())
+                self.convert_to_value_wrap(self.read_from_widget())
             except ValueError, e:
                 invalid_field = InvalidField(self, str(e))
-                invalid_field.prepend_message(self.invalid_message)
+                if self.invalid_message is not None:
+                    invalid_field.prepend_message(self.invalid_message)
                 raise invalid_field
 

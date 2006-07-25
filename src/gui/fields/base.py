@@ -41,7 +41,7 @@ class Single(object):
         self.parent = None
 
     def get_active(self):
-        return self.instance != None or self.instances != None
+        return self.instance is not None or self.instances is not None
 
     def init_widgets(self, instance):
         if self.applicable(instance):

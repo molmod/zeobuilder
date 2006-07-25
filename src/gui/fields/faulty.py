@@ -20,7 +20,7 @@
 # --
 
 from elementary import Faulty
-from mixin import ambiguous
+from mixin import ambiguous, insensitive
 from zeobuilder.conversion import express_measure, eval_measure
 from molmod.units import LENGTH
 import popups
@@ -45,17 +45,29 @@ class Entry(Faulty):
         self.entry = None
         Faulty.destroy_widgets(self)
 
-    def read_from_widget(self):
-        representation = self.entry.get_text()
-        if representation == "":
-            return ambiguous
-        else:
-            return representation
-
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous: representation = ""
-        self.entry.set_text(representation)
+        #print self, representation
+        if representation == insensitive:
+            self.entry.set_sensitive(False)
+        else:
+            self.entry.set_sensitive(True)
+            if representation == ambiguous: representation = ""
+            self.entry.set_text(representation)
         Faulty.write_to_widget(self, representation, original)
+
+    def read_from_widget(self):
+        if not self.entry.get_property("sensitive"):
+            return insensitive
+        else:
+            representation = self.entry.get_text()
+            if representation == "":
+                return ambiguous
+            else:
+                return representation
+
+    def convert_to_value(self, representation):
+        if not isinstance(representation, str):
+            raise ValueError("Please enter something.")
 
 
 class Float(Entry):
@@ -86,6 +98,7 @@ class Float(Entry):
                 raise ValueError, "Value out of range. The value you entered (%s) violates %s < %s." % (self.convert_to_representation(value), name, self.convert_to_representation(self.high))
 
     def convert_to_value(self, representation):
+        Entry.convert_to_value(self, representation)
         value = float(representation)
         self.check_ranges(value, "float")
         return value
@@ -103,6 +116,7 @@ class Int(Entry):
         return str(value)
 
     def convert_to_value(self, representation):
+        Entry.convert_to_value(self, representation)
         value = int(representation)
         if self.minimum is not None and value < self.minimum:
             raise ValueError, "Value too low. (int >= %i)" % self.minimum
@@ -118,6 +132,7 @@ class Length(Float):
         return express_measure(value, LENGTH, self.decimals, self.scientific)
 
     def convert_to_value(self, representation):
+        Entry.convert_to_value(self, representation)
         value = eval_measure(representation, measure=LENGTH)
         self.check_ranges(value, "length")
         return value
@@ -127,9 +142,10 @@ class Name(Entry):
     Popup = popups.Default
 
     def convert_to_value(self, representation):
+        Entry.convert_to_value(self, representation)
         representation.strip()
         if representation == "":
-            raise ValueError, "A name must contain non white space characters."
+            raise ValueError("A name must contain non white space characters.")
         return representation
 
 

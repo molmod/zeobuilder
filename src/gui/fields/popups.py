@@ -53,8 +53,8 @@ class Base(object):
         self.menu.append(mi)
 
     def popup(self, button, time):
-        #self.menu.show()
-        self.menu.popup(None, None, None, button, time)
+        if len(self.menu.get_children()) > 0:
+            self.menu.popup(None, None, None, button, time)
 
     def write_to_widget(self, widget, representation):
         self.field.write_to_widget(representation)
@@ -63,7 +63,10 @@ class Default(Base):
     "The default popup for a field, only has a revert function"
     def __init__(self, field, parent_window):
         Base.__init__(self, field, parent_window)
-        self.add_item("Revert to %s" + field.original, self.write_to_widget, field.original)
+        from mixin import insensitive
+        if field.original != insensitive:
+            self.add_item("Revert to %s" % str(field.original), self.write_to_widget, field.original)
+
 
 class Length(Default):
     "A popup that can convert lengths to other unit systems"
@@ -77,7 +80,7 @@ class Length(Default):
             for UNIT in measures[LENGTH]:
                 unit_suffix = suffices[UNIT]
                 alternative_representation = express_measure(length, measure=LENGTH, unit=UNIT)
-                self.add_item("Convert to " + unit_suffix + " (" + alternative_representation + ")", self.write_to_widget, alternative_representation)
+                self.add_item("Convert to %s (%f)" % (unit_suffix, alternative_representation), self.write_to_widget, alternative_representation)
         except ValueError:
             self.add_item("Convert to ... (invalid entries)", None)
 
@@ -105,4 +108,4 @@ class Element(Base):
             str_original = str(field.original)
         else:
             str_original = moldata.periodic.symbol[field.original]
-        self.add_item("Revert to " + str_original, self.write_to_widget, field.original)
+        self.add_item("Revert to %s" % str_original, self.write_to_widget, field.original)

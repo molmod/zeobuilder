@@ -55,15 +55,15 @@ class Vector(Composed):
         Composed.create_widgets(self)
         self.tabulate_widgets()
 
-    def applicable_attribute(self, attribute):
-        return len(attribute) >= 3
+    def applicable_attribute(self):
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
 
-    def read_from_attribute(self, attribute):
-        return tuple(attribute[:3])
+    def read_from_attribute(self):
+        return tuple(self.attribute)
 
-    def write_to_attribute(self, value, attribute):
-        for index, coordinate in enumerate(value):
-            attribute[index] = coordinate
+    def write_to_attribute(self, value):
+        self.attribute = numpy.array(value)
+
 
 class Translation(Vector):
     Popup = popups.Translation
@@ -71,14 +71,14 @@ class Translation(Vector):
     def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, scientific=False, decimals=5, vector_name="t", show_field_popups=False, table_border_width=6):
         Vector.__init__(self, invalid_message, label_text, attribute_name, show_popup, None, None, True, True, scientific, decimals, True, vector_name, show_field_popups, table_border_width)
 
-    def applicable_attribute(self, attribute):
-        return isinstance(attribute, MathTranslation) and Vector.applicable_attribute(self, attribute.translation_vector)
+    def applicable_attribute(self):
+        return isinstance(self.attribute, MathTranslation)
 
-    def read_from_attribute(self, attribute):
-        return Vector.read_from_attribute(self, attribute.translation_vector)
+    def read_from_attribute(self):
+        return tuple(self.attribute.translation_vector)
 
-    def write_to_attribute(self, value, attribute):
-        Vector.write_to_attribute(self, value, attribute.translation_vector)
+    def write_to_attribute(self, value):
+        self.attribute.translation_vector = numpy.array(value)
 
 
 class Rotation(Composed):
@@ -98,29 +98,21 @@ class Rotation(Composed):
         Composed.create_widgets(self)
         self.tabulate_widgets()
 
-    def applicable_attribute(self, attribute):
-        return isinstance(attribute, MathRotation)
+    def applicable_attribute(self):
+        return isinstance(self.attribute, MathRotation)
 
-    def read_from_attribute(self, attribute):
-        temp = attribute.get_rotation_properties()
+    def read_from_attribute(self):
+        temp = self.attribute.get_rotation_properties()
         return (temp[1][0], temp[1][1], temp[1][2], temp[0], temp[2])
 
-    def write_to_attribute(self, value, attribute):
+    def write_to_attribute(self, value):
         rotation_axis = numpy.array([float(value[0]), float(value[1]), float(value[2])])
         rotation_angle = float(value[3])
         invert = value[4]
-        attribute.set_rotation_properties(rotation_angle, rotation_axis, invert)
-
-    def instance_applicable(self, instance):
-        if not Edit.instance_applicable(self, instance): return False
-        if self.attribute_name is None:
-            Class = instance.__class__
-        else:
-            Class = eval("instance." + self.attribute_name).__class__
-        return issubclass(Class, Rotation)
+        self.attribute.set_rotation_properties(rotation_angle, rotation_axis, invert)
 
 
-class Box(Vector):
+class BoxSize(Vector):
     Popup = popups.Default
 
     def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, scientific=False, decimals=5, show_field_popups=False, table_border_width=6):
@@ -132,6 +124,30 @@ class Color(Vector):
 
     def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, decimals=5, show_field_popups=False, table_border_width=6):
         Vector.__init__(self, invalid_message, label_text, attribute_name, show_popup, 0.0, 1.0, True, True, False, decimals, False, "color", show_field_popups, table_border_width)
+
+
+class BoxRegion(Composed):
+    Popup = popups.Default
+
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, show_field_popups=False, table_border_width=6):
+        fields = [
+            Vector(None, None, ".", show_field_popups, low, high, low_inclusive, high_inclusive, scientific, decimals, length, "low", show_field_popups, table_border_width),
+            Vector(None, None, ".", show_field_popups, low, high, low_inclusive, high_inclusive, scientific, decimals, length, "high", show_field_popups, table_border_width),
+        ]
+        Composed.__init__(self, fields, invalid_message, label_text, attribute_name, show_popup, show_field_popups, table_border_width, False)
+
+    def create_widgets(self):
+        Composed.create_widgets(self)
+        self.tabulate_widgets()
+
+    def applicable_attribute(self):
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (2,3)
+
+    def read_from_attribute(self):
+        return tuple(self.attribute)
+
+    def write_to_attribute(self, value):
+        self.attribute = numpy.array(value)
 
 
 class CellMatrix(Composed):
@@ -149,24 +165,19 @@ class CellMatrix(Composed):
         Composed.create_widgets(self)
         self.tabulate_widgets()
 
-    def applicable_attribute(self, attribute):
-        return attribute.shape == (3,3)
+    def applicable_attribute(self):
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,3)
 
-    def read_from_attribute(self, attribute):
-        return tuple(numpy.transpose(attribute))
+    def read_from_attribute(self):
+        return tuple(numpy.transpose(self.attribute))
 
-    def write_to_attribute(self, value, attribute):
-        for index, coordinate in enumerate(value):
-            attribute[:,index] = coordinate
+    def write_to_attribute(self, value):
+        self.attribute = numpy.array(value).transpose()
 
     def check(self):
         Composed.check(self)
         if self.get_active() and self.changed():
-            matrix = numpy.zeros((3, 3), float)
-            self.write_to_attribute(
-                self.convert_to_value(self.read_from_widget()),
-                matrix
-            )
+            matrix = numpy.array(self.convert_to_value_wrap(self.read_from_widget())).transpose()
             for col, name in enumerate(["A", "B", "C"]):
                 norm = math.sqrt(numpy.dot(matrix[:,col], matrix[:,col]))
                 if norm < 1e-6:
@@ -195,15 +206,14 @@ class CellActive(Composed):
         Composed.create_widgets(self)
         self.tabulate_widgets()
 
-    def applicable_attribute(self, attribute):
-        return len(attribute) == 3
+    def applicable_attribute(self):
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
 
-    def read_from_attribute(self, attribute):
-        return tuple(attribute)
+    def read_from_attribute(self):
+        return tuple(self.attribute)
 
-    def write_to_attribute(self, value, attribute):
-        for index, coordinate in enumerate(value):
-            attribute[index] = coordinate
+    def write_to_attribute(self, value):
+        self.attribute = numpy.array(value)
 
 
 class Repetitions(Composed):
@@ -221,15 +231,14 @@ class Repetitions(Composed):
         Composed.create_widgets(self)
         self.tabulate_widgets()
 
-    def applicable_attribute(self, attribute):
-        return len(attribute) == 3
+    def applicable_attribute(self):
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
 
-    def read_from_attribute(self, attribute):
-        return tuple(attribute)
+    def read_from_attribute(self):
+        return tuple(self.attribute)
 
-    def write_to_attribute(self, value, attribute):
-        for index, coordinate in enumerate(value):
-            attribute[index] = coordinate
+    def write_to_attribute(self, value):
+        self.attribute = numpy.array(value)
 
 
 class Units(Composed):
@@ -254,17 +263,17 @@ class Units(Composed):
         Composed.create_widgets(self)
         self.tabulate_widgets()
 
-    def applicable_attribute(self, attribute):
-        if not isinstance(attribute, dict): return False
-        if not len(attribute) == len(measures): return False
-        for measure in attribute:
+    def applicable_attribute(self):
+        if not isinstance(self.attribute, dict): return False
+        if not len(self.attribute) == len(measures): return False
+        for measure in self.attribute:
             if not measure in measures: return False
         return True
 
-    def read_from_attribute(self, attribute):
-        return tuple([attribute[measure] for measure in measure_names])
+    def read_from_attribute(self):
+        return tuple(self.attribute[measure] for measure in measure_names)
 
-    def write_to_attribute(self, value, attribute):
+    def write_to_attribute(self, value):
         for index, measure in enumerate(measure_names):
-            attribute[measure] = value[index]
+            self.attribute[measure] = value[index]
 

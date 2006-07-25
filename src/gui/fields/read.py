@@ -20,7 +20,7 @@
 # --
 
 from elementary import Read
-from mixin import ambiguous
+from mixin import ambiguous, insensitive
 from zeobuilder.conversion import express_measure, express_data_size
 from molmod.units import LENGTH
 
@@ -46,17 +46,21 @@ class Label(Read):
             return str(value)
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous:
-            self.container.set_label("<span foreground=\"gray\">%s</span>" % ambiguous)
+        if representation == insensitive:
+            self.container.set_sensitive(False)
         else:
-            self.container.set_label(representation)
+            self.container.set_sensitive(True)
+            if representation == ambiguous:
+                self.container.set_label("<span foreground=\"gray\">%s</span>" % ambiguous)
+            else:
+                self.container.set_label(representation)
 
 
 class Handedness(Label):
     mutable_attribute = True
 
-    def read_from_attribute(self, attribute):
-        return (numpy.linalg.det(attribute.get_absolute_frame().rotation_matrix) > 0)
+    def read_from_attribute(self):
+        return (numpy.linalg.det(self.attribute.get_absolute_frame().rotation_matrix) > 0)
 
     def convert_to_representation(self, value):
         if value == ambiguous:
@@ -66,11 +70,11 @@ class Handedness(Label):
         else:
             return "The selected frames are left-handed."
 
-    def applicable_attribute(self, attribute):
+    def applicable_attribute(self):
         from zeobuilder.transformations import Rotation
         from zeobuilder.nodes.glmixin import GLTransformationMixin
-        return isinstance(attribute, GLTransformationMixin) and \
-               isinstance(attribute.transformation, Rotation)
+        return isinstance(self.attribute, GLTransformationMixin) and \
+               isinstance(self.attribute.transformation, Rotation)
 
 
 class BBox(Label):
@@ -82,14 +86,14 @@ class BBox(Label):
                 express_measure(value.corners[1][2] - value.corners[0][2], LENGTH))
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous:
-            Label.write_to_widget(self, ambiguous, original)
-        else:
+        if isinstance(representation, tuple):
             Label.write_to_widget(self, "<span foreground=\"gray\">(</span> %s <span foreground=\"gray\">,</span> %s <span foreground=\"gray\">,</span> %s <span foreground=\"gray\">)</span>" % representation, original)
+        else:
+            Label.write_to_widget(self, representation, original)
 
-    def applicable_attribute(self, attribute):
+    def applicable_attribute(self):
         from zeobuilder.nodes.helpers import BoundingBox
-        return isinstance(attribute, BoundingBox)
+        return isinstance(self.attribute, BoundingBox)
 
 
 class Distance(Label):
@@ -105,9 +109,9 @@ class VectorLength(Distance):
         d = attribute.shortest_vector_relative_to(attribute.parent)
         return math.sqrt(numpy.dot(d, d))
 
-    def applicable_attribute(self, attribute):
+    def applicable_attribute(self):
         from zeobuilder.nodes.vector import Vector
-        return isinstance(attribute, Vector)
+        return isinstance(self.attribute, Vector)
 
 
 class DataSize(Label):
