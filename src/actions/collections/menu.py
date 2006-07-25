@@ -241,7 +241,7 @@ class Menu(object):
             for menu_item in menu.get_children():
                 menu_item.set_sensitive(True)
                 submenu = menu_item.get_submenu()
-                if submenuis not None:
+                if submenu is not None:
                     set_all_sensitive(submenu)
 
         if not self.all_menu_items_sensitive:
