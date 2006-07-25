@@ -230,11 +230,11 @@ class EditMixin(ReadMixin):
         if self.label is None:
             return
         if self.changed():
-            print "ON ", self.attribute_name, id(self), self.label_text
+            #print "ON ", self.attribute_name, id(self), self.label_text
             if len(self.label.get_label()) == len(self.label_text):
                 self.label.set_label(self.label_text + changed_indicator)
         else:
-            print "OFF", self.attribute_name, id(self), self.label_text
+            #print "OFF", self.attribute_name, id(self), self.label_text
             if len(self.label.get_label()) > len(self.label_text):
                 self.label.set_label(self.label_text)
 
