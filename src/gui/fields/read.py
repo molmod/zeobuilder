@@ -34,6 +34,7 @@ class Label(Read):
     def create_widgets(self):
         Read.create_widgets(self)
         self.data_widget = gtk.Label()
+        self.data_widget.set_selectable(True)
         self.data_widget.set_alignment(0.0, 0.5)
         self.data_widget.set_use_markup(True)
 

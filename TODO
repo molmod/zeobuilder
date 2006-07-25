@@ -23,7 +23,6 @@ TODO core
     * Rewrite the invalid messages in the dialogs
     * default values for fieldsdialog and last used values
     * A history for the selection filters (saved in a config file)
-    * Read-only-fields, that can be coppied in to clipboard
 
 
 ### New/updated dialog fields
