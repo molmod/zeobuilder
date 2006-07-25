@@ -150,6 +150,32 @@ class BoxRegion(Composed):
         self.attribute = numpy.array(value)
 
 
+class Interval(Composed):
+    Popup = popups.Default
+
+    def __init__(self, invalid_message, label_text=None, attribute_name=None, show_popup=True, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, interval_name="x", show_field_popups=False, table_border_width=6):
+        if length: FieldClass = Length
+        else: FieldClass = Float
+        fields = [
+            FieldClass("Invalid %s.low" % interval_name, "   %s.min " % interval_name, "?", show_field_popups, low, high, low_inclusive, high_inclusive, scientific, decimals),
+            FieldClass("Invalid %s.high" % interval_name, "   %s.max " % interval_name, "?", show_field_popups, low, high, low_inclusive, high_inclusive, scientific, decimals),
+        ]
+        Composed.__init__(self, fields, invalid_message, label_text, attribute_name, show_popup, show_field_popups, table_border_width, False)
+
+    def create_widgets(self):
+        Composed.create_widgets(self)
+        self.tabulate_widgets()
+
+    def applicable_attribute(self):
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (2,)
+
+    def read_from_attribute(self):
+        return tuple(self.attribute)
+
+    def write_to_attribute(self, value):
+        self.attribute = numpy.array(value)
+
+
 class CellMatrix(Composed):
     Popup = popups.Default
 
