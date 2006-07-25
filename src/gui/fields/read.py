@@ -100,8 +100,8 @@ class Distance(Label):
 class VectorLength(Distance):
     mutable_attribute = True
 
-    def read_from_node(self, node):
-        attribute = Distance.read_from_node(self, node)
+    def read_from_instance(self, instance):
+        attribute = Distance.read_from_instance(self, instance)
         d = attribute.shortest_vector_relative_to(attribute.parent)
         return math.sqrt(numpy.dot(d, d))
 

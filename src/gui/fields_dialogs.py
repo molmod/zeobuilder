@@ -76,7 +76,7 @@ class FieldsDialogBase(object):
             try:
                 self.main_field.check()
                 self.valid = True
-                # first read out the widgets and update the node
+                # first read out the widgets and update the instance
                 self.write()
                 # if the user pressed apply: reread
                 if (response_id == gtk.RESPONSE_APPLY):
@@ -97,8 +97,8 @@ class FieldsDialogBase(object):
 
 
 class FieldsDialogSimple(FieldsDialogBase):
-    def init_widgets(self, node):
-        self.main_field.init_widgets(node)
+    def init_widgets(self, instance):
+        self.main_field.init_widgets(instance)
 
     def read(self):
         self.main_field.read()
@@ -108,8 +108,8 @@ class FieldsDialogSimple(FieldsDialogBase):
 
 
 class FieldsDialogMultiplex(FieldsDialogBase):
-    def init_widgets(self, nodes):
-        self.main_field.init_widgets_multiplex(nodes)
+    def init_widgets(self, instances):
+        self.main_field.init_widgets_multiplex(instances)
 
     def read(self):
         self.main_field.read_multiplex()

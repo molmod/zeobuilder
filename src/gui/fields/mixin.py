@@ -44,40 +44,40 @@ class ReadMixin(object):
         assert self.mutable_attribute or attribute != None, "%s requires an immutable attribute." % self.__class__
         self.attribute = attribute
 
-    def applicable(self, node):
+    def applicable(self, instance):
         #print self.attribute
-        if (self.attribute is not None) and (self.attribute not in node.__dict__):
+        if (self.attribute is not None) and (self.attribute not in instance.__dict__):
             return False
         else:
             if self.mutable_attribute:
                 if self.attribute is None:
-                    return self.applicable_attribute(node)
+                    return self.applicable_attribute(instance)
                 else:
-                    return self.applicable_attribute(eval("node.%s" % self.attribute))
+                    return self.applicable_attribute(eval("instance.%s" % self.attribute))
             else:
                 return self.attribute is not None
 
-    def applicable_attribute(self, node):
+    def applicable_attribute(self, instance):
         raise NotImplementedError
 
-    def read(self, node=None):
-        if self.node is not None:
-            if node is None: node = self.node
-            representation = self.convert_to_representation(self.read_from_node(node))
+    def read(self, instance=None):
+        if self.instance is not None:
+            if instance is None: instance = self.instance
+            representation = self.convert_to_representation(self.read_from_instance(instance))
             self.write_to_widget(representation, True)
 
     def read_multiplex(self):
-        if self.nodes is not None:
-            common = self.convert_to_representation(self.read_from_node(self.nodes[0]))
-            for node in self.nodes[1:]:
-                if common != self.convert_to_representation(self.read_from_node(node)):
+        if self.instances is not None:
+            common = self.convert_to_representation(self.read_from_instance(self.instances[0]))
+            for instance in self.instances[1:]:
+                if common != self.convert_to_representation(self.read_from_instance(instance)):
                     self.set_ambiguous_capability(True)
                     self.write_to_widget(ambiguous, True)
                     return
             self.set_ambiguous_capability(False)
             self.write_to_widget(common, True)
 
-    def write(self, node=None):
+    def write(self, instance=None):
         pass
 
     def write_multiplex(self):
@@ -92,14 +92,14 @@ class ReadMixin(object):
     def changed_names(self):
         return []
 
-    def read_from_node(self, node):
+    def read_from_instance(self, instance):
         if self.mutable_attribute:
             if self.attribute == None:
-                return self.read_from_attribute(node)
+                return self.read_from_attribute(instance)
             else:
-                return self.read_from_attribute(eval("node.%s" % self.attribute))
+                return self.read_from_attribute(eval("instance.%s" % self.attribute))
         else:
-            return eval("node.%s" % self.attribute)
+            return eval("instance.%s" % self.attribute)
 
     def read_from_attribute(self, attribute):
         return attribute
@@ -134,20 +134,20 @@ class EditMixin(ReadMixin):
             self.bu_popup.destroy()
             self.bu_popup = None
 
-    def write(self, node=None):
-        if self.node != None and (self.changed() or node!=None):
+    def write(self, instance=None):
+        if self.instance != None and (self.changed() or instance!=None):
             representation = self.read_from_widget()
-            if node == None:
-                self.write_to_node(self.convert_to_value(representation), self.node)
+            if instance == None:
+                self.write_to_instance(self.convert_to_value(representation), self.instance)
                 #self.read()
             else:
-                self.write_to_node(self.convert_to_value(representation), node)
+                self.write_to_instance(self.convert_to_value(representation), instance)
 
     def write_multiplex(self):
-        if self.nodes != None and self.changed():
+        if self.instances != None and self.changed():
             representation = self.read_from_widget()
-            for node in self.nodes:
-                self.write_to_node(self.convert_to_value(representation), node)
+            for instance in self.instances:
+                self.write_to_instance(self.convert_to_value(representation), instance)
             #self.read_multiplex()
 
     def changed_names(self):
@@ -169,14 +169,14 @@ class EditMixin(ReadMixin):
         # This should convert a representation in a value
         return representation
 
-    def write_to_node(self, value, node):
+    def write_to_instance(self, value, instance):
         if self.mutable_attribute:
             if self.attribute == None:
-                self.write_to_attribute(value, node)
+                self.write_to_attribute(value, instance)
             else:
-                self.write_to_attribute(value, eval("node.%s" % self.attribute))
+                self.write_to_attribute(value, eval("instance.%s" % self.attribute))
         else:
-            exec "node.%s = value" % self.attribute
+            exec "instance.%s = value" % self.attribute
 
     def write_to_attribute(self, value, attribute):
         # Yo only want to implement this if self.mutable_attribute == True
@@ -219,7 +219,7 @@ class FaultyMixin(EditMixin):
         self.invalid_message = invalid_message
 
     def check(self):
-        #print self.label_text, self.nodes, self.node, self.get_active()
+        #print self.label_text, self.instances, self.instance, self.get_active()
         if self.get_active() and self.changed():
             try:
                 self.convert_to_value(self.read_from_widget())

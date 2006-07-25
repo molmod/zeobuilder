@@ -111,12 +111,12 @@ class Rotation(Composed):
         invert = value[4]
         attribute.set_rotation_properties(rotation_angle, rotation_axis, invert)
 
-    def node_applicable(self, node):
-        if not Edit.node_applicable(self, node): return False
+    def instance_applicable(self, instance):
+        if not Edit.instance_applicable(self, instance): return False
         if self.attribute == None:
-            Class = node.__class__
+            Class = instance.__class__
         else:
-            Class = eval("node." + self.attribute).__class__
+            Class = eval("instance." + self.attribute).__class__
         return issubclass(Class, Rotation)
 
 

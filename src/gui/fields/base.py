@@ -36,31 +36,31 @@ class Single(object):
         self.label_text = label_text
         self.container = None
         self.label = None
-        self.node = None
-        self.nodes = None
+        self.instance = None
+        self.instances = None
         self.parent = None
 
     def get_active(self):
-        return self.node != None or self.nodes != None
+        return self.instance != None or self.instances != None
 
-    def init_widgets(self, node):
-        if self.applicable(node):
-            self.node = node
+    def init_widgets(self, instance):
+        if self.applicable(instance):
+            self.instance = instance
             self.create_widgets()
         else:
-            self.node = None
+            self.instance = None
 
-    def init_widgets_multiplex(self, nodes):
-        for node in nodes:
-            if not self.applicable(node):
-                self.nodes = None
+    def init_widgets_multiplex(self, instances):
+        for instance in instances:
+            if not self.applicable(instance):
+                self.instances = None
                 #print "NOT APPLICABLE", self, self.label_text
                 return
         #print "IS  APPLICABLE", self, self.label_text
-        self.nodes = nodes
+        self.instances = instances
         self.create_widgets()
 
-    def applicable(self, node):
+    def applicable(self, instance):
         raise NotImplementedError
 
     def create_widgets(self):
@@ -76,8 +76,8 @@ class Single(object):
         if self.container != None:
             self.container.destroy()
             self.container = None
-        self.node = None
-        self.nodes = None
+        self.instance = None
+        self.instances = None
 
     def show(self, field=None):
         # makes sure the correct notebook page is shown
@@ -98,23 +98,23 @@ class Multiple(Single):
             field.destroy_widgets()
         Single.destroy_widgets(self)
 
-    def read(self, node=None):
-        if self.node is not None:
+    def read(self, instance=None):
+        if self.instance is not None:
             for field in self.fields:
                 field.read()
 
     def read_multiplex(self):
-        if self.nodes is not None:
+        if self.instances is not None:
             for field in self.fields:
                 field.read_multiplex()
 
-    def write(self, node=None):
-        if self.node is not None:
+    def write(self, instance=None):
+        if self.instance is not None:
             for field in self.fields:
                field.write()
 
     def write_multiplex(self):
-        if self.nodes is not None:
+        if self.instances is not None:
             for field in self.fields:
                 field.write_multiplex()
 

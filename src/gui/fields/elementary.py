@@ -32,8 +32,8 @@ class Read(Single, ReadMixin):
         Single.__init__(self, label_text)
         ReadMixin.__init__(self, attribute)
 
-    def applicable(self, node):
-        return ReadMixin.applicable(self, node)
+    def applicable(self, instance):
+        return ReadMixin.applicable(self, instance)
 
 
 class Edit(Single, EditMixin):
@@ -41,8 +41,8 @@ class Edit(Single, EditMixin):
         Single.__init__(self, label_text)
         EditMixin.__init__(self, attribute, show_popup)
 
-    def applicable(self, node):
-        return EditMixin.applicable(self, node)
+    def applicable(self, instance):
+        return EditMixin.applicable(self, instance)
 
     def create_widgets(self):
         Single.create_widgets(self)
@@ -58,8 +58,8 @@ class Faulty(Single, FaultyMixin):
         Single.__init__(self, label_text)
         FaultyMixin.__init__(self, invalid_message, attribute, show_popup)
 
-    def applicable(self, node):
-        return FaultyMixin.applicable(self, node)
+    def applicable(self, instance):
+        return FaultyMixin.applicable(self, instance)
 
     def create_widgets(self):
         Single.create_widgets(self)
@@ -81,14 +81,14 @@ class Composed(Multiple, FaultyMixin):
         self.table_border_width = table_border_width
         self.vertical = vertical
 
-    def applicable(self, node):
-        return FaultyMixin.applicable(self, node)
+    def applicable(self, instance):
+        return FaultyMixin.applicable(self, instance)
 
     def create_widgets(self):
         for field in self.fields:
             # to make the subfields also believe they are active
-            field.node = self.node
-            field.nodes = self.nodes
+            field.instance = self.instance
+            field.instances = self.instances
             field.on_widget_changed = self.on_widget_changed
             field.create_widgets()
         Multiple.create_widgets(self)
@@ -157,14 +157,14 @@ class Composed(Multiple, FaultyMixin):
         Multiple.destroy_widgets(self)
         FaultyMixin.destroy_widgets(self)
 
-    def read(self, node=None):
-        FaultyMixin.read(self, node)
+    def read(self, instance=None):
+        FaultyMixin.read(self, instance)
 
     def read_multiplex(self):
         FaultyMixin.read_multiplex(self)
 
-    def write(self, node=None):
-        FaultyMixin.write(self, node)
+    def write(self, instance=None):
+        FaultyMixin.write(self, instance)
 
     def write_multiplex(self):
         FaultyMixin.write_multiplex(self)
@@ -201,17 +201,17 @@ class Composed(Multiple, FaultyMixin):
 
 
 class Group(Multiple):
-    def init_widgets(self, node):
+    def init_widgets(self, instance):
         for field in self.fields:
-            field.init_widgets(node)
-        Multiple.init_widgets(self, node)
+            field.init_widgets(instance)
+        Multiple.init_widgets(self, instance)
 
-    def init_widgets_multiplex(self, nodes):
+    def init_widgets_multiplex(self, instances):
         for field in self.fields:
-            field.init_widgets_multiplex(nodes)
-        Multiple.init_widgets_multiplex(self, nodes)
+            field.init_widgets_multiplex(instances)
+        Multiple.init_widgets_multiplex(self, instances)
 
-    def applicable(self, node):
+    def applicable(self, instance):
         for field in self.fields:
             if field.get_active(): return True
         return False
