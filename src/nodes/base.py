@@ -70,14 +70,14 @@ class Base(gobject.GObject):
     def trace(self):
         parent = self
         trace = [self]
-        while parent != None:
+        while parent is not None:
             parent = parent.parent
             trace.insert(0, parent)
         return trace
 
     def is_indirect_child_of(self, parent):
         if parent == self.parent: return True
-        elif self.parent == None: return False
+        elif self.parent is None: return False
         else: return self.parent.is_indirect_child_of(parent)
 
     #
@@ -88,5 +88,5 @@ class Base(gobject.GObject):
         return True
 
     def set_selected(self, selected):
-        assert self.model != None, "Can only select an node if it is part of a model."
+        assert self.model is not None, "Can only select an node if it is part of a model."
         self.selected = selected

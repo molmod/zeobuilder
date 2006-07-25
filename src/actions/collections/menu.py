@@ -112,7 +112,7 @@ class SubMenu(MenuActionContainer):
                 separator = gtk.SeparatorMenuItem()
                 menu.append(separator)
             something_added |= former_added
-        if separator != None:
+        if separator is not None:
             separator.destroy()
         return something_added
 
@@ -143,7 +143,7 @@ class Place(MenuActionContainer):
             elif issubclass(item, Base):
                 if not only_show_applicable or item.cached_analyze_selection():
                     something_added = True
-                    if item.menu_info.image_name != None:
+                    if item.menu_info.image_name is not None:
                         if gtk.stock_lookup(item.menu_info.image_name) is not None:
                             menu_item = gtk.ImageMenuItem(item.menu_info.image_name)
                             menu_item.get_child().set_label(name)
@@ -154,7 +154,7 @@ class Place(MenuActionContainer):
                             )
                     else:
                         menu_item = gtk.MenuItem(name)
-                    if item.menu_info.accel_key != None:
+                    if item.menu_info.accel_key is not None:
                         menu_item.add_accelerator(
                             "activate",
                             accel_group,
@@ -164,7 +164,7 @@ class Place(MenuActionContainer):
                         )
                     menu.append(menu_item)
                     menu_item.connect("activate", on_activate, item)
-                    if on_expose != None:
+                    if on_expose is not None:
                         menu_item.connect("expose-event", on_expose, item)
             else:
                 raise AssertionError
@@ -241,7 +241,7 @@ class Menu(object):
             for menu_item in menu.get_children():
                 menu_item.set_sensitive(True)
                 submenu = menu_item.get_submenu()
-                if submenu!= None:
+                if submenuis not None:
                     set_all_sensitive(submenu)
 
         if not self.all_menu_items_sensitive:

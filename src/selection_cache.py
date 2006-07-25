@@ -232,7 +232,7 @@ class SelectionCache(gobject.GObject):
             variables = []
         result = LocalProblem()
         parent = self.parent
-        if parent == None: return None
+        if parent is None: return None
         for node in self.nodes:
             variables = {}
             for child in node.children:

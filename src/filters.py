@@ -171,7 +171,7 @@ def run_file_dialog(file_dialog, file_function, *args):
     from zeobuilder.gui.simple import ok_error
     success = False
     current_dir = context.application.main.get_current_directory()
-    if current_dir != None:
+    if current_dir is not None:
         file_dialog.set_current_folder(current_dir)
     while file_dialog.run() == gtk.RESPONSE_OK:
         filename = file_dialog.get_filename()

@@ -145,7 +145,7 @@ class FrameAxes(object):
             indenter.write_line("inside_vector <0.0, 0.0, 0.0>")
             indenter.write_line("pigment { color %s }" % color)
             indenter.write_line("finish { my_finish }")
-            if povrot != None: indenter.write_line(povrot)
+            if povrot is not None: indenter.write_line(povrot)
             indenter.write_line("}", -1)
 
         write_axis("Red")
@@ -170,7 +170,7 @@ class BoundingBox(object):
         self.corners = None
 
     def extend_with_point(self, point):
-        if self.corners == None:
+        if self.corners is None:
             self.corners = [copy.deepcopy(point), copy.deepcopy(point)]
         else:
             for i in range(3):
@@ -178,7 +178,7 @@ class BoundingBox(object):
                 if point[i] > self.corners[1][i]: self.corners[1][i] = point[i]
 
     def extend_with_corners(self, corners):
-        if self.corners == None:
+        if self.corners is None:
             self.corners = copy.deepcopy(corners)
         else:
             for i in range(3):
@@ -187,7 +187,7 @@ class BoundingBox(object):
 
     def transformed(self, transformation):
         result = BoundingBox()
-        if self.corners == None: return result
+        if self.corners is None: return result
         combinations = ((0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0), (0, 0, 1), (1, 0, 1), (0, 1, 1), (1, 1, 1))
         for c in combinations:
             result.extend_with_point(transformation.vector_apply(numpy.array([self.corners[c[0]][0], self.corners[c[1]][1], self.corners[c[2]][2]])))
@@ -198,7 +198,7 @@ class BoundingBox(object):
     #
 
     def draw(self):
-        if self.corners == None: return
+        if self.corners is None: return
         # we can asume that self.bounding_box is defined. self.bounding_box defines a box
         # that surrounds the content of the current geometric object and
         # has it's ridges parallel to the frame axes. It has the following

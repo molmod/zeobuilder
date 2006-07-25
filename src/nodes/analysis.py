@@ -96,7 +96,7 @@ def list_by_parent(nodes):
     return result
 
 def list_traces_by(nodes):
-    return dict([(node, node.trace()) for node in nodes if node != None])
+    return dict([(node, node.trace()) for node in nodes if node is not None])
 
 def calculate_center(translations):
     center = numpy.zeros(3, float)

@@ -45,7 +45,7 @@ class Base(object):
     def add_item(self, label, on_activate, *args):
         "Adds a new menuitem with the corresponding event_handler"
         mi = gtk.MenuItem(label)
-        if on_activate == None:
+        if on_activate is None:
             mi.set_sensitive(False)
         else:
             mi.connect("activate", on_activate, *args)

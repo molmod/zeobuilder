@@ -77,7 +77,7 @@ class ConnectBase(Immediate):
         cache = context.application.cache
         if len(cache.nodes) != 2: return False
         if len(cache.translations) != 2: return False
-        if cache.common_parent == None: return False
+        if cache.common_parent is None: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)

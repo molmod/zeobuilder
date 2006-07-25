@@ -132,7 +132,7 @@ class Vector(GLReferentBase):
     #
 
     def translation_relative_to(self, target, other):
-        if target != None:
+        if target is not None:
             return target.get_frame_relative_to(other).translation_vector
         else:
             return None
@@ -142,14 +142,14 @@ class Vector(GLReferentBase):
 
     def shortest_vector_relative_to(self, other):
         b, e = self.translations_relative_to(other)
-        if (b == None) or (e == None):
+        if (b is None) or (e is None):
             return None
         else:
             return self.parent.shortest_vector(e - b)
 
     def calc_vector_dimensions(self):
         relative_translation = self.shortest_vector_relative_to(self.parent)
-        if relative_translation == None:
+        if relative_translation is None:
             self.length = 0
         else:
             self.length = math.sqrt(numpy.dot(relative_translation, relative_translation))

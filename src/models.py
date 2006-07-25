@@ -50,7 +50,7 @@ class Model(gobject.GObject):
     # internal functions
 
     def add_to_root(self, model_object):
-        assert model_object.parent == None
+        assert model_object.parent is None
         self.root.append(model_object)
         model_object.set_model(self)
         model_object.fixed = True
@@ -128,8 +128,8 @@ class Model(gobject.GObject):
 
     def file_save(self, filename=None, nodes=None):
         self.emit("file-saving")
-        if filename == None:
-            if self.filename == None:
+        if filename is None:
+            if self.filename is None:
                 raise FileNameError(about, "One needs a filename to save to.")
             filename = self.filename
         about = "Could not save to file '%s'" % filename

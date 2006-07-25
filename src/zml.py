@@ -70,7 +70,7 @@ def dump_to_file(f, node):
         cls = type(node)
         if cls == types.InstanceType: cls = node.__class__ # For old style stuff
 
-        if name == None: name_key = ""
+        if name is None: name_key = ""
         else: name_key = " label=" + xml.sax.saxutils.quoteattr(name)
 
         if cls == str:

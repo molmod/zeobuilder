@@ -109,7 +109,7 @@ class Main(GladeWrapper):
 
     def get_current_directory(self):
         name = context.application.model.filename
-        if name != None:
+        if name is not None:
             return os.path.dirname(name)
 
     # high level gui functions
@@ -185,7 +185,7 @@ class Main(GladeWrapper):
         return True
 
     def toggle_selection(self, node, on=None):
-        if on == None: on = not node.selected
+        if on is None: on = not node.selected
         if on:
             if not self.filter_active or eval(self.filter_expression):
                 if node.parent is not None:
@@ -208,7 +208,7 @@ class Main(GladeWrapper):
         # Only do something with the right mouse button.
         tree_view.grab_focus()
         temp = tree_view.get_path_at_pos(int(event.x), int(event.y))
-        if temp == None: return False
+        if temp is None: return False
         path, col, cellx, celly = temp
         if event.button == 3:
             if not self.tree_selection.path_is_selected(path):

@@ -64,16 +64,16 @@ class Single(object):
         raise NotImplementedError
 
     def create_widgets(self):
-        if self.label_text != None:
+        if self.label_text is not None:
             self.label = gtk.Label(self.label_text)
             self.label.set_alignment(0.0, 0.5)
             self.label.set_use_markup(True)
 
     def destroy_widgets(self):
-        if self.label != None:
+        if self.label is not None:
             self.label.destroy()
             self.label = None
-        if self.container != None:
+        if self.container is not None:
             self.container.destroy()
             self.container = None
         self.instance = None
@@ -82,7 +82,7 @@ class Single(object):
     def show(self, field=None):
         # makes sure the correct notebook page is shown
         # etc. to point at the incorrect field.
-        if self.parent != None:
+        if self.parent is not None:
             self.parent.show(self)
 
 

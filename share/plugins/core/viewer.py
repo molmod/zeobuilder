@@ -37,7 +37,7 @@ class ViewReset(Immediate):
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
         # B) validating
-        if context.application.main == None: return False
+        if context.application.main is None: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
@@ -76,7 +76,7 @@ class ViewerConfiguration(Immediate):
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
         # B) validating and initialising
-        if context.application.main == None: return False
+        if context.application.main is None: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)

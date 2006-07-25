@@ -149,7 +149,7 @@ class EditMixin(ReadMixin):
         self.bu_popup = None
 
     def create_widgets(self):
-        if (self.show_popup) and (self.Popup != None):
+        if (self.show_popup) and (self.Popup is not None):
             self.bu_popup = gtk.Button()
             self.bu_popup.set_property("can_focus", False)
             image = gtk.Image()
@@ -158,21 +158,21 @@ class EditMixin(ReadMixin):
             self.bu_popup.connect("button_release_event", self.on_bu_popup_released)
 
     def destroy_widgets(self):
-        if self.bu_popup != None:
+        if self.bu_popup is not None:
             self.bu_popup.destroy()
             self.bu_popup = None
 
     def write(self, instance=None):
-        if self.instance != None and (self.changed() or instance!=None):
+        if self.instance is not None and (self.changed() or instance!=None):
             representation = self.read_from_widget()
-            if instance == None:
+            if instance is None:
                 self.write_to_instance(self.convert_to_value_wrap(representation), self.instance)
                 #self.read()
             else:
                 self.write_to_instance(self.convert_to_value_wrap(representation), instance)
 
     def write_multiplex(self):
-        if self.instances != None and self.changed():
+        if self.instances is not None and self.changed():
             representation = self.read_from_widget()
             for instance in self.instances:
                 self.write_to_instance(self.convert_to_value_wrap(representation), instance)

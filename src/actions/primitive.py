@@ -36,7 +36,7 @@ class Base(object):
     def __init__(self, victim, done=False):
         self.victim = victim
         self.done = done
-        if context.application.action_manager != None:
+        if context.application.action_manager is not None:
             context.application.action_manager.append_primitive_to_current_action(self)
         elif not self.done:
             self.init()
@@ -88,13 +88,13 @@ class SetAttribute(Base):
 
     def redo(self):
         Base.redo(self)
-        if self.old_value == None:
+        if self.old_value is None:
             self.old_value = eval("self.victim.%s" % self.attribute_name)
         exec("self.victim.%s = self.new_value" % self.attribute_name)
 
     def undo(self):
         Base.undo(self)
-        if self.new_value == None:
+        if self.new_value is None:
             self.new_value = eval("self.victim.%s" % self.attribute_name)
         exec("self.victim.%s = self.old_value" % self.attribute_name)
 
@@ -112,7 +112,7 @@ class Delete(Base):
 
     def redo(self):
         Base.redo(self)
-        if self.old_index == None:
+        if self.old_index is None:
             self.old_parent = self.victim.parent
             self.old_index = self.victim.get_index()
         self.old_parent.remove(self.victim)
@@ -138,7 +138,7 @@ class Move(Base):
 
     def redo(self):
         Base.redo(self)
-        if self.old_index == None:
+        if self.old_index is None:
             self.old_parent = self.victim.parent
             self.old_index = self.victim.get_index()
         self.victim.move(self.new_parent, self.new_index)
@@ -167,7 +167,7 @@ class SetPublishedProperty(Base):
 
     def redo(self):
         Base.redo(self)
-        if self.old_value == None:
+        if self.old_value is None:
             self.old_value = self.published_property.get(self.victim)
         self.published_property.set(self.victim, self.new_value)
 

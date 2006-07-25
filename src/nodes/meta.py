@@ -48,7 +48,7 @@ class NodeClass(gobject.GObjectMeta):
                published_property.set_default(dict[published_property.default.__name__])
            if published_property.get.__name__ in dict:
                published_property.get = dict[published_property.get.__name__]
-           if published_property.set != None and published_property.set.__name__ in dict:
+           if published_property.set is not None and published_property.set.__name__ in dict:
                published_property.set = dict[published_property.set.__name__]
         # merge the edit fields with those from the ancestors
         if not hasattr(cls, "dialog_fields"):

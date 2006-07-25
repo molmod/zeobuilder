@@ -40,7 +40,7 @@ class GroupBase(Immediate):
         # B) validating
         cache = context.application.cache
         old_parent = cache.parent
-        if old_parent == None: return False
+        if old_parent is None: return False
         if not isinstance(old_parent, ContainerMixin): return False
         if not old_parent.check_add(NewParentClass): return False
         if cache.some_nodes_fixed: return False
@@ -95,7 +95,7 @@ class UngroupBase(Immediate):
         # B) validating
         cache = context.application.cache
         new_parent = cache.parent
-        if new_parent == None: return False
+        if new_parent is None: return False
         for Class in cache.classes:
             if not issubclass(Class, ContainerMixin): return False
         if cache.some_children_fixed: return False
@@ -172,9 +172,9 @@ class OneLevelHigher(Immediate):
         # B) validating
         cache = context.application.cache
         old_parent = cache.parent
-        if old_parent == None: return False
+        if old_parent is None: return False
         new_parent = old_parent.parent
-        if new_parent == None: return False
+        if new_parent is None: return False
         if cache.some_nodes_fixed: return False
         for Class in cache.classes:
             if not new_parent.check_add(Class): return False

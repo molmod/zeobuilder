@@ -112,10 +112,10 @@ class Composed(Multiple, FaultyMixin):
         else:
             cols = 2
 
-        if (self.label != None) or (self.bu_popup != None):
+        if (self.label is not None) or (self.bu_popup is not None):
             hbox = gtk.HBox(spacing=6)
-            if self.label != None: hbox.pack_start(self.label, expand=False, fill=False)
-            if self.bu_popup != None: hbox.pack_end(self.bu_popup, expand=False, fill=False)
+            if self.label is not None: hbox.pack_start(self.label, expand=False, fill=False)
+            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False, fill=False)
             self.container = gtk.Table(4, cols)
             self.container.attach(hbox, 0, cols, 0, 1, yoptions=0)
             first_edit = 1
@@ -136,10 +136,10 @@ class Composed(Multiple, FaultyMixin):
 
     def tabulate_widgets_horizontal(self):
         cols = len(self.fields)
-        if (self.label != None) or (self.bu_popup != None):
+        if (self.label is not None) or (self.bu_popup is not None):
             hbox = gtk.HBox(spacing=6)
-            if self.label != None: hbox.pack_start(self.label, expand=False, fill=False)
-            if self.bu_popup != None: hbox.pack_end(self.bu_popup, expand=False, fill=False)
+            if self.label is not None: hbox.pack_start(self.label, expand=False, fill=False)
+            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False, fill=False)
             self.container = gtk.Table(2, cols)
             self.container.attach(hbox, 0, cols, 0, 1, yoptions=0)
             first_edit = 1

@@ -34,7 +34,7 @@ def eval_measure(s, measure):
             s = s[:-len(suffices[UNIT])]
             suffix_UNIT = UNIT
             break
-    if suffix_UNIT == None:
+    if suffix_UNIT is None:
         suffix_UNIT = context.application.configuration.default_units[measure]
 
     return from_unit[suffix_UNIT](float(s))
@@ -42,7 +42,7 @@ def eval_measure(s, measure):
 # * expression routines (from value to string)
 
 def express_measure(val, measure, decimals=5, scientific=False, unit=None):
-    if unit == None:
+    if unit is None:
         unit = context.application.configuration.default_units[measure]
 
     printf_character = {True: "E", False: "F"}[scientific]

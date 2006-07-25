@@ -118,7 +118,7 @@ class InteractiveBar(gtk.Table):
     ]
 
     def __init__(self):
-        assert context.application.action_manager != None
+        assert context.application.action_manager is not None
         self.start_button = 0
         # Interactive buttons (gui stuff)
         self.buttons = {}

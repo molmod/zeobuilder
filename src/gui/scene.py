@@ -90,7 +90,7 @@ class Scene(object):
         height = viewport[3]
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        if selection_box != None:
+        if selection_box is not None:
             # set up a select buffer
             glSelectBuffer(self.select_buffer_size)
             glRenderMode(GL_SELECT)
@@ -99,7 +99,7 @@ class Scene(object):
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         # Apply the pick matrix if selecting
-        if selection_box != None:
+        if selection_box is not None:
             gluPickMatrix(0.5 * (selection_box[0] + selection_box[2]),
                           height - 0.5 * (selection_box[1] + selection_box[3]),
                           selection_box[2] - selection_box[0] + 1,
@@ -130,7 +130,7 @@ class Scene(object):
         self.viewer.gl_apply()
         glTranslatef(0.0, 0.0, -znear)
         # Draw the rotation center, only when realy drawing objects:
-        if selection_box == None:
+        if selection_box is None:
             glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
             glShadeModel(GL_SMOOTH)
             self.draw_rotation_center()
@@ -148,18 +148,18 @@ class Scene(object):
         # 2) the translation that brings the rotation center to the carthesian center
         # 3) the rotation
         # 4) the translation that brings the model in front of the observer
-        if context.application.model.universe != None:
-            if selection_box == None: # When just picking objects, don't change the call lists, not needed.
+        if context.application.model.universe is not None:
+            if selection_box is None: # When just picking objects, don't change the call lists, not needed.
                 self.revalidations.reverse()
                 for revalidation in self.revalidations:
                     revalidation()
                 self.revalidations = []
             context.application.model.universe.call_list()
 
-        if selection_box != None:
+        if selection_box is not None:
             # now let the caller analyze the hits.
             temp = glRenderMode(GL_RENDER)
-            if temp == None:
+            if temp is None:
                 return []
             else:
                 return list(temp)
@@ -225,6 +225,6 @@ class Scene(object):
         model_view.apply_before(self.viewer)
         model_view.apply_inverse_before(self.rotation)
         model_view.apply_inverse_before(self.center)
-        if gl_object != None:
+        if gl_object is not None:
             model_view.apply_before(gl_object.get_absolute_parentframe())
         return model_view

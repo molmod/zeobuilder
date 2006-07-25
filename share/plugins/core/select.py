@@ -76,7 +76,7 @@ class SelectTargets(Immediate):
         main = context.application.main
         for reference in references:
             main.toggle_selection(reference, False)
-            if reference.target != None:
+            if reference.target is not None:
                 main.toggle_selection(reference.target, True)
 
 
@@ -90,7 +90,7 @@ class SelectParents(Immediate):
         # B) validating
         parents = context.application.cache.parents
         if len(parents) == 0: return False
-        if len(parents) == 1 and parents[0] == None: return False
+        if len(parents) == 1 and parents[0] is None: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
@@ -100,7 +100,7 @@ class SelectParents(Immediate):
         main = context.application.main
         main.tree_selection.unselect_all()
         for parent in parents:
-            if parent != None: main.toggle_selection(parent, on=True)
+            if parent is not None: main.toggle_selection(parent, on=True)
 
 
 class SelectChildren(Immediate):
@@ -272,7 +272,7 @@ class RestoreSavedSelection(Immediate):
         for referent in referents:
             main.toggle_selection(referent, False)
             for reference in referent.children:
-                if reference.target != None:
+                if reference.target is not None:
                     main.toggle_selection(reference.target, True)
 
 
@@ -334,7 +334,7 @@ class PickSelection(Interactive):
         if len(selection_list) > 0:
             nearest = None
             for sel in selection_list:
-                if nearest == None:
+                if nearest is None:
                     nearest = sel
                 elif sel[0] < nearest[0]:
                     nearest = sel
@@ -359,7 +359,7 @@ class PickSelection(Interactive):
             if (event.button != 3):
                 hit = self.get_nearest(main.drawing_area.scene.draw((event.x, event.y, event.x, event.y)),
                                        main.drawing_area.scene.gl_names)
-                if hit == None:
+                if hit is None:
                     main.tree_selection.unselect_all()
                 else:
                     main.toggle_selection(hit)

@@ -46,16 +46,16 @@ class Reference(Base):
         self.icon = self.overlay_icon
 
     def set_target(self, target):
-        if self.target == None and target != None:
+        if self.target is None and target is not None:
             self.define_target(target)
-        elif self.target != None and target != None:
+        elif self.target is not None and target is not None:
             self.undefine_target()
             self.define_target(target)
-        elif self.target != None and target == None:
+        elif self.target is not None and target is None:
             self.undefine_target()
         else:
             return
-        if self.parent != None: self.parent.set_target(self, target)
+        if self.parent is not None: self.parent.set_target(self, target)
 
     #
     # Tree
@@ -121,11 +121,11 @@ class SpatialReference(Reference):
 
     def set_model(self, model):
         Reference.set_model(self, model)
-        if self.target != None: self.connect_bridge()
+        if self.target is not None: self.connect_bridge()
 
     def unset_model(self):
         Reference.unset_model(self)
-        if self.target != None: self.disconnect_bridge()
+        if self.target is not None: self.disconnect_bridge()
 
     #
     # Targets
@@ -133,10 +133,10 @@ class SpatialReference(Reference):
 
     def define_target(self, new_target):
         Reference.define_target(self, new_target)
-        if self.model != None: self.connect_bridge()
+        if self.model is not None: self.connect_bridge()
 
     def undefine_target(self):
-        if self.model != None: self.disconnect_bridge()
+        if self.model is not None: self.disconnect_bridge()
         Reference.undefine_target(self)
 
     def check_target(self, new_target):

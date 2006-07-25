@@ -118,7 +118,7 @@ class Repeat(Immediate):
         if not Immediate.analyze_selection(): return False
         # B) validating
         last_action = context.application.action_manager.last_action
-        if last_action == None: return False
+        if last_action is None: return False
         if not last_action.want_repeat(): return False
         # C) passed all tests:
         return True
@@ -130,7 +130,7 @@ class Repeat(Immediate):
 
 def delete(nodes):
     for dupe in nodes:
-        if dupe.model != None: # this check must be made because a dupe
+        if dupe.model is not None: # this check must be made because a dupe
                                # might get deleted by the consequence of the
                                # deletion of one of the former dupes.
             primitive.Delete(dupe)

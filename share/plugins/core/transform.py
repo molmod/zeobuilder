@@ -157,7 +157,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         cache = context.application.cache
-        if cache.parent == None: return False
+        if cache.parent is None: return False
         transformed_nodes = cache.transformed_nodes
         if len(transformed_nodes) == 0: return False
         if len(transformed_nodes) == 1 and not isinstance(transformed_nodes[0].transformation, Translation): return False
@@ -178,7 +178,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
             if (len(nodes) >= 2) and isinstance(last_but_one, Vector):
                 b1, e1 = last.translations_relative_to(parent)
                 b2, e2 = last_but_one.translations_relative_to(parent)
-                if (b1 != None) and (e1 != None) and (b2 != None) and (e2 != None):
+                if (b1 is not None) and (e1 is not None) and (b2 is not None) and (e2 is not None):
                     if last.children[0].target == last_but_one.children[0].target:
                         self.parameters.complete.translation_vector = copy.copy(b1)
                     angle = angle(e1 - b1, e2 - b2) / math.pi * 180
@@ -186,7 +186,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
                     self.parameters.complete.set_rotation_properties(angle, rotation_vector, False)
             else:
                 b, e = last.translations_relative_to(self.parent)
-                if (b != None) and (e != None):
+                if (b is not None) and (e is not None):
                     self.parameters.complete.translation_vector = b
                     self.parameters.complete.set_rotation_properties(45.0, e - b, False)
         elif isinstance(last, GLTransformationMixin) and isinstance(last.transformation, Translation):
@@ -218,7 +218,7 @@ class TranslateDialog(ImmediateWithMemory):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         cache = context.application.cache
-        if cache.parent == None: return False
+        if cache.parent is None: return False
         if len(cache.translated_nodes) == 0: return False
         if cache.some_nodes_fixed: return False
         # B) validating
@@ -232,7 +232,7 @@ class TranslateDialog(ImmediateWithMemory):
         last = cache.nodes[-1]
         if isinstance(last, Vector):
             b, e = last.translations_relative_to(cache.parent)
-            if (b != None) and (e != None):
+            if (b is not None) and (e is not None):
                 self.parameters.translation.translation_vector = e - b
         if self.translation.run(self.parameters.translation) != gtk.RESPONSE_OK:
             self.parameters.clear()
@@ -309,14 +309,14 @@ class RoundRotation(Immediate):
                 else:
                     record.quaternion = None
 
-            return filter(lambda record: record.quaternion != None, records)
+            return filter(lambda record: record.quaternion is not None, records)
 
         new_quaternions = filter_out_high_cost(new_quaternions)
 
         for index1, record1 in enumerate(new_quaternions):
-            if record1.quaternion != None:
+            if record1.quaternion is not None:
                 for record2 in new_quaternions[:index1]:
-                    if record2.quaternion != None:
+                    if record2.quaternion is not None:
                         if 1 - numpy.dot(record1.quaternion, record2.quaternion) < 1e-3:
                             record2.quaternion = None
                 for record2 in rounded_quaternions:
@@ -324,7 +324,7 @@ class RoundRotation(Immediate):
                         record1.quaternion = None
                         break
 
-        new_quaternions = filter(lambda record: record.quaternion != None, new_quaternions)
+        new_quaternions = filter(lambda record: record.quaternion is not None, new_quaternions)
 
         rounded_quaternions = filter_out_high_cost(rounded_quaternions)
 
@@ -340,7 +340,7 @@ class RoundRotation(Immediate):
         if self.select_quaternion.run(user_record) != gtk.RESPONSE_OK:
             raise CancelException
 
-        if user_record.quaternion != None:
+        if user_record.quaternion is not None:
             new_transformation = copy.deepcopy(victim.transformation)
             new_transformation.rotation_matrix = factor * quaternion_to_rotation_matrix(user_record.quaternion)
             primitive.SetPublishedProperty(victim, "transformation", new_transformation)
@@ -373,9 +373,9 @@ class RotateMouseMixin(object):
             rotation_axis = numpy.array([0.0, 0.0, -1.0])
             rotation_angle = rotz - self.former_rotz
             self.former_rotz = rotz
-        if self.user_to_parent != None:
+        if self.user_to_parent is not None:
             rotation_axis = numpy.dot(self.user_to_parent, rotation_axis)
-        if self.rotation_axis != None:
+        if self.rotation_axis is not None:
             rotation_axis = self.rotation_axis * {True: 1, False: -1}[numpy.dot(self.rotation_axis, rotation_axis) > 0]
         temp = Rotation()
         temp.set_rotation_properties(rotation_angle, rotation_axis, False)
@@ -403,9 +403,9 @@ class RotateKeyboardMixin(object):
         else:
             return None
 
-        if self.user_to_parent != None:
+        if self.user_to_parent is not None:
             rotation_axis = numpy.dot(self.user_to_parent, rotation_axis)
-        if self.rotation_axis != None:
+        if self.rotation_axis is not None:
             rotation_axis = self.rotation_axis * {True: 1, False: -1}[numpy.dot(self.rotation_axis, rotation_axis) > 0]
         temp = Rotation()
         temp.set_rotation_properties(rotation_angle, rotation_axis, False)
@@ -419,7 +419,7 @@ class RotateObjectBase(InteractiveWithMemory):
     def analyze_selection(parameters=None):
         if not InteractiveWithMemory.analyze_selection(parameters): return False
         application = context.application
-        if application.main == None: return False
+        if application.main is None: return False
         nodes = application.cache.nodes
         if len(nodes) == 0: return False
         if nodes[0].get_fixed(): return False
@@ -445,7 +445,7 @@ class RotateObjectBase(InteractiveWithMemory):
             # take the information out of the helper nodes
             if isinstance(helper, Vector):
                 b, e = helper.translations_relative_to(self.victim.parent)
-                if not ((b == None) or (e == None)):
+                if not ((b is None) or (e is None)):
                     self.rotation_center = b
                     self.rotation_axis = e - b
                     norm = numpy.dot(self.rotation_axis, self.rotation_axis)
@@ -510,7 +510,7 @@ class RotateObjectKeyboard(RotateObjectBase, RotateKeyboardMixin):
 
     def key_press(self, drawing_area, event):
         rotation = RotateKeyboardMixin.key_press(self, drawing_area, event)
-        if rotation != None: self.apply_rotation(rotation)
+        if rotation is not None: self.apply_rotation(rotation)
         self.changed = True
 
 
@@ -519,7 +519,7 @@ class RotateWorldBase(Interactive):
         # A) calling ancestor
         if not Interactive.analyze_selection(): return False
         # B) validating
-        if context.application.main == None: return False
+        if context.application.main is None: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
@@ -549,7 +549,7 @@ class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
 
     def key_press(self, drawing_area, event):
         rotation = RotateKeyboardMixin.key_press(self, drawing_area, event)
-        if rotation == None: return
+        if rotation is None: return
         drawing_area.scene.rotation.apply_before(rotation)
         drawing_area.queue_draw()
 
@@ -580,7 +580,7 @@ class TranslateMouseMixin(object):
             trans = numpy.array([0.0, 0.0, delta_z])
             self.update_victim_depth()
             self.former_x = event.x
-        if self.user_to_parent == None:
+        if self.user_to_parent is None:
             return trans
         else:
             return numpy.dot(self.user_to_parent, trans)
@@ -609,7 +609,7 @@ class TranslateKeyboardMixin(object):
         self.update_victim_depth()
         translation_vector *= 0.02 * (1 + abs(self.victim_depth))
 
-        if self.user_to_parent == None:
+        if self.user_to_parent is None:
             return translation_vector
         else:
             return numpy.dot(self.user_to_parent, translation_vector)
@@ -622,9 +622,9 @@ class TranslateObjectBase(InteractiveWithMemory):
     def analyze_selection(parameters=None):
         if not InteractiveWithMemory.analyze_selection(parameters): return False
         application = context.application
-        if application == None: return False
+        if application is None: return False
         victim = application.cache.node
-        if victim == None: return False
+        if victim is None: return False
         if victim.get_fixed(): return False
         if not isinstance(victim, GLTransformationMixin): return False
         if not isinstance(victim.transformation, Translation): return False
@@ -685,7 +685,7 @@ class TranslateWorldBase(Interactive):
         # A) calling ancestor
         if not Interactive.analyze_selection(): return False
         # B) validating
-        if context.application.main == None: return False
+        if context.application.main is None: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
@@ -725,7 +725,7 @@ class TranslateViewerBase(Interactive):
         # A) calling ancestor
         if not Interactive.analyze_selection(): return False
         # B) validating
-        if context.application.main == None: return False
+        if context.application.main is None: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)

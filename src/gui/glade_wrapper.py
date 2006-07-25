@@ -49,7 +49,7 @@ class GladeWrapper(object):
                 break
 
         # load the requested widget as widget_dict_name
-        if widget_dict_name == None:
+        if widget_dict_name is None:
             widget_dict_name = widget
         widget = self.widgets.get_widget(widget)
         if widget is None:
@@ -73,7 +73,7 @@ class GladeWrapper(object):
     def init_proxies(self, widgets_list):
         "This method will create the atributes in self that refer to the widgets passed in the wedgets_list as as list of strings."
         for widget_name in widgets_list:
-            if self.widgets.get_widget(widget_name) == None:
+            if self.widgets.get_widget(widget_name) is None:
                 raise GladeWrapperError, "The widget (" + widget_name + ") in the widgets_list parameter does not exist."
             else:
                 self.__dict__[widget_name] = self.widgets.get_widget(widget_name)
