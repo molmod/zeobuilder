@@ -20,6 +20,7 @@
 # --
 
 from elementary import Faulty
+from mixin import ambiguous
 from zeobuilder.conversion import express_measure, eval_measure
 from molmod.units import LENGTH
 import popups
@@ -47,12 +48,12 @@ class Entry(Faulty):
     def read_from_widget(self):
         representation = self.entry.get_text()
         if representation == "":
-            return None
+            return ambiguous
         else:
             return representation
 
     def write_to_widget(self, representation, original=False):
-        if representation == None: representation = ""
+        if representation == ambiguous: representation = ""
         self.entry.set_text(representation)
         Faulty.write_to_widget(self, representation, original)
 
@@ -73,12 +74,12 @@ class Float(Entry):
         return ("%.*" + {True: "E", False: "F"}[self.scientific]) % (self.decimals, value)
 
     def check_ranges(self, value, name):
-        if (self.low != None):
+        if (self.low is not None):
             if self.low_inclusive and value < self.low:
                 raise ValueError, "Value out of range. The value you entered (%s) violates %s >= %s." % (self.convert_to_representation(value), name, self.convert_to_representation(self.low))
             if not self.low_inclusive and value <= self.low:
                 raise ValueError, "Value out of range. The value you entered (%s) violates %s > %s." % (self.convert_to_representation(value), name, self.convert_to_representation(self.low))
-        if (self.high != None):
+        if (self.high is not None):
             if self.high_inclusive and value > self.high:
                 raise ValueError, "Value out of range. The value you entered (%s) violates %s <= %s." % (self.convert_to_representation(value), name, self.convert_to_representation(self.high))
             if not self.high_inclusive and value >= self.high:
@@ -103,9 +104,9 @@ class Int(Entry):
 
     def convert_to_value(self, representation):
         value = int(representation)
-        if self.minimum != None and value < self.minimum:
+        if self.minimum is not None and value < self.minimum:
             raise ValueError, "Value too low. (int >= %i)" % self.minimum
-        if self.maximum != None and value > self.maximum:
+        if self.maximum is not None and value > self.maximum:
             raise ValueError, "Value too high. (int <= %i)" % self.maximum
         return value
 

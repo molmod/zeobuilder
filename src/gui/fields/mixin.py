@@ -28,6 +28,15 @@ __all__ = ["ReadMixin", "EditMixin", "InvalidField", "FaultyMixin"]
 changed_indicator = "<span foreground=\"red\">*</span>"
 
 
+class Ambiguous(object):
+    def __str__(self):
+        return "(ambiguous state)"
+
+
+ambiguous = Ambiguous()
+
+
+
 class ReadMixin(object):
     mutable_attribute = False
 
@@ -52,20 +61,20 @@ class ReadMixin(object):
         raise NotImplementedError
 
     def read(self, node=None):
-        if self.node != None:
-            if node == None: node = self.node
+        if self.node is not None:
+            if node is None: node = self.node
             representation = self.convert_to_representation(self.read_from_node(node))
             self.write_to_widget(representation, True)
 
     def read_multiplex(self):
-        if self.nodes != None:
+        if self.nodes is not None:
             common = self.convert_to_representation(self.read_from_node(self.nodes[0]))
             for node in self.nodes[1:]:
                 if common != self.convert_to_representation(self.read_from_node(node)):
-                    self.set_inconsistent_capability(True)
-                    self.write_to_widget(None, True)
+                    self.set_ambiguous_capability(True)
+                    self.write_to_widget(ambiguous, True)
                     return
-            self.set_inconsistent_capability(False)
+            self.set_ambiguous_capability(False)
             self.write_to_widget(common, True)
 
     def write(self, node=None):
@@ -77,7 +86,7 @@ class ReadMixin(object):
     def check(self):
         pass
 
-    def set_inconsistent_capability(self, inconsistent):
+    def set_ambiguous_capability(self, inconsistent):
         pass
 
     def changed_names(self):
@@ -175,7 +184,7 @@ class EditMixin(ReadMixin):
 
     def changed(self):
         representation = self.read_from_widget()
-        return representation != self.original and representation != None
+        return representation != self.original and representation != ambiguous
 
     def on_widget_changed(self, widget):
         self.update_label()

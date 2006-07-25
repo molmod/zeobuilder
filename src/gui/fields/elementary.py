@@ -20,7 +20,7 @@
 # --
 
 from base import Single, Multiple
-from mixin import ReadMixin, EditMixin, FaultyMixin, InvalidField
+from mixin import ReadMixin, EditMixin, FaultyMixin, InvalidField, ambiguous
 
 import gtk
 
@@ -181,9 +181,9 @@ class Composed(Multiple, FaultyMixin):
         return tuple([field.convert_to_representation(value[index]) for index, field in enumerate(self.fields)])
 
     def write_to_widget(self, representation, original=False):
-        if representation == None:
+        if representation == ambiguous:
             for field in self.fields:
-                field.write_to_widget(None, original)
+                field.write_to_widget(ambiguous, original)
         else:
             for index, field in enumerate(self.fields):
                 field.write_to_widget(representation[index], original)
@@ -191,8 +191,8 @@ class Composed(Multiple, FaultyMixin):
 
     def read_from_widget(self):
         result = tuple([field.read_from_widget() for field in self.fields])
-        if None in result:
-            return None
+        if ambiguous in result:
+            return ambiguous
         else:
             return result
 

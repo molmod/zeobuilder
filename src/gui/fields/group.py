@@ -40,7 +40,7 @@ class Table(Group):
         self.container.set_row_spacings(6)
         self.container.set_col_spacings(6)
         self.container.set_border_width(self.table_border_width)
-        if self.label != None:
+        if self.label is not None:
             self.container.resize(1, 4)
             self.container.attach(self.label, 0, 3, 0, 1, xoptions=gtk.FILL, yoptions=0)
             first_edit = 1
@@ -54,15 +54,15 @@ class Table(Group):
                 container_left = first_edit
                 container_right = first_edit + 3
                 if not field.self_containing:
-                    if field.label != None:
+                    if field.label is not None:
                         self.container.attach(field.label, first_edit, first_edit+1, last_row, last_row+1, xoptions=gtk.FILL, yoptions=0)
                         container_left += 1
-                    if isinstance(field, EditMixin) and field.bu_popup != None:
+                    if isinstance(field, EditMixin) and field.bu_popup is not None:
                         container_right -= 1
                         self.container.attach(field.bu_popup, first_edit+2, first_edit+3, last_row, last_row+1, xoptions=0, yoptions=0)
                 self.container.attach(field.container, container_left, container_right, last_row, last_row+1, xoptions=field.xoptions, yoptions=field.yoptions)
                 last_row += 1
-        if self.label != None:
+        if self.label is not None:
             da = gtk.DrawingArea()
             da.set_size_request(10, 0)
             self.container.attach(da, 0, 1, 1, last_row+1, xoptions=0)

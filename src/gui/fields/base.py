@@ -99,22 +99,22 @@ class Multiple(Single):
         Single.destroy_widgets(self)
 
     def read(self, node=None):
-        if self.node != None:
+        if self.node is not None:
             for field in self.fields:
                 field.read()
 
     def read_multiplex(self):
-        if self.nodes != None:
+        if self.nodes is not None:
             for field in self.fields:
                 field.read_multiplex()
 
     def write(self, node=None):
-        if self.node != None:
+        if self.node is not None:
             for field in self.fields:
                field.write()
 
     def write_multiplex(self):
-        if self.nodes != None:
+        if self.nodes is not None:
             for field in self.fields:
                 field.write_multiplex()
 

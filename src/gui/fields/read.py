@@ -20,6 +20,7 @@
 # --
 
 from elementary import Read
+from mixin import ambiguous
 from zeobuilder.conversion import express_measure, express_data_size
 from molmod.units import LENGTH
 
@@ -39,14 +40,14 @@ class Label(Read):
         self.container.set_use_markup(True)
 
     def convert_to_representation(self, value):
-        if value == None:
+        if value == ambiguous:
             return ""
         else:
             return str(value)
 
     def write_to_widget(self, representation, original=False):
-        if representation == None:
-            self.container.set_label("<span foreground=\"gray\">(Inconsistent values)</span>")
+        if representation == ambiguous:
+            self.container.set_label("<span foreground=\"gray\">%s</span>" % ambiguous)
         else:
             self.container.set_label(representation)
 
@@ -58,13 +59,12 @@ class Handedness(Label):
         return (numpy.linalg.det(attribute.get_absolute_frame().rotation_matrix) > 0)
 
     def convert_to_representation(self, value):
-        if value == None:
-            return "mixed"
+        if value == ambiguous:
+            return ambiguous
+        elif value:
+            return "The selected frames are right-handed."
         else:
-            return {True:"right", False: "left"}[value]
-
-    def write_to_widget(self, representation, original=False):
-        Label.write_to_widget(self, "The selected frames are %s-handed." % representation, original)
+            return "The selected frames are left-handed."
 
     def applicable_attribute(self, attribute):
         from zeobuilder.transformations import Rotation
@@ -82,8 +82,8 @@ class BBox(Label):
                 express_measure(value.corners[1][2] - value.corners[0][2], LENGTH))
 
     def write_to_widget(self, representation, original=False):
-        if representation == None:
-            Label.write_to_widget(self, None, original)
+        if representation == ambiguous:
+            Label.write_to_widget(self, ambiguous, original)
         else:
             Label.write_to_widget(self, "<span foreground=\"gray\">(</span> %s <span foreground=\"gray\">,</span> %s <span foreground=\"gray\">,</span> %s <span foreground=\"gray\">)</span>" % representation, original)
 

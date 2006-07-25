@@ -63,18 +63,14 @@ class Default(Base):
     "The default popup for a field, only has a revert function"
     def __init__(self, field, parent_window):
         Base.__init__(self, field, parent_window)
-        if field.original == None:
-            str_original = "Inconsistent"
-        else:
-            str_original = str(field.original)
-        self.add_item("Revert to " + str_original, self.write_to_widget, field.original)
+        self.add_item("Revert to %s" + field.original, self.write_to_widget, field.original)
 
 class Length(Default):
     "A popup that can convert lengths to other unit systems"
     def __init__(self, field, parent_window):
         Default.__init__(self, field, parent_window)
         representation = self.field.read_from_widget()
-        if representation == None: return
+        if representation == ambiguous: return
         self.add_separator()
         try:
             length = self.field.convert_to_value(representation)
@@ -91,7 +87,7 @@ class Translation(Default):
         Default.__init__(self, field, parent_window)
         self.add_item("Reset", self.write_to_widget, ('0.0', '0.0', '0.0'))
         representation = self.field.read_from_widget()
-        if representation == None: return
+        if representation == ambiguous: return
 
 
 class Rotation(Default):
@@ -99,14 +95,14 @@ class Rotation(Default):
         Default.__init__(self, field, parent_window)
         self.add_item("Reset", self.write_to_widget, ('0.0', '0.0', '1.0', '0.0', False))
         representation = self.field.read_from_widget()
-        if representation == None: return
+        if representation == ambiguous: return
 
 
 class Element(Base):
     def __init__(self, field, parent_window):
         Base.__init__(self, field, parent_window)
-        if field.original == None:
-            str_original = "Inconsistent"
+        if field.original == ambiguous:
+            str_original = str(field.original)
         else:
             str_original = moldata.periodic.symbol[field.original]
         self.add_item("Revert to " + str_original, self.write_to_widget, field.original)

@@ -20,6 +20,7 @@
 # --
 
 from elementary import Edit
+from mixin import ambiguous
 from molmod.data import periodic
 from zeobuilder.conversion import express_measure
 from molmod.units import MASS, LENGTH
@@ -43,7 +44,8 @@ class CheckButton(Edit):
         self.check_button.add(self.label)
         self.container = gtk.HBox(spacing=6)
         self.container.pack_start(self.check_button)
-        if self.bu_popup != None: self.container.pack_start(self.bu_popup, expand=False, fill=False)
+        if self.bu_popup is not None:
+            self.container.pack_start(self.bu_popup, expand=False, fill=False)
 
     def destroy_widgets(self):
         self.check_button = None
@@ -51,12 +53,12 @@ class CheckButton(Edit):
 
     def read_from_widget(self):
         if self.check_button.get_inconsistent():
-            return None
+            return ambiguous
         else:
             return self.check_button.get_active()
 
     def write_to_widget(self, representation, original=False):
-        if representation == None:
+        if representation == ambiguous:
             self.check_button.set_active(False)
             self.check_button.set_inconsistent(True)
         else:
@@ -100,7 +102,7 @@ class ComboBox(Edit):
         Edit.destroy_widgets(self)
 
     def write_to_widget(self, representation, original=False):
-        if representation == None:
+        if representation == ambiguous:
             iter = self.combo_model.get_iter_first()
         else:
             iter = self.combo_model.get_iter(representation)
@@ -112,24 +114,24 @@ class ComboBox(Edit):
 
     def read_from_widget(self):
         iter = self.combo_box.get_active_iter()
-        if iter == None:
-            return None
+        if iter is None:
+            return ambiguous
         representation = self.combo_model.get_path(iter)
         if self.inconsistent and representation == self.combo_model.get_path(self.combo_model.get_iter_first()):
-            return None
+            return ambiguous
         else:
             return representation
 
     def convert_to_value(self, representation):
         return self.combo_model.get_value(self.combo_model.get_iter(representation), 0)
 
-    def set_inconsistent_capability(self, inconsistent):
+    def set_ambiguous_capability(self, inconsistent):
         if self.inconsistent and not inconsistent:
             self.inconsistent = False
             self.combo_model.remove(self.combo_model.get_iter_first())
         elif not self.inconsistent and inconsistent:
             self.inconsistent = True
-            self.combo_model.prepend([None, " "])
+            self.combo_model.prepend([ambiguous, str(ambiguous)])
 
 
 class List(Edit):
@@ -178,7 +180,7 @@ class List(Edit):
         Edit.destroy_widgets(self)
 
     def write_to_widget(self, representation, original=False):
-        if representation == None:
+        if representation == ambiguous:
             iter = self.list_store.get_iter_first()
         else:
             iter = self.list_store.get_iter(representation)
@@ -190,24 +192,24 @@ class List(Edit):
 
     def read_from_widget(self):
         model, iter = self.list_selection.get_selected()
-        if iter == None:
-            return None
+        if iter is None:
+            return ambiguous
         representation = self.list_store.get_path(iter)
         if self.inconsistent and representation == self.list_store.get_path(self.list_store.get_iter_first()):
-            return None
+            return ambiguous
         else:
             return representation
 
     def convert_to_value(self, representation):
         return self.list_store.get_value(self.list_store.get_iter(representation), 0)
 
-    def set_inconsistent_capability(self, inconsistent):
+    def set_ambiguous_capability(self, inconsistent):
         if self.inconsistent and not inconsistent:
             self.inconsistent = False
             self.list_store.remove(self.list_store.get_iter_first())
         elif not self.inconsistent and inconsistent:
             self.inconsistent = True
-            self.list_store.prepend([" "] * len(self.fields) + [None])
+            self.list_store.prepend([str(ambiguous)] + [" "] * (len(self.fields)-1) + [ambiguous])
 
 
 class Element(Edit):
@@ -252,11 +254,11 @@ class Element(Edit):
         self.bu_former = None
         self.container = gtk.VBox(spacing=6)
         self.container.set_border_width(self.border_width)
-        if (self.label != None) and (self.bu_popup != None):
+        if (self.label is not None) and (self.bu_popup is not None):
             hbox = gtk.HBox(spacing=6)
             self.container.pack_start(hbox)
-            if self.label != None: hbox.pack_start(self.label, expand=False)
-            if self.bu_popup != None: hbox.pack_end(self.bu_popup, expand=False)
+            if self.label is not None: hbox.pack_start(self.label, expand=False)
+            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False)
         self.container.pack_start(ta_elements)
 
     def destroy_widgets(self):
@@ -267,7 +269,7 @@ class Element(Edit):
 
     def on_bu_element_toggled(self, widget, number):
         if widget.get_active() == True:
-            if (self.bu_former != widget) and (self.bu_former != None):
+            if (self.bu_former != widget) and (self.bu_former is not None):
                 # Put out the former bu_element
                 temp = self.bu_former
                 self.bu_former = widget
@@ -307,11 +309,11 @@ class TextView(Edit):
         self.container = gtk.VBox(spacing=6)
         self.container.set_border_width(self.border_width)
 
-        if (self.label != None) or (self.bu_popup != None):
+        if (self.label is not None) or (self.bu_popup is not None):
             hbox = gtk.HBox(spacing=6)
             self.container.pack_start(hbox, expand=False, fill=True)
-            if self.label != None: hbox.pack_start(self.label, expand=False)
-            if self.bu_popup != None: hbox.pack_end(self.bu_popup, expand=False)
+            if self.label is not None: hbox.pack_start(self.label, expand=False)
+            if self.bu_popup is not None: hbox.pack_end(self.bu_popup, expand=False)
 
         text_view = gtk.TextView()
         self.text_buffer = text_view.get_buffer()
@@ -335,7 +337,7 @@ class TextView(Edit):
             return value
 
     def write_to_widget(self, representation, original=False):
-        if representation == None: representation = ""
+        if representation == ambiguous: representation = ""
         self.text_buffer.set_text(representation)
         Edit.write_to_widget(self, representation, original)
 
@@ -351,7 +353,7 @@ class TextView(Edit):
         if not self.line_breaks:
             representation = representation.replace("\n", " ")
         if representation == "":
-            return None
+            return ambiguous
         else:
             return representation
 
