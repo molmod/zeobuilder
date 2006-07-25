@@ -20,6 +20,7 @@
 # --
 
 from zeobuilder import context
+from zeobuilder.nodes.reference import Reference
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 import zeobuilder.actions.primitive as primitive
@@ -38,7 +39,10 @@ class EditProperties(Immediate):
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
         # B) validating
-        if len(context.application.cache.nodes) == 0: return False
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        for cls in cache.classes:
+            if issubclass(cls, Reference): return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
