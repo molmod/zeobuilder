@@ -98,7 +98,7 @@ class ComboBox(Edit):
         self.combo_box.add_attribute(text_cell_renderer, "text", 1)
         self.combo_box.connect('changed', self.on_widget_changed)
         self.container = self.combo_box
-        self.ambiguous = False
+        self.can_ambiguous = False
         for value, label in self.choices:
             iter = self.combo_model.append([value, label])
             self.paths[value] = self.combo_model.get_path(iter)
@@ -132,7 +132,7 @@ class ComboBox(Edit):
             if iter is None:
                 return ambiguous
             representation = self.combo_model.get_path(iter)
-            if self.ambiguous and representation == self.combo_model.get_path(self.combo_model.get_iter_first()):
+            if self.can_ambiguous and representation == self.combo_model.get_path(self.combo_model.get_iter_first()):
                 return ambiguous
             else:
                 return representation
@@ -140,12 +140,12 @@ class ComboBox(Edit):
     def convert_to_value(self, representation):
         return self.combo_model.get_value(self.combo_model.get_iter(representation), 0)
 
-    def set_ambiguous_capability(self, ambiguous):
-        if self.ambiguous and not ambiguous:
-            self.ambiguous = False
+    def set_ambiguous_capability(self, can_ambiguous):
+        if self.can_ambiguous and not can_ambiguous:
+            self.can_ambiguous = False
             self.combo_model.remove(self.combo_model.get_iter_first())
-        elif not self.ambiguous and ambiguous:
-            self.ambiguous = True
+        elif not self.can_ambiguous and can_ambiguous:
+            self.can_ambiguous = True
             self.combo_model.prepend([ambiguous, str(ambiguous)])
 
 
@@ -180,7 +180,7 @@ class List(Edit):
         self.container.add(self.list_view)
         self.container.set_policy(gtk.POLICY_NEVER, gtk.POLICY_AUTOMATIC)
         self.container.set_size_request(-1, 250)
-        self.ambiguous = False
+        self.can_ambiguous = False
         self.list_selection.connect('changed', self.on_widget_changed)
 
         for record in self.records:
@@ -217,7 +217,7 @@ class List(Edit):
             if iter is None:
                 return ambiguous
             representation = self.list_store.get_path(iter)
-            if self.ambiguous and representation == self.list_store.get_path(self.list_store.get_iter_first()):
+            if self.can_ambiguous and representation == self.list_store.get_path(self.list_store.get_iter_first()):
                 return ambiguous
             else:
                 return representation
@@ -225,12 +225,12 @@ class List(Edit):
     def convert_to_value(self, representation):
         return self.list_store.get_value(self.list_store.get_iter(representation), 0)
 
-    def set_ambiguous_capability(self, ambiguous):
-        if self.ambiguous and not ambiguous:
-            self.ambiguous = False
+    def set_ambiguous_capability(self, can_ambiguous):
+        if self.can_ambiguous and not can_ambiguous:
+            self.can_ambiguous = False
             self.list_store.remove(self.list_store.get_iter_first())
-        elif not self.ambiguous and ambiguous:
-            self.ambiguous = True
+        elif not self.can_ambiguous and can_ambiguous:
+            self.can_ambiguous = True
             self.list_store.prepend([str(ambiguous)] + [" "] * (len(self.fields)-1) + [ambiguous])
 
 
