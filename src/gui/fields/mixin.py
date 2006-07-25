@@ -86,7 +86,7 @@ class ReadMixin(object):
     def check(self):
         pass
 
-    def set_ambiguous_capability(self, inconsistent):
+    def set_ambiguous_capability(self, ambiguous):
         pass
 
     def changed_names(self):
