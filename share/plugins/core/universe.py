@@ -23,13 +23,16 @@
 from zeobuilder import context
 from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property, DialogFieldInfo
 from zeobuilder.nodes.elementary import GLContainerBase
+from zeobuilder.nodes.parent_mixin import ReferentMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.helpers import FrameAxes
+from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.actions.composed import ImmediateWithMemory
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui import load_image
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.transformations import Translation
+from zeobuilder.zml import dump_to_file, load_from_file
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 
@@ -39,7 +42,7 @@ from molmod.units import angstrom
 from OpenGL.GL import *
 import numpy, gtk
 
-import copy
+import math, copy, StringIO
 
 
 class PeriodicBox(UnitCell):
@@ -362,10 +365,11 @@ class Universe(GLPeriodicContainer, FrameAxes):
     #
 
     def draw(self):
+        # reduce the number of repetitions to one for inactive axes
         repetitions = self.repetitions * self.cell_active + 1 - self.cell_active
         for position in yield_all_positions(repetitions):
             glPushMatrix()
-            t = numpy.dot(self.cell, (1 - repetitions) * 0.5 + position)
+            t = numpy.dot(self.cell, position)
             glTranslate(t[0], t[1], t[2])
             GLPeriodicContainer.draw(self)
             glPopMatrix()
@@ -415,19 +419,140 @@ class UnitCellToCluster(ImmediateWithMemory):
         node = context.application.cache.node
         if not isinstance(node, UnitCell): return False
         if sum(node.cell_active) == 0: return False
+        if hasattr(parameters, "interval_a") and not node.cell_active[0]: return False
+        if hasattr(parameters, "interval_b") and not node.cell_active[1]: return False
+        if hasattr(parameters, "interval_c") and not node.cell_active[2]: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
 
     def ask_parameters(self):
-        self.parameters.interval_a = numpy.array([-0.5, 0.5], float)
-        self.parameters.interval_b = numpy.array([-0.5, 0.5], float)
-        self.parameters.interval_c = numpy.array([-0.5, 0.5], float)
+        universe = context.application.cache.node
+        if universe.cell_active[0]:
+            self.parameters.interval_a = numpy.array([-0.5, -0.5 + universe.repetitions[0]], float)
+        if universe.cell_active[1]:
+            self.parameters.interval_b = numpy.array([-0.5, -0.5 + universe.repetitions[1]], float)
+        if universe.cell_active[2]:
+            self.parameters.interval_c = numpy.array([-0.5, -0.5 + universe.repetitions[2]], float)
         if self.cuttoff.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
     def do(self):
-        pass
+        universe = context.application.cache.node
+        def extend_to_cluster(axis, interval):
+            if interval is None: return
+            assert universe.cell_active[axis]
+            interval.sort()
+            index_min = int(math.floor(interval[0]))
+            index_max = int(math.ceil(interval[1]))
+
+            positioned = [
+                node
+                for node
+                in universe.children
+                if (
+                    isinstance(node, GLTransformationMixin) and
+                    isinstance(node.transformation, Translation)
+                )
+            ]
+            if len(positioned) == 0: return
+
+            serialized = StringIO.StringIO()
+            dump_to_file(serialized, positioned)
+
+            # replication the positioned objects
+            new_children = {}
+            for cell_index in xrange(index_min, index_max+1):
+                serialized.seek(0)
+                nodes = load_from_file(serialized)
+                new_children[cell_index] = {}
+                for node_index, node in enumerate(nodes):
+                    position = node.transformation.translation_vector + universe.cell[:,axis]*cell_index
+                    fractional = universe.to_fractional(position)
+                    if (fractional[axis] < interval[0]) or (fractional[axis] > interval[1]):
+                        continue
+                    node.transformation.translation_vector = position
+                    new_children[cell_index][node_index] = node
+
+            new_connectors = []
+            # replicate the objects that connect these positioned objects
+            for cell_index in xrange(index_min, index_max+1):
+                for connector in universe.children:
+                    if not isinstance(connector, ReferentMixin): continue
+                    skip = False
+                    for reference in connector.children:
+                        if not isinstance(reference, SpatialReference):
+                            skip = True
+                            break
+                    if skip: continue
+
+                    first_target_orig = connector.children[0].target
+                    first_target_index = positioned.index(first_target_orig)
+                    first_target = new_children[cell_index].get(first_target_index)
+                    if first_target is None:
+                        continue
+                    new_targets = [first_target]
+
+                    skip = False
+                    for reference in connector.children[1:]:
+                        other_target_orig = reference.target
+                        shortest_vector = universe.shortest_vector((
+                            other_target_orig.transformation.translation_vector
+                           -first_target_orig.transformation.translation_vector
+                        ))
+                        translation = first_target.transformation.translation_vector + shortest_vector
+                        other_cell_index = universe.to_index(translation)
+                        other_target_index = positioned.index(other_target_orig)
+                        other_cell_children = new_children.get(other_cell_index[axis])
+                        if other_cell_children is None:
+                            skip = True
+                            break
+                        other_target = other_cell_children.get(other_target_index)
+                        if other_target is None:
+                            skip = True
+                            break
+                        new_targets.append(other_target)
+                    if skip:
+                        del new_targets
+                        continue
+
+                    state = connector.__getstate__()
+                    state["targets"] = new_targets
+                    new_connectors.append(connector.__class__(**state))
+
+            # forget about the others
+
+            serialized.close()
+            del serialized
+
+            # remove the existing nodes
+
+            while len(universe.children) > 0:
+                primitive.Delete(universe.children[0])
+            del positioned
+
+            # remove the periodicity
+
+            tmp_active = universe.cell_active.copy()
+            tmp_active[axis] = False
+            primitive.SetPublishedProperty(universe, "cell_active", tmp_active)
+
+            # add the new nodes
+
+            for nodes in new_children.itervalues():
+                for node in nodes.itervalues():
+                    primitive.Add(node, universe)
+
+            for connector in new_connectors:
+                primitive.Add(connector, universe)
+
+
+        if hasattr(self.parameters, "interval_a"):
+            extend_to_cluster(0, self.parameters.interval_a)
+        if hasattr(self.parameters, "interval_b"):
+            extend_to_cluster(1, self.parameters.interval_b)
+        if hasattr(self.parameters, "interval_c"):
+            extend_to_cluster(2, self.parameters.interval_c)
 
 
 nodes = {

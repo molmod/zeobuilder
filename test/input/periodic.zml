@@ -1,0 +1,294 @@
+<?xml version='1.0'?>
+<zml_file version='0.1' single='False'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <array label="cell_active">
+    <tuple label="shape">
+     <int>3</int>
+    </tuple>
+    <cells>False True True </cells>
+   </array>
+   <array label="repetitions">
+    <tuple label="shape">
+     <int>3</int>
+    </tuple>
+    <cells>1 1 1 </cells>
+   </array>
+   <str label="name">Universe</str>
+   <bool label="box_visible">True</bool>
+   <bool label="expanded">True</bool>
+   <array label="cell">
+    <tuple label="shape">
+     <int>3</int>
+     <int>3</int>
+    </tuple>
+    <cells>13.4953438705 1.85230209988 6.35075005672 4.84638371101e-16 13.0977537563 -4.71519135226 -1.99059518868e-16 0.0 8.55192420801 </cells>
+   </array>
+   <bool label="visible">True</bool>
+   <float label="axis_thickness">0.18897261249</float>
+   <bool label="axes_visible">True</bool>
+   <float label="axis_length">1.8897261249</float>
+   <list label="children">
+    <model_object id='1' class='Box'>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <bool label="visible">True</bool>
+     <array label="size">
+      <tuple label="shape">
+       <int>3</int>
+      </tuple>
+      <cells>1.8897261249 1.00000527077 1.00000527077 </cells>
+     </array>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <tuple label="shape">
+        <int>3</int>
+       </tuple>
+       <cells>-1.2151170104 -2.2998222004 -0.127111604638 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <tuple label="shape">
+        <int>3</int>
+        <int>3</int>
+       </tuple>
+       <cells>0.436941792433 -0.287784125724 0.852210165984 0.870501844737 -0.103297346213 -0.481202864263 0.226513594149 0.952108163628 0.20538168472 </cells>
+      </array>
+     </transformation>
+     <str label="name">Boxa</str>
+    </model_object>
+    <model_object id='2' class='Box'>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <bool label="visible">True</bool>
+     <array label="size">
+      <tuple label="shape">
+       <int>3</int>
+      </tuple>
+      <cells>1.8897261249 1.00000527077 1.00000527077 </cells>
+     </array>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <tuple label="shape">
+        <int>3</int>
+       </tuple>
+       <cells>-2.60729769674 0.67578737217 -2.21861688097 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <tuple label="shape">
+        <int>3</int>
+        <int>3</int>
+       </tuple>
+       <cells>0.436941792433 -0.287784125724 0.852210165984 0.870501844737 -0.103297346213 -0.481202864263 0.226513594149 0.952108163628 0.20538168472 </cells>
+      </array>
+     </transformation>
+     <str label="name">Boxa</str>
+    </model_object>
+    <model_object id='3' class='Arrow'>
+     <str label="name">Arrow</str>
+     <bool label="visible">True</bool>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <float label="arrow_radius">0.3</float>
+     <bool label="expanded">False</bool>
+     <float label="arrow_length">0.6</float>
+     <float label="arrow_position">0.5</float>
+     <float label="radius">0.15</float>
+     <int label="quality">50</int>
+     <list label="targets">
+      <reference to='1' />
+      <reference to='2' />
+     </list>
+    </model_object>
+    <model_object id='4' class='Sphere'>
+     <str label="name">Sphere</str>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <bool label="visible">True</bool>
+     <float label="radius">0.5</float>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <tuple label="shape">
+        <int>3</int>
+       </tuple>
+       <cells>2.36036296947 -1.44811638011 1.0186233516 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='5' class='Arrow'>
+     <str label="name">Arrow</str>
+     <bool label="visible">True</bool>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <float label="arrow_radius">0.3</float>
+     <bool label="expanded">False</bool>
+     <float label="arrow_length">0.6</float>
+     <float label="arrow_position">0.5</float>
+     <float label="radius">0.15</float>
+     <int label="quality">50</int>
+     <list label="targets">
+      <reference to='2' />
+      <reference to='4' />
+     </list>
+    </model_object>
+    <model_object id='6' class='Sphere'>
+     <str label="name">Sphere</str>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <bool label="visible">True</bool>
+     <float label="radius">0.5</float>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <tuple label="shape">
+        <int>3</int>
+       </tuple>
+       <cells>-0.285939566577 4.2699918621 0.795465551761 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='7' class='Arrow'>
+     <str label="name">Arrow</str>
+     <bool label="visible">True</bool>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <float label="arrow_radius">0.3</float>
+     <bool label="expanded">False</bool>
+     <float label="arrow_length">0.6</float>
+     <float label="arrow_position">0.5</float>
+     <float label="radius">0.15</float>
+     <int label="quality">50</int>
+     <list label="targets">
+      <reference to='1' />
+      <reference to='6' />
+     </list>
+    </model_object>
+    <model_object id='8' class='Arrow'>
+     <str label="name">Arrow</str>
+     <bool label="visible">True</bool>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <float label="arrow_radius">0.3</float>
+     <bool label="expanded">False</bool>
+     <float label="arrow_length">0.6</float>
+     <float label="arrow_position">0.5</float>
+     <float label="radius">0.15</float>
+     <int label="quality">50</int>
+     <list label="targets">
+      <reference to='4' />
+      <reference to='6' />
+     </list>
+    </model_object>
+    <model_object id='9' class='Arrow'>
+     <str label="name">Arrow</str>
+     <bool label="visible">True</bool>
+     <array label="color">
+      <tuple label="shape">
+       <int>4</int>
+      </tuple>
+      <cells>0.7 0.7 0.7 1.0 </cells>
+     </array>
+     <float label="arrow_radius">0.3</float>
+     <bool label="expanded">False</bool>
+     <float label="arrow_length">0.6</float>
+     <float label="arrow_position">0.5</float>
+     <float label="radius">0.15</float>
+     <int label="quality">50</int>
+     <list label="targets">
+      <reference to='1' />
+      <reference to='4' />
+     </list>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='10' class='Folder'>
+   <bool label="expanded">True</bool>
+   <str label="name">Root folder</str>
+   <list label="children">
+    <model_object id='11' class='Notes'>
+     <binary label="notes">VGhpcyBpcyBhIHRlc3Qu
+</binary>
+     <str label="name">Notes</str>
+    </model_object>
+    <model_object id='12' class='Folder'>
+     <bool label="expanded">True</bool>
+     <str label="name">Folder</str>
+     <list label="children">
+      <model_object id='13' class='Point'>
+       <str label="name">Point</str>
+       <array label="color">
+        <tuple label="shape">
+         <int>4</int>
+        </tuple>
+        <cells>0.7 0.7 0.7 1.0 </cells>
+       </array>
+       <float label="spike_length">0.3</float>
+       <bool label="visible">True</bool>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <tuple label="shape">
+          <int>3</int>
+         </tuple>
+         <cells>0.0 0.0 0.0 </cells>
+        </array>
+       </translation>
+       <float label="spike_thickness">0.1</float>
+      </model_object>
+      <model_object id='14' class='Sphere'>
+       <str label="name">Sphere</str>
+       <array label="color">
+        <tuple label="shape">
+         <int>4</int>
+        </tuple>
+        <cells>0.7 0.7 0.7 1.0 </cells>
+       </array>
+       <bool label="visible">True</bool>
+       <float label="radius">0.5</float>
+       <int label="quality">50</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <tuple label="shape">
+          <int>3</int>
+         </tuple>
+         <cells>0.0 0.0 0.0 </cells>
+        </array>
+       </translation>
+      </model_object>
+     </list>
+    </model_object>
+   </list>
+  </model_object>
+ </list>
+</zml_file>

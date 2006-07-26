@@ -94,7 +94,7 @@ class Vector(GLReferentBase):
     #
 
     def revalidate_total_list(self):
-        if self.total_list > 0:
+        if self.gl_active:
             glNewList(self.total_list, GL_COMPILE)
             if self.visible:
                 glPushName(self.draw_list)
@@ -107,11 +107,11 @@ class Vector(GLReferentBase):
             self.total_list_valid = True
 
     def revalidate_draw_list(self):
-        if self.draw_list > 0:
+        if self.gl_active > 0:
             GLReferentBase.revalidate_draw_list(self)
 
     def revalidate_boundingbox_list(self):
-        if self.boundingbox_list > 0:
+        if self.gl_active:
             #print "Compiling selection list (" + str(self.boundingbox_list) + "): " + str(self.name)
             glNewList(self.boundingbox_list, GL_COMPILE)
             glPushMatrix()
@@ -133,17 +133,9 @@ class Vector(GLReferentBase):
     # Vector
     #
 
-    def translation_relative_to(self, target, other):
-        if target is not None:
-            return target.get_frame_relative_to(other).translation_vector
-        else:
-            return None
-
-    def translations_relative_to(self, other):
-        return tuple([self.translation_relative_to(self.children[i].target, other) for i in (0, 1)])
-
     def shortest_vector_relative_to(self, other):
-        b, e = self.translations_relative_to(other)
+        b = self.children[0].translation_relative_to(other)
+        e = self.children[1].translation_relative_to(other)
         if (b is None) or (e is None):
             return None
         else:
@@ -156,7 +148,7 @@ class Vector(GLReferentBase):
         else:
             self.length = math.sqrt(numpy.dot(relative_translation, relative_translation))
             if self.length > 0:
-                self.orientation.translation_vector = self.translation_relative_to(self.children[0].target, self.parent)
+                self.orientation.translation_vector = self.children[0].translation_relative_to(self.parent)
                 c = relative_translation[2] / self.length
                 if c == 1.0:
                     self.orientation.set_rotation_properties(0, numpy.array([1.0, 0.0, 0.0]), False)

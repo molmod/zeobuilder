@@ -26,6 +26,7 @@ from zeobuilder.nodes.base import Base
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import bridge as tree_bridge
+from zeobuilder.transformations import Translation
 from zeobuilder.gui import load_image
 
 import gtk.gdk, gobject
@@ -84,7 +85,7 @@ class Reference(Base):
     def define_target(self, new_target):
         assert self.target is None, "Reference already has a target"
         assert new_target is not None, "Must assign a target"
-        assert self.check_target(new_target), "Target not accepted"
+        assert self.check_target(new_target), "Target %s not accepted" % new_target
         self.target = new_target
         if self.model is not None:
             self.target.references.append(self)
@@ -140,7 +141,7 @@ class SpatialReference(Reference):
         Reference.undefine_target(self)
 
     def check_target(self, new_target):
-        if not isinstance(new_target, GLTransformationMixin): return False
+        if not isinstance(new_target, GLTransformationMixin) or not isinstance(new_target.transformation, Translation): return False
         return Reference.check_target(self, new_target)
 
     def on_target_move(self, model_object):
@@ -162,3 +163,13 @@ class SpatialReference(Reference):
         for model_object, connection_identifier in self.bridge_handlers:
             model_object.disconnect(connection_identifier)
         self.bridge_handlers = []
+
+    #
+    # About translation
+    #
+
+    def translation_relative_to(self, other):
+        if self.target is not None:
+            return self.target.get_frame_relative_to(other).translation_vector
+        else:
+            return None

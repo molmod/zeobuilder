@@ -531,6 +531,18 @@ class CoreActions(ApplicationTestCase):
             TranslateDialog(parameters)
         self.run_test_application(fn)
 
+    def test_unit_cell_to_cluster(self):
+        def fn():
+            context.application.model.file_open("input/periodic.zml")
+            context.application.main.toggle_selection(context.application.model.universe, on=True)
+            parameters = Parameters()
+            parameters.interval_b = numpy.array([0.0, 2.0], float)
+            parameters.interval_c = numpy.array([0.0, 2.0], float)
+            UnitCellToCluster = context.application.plugins.get_action("UnitCellToCluster")
+            self.assert_(UnitCellToCluster.analyze_selection(parameters))
+            UnitCellToCluster(parameters)
+        self.run_test_application(fn, quit=False)
+
     #def test_connect_bonds_automatically_precursor(self):
     #    from zeobuilder.actions.composed.connect.automated import ConnectAtomsAutomaticallyPhysical
     #    self.load_file("precursor_atoms.zml")
