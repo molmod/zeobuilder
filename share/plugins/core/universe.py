@@ -475,6 +475,17 @@ class Universe(GLPeriodicContainer, FrameAxes):
         GLPeriodicContainer.revalidate_bounding_box(self)
         FrameAxes.extend_bounding_box(self, self.bounding_box)
 
+    #
+    # Flags
+    #
+
+    def set_selected(self, selected):
+        if selected != self.selected:
+            assert self.model is not None, "Can only select a node if it is part of a model."
+            self.selected = selected
+            self.invalidate_total_list()
+            self.invalidate_box_list()
+
 
 class UnitCellToCluster(ImmediateWithMemory):
     description = "Convert the unit cell to a cluster"
