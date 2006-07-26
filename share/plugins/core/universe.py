@@ -230,9 +230,9 @@ class Universe(GLPeriodicContainer, FrameAxes):
     # Tree
     #
 
-    def check_add(Class, ModelClass):
-        if not GLPeriodicContainer.check_add(ModelClass): return False
-        if issubclass(ModelClass, Universe): return False
+    def check_add(Class, ModelObjectClass):
+        if not GLPeriodicContainer.check_add(ModelObjectClass): return False
+        if issubclass(ModelObjectClass, Universe): return False
         return True
     check_add = classmethod(check_add)
 

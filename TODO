@@ -34,7 +34,6 @@ TODO core
 
 ### Implementation
 
-    * ModelClass -> ModelObjectClass
     * Remove the "single" stuff from zml
     * Python 2.4 dependencies:
         - Use generator expression where possible (sum, min, max, tuple, list, dict, enumerate)

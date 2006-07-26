@@ -39,10 +39,10 @@ class Frame(GLFrameBase, FrameAxes):
     # Tree
     #
 
-    def check_add(Class, ModelClass):
-        if not GLFrameBase.check_add(ModelClass): return False
+    def check_add(Class, ModelObjectClass):
+        if not GLFrameBase.check_add(ModelObjectClass): return False
         Universe = context.application.plugins.get_node("Universe")
-        if issubclass(ModelClass, Universe): return False
+        if issubclass(ModelObjectClass, Universe): return False
         return True
     check_add = classmethod(check_add)
 
