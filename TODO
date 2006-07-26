@@ -7,16 +7,6 @@ TODO LISTS
 TODO core
 ---------
 
-### Bugs
-
-    * write_pov on periodic systems is broken
-
-
-### New/Updated actions
-
-    * Invert action that pops an inversion center dialog
-
-
 ### User interface
 
     * Rewrite the invalid messages in the dialogs
@@ -65,6 +55,7 @@ TODO before first release
 
 ### Bugs
 
+    * write_pov on periodic systems is broken
 	* Correct face culling for inverted objects
     * apply lint tools on code to find extra bugs
     * do manual tests in addition to the unit tests.
@@ -75,6 +66,7 @@ TODO before first release
     * Create an action for the transformations that the scanresults dialog does
     * Action for changing visualization of sets of atoms and bonds (children)
         -> should be done maybe with representations
+    * Invert action that pops an inversion center dialog
 
 
 ### New/Updated model objects
