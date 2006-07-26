@@ -124,7 +124,7 @@ class RotateDialog(ImmediateWithMemory):
 
     def analyze_selection(parameters=None):
         # A) calling ancestor
-        if not ImmediateWithMemory.analyze_selection(parameters=None): return False
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
         node = context.application.cache.node
         if not isinstance(node, GLTransformationMixin): return False
@@ -274,7 +274,7 @@ class RoundRotation(Immediate):
 
     def analyze_selection(parameters=None):
         # A) calling ancestor
-        if not ImmediateWithMemory.analyze_selection(parameters=None): return False
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
         node = context.application.cache.node
         if not isinstance(node, GLTransformationMixin): return False
