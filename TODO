@@ -11,6 +11,7 @@ TODO core
 
     * bounding box is not calculated / updated correctly when number
       of repetitions of universe is set higher than one.
+    * write_pov on periodic systems is broken
 
 
 ### New/Updated actions
@@ -33,7 +34,7 @@ TODO core
 
 ### Implementation
 
-    * Modify unit_cell.cell -> columns to rows
+    * ModelClass -> ModelObjectClass
     * Remove the "single" stuff from zml
     * Python 2.4 dependencies:
         - Use generator expression where possible (sum, min, max, tuple, list, dict, enumerate)
@@ -157,7 +158,6 @@ TODO following releases
         - logical operations on SavedSelections
         - define plugins and selected instances as locals
     * Full support for periodic an symmetric unit cells
-        - clipping planes
         - implementation of all two dimensional and three dimensional
           crystal lattices
     * An interactive feedback connection to/from computational tools

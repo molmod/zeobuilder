@@ -31,6 +31,7 @@ from molmod.units import angstrom
 
 from OpenGL.GLU import *
 from OpenGL.GL import *
+import numpy
 
 import math
 
@@ -47,6 +48,7 @@ class Scene(object):
         self.reset_view()
         self.gl_names = {}
         self.revalidations = []
+        self.clip_planes = {}
 
     def init(self, r=0.0, g=0.0, b=0.0): # gl_context sensitive method
         # And then there was light (and material)!
@@ -142,12 +144,11 @@ class Scene(object):
         self.center.gl_apply_inverse()
         #print self.transformation
 
-        # Here comes all the drawing. The following transformations will be applied (in order)
-        # 1) transformations within this draw functions
-        #    (these should be undone, using the modelview_matrix stack)
-        # 2) the translation that brings the rotation center to the carthesian center
-        # 3) the rotation
-        # 4) the translation that brings the model in front of the observer
+        # define the clipping planes:
+        for GL_CLIP_PLANEi, coefficients in self.clip_planes.iteritems():
+            temp = coefficients.copy()
+            glClipPlane(GL_CLIP_PLANEi, coefficients)
+
         if context.application.model.universe is not None:
             if selection_box is None: # When just picking objects, don't change the call lists, not needed.
                 self.revalidations.reverse()

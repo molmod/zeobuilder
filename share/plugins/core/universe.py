@@ -36,7 +36,7 @@ from zeobuilder.zml import dump_to_file, load_from_file
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 
-from molmod.unit_cell import UnitCell
+from molmod.unit_cell import UnitCell as MolmodUnitCell
 from molmod.units import angstrom
 
 from OpenGL.GL import *
@@ -45,7 +45,7 @@ import numpy, gtk
 import math, copy, StringIO
 
 
-class PeriodicBox(UnitCell):
+class UnitCell(MolmodUnitCell):
 
     __metaclass__ = NodeClass
 
@@ -58,22 +58,10 @@ class PeriodicBox(UnitCell):
         #    raise ValueError, "The volume of the unit cell must be significantly larger than zero."
         self.cell = cell
         self.update_reciproke()
-        self.invalidate_draw_list()
-        for child in self.children:
-            child.invalidate_draw_list()
-            child.invalidate_boundingbox_list()
 
     def set_cell_active(self, cell_active):
         self.cell_active = cell_active
         self.update_reciproke()
-        self.invalidate_draw_list()
-        for child in self.children:
-            child.invalidate_draw_list()
-            child.invalidate_boundingbox_list()
-
-    def set_box_visible(self, box_visible):
-        self.box_visible = box_visible
-        self.invalidate_draw_list()
 
     published_properties = PublishedProperties({
         # The columns of the cell are the vectors that correspond
@@ -81,7 +69,6 @@ class PeriodicBox(UnitCell):
         # other words this matrix transforms a unit cube to the unit cell.
         "cell": Property(numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, set_cell),
         "cell_active": Property(numpy.array([False, False, False]), lambda self: self.cell_active, set_cell_active),
-        "box_visible": Property(True, lambda self: self.box_visible, set_box_visible)
     })
 
     #
@@ -98,123 +85,10 @@ class PeriodicBox(UnitCell):
             label_text="Active directions",
             attribute_name="cell_active",
         )),
-        DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
-            label_text="Show periodic box (if active)",
-            attribute_name="box_visible",
-        ))
     ])
 
-    #
-    # Draw
-    #
 
-    def draw_box(self, light, draw_line, set_color):
-        # filter out the inactive cell vectors: the rows of the cage matrix
-        # correspond to the half ridges if that dimension is periodic, other
-        # wise the row is zero.
-        cage = numpy.transpose(0.5 * self.cell * self.cell_active)
-        # calculate all corners of the parallellepipedum
-        # r=right, l=left, t=top, b=bottom, f=front, a=back
-        rtf =  cage[0] + cage[1] + cage[2]
-        ltf = -cage[0] + cage[1] + cage[2]
-        rbf =  cage[0] - cage[1] + cage[2]
-        lbf = -cage[0] - cage[1] + cage[2]
-        rta =  cage[0] + cage[1] - cage[2]
-        lta = -cage[0] + cage[1] - cage[2]
-        rba =  cage[0] - cage[1] - cage[2]
-        lba = -cage[0] - cage[1] - cage[2]
-        # colors
-        col  = {True: 6.0, False: 4.0}[light]
-        sat  = {True: 0.0, False: 1.0}[light]
-        gray = {True: 6.0, False: 4.0}[light]
-
-        if self.cell_active[0]:
-            # the ridges parallell to the x-axis
-            set_color(col, sat, sat)
-            draw_line(lba, rba)
-            set_color(gray, gray, gray)
-            if self.cell_active[2]:
-                draw_line(lbf, rbf)
-            if self.cell_active[1] and self.cell_active[2]:
-                draw_line(ltf, rtf)
-            if self.cell_active[1]:
-                draw_line(lta, rta)
-
-        if self.cell_active[1]:
-            # the ridges parallell to the y-axis
-            set_color(sat, col, sat)
-            draw_line(lba, lta)
-            set_color(gray, gray, gray)
-            if self.cell_active[2]:
-                draw_line(lbf, ltf)
-            if self.cell_active[0] and self.cell_active[2]:
-                draw_line(rbf, rtf)
-            if self.cell_active[0]:
-                draw_line(rba, rta)
-
-        if self.cell_active[2]:
-            # the ridges parallell to the z-axis
-            set_color(sat, sat, col)
-            draw_line(lba, lbf)
-            set_color(gray, gray, gray)
-            if self.cell_active[1]:
-                draw_line(lta, ltf)
-            if self.cell_active[0] and self.cell_active[1]:
-                draw_line(rta, rtf)
-            if self.cell_active[0]:
-                draw_line(rba, rbf)
-
-    def draw(self, light):
-        if self.box_visible:
-            def draw_line(begin, end):
-                glVertexf(begin)
-                glVertexf(end)
-
-            def set_color(r, g, b):
-                glMaterial(GL_FRONT, GL_AMBIENT, [r, g, b, 1.0])
-
-            glLineWidth(2)
-            glMaterial(GL_FRONT, GL_DIFFUSE, [0.0, 0.0, 0.0, 0.0])
-            glMaterial(GL_FRONT, GL_SPECULAR, [0.0, 0.0, 0.0, 0.0])
-            glBegin(GL_LINES)
-            self.draw_box(light, draw_line, set_color)
-            glEnd()
-            glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
-
-    def write_pov(self, indenter):
-        if self.box_visible:
-            color = numpy.zeros(3, float)
-            def draw_line(begin, end):
-                indenter.write_line("cylinder {", 1)
-                indenter.write_line("<%f, %f, %f>, <%f, %f, %f>, 0.05" % (tuple(begin) + tuple(end)))
-                indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(color))
-                indenter.write_line("}", -1)
-
-            def set_color(r, g, b):
-                color[0] = r
-                color[1] = g
-                color[2] = b
-
-            self.draw_box(True, draw_line, set_color)
-
-    #
-    # Revalidation
-    #
-
-    def extend_bounding_box(self, bounding_box):
-        if self.box_visible:
-            cage = numpy.transpose(0.5 * self.cell * self.cell_active)
-            bounding_box.extend_with_point( cage[0] + cage[1] + cage[2])
-            bounding_box.extend_with_point(-cage[0] + cage[1] + cage[2])
-            bounding_box.extend_with_point( cage[0] - cage[1] + cage[2])
-            bounding_box.extend_with_point(-cage[0] - cage[1] + cage[2])
-            bounding_box.extend_with_point( cage[0] + cage[1] - cage[2])
-            bounding_box.extend_with_point(-cage[0] + cage[1] - cage[2])
-            bounding_box.extend_with_point( cage[0] - cage[1] - cage[2])
-            bounding_box.extend_with_point(-cage[0] - cage[1] - cage[2])
-
-
-class GLPeriodicContainer(GLContainerBase, PeriodicBox):
+class GLPeriodicContainer(GLContainerBase, UnitCell):
 
     #
     # State
@@ -233,15 +107,25 @@ class GLPeriodicContainer(GLContainerBase, PeriodicBox):
     #
 
     def set_cell(self, cell):
-        PeriodicBox.set_cell(self, cell)
+        UnitCell.set_cell(self, cell)
         self.update_child_positions()
         self.invalidate_boundingbox_list()
+        self.invalidate_draw_list()
+        # for vectors
+        #for child in self.children:
+        #    child.invalidate_draw_list()
+        #    child.invalidate_boundingbox_list()
 
 
     def set_cell_active(self, cell_active):
-        PeriodicBox.set_cell_active(self, cell_active)
+        UnitCell.set_cell_active(self, cell_active)
         self.update_child_positions()
+        self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
+        # for vectors
+        #for child in self.children:
+        #    child.invalidate_draw_list()
+        #    child.invalidate_boundingbox_list()
 
     #
     # Tree
@@ -259,18 +143,6 @@ class GLPeriodicContainer(GLContainerBase, PeriodicBox):
             modelobject.disconnect(self.child_connections[modelobject])
 
     #
-    # Draw
-    #
-
-    def draw(self):
-        GLContainerBase.draw(self)
-        PeriodicBox.draw(self, self.selected)
-
-    def write_pov(self, indenter):
-        PeriodicBox.write_pov(self, indenter)
-        GLContainerBase.write_pov(self, indenter)
-
-    #
     # Invalidate
     #
 
@@ -278,15 +150,7 @@ class GLPeriodicContainer(GLContainerBase, PeriodicBox):
         self.wrap_position_in_cell(child)
 
     #
-    # Revalidate
-    #
-
-    def revalidate_bounding_box(self):
-        GLContainerBase.revalidate_bounding_box(self)
-        PeriodicBox.extend_bounding_box(self, self.bounding_box)
-
-    #
-    # Geometrix
+    # Wrapping
     #
 
     def wrap_position_in_cell(self, child):
@@ -303,7 +167,7 @@ class GLPeriodicContainer(GLContainerBase, PeriodicBox):
                 self.wrap_position_in_cell(child)
 
     def shortest_vector(self, delta):
-        return PeriodicBox.shortest_vector(self, delta)
+        return UnitCell.shortest_vector(self, delta)
 
 
 def yield_all_positions(l):
@@ -317,17 +181,33 @@ def yield_all_positions(l):
 
 class Universe(GLPeriodicContainer, FrameAxes):
     icon = load_image("universe.svg", (20, 20))
+    clip_margin = 0.1
 
     #
     # Properties
     #
 
+    def set_cell(self, cell):
+        GLPeriodicContainer.set_cell(self, cell)
+        self.update_clip_planes()
+
+    def set_cell_active(self, cell_active):
+        GLPeriodicContainer.set_cell_active(self, cell_active)
+        self.update_clip_planes()
+
     def set_repetitions(self, repetitions):
         self.repetitions = repetitions
-        self.invalidate_draw_list()
+        self.update_clip_planes()
+        self.invalidate_box_list()
+        self.invalidate_total_list()
+
+    def set_box_visible(self, box_visible):
+        self.box_visible = box_visible
+        self.invalidate_total_list()
 
     published_properties = PublishedProperties({
         "repetitions": Property(numpy.array([1, 1, 1], int), lambda self: self.repetitions, set_repetitions),
+        "box_visible": Property(True, lambda self: self.box_visible, set_box_visible),
     })
 
     #
@@ -339,7 +219,11 @@ class Universe(GLPeriodicContainer, FrameAxes):
             label_text="Repetitions",
             attribute_name="repetitions",
             invalid_message="Please enter valid repetitions",
-        ))
+        )),
+        DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
+            label_text="Show periodic box (if active)",
+            attribute_name="box_visible",
+        )),
     ])
 
     #
@@ -361,33 +245,244 @@ class Universe(GLPeriodicContainer, FrameAxes):
         self.invalidate_draw_list()
 
     #
+    # OpenGL
+    #
+
+    def initialize_gl(self):
+        self.set_clip_planes()
+        self.box_list = glGenLists(1)
+        ##print "Created box list (%i): %s" % (self.box_list, self.get_name())
+        self.box_list_valid = True
+        GLPeriodicContainer.initialize_gl(self)
+
+    def release_gl(self):
+        GLPeriodicContainer.release_gl(self)
+        ##print "Deleting box list (%i): %s" % (self.box_list, self.get_name())
+        glDeleteLists(self.box_list, 1)
+        del self.box_list
+        del self.box_list_valid
+        self.unset_clip_planes()
+
+    #
+    # Clipping
+    #
+
+    def update_clip_planes(self):
+        self.unset_clip_planes()
+        self.set_clip_planes()
+
+    def set_clip_planes(self):
+        scene = context.application.main.drawing_area.scene
+        assert len(scene.clip_planes) == 0
+        active, inactive = self.get_active_inactive()
+        if len(active) == 1:
+            ridge = self.cell[:,active[0]]
+            length = math.sqrt(numpy.dot(ridge, ridge))
+            normal = ridge / length
+            repetitions = self.repetitions[active[0]]
+            scene.clip_planes = {
+                GL_CLIP_PLANE0: numpy.array(list( normal) + [0.5*length*repetitions + self.clip_margin]),
+                GL_CLIP_PLANE1: numpy.array(list(-normal) + [0.5*length*repetitions + self.clip_margin]),
+            }
+        elif len(active) == 2:
+            ridge_a = self.cell[:,active[0]]
+            normal_a = ridge_a / math.sqrt(numpy.dot(ridge_a, ridge_a))
+            repetitions_a = self.repetitions[active[0]]
+
+            ridge_b = self.cell[:,active[1]]
+            normal_b = ridge_b / math.sqrt(numpy.dot(ridge_b, ridge_b))
+            repetitions_b = self.repetitions[active[1]]
+
+            def add_planes(CP1, CP2, ridge, repetitions, normal_other):
+                ortho = ridge - normal_other*numpy.dot(normal_other, ridge)
+                length = math.sqrt(numpy.dot(ortho, ortho))
+                ortho /= length
+                scene.clip_planes[CP1] = numpy.array(list( ortho) + [0.5*length + self.clip_margin])
+                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [(repetitions-0.5)*length + self.clip_margin])
+
+            add_planes(GL_CLIP_PLANE0, GL_CLIP_PLANE1, ridge_a, repetitions_a, normal_b)
+            add_planes(GL_CLIP_PLANE2, GL_CLIP_PLANE3, ridge_b, repetitions_b, normal_a)
+        elif len(active) == 3:
+            ridge_a = self.cell[:,0]
+            normal_a = ridge_a / math.sqrt(numpy.dot(ridge_a, ridge_a))
+            repetitions_a = self.repetitions[0]
+
+            ridge_b = self.cell[:,1]
+            normal_b = ridge_b / math.sqrt(numpy.dot(ridge_b, ridge_b))
+            repetitions_b = self.repetitions[1]
+
+            ridge_c = self.cell[:,2]
+            normal_c = ridge_c / math.sqrt(numpy.dot(ridge_c, ridge_c))
+            repetitions_c = self.repetitions[2]
+
+            def add_planes(CP1, CP2, ridge, repetitions, normal_other1, normal_other2):
+                ortho = numpy.cross(normal_other1, normal_other2)
+                ortho /= math.sqrt(numpy.dot(ortho, ortho))
+                length = numpy.dot(ortho, ridge)
+                if length < 0:
+                    ortho *= -1
+                length = abs(length)
+                scene.clip_planes[CP1] = numpy.array(list( ortho) + [0.5*length + self.clip_margin])
+                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [(repetitions-0.5)*length + self.clip_margin])
+
+            add_planes(GL_CLIP_PLANE0, GL_CLIP_PLANE1, ridge_a, repetitions_a, normal_b, normal_c)
+            add_planes(GL_CLIP_PLANE2, GL_CLIP_PLANE3, ridge_b, repetitions_b, normal_c, normal_a)
+            add_planes(GL_CLIP_PLANE4, GL_CLIP_PLANE5, ridge_c, repetitions_c, normal_a, normal_b)
+        for GL_CLIP_PLANEi in scene.clip_planes:
+            glEnable(GL_CLIP_PLANEi)
+        context.application.main.drawing_area.queue_draw()
+
+    def unset_clip_planes(self):
+        scene = context.application.main.drawing_area.scene
+        for GL_CLIP_PLANEi in scene.clip_planes:
+            glDisable(GL_CLIP_PLANEi)
+        scene.clip_planes = {}
+        context.application.main.drawing_area.queue_draw()
+
+    #
+    # Invalidation
+    #
+
+
+    def invalidate_box_list(self):
+        if self.gl_active and self.box_list_valid:
+            self.box_list_valid = False
+            context.application.main.drawing_area.queue_draw()
+            context.application.main.drawing_area.scene.add_revalidation(self.revalidate_box_list)
+            ##print "EMIT %s: on-box-list-invalidated" % self.get_name()
+
+    def invalidate_all_lists(self):
+        self.invalidate_box_list()
+        GLPeriodicContainer.invalidate_all_lists(self)
+
+    #
     # Draw
     #
 
+    def draw_box_helper(self, light, draw_line, set_color):
+        col  = {True: 6.0, False: 4.0}[light]
+        sat  = {True: 0.0, False: 1.0}[light]
+        gray = {True: 6.0, False: 4.0}[light]
+
+        def draw_three(origin):
+            if self.cell_active[0]:
+                set_color(col, sat, sat)
+                draw_line(origin, origin+self.cell[:,0])
+            if self.cell_active[1]:
+                set_color(sat, col, sat)
+                draw_line(origin, origin+self.cell[:,1])
+            if self.cell_active[2]:
+                set_color(sat, sat, col)
+                draw_line(origin, origin+self.cell[:,2])
+
+        def draw_gray(origin, axis1, axis2, n1, n2, delta, nd):
+            set_color(gray, gray, gray)
+            if n1 == 0 and n2 == 0:
+                return
+            for i1 in xrange(n1+1):
+                if i1 == 0:
+                    b2 = 1
+                    draw_line(origin+delta, origin+nd*delta)
+                else:
+                    b2 = 0
+                for i2 in xrange(b2, n2+1):
+                    draw_line(origin+i1*axis1+i2*axis2, origin+i1*axis1+i2*axis2+nd*delta)
+
+        origin = -0.5*sum(self.cell.transpose())
+        draw_three(origin)
+        draw_gray(origin, self.cell[:,0], self.cell[:,1], self.repetitions[0], self.repetitions[1], self.cell[:,2], self.repetitions[2])
+        draw_gray(origin, self.cell[:,1], self.cell[:,2], self.repetitions[1], self.repetitions[2], self.cell[:,0], self.repetitions[0])
+        draw_gray(origin, self.cell[:,2], self.cell[:,0], self.repetitions[2], self.repetitions[0], self.cell[:,1], self.repetitions[1])
+
+    def draw_box(self):
+        def draw_line(begin, end):
+            glVertexf(begin)
+            glVertexf(end)
+
+        def set_color(r, g, b):
+            glMaterial(GL_FRONT, GL_AMBIENT, [r, g, b, 1.0])
+
+        glLineWidth(2)
+        glMaterial(GL_FRONT, GL_DIFFUSE, [0.0, 0.0, 0.0, 0.0])
+        glMaterial(GL_FRONT, GL_SPECULAR, [0.0, 0.0, 0.0, 0.0])
+        glBegin(GL_LINES)
+        self.draw_box_helper(self.selected, draw_line, set_color)
+        glEnd()
+        glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
+
     def draw(self):
-        # reduce the number of repetitions to one for inactive axes
-        repetitions = self.repetitions * self.cell_active + 1 - self.cell_active
-        for position in yield_all_positions(repetitions):
-            glPushMatrix()
-            t = numpy.dot(self.cell, position)
-            glTranslate(t[0], t[1], t[2])
-            GLPeriodicContainer.draw(self)
-            glPopMatrix()
+        GLPeriodicContainer.draw(self)
         FrameAxes.draw(self, self.selected)
 
     def write_pov(self, indenter):
         indenter.write_line("union {", 1)
         FrameAxes.write_pov(self, indenter)
-        GLPeriodicContainer.write_pov(self, indenter)
+        if self.box_visible and sum(self.cell_active) > 0:
+            color = numpy.zeros(3, float)
+            def draw_line(begin, end):
+                indenter.write_line("cylinder {", 1)
+                indenter.write_line("<%f, %f, %f>, <%f, %f, %f>, 0.05" % (tuple(begin) + tuple(end)))
+                indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(color))
+                indenter.write_line("}", -1)
+
+            def set_color(r, g, b):
+                color[0] = r
+                color[1] = g
+                color[2] = b
+
+            self.draw_box_helper(True, draw_line, set_color)
         indenter.write_line("}", -1)
 
     #
     # Revalidation
     #
 
-    def revalidate_bounding_box(self):
+    def revalidate_box_list(self):
+        if self.gl_active > 0:
+            ##print "Compiling box list (%i): %s" % (self.box_list,  self.get_name())
+            glNewList(self.box_list, GL_COMPILE)
+            glPushMatrix()
+            if sum(self.cell_active) > 0:
+                self.draw_box()
+            glEndList()
+            self.box_list_valid = True
+
+    def revalidate_total_list(self):
+        if self.gl_active > 0:
+            ##print "Compiling total list (%i): %s" % (self.total_list, self.get_name())
+            glNewList(self.total_list, GL_COMPILE)
+            if self.visible:
+                glPushName(self.draw_list)
+                if self.box_visible: glCallList(self.box_list)
+                if self.selected: glCallList(self.boundingbox_list)
+
+                # repeat the draw list for all the unit cell images.
+                repetitions = (self.repetitions + 2) * self.cell_active + 1 - self.cell_active
+                for position in yield_all_positions(repetitions):
+                    glPushMatrix()
+                    t = numpy.dot(self.cell, numpy.array(position)-self.cell_active)
+                    glTranslate(t[0], t[1], t[2])
+                    glCallList(self.draw_list)
+                    glPopMatrix()
+
+                glPopMatrix()
+                glPopName()
+            glEndList()
+            self.total_list_valid = True
+
+    def extend_bounding_box(self, bounding_box):
         GLPeriodicContainer.revalidate_bounding_box(self)
         FrameAxes.extend_bounding_box(self, self.bounding_box)
+        if self.box_visible:
+            cage = numpy.transpose(0.5 * self.cell * self.cell_active)
+            bounding_box.extend_with_point( cage[0] + cage[1] + cage[2])
+            bounding_box.extend_with_point(-cage[0] + cage[1] + cage[2])
+            bounding_box.extend_with_point( cage[0] - cage[1] + cage[2])
+            bounding_box.extend_with_point(-cage[0] - cage[1] + cage[2])
+            bounding_box.extend_with_point( cage[0] + cage[1] - cage[2])
+            bounding_box.extend_with_point(-cage[0] + cage[1] - cage[2])
+            bounding_box.extend_with_point( cage[0] - cage[1] - cage[2])
+            bounding_box.extend_with_point(-cage[0] - cage[1] - cage[2])
 
 
 class UnitCellToCluster(ImmediateWithMemory):
