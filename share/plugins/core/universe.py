@@ -327,7 +327,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
         self.invalidate_draw_list()
 
     published_properties = PublishedProperties({
-        "repetitions": Property(numpy.array([1, 1, 1]), lambda self: self.repetitions, set_repetitions),
+        "repetitions": Property(numpy.array([1, 1, 1], int), lambda self: self.repetitions, set_repetitions),
     })
 
     #
@@ -555,10 +555,181 @@ class UnitCellToCluster(ImmediateWithMemory):
             extend_to_cluster(2, self.parameters.interval_c)
 
 
+class SuperCell(ImmediateWithMemory):
+    description = "Convert the unit cell to larger unit cell"
+    menu_info = MenuInfo("default/_Object:special", "_Super cell", order=(0, 4, 2, 0))
+
+    repetitions = FieldsDialogSimple(
+        "Super cell",
+        fields.group.Table(
+            fields=[
+                fields.faulty.Int(
+                    attribute_name="repetitions_%s" % ridge.lower(),
+                    invalid_message="Please enter a valid repetition number for ridge %s" % ridge,
+                    label_text=ridge,
+                    minimum=1,
+                )
+                for ridge in ["A", "B", "C"]
+            ],
+            label_text="The number of repetitions along each active axis."
+        ),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+    )
+
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        node = context.application.cache.node
+        if not isinstance(node, UnitCell): return False
+        if sum(node.cell_active) == 0: return False
+        if hasattr(parameters, "repetitions_a") and not node.cell_active[0]: return False
+        if hasattr(parameters, "repetitions_b") and not node.cell_active[1]: return False
+        if hasattr(parameters, "repetitions_c") and not node.cell_active[2]: return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def ask_parameters(self):
+        universe = context.application.cache.node
+        if universe.cell_active[0]:
+            self.parameters.repetitions_a = universe.repetitions[0]
+        if universe.cell_active[1]:
+            self.parameters.repetitions_b = universe.repetitions[0]
+        if universe.cell_active[2]:
+            self.parameters.repetitions_c = universe.repetitions[0]
+        if self.repetitions.run(self.parameters) != gtk.RESPONSE_OK:
+            self.parameters.clear()
+
+    def do(self):
+        # create the repetitions vector
+        repetitions = []
+
+        if hasattr(self.parameters, "repetitions_a"):
+            repetitions.append(self.parameters.repetitions_a)
+        else:
+            repetitions.append(1)
+
+        if hasattr(self.parameters, "repetitions_b"):
+            repetitions.append(self.parameters.repetitions_b)
+        else:
+            repetitions.append(1)
+
+        if hasattr(self.parameters, "repetitions_c"):
+            repetitions.append(self.parameters.repetitions_c)
+        else:
+            repetitions.append(1)
+
+        repetitions = numpy.array(repetitions, int)
+
+        # serialize the positioned children
+
+        universe = context.application.cache.node
+
+        positioned = [
+            node
+            for node
+            in universe.children
+            if (
+                isinstance(node, GLTransformationMixin) and
+                isinstance(node.transformation, Translation)
+            )
+        ]
+        if len(positioned) == 0: return
+
+        serialized = StringIO.StringIO()
+        dump_to_file(serialized, positioned)
+
+        # create the replica's
+
+        # replication the positioned objects
+        new_children = {}
+        for cell_index in yield_all_positions(repetitions):
+            cell_index = numpy.array(cell_index)
+            cell_hash = tuple(cell_index)
+            serialized.seek(0)
+            nodes = load_from_file(serialized)
+            new_children[cell_hash] = nodes
+            for node in nodes:
+                node.transformation.translation_vector += numpy.dot(universe.cell, cell_index - 0.5*(repetitions - 1))
+
+        new_connectors = []
+        # replicate the objects that connect these positioned objects
+        for cell_index in yield_all_positions(repetitions):
+            cell_index = numpy.array(cell_index)
+            cell_hash = tuple(cell_index)
+            for connector in universe.children:
+                if not isinstance(connector, ReferentMixin): continue
+                skip = False
+                for reference in connector.children:
+                    if not isinstance(reference, SpatialReference):
+                        skip = True
+                        break
+                if skip: continue
+
+                first_target_orig = connector.children[0].target
+                first_target_index = positioned.index(first_target_orig)
+                first_target = new_children[cell_hash][first_target_index]
+                assert first_target is not None
+                new_targets = [first_target]
+
+                for reference in connector.children[1:]:
+                    other_target_orig = reference.target
+                    shortest_vector = universe.shortest_vector((
+                        other_target_orig.transformation.translation_vector
+                        -first_target_orig.transformation.translation_vector
+                    ))
+                    translation = first_target.transformation.translation_vector + shortest_vector
+                    other_cell_index = universe.to_index(translation - numpy.dot(universe.cell, -0.5*(repetitions - 1)))
+                    other_cell_index %= repetitions
+                    other_cell_hash = tuple(other_cell_index)
+                    other_target_index = positioned.index(other_target_orig)
+                    other_cell_children = new_children.get(other_cell_hash)
+                    assert other_cell_children is not None
+                    other_target = other_cell_children[other_target_index]
+                    assert other_target is not None
+                    new_targets.append(other_target)
+
+                state = connector.__getstate__()
+                state["targets"] = new_targets
+                new_connectors.append(connector.__class__(**state))
+
+        # forget about the others
+
+        serialized.close()
+        del serialized
+
+        # remove the existing nodes
+
+        while len(universe.children) > 0:
+            primitive.Delete(universe.children[0])
+        del positioned
+
+        # multiply the cell matrix and reset the number of repetitions
+
+        new_matrix = universe.cell * repetitions
+        primitive.SetPublishedProperty(universe, "cell", new_matrix)
+        primitive.SetPublishedProperty(universe, "repetitions", numpy.array([1, 1, 1], int))
+
+        # add the new nodes
+
+        for nodes in new_children.itervalues():
+            for node in nodes:
+                primitive.Add(node, universe)
+
+        for connector in new_connectors:
+            primitive.Add(connector, universe)
+
+
+
+
+
+
 nodes = {
     "Universe": Universe
 }
 
 actions = {
-    "UnitCellToCluster": UnitCellToCluster
+    "UnitCellToCluster": UnitCellToCluster,
+    "SuperCell": SuperCell,
 }

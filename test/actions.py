@@ -541,7 +541,19 @@ class CoreActions(ApplicationTestCase):
             UnitCellToCluster = context.application.plugins.get_action("UnitCellToCluster")
             self.assert_(UnitCellToCluster.analyze_selection(parameters))
             UnitCellToCluster(parameters)
-        self.run_test_application(fn, quit=False)
+        self.run_test_application(fn)
+
+    def test_super_cell(self):
+        def fn():
+            context.application.model.file_open("input/periodic.zml")
+            context.application.main.toggle_selection(context.application.model.universe, on=True)
+            parameters = Parameters()
+            parameters.repetitions_b = 2
+            parameters.repetitions_c = 3
+            SuperCell = context.application.plugins.get_action("SuperCell")
+            self.assert_(SuperCell.analyze_selection(parameters))
+            SuperCell(parameters)
+        self.run_test_application(fn)
 
     #def test_connect_bonds_automatically_precursor(self):
     #    from zeobuilder.actions.composed.connect.automated import ConnectAtomsAutomaticallyPhysical
