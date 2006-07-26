@@ -51,10 +51,9 @@ class ColorMixin(object):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Markup", (1, 0), fields.composed.Color(
+        DialogFieldInfo("Markup", (1, 0), fields.edit.Color(
             label_text="Color",
             attribute_name="color",
-            invalid_message="Invalid color components.",
         ))
     ])
 
@@ -94,15 +93,13 @@ class DoubleSidedColorMixin(object):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Markup", (1, 0), fields.composed.Color(
+        DialogFieldInfo("Markup", (1, 0), fields.edit.Color(
             label_text="Front color",
             attribute_name="front_color",
-            invalid_message="Invalid front color components.",
         )),
-        DialogFieldInfo("Markup", (1, 1), fields.composed.Color(
+        DialogFieldInfo("Markup", (1, 1), fields.edit.Color(
             label_text="Back color",
             attribute_name="back_color",
-            invalid_message="Invalid back color components.",
         ))
     ])
 

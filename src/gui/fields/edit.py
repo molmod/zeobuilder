@@ -19,6 +19,7 @@
 #
 # --
 
+
 from elementary import Edit
 from mixin import ambiguous, insensitive
 from molmod.data import periodic
@@ -26,9 +27,12 @@ from zeobuilder.conversion import express_measure
 from molmod.units import MASS, LENGTH
 import popups
 
-import gtk, gobject, StringIO
+import gtk, gobject, numpy
 
-__all__ = ["CheckButton", "ComboBox", "Element", "TextView"]
+import StringIO
+
+
+__all__ = ["CheckButton", "ComboBox", "Element", "TextView", "Color"]
 
 
 class CheckButton(Edit):
@@ -380,3 +384,56 @@ class TextView(Edit):
             else:
                 return representation
 
+
+class Color(Edit):
+    Popup = popups.Default
+
+    def create_widgets(self):
+        Edit.create_widgets(self)
+        self.color_button = gtk.ColorButton()
+        self.color_button.connect("color-set", self.on_widget_changed)
+        self.color_child = self.color_button.get_children()[0]
+        self.ambiguous_label = gtk.Label(str(ambiguous))
+        self.ambiguous_label.show_all()
+        self.data_widget = self.color_button
+
+    def destroy_widgets(self):
+        self.color_button = None
+        Edit.destroy_widgets(self)
+
+    def convert_to_representation(self, value):
+        return tuple((value[0:3]*66535).astype(int))
+
+    def write_to_widget(self, representation, original=False):
+        if representation == insensitive:
+            self.color_button.set_sensitive(False)
+        else:
+            self.color_button.set_sensitive(True)
+            self.color_button.remove(self.color_button.get_children()[0])
+            if representation == ambiguous:
+                self.color_button.add(self.ambiguous_label)
+            else:
+                self.color_button.add(self.color_child)
+                self.color_button.set_color(gtk.gdk.Color(*representation))
+        Edit.write_to_widget(self, representation, original)
+
+    def convert_to_value(self, representation):
+        result = numpy.array(representation + (1.0,), float)
+        result[0:3] /= 66535
+        return result
+
+    def read_from_widget(self):
+        if not self.color_button.get_property("sensitive"):
+            return insensitive
+        else:
+            if self.color_button.get_children()[0] == self.ambiguous_label:
+                return ambiguous
+            else:
+                tmp = self.color_button.get_color()
+                return (tmp.red, tmp.green, tmp.blue)
+
+    def on_widget_changed(self, widget):
+        Edit.on_widget_changed(self, widget)
+        self.color_button.remove(self.color_button.get_children()[0])
+        self.color_button.add(self.color_child)
+        

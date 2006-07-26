@@ -14,11 +14,6 @@ TODO core
     * A history for the selection filters (saved in a config file)
 
 
-### New/updated dialog fields
-
-    * A nicer color field (with colors)
-
-
 ### Implementation
 
 	* Code documentation + revision of each module
