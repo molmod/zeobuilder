@@ -188,7 +188,7 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
         if name == "zml_file":
             if attrs.getValue("version") != "0.1": raise FilterError, "Only format 0.1 is supported in this version of Zeobuilder."
         else:
-            new_tag = ZMLTag(name, dict([(name, attrs.getValue(name)) for name in attrs.getNames()]))
+            new_tag = ZMLTag(name, dict((name, attrs.getValue(name)) for name in attrs.getNames()))
             if (len(self.hierarchy) == 0) or (self.hierarchy[-1][-1].being_processed):
                 self.hierarchy.append([new_tag])
             else:
@@ -220,12 +220,12 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             else: current_tag.value = False
         elif name == "none": current_tag.value = None
         elif name == "list": current_tag.value = [tag.value for tag in child_tags]
-        elif name == "dict": current_tag.value = dict([(tag.label, tag.value) for tag in child_tags])
-        elif name == "tuple": current_tag.value = tuple([tag.value for tag in child_tags])
+        elif name == "dict": current_tag.value = dict((tag.label, tag.value) for tag in child_tags)
+        elif name == "tuple": current_tag.value = tuple(tag.value for tag in child_tags)
         elif name == "cells":
             current_tag.value = numpy.array([eval(item) for item in current_tag.content.split()])
         elif name == "array":
-            child_dict = dict([(tag.name, tag.value) for tag in child_tags])
+            child_dict = dict((tag.name, tag.value) for tag in child_tags)
             current_tag.value = numpy.reshape(child_dict["cells"], child_dict["tuple"])
         elif name == "vector": current_tag.value = numpy.array([eval(item) for item in current_tag.content.split()])
         elif name == "matrix": current_tag.value = numpy.reshape(numpy.array([eval(item) for item in current_tag.content.split()]), (int(current_tag.attributes["rows"]), -1))
@@ -242,7 +242,7 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             current_tag.value.rotation_matrix = child_tags[0].value
         elif name == "transformation":
             current_tag.value = Complete()
-            child_dict = dict([(tag.label, tag.value) for tag in child_tags])
+            child_dict = dict((tag.label, tag.value) for tag in child_tags)
             current_tag.value.rotation_matrix = child_dict["rotation_matrix"]
             current_tag.value.translation_vector = child_dict["translation_vector"]
         elif name == "reference":
@@ -255,7 +255,7 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             target_ids.append(int(current_tag.attributes["to"]))
         elif name == "model_object":
             Class = context.application.plugins.get_node(str(current_tag.attributes["class"]))
-            state = dict([(tag.label, tag.value) for tag in child_tags])
+            state = dict((tag.label, tag.value) for tag in child_tags)
             current_tag.value = Class(**state)
             self.nodes[int(current_tag.attributes["id"])] = current_tag.value
         else: pass

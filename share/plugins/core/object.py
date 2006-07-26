@@ -50,7 +50,7 @@ class EditProperties(Immediate):
     def do(self):
         victims = context.application.cache.nodes
         # Define the old copy of the state
-        old_states = dict([(victim, copy.deepcopy(victim.__getstate__())) for victim in victims])
+        old_states = dict((victim, copy.deepcopy(victim.__getstate__())) for victim in victims)
         # Let the user make changes
         edit_properties = context.application.edit_properties
         edit_properties.run(victims)

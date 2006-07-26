@@ -27,7 +27,7 @@ def common_parent(parents):
     if None in parents: return None
     if len(parents) == 1: return parents[0]
     parent_traces = [parent.trace() for parent in parents]
-    common_position = min([len(x) for x in parent_traces])-1
+    common_position = min(len(x) for x in parent_traces)-1
     former_trace = parent_traces[0]
     for trace in parent_traces[1:]:
         while trace[common_position] != former_trace[common_position]:
@@ -96,7 +96,7 @@ def list_by_parent(nodes):
     return result
 
 def list_traces_by(nodes):
-    return dict([(node, node.trace()) for node in nodes if node is not None])
+    return dict((node, node.trace()) for node in nodes if node is not None)
 
 def calculate_center(translations):
     center = numpy.zeros(3, float)
