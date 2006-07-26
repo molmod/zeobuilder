@@ -178,6 +178,7 @@ def run_file_dialog(file_dialog, file_function, *args):
         try:
             file_function(filename, *args)
             success = True
+            break
         except (FilterError, FilenameError), e:
             ok_error(str(e))
     file_dialog.hide()
