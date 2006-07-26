@@ -21,11 +21,6 @@ TODO core
 
 ### Implementation
 
-    * Python 2.4 dependencies:
-        - Use sets instead of lists where uniqueness and fast "x in set"
-          operations are required (TODO: CONVERT LIST TO SET)
-        - check all sort methods of sequences and use key and reverse where
-          possible
     * Some ideas
         - separate the common parts of InteractiveRotateObject and
           InteractiveTranslateObject

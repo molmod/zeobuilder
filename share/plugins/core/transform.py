@@ -349,7 +349,7 @@ class RoundRotation(Immediate):
         if len(rounded_quaternions) == 0:
             raise UserError, "No similar rounded rotations found."
 
-        rounded_quaternions.sort(lambda x, y: cmp(x.cost_function, y.cost_function))
+        rounded_quaternions.sort(key=(lambda x: x.cost_function))
 
         self.select_quaternion.main_field.records = rounded_quaternions
         user_record = Record("", rounded_quaternions[0].quaternion)
