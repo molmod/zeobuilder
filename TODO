@@ -10,7 +10,6 @@ TODO core
 ### Bugs
 
     * Draging vectors does not properly invalidate them
-    * Selections in the 3D view are not updated after dragging (vectors)
     * bounding box is not calculated / updated correctly when number
       of repetitions of universe is set higher than one.
     * a newly added vector is not shown in the drawing area and other

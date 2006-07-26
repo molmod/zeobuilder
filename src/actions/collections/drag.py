@@ -53,7 +53,7 @@ class Drag(object):
     def on_drag_data_received(self, tree_view, drag_context, x, y, selection_data, info, timestamp):
         cache = context.application.cache
         model = context.application.model
-        
+
 
         if len(cache.nodes) == 0:
             drag_context.finish(False, False, timestamp)

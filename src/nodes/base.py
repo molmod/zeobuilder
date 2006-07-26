@@ -54,6 +54,8 @@ class Base(gobject.GObject):
     def unset_model(self):
         assert self.model is not None
         self.model.remove_node(self)
+        self.selected = False
+        self.model = None
 
     def get_name(self):
         raise NotImplementedError

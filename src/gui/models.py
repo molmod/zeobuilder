@@ -53,7 +53,6 @@ class Model(ModelBase, gtk.TreeStore):
         #print "Removing node %s (%i)" % (node.get_name(), id(node))
         self.remove(node.iter)
         del node.iter
-        self.model = None
 
     def set_universe(self, universe):
         ModelBase.set_universe(self, universe)
