@@ -125,7 +125,7 @@ def dump_to_file(f, node):
         elif issubclass(cls, ModelObject):
             if node in identifiers:
                 if use_references:
-                    indenter.write_line("<reference to='%id' />" % identifiers[node])
+                    indenter.write_line("<reference to='%i' />" % identifiers[node])
                 else:
                     indenter.write_line("<model_object%s id='%i' class='%s'>" % (name_key, identifiers[node], node.default_name()), 1)
                     for key, item in node.__getstate__().iteritems():
