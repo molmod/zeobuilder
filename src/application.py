@@ -105,7 +105,7 @@ class TestApplication(Application):
     def after_gui(self):
         try:
             self.init_fn()
-            if quit:
+            if self.quit:
                 self.model.file_close()
                 self.main.window.destroy()
                 gtk.main_quit()
