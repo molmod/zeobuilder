@@ -454,7 +454,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
             if self.visible:
                 glPushName(self.draw_list)
                 if self.box_visible: glCallList(self.box_list)
-                if self.selected: glCallList(self.boundingbox_list)
+                if self.selected and sum(self.cell_active) == 0:
+                    glCallList(self.boundingbox_list)
 
                 # repeat the draw list for all the unit cell images.
                 repetitions = (self.repetitions + 2) * self.cell_active + 1 - self.cell_active
@@ -473,16 +474,6 @@ class Universe(GLPeriodicContainer, FrameAxes):
     def extend_bounding_box(self, bounding_box):
         GLPeriodicContainer.revalidate_bounding_box(self)
         FrameAxes.extend_bounding_box(self, self.bounding_box)
-        if self.box_visible:
-            cage = numpy.transpose(0.5 * self.cell * self.cell_active)
-            bounding_box.extend_with_point( cage[0] + cage[1] + cage[2])
-            bounding_box.extend_with_point(-cage[0] + cage[1] + cage[2])
-            bounding_box.extend_with_point( cage[0] - cage[1] + cage[2])
-            bounding_box.extend_with_point(-cage[0] - cage[1] + cage[2])
-            bounding_box.extend_with_point( cage[0] + cage[1] - cage[2])
-            bounding_box.extend_with_point(-cage[0] + cage[1] - cage[2])
-            bounding_box.extend_with_point( cage[0] - cage[1] - cage[2])
-            bounding_box.extend_with_point(-cage[0] - cage[1] - cage[2])
 
 
 class UnitCellToCluster(ImmediateWithMemory):

@@ -9,7 +9,7 @@ TODO core
 
 ### Bugs
 
-    * bounding box is not calculated / updated correctly when number
+    * bounding box is not updated correctly when number
       of repetitions of universe is set higher than one.
     * write_pov on periodic systems is broken
 
@@ -28,7 +28,6 @@ TODO core
 
 ### New/updated dialog fields
 
-    * field ElementSimple and popup ElementSimplePopup
     * A nicer color field (with colors)
 
 
@@ -63,6 +62,7 @@ TODO before first release
 	  	- an action button who's sensitivity depends on the selection cache
 	  	- that atoms that are candidates for connections in the connections
 	  	  scanner must be made configurable. (a la selection filter)
+        - field ElementSimple and popup ElementSimplePopup
 
 
 ### Bugs
