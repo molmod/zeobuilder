@@ -255,8 +255,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
         self.box_list_valid = True
         GLPeriodicContainer.initialize_gl(self)
 
-    def release_gl(self):
-        GLPeriodicContainer.release_gl(self)
+    def cleanup_gl(self):
+        GLPeriodicContainer.cleanup_gl(self)
         ##print "Deleting box list (%i): %s" % (self.box_list, self.get_name())
         glDeleteLists(self.box_list, 1)
         del self.box_list

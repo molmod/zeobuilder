@@ -41,7 +41,6 @@ TODO core
         - check all sort methods of sequences and use key and reverse where
           possible
     * Some ideas
-        - separate a MutableAttributeMixin from the field classes
         - separate the common parts of InteractiveRotateObject and
           InteractiveTranslateObject
 	* Code documentation + revision of each module
