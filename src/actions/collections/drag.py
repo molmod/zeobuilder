@@ -51,24 +51,26 @@ class Drag(object):
         self.drag_actions.sort(key=(lambda a: a.drag_info.order))
 
     def on_drag_data_received(self, tree_view, drag_context, x, y, selection_data, info, timestamp):
+        cache = context.application.cache
         model = context.application.model
+        
 
-        if len(model.selected_nodes) == 0:
+        if len(cache.nodes) == 0:
             drag_context.finish(False, False, timestamp)
             #print "DRAG has no selected nodes"
             return
 
         destination_path, pos = tree_view.get_dest_row_at_pos(x, y)
-        for node in model.selected_nodes:
-            source_path = model.treestore.get_path(node.iter)
+        for node in cache.nodes:
+            source_path = model.get_path(node.iter)
             # check for each source item wether the destination is not a child of it.
             if destination_path[0:len(source_path)] == source_path:
                 drag_context.finish(False, False, timestamp)
                 #print "DROP not accepted"
                 return
 
-        destination_iter = model.treestore.get_iter(destination_path)
-        destination = model.treestore.get_value(destination_iter, 0)
+        destination_iter = model.get_iter(destination_path)
+        destination = model.get_value(destination_iter, 0)
         if (pos == gtk.TREE_VIEW_DROP_INTO_OR_BEFORE) or (pos == gtk.TREE_VIEW_DROP_INTO_OR_AFTER):
             # We assume that the user dropped on top if the item, doesn't always work
             #print "TRY DROP Into"

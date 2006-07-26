@@ -9,7 +9,8 @@ TODO core
 
 ### Bugs
 
-    * DragActions use model.selected_nodes
+    * Draging vectors does not properly invalidate them
+    * Selections in the 3D view are not updated after dragging (vectors)
 
 
 ### New/Updated actions
