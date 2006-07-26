@@ -92,14 +92,16 @@ class Table(Group):
     def destroy_widgets(self):
         if self.buttons != NO_BUTTONS:
             for field in self.fields:
-                field.sensitive_button.destroy()
-                field.sensitive_button = None
+                if field.get_active():
+                    field.sensitive_button.destroy()
+                    field.sensitive_button = None
 
     def read(self, instance=None):
         Group.read(self, instance=None)
         if self.buttons != NO_BUTTONS:
             for field in self.fields:
-                field.sensitive_button.set_active(field.read_from_widget() != insensitive)
+                if field.get_active():
+                    field.sensitive_button.set_active(field.read_from_widget() != insensitive)
 
     def on_button_toggled(self, toggle_button, field):
         if toggle_button.get_active():
