@@ -44,10 +44,12 @@ class GLContainerMixin(ContainerMixin):
     def add(self, model_object, index=-1):
         model_object.request_gl()
         ContainerMixin.add(self, model_object, index)
+        self.invalidate_all_lists()
 
     def remove(self, model_object):
         ContainerMixin.remove(self, model_object)
         model_object.drop_gl()
+        self.invalidate_all_lists()
 
     def check_add(Class, ModelClass):
         if not ContainerMixin.check_add(ModelClass): return False

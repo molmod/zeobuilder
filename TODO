@@ -9,11 +9,8 @@ TODO core
 
 ### Bugs
 
-    * Draging vectors does not properly invalidate them
     * bounding box is not calculated / updated correctly when number
       of repetitions of universe is set higher than one.
-    * a newly added vector is not shown in the drawing area and other
-      new objects are only shown when they are selected
 
 
 ### New/Updated actions
