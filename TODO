@@ -21,9 +21,6 @@ TODO core
 
 ### Implementation
 
-    * Some ideas
-        - separate the common parts of InteractiveRotateObject and
-          InteractiveTranslateObject
 	* Code documentation + revision of each module
  
 
