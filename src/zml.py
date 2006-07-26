@@ -138,7 +138,7 @@ def dump_to_file(f, node):
     dump_stage1(node)
     dump_stage2()
     indenter.write_line("<?xml version='1.0'?>")
-    indenter.write_line("<zml_file version='0.1' single='" + str(isinstance(node, Base)) + "'>", 1)
+    indenter.write_line("<zml_file version='0.1'>", 1)
     dump_stage3(indenter, node, False)
     indenter.write_line("</zml_file>", -1)
 
@@ -174,8 +174,7 @@ class ZMLTag(object):
 
 class ZMLHandler(xml.sax.handler.ContentHandler):
     def __init__(self):
-        self.node = None
-        self.single = False
+        self.root = None
         self.nodes = {}
         self.target_ids = {}
 
@@ -188,7 +187,6 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
     def startElement(self, name, attrs):
         if name == "zml_file":
             if attrs.getValue("version") != "0.1": raise FilterError, "Only format 0.1 is supported in this version of Zeobuilder."
-            self.single = (attrs.getValue("single").strip().lower() == "true")
         else:
             new_tag = ZMLTag(name, dict([(name, attrs.getValue(name)) for name in attrs.getNames()]))
             if (len(self.hierarchy) == 0) or (self.hierarchy[-1][-1].being_processed):
@@ -268,7 +266,7 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
         if len(child_tags) > 0: self.hierarchy.pop()
 
     def endDocument(self):
-        self.node = self.hierarchy[0][0].value
+        self.root = self.hierarchy[0][0].value
         self.hierarchy = []
 
         # fix the referents:
@@ -284,20 +282,18 @@ def load_from_file(f):
     content_handler = ZMLHandler()
     f.seek(0)
     xml.sax.parse(f, content_handler)
-    if content_handler.single: nodes = [content_handler.node]
-    else: nodes = content_handler.node
-    for node in nodes:
+    root = content_handler.root
+    for node in root:
         if isinstance(node, ParentMixin):
             node.reparent()
-    return nodes
+    return root
 
 
 def load_from_string(s):
     content_handler = ZMLHandler()
     xml.sax.parseString(s, content_handler)
-    if content_handler.single: nodes = [content_handler.node]
-    else: nodes = content_handler.node
-    for node in nodes:
+    root = content_handler.root
+    for node in root:
         if isinstance(node, ParentMixin):
             node.reparent()
-    return nodes
+    return root

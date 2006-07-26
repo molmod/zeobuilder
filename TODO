@@ -34,7 +34,6 @@ TODO core
 
 ### Implementation
 
-    * Remove the "single" stuff from zml
     * Python 2.4 dependencies:
         - Use generator expression where possible (sum, min, max, tuple, list, dict, enumerate)
         - Use sets instead of lists where uniqueness and fast "x in set"
