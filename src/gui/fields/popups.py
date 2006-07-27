@@ -239,7 +239,7 @@ class Rotation(Default):
 
 class Element(Base):
     def fill_menu(self):
-        Default.fill_menu(self)
+        Base.fill_menu(self)
         from mixin import ambiguous
         if self.field.original == ambiguous:
             str_original = str(self.field.original)
