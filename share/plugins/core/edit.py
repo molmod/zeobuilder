@@ -211,7 +211,9 @@ class Paste(Immediate):
 
     def do(self):
         parent = context.application.cache.node
-
+        main = context.application.main
+        main.tree_selection.unselect_all()
+        
         def load_func(clipboard, selection_data, user_data):
             string_representation = selection_data.data
             if string_representation is None:
@@ -220,6 +222,7 @@ class Paste(Immediate):
             for node in nodes:
                 if parent.check_add(node.__class__):
                     primitive.Add(node, parent)
+                    main.toggle_selection(node, True)
 
         clipboard = gtk.clipboard_get()
         clipboard.request_contents("ZML", load_func)
@@ -264,16 +267,17 @@ class Duplicate(Immediate):
         parent = cache.parent
         highest_index = cache.highest_index
 
-        # Lazy solution for the moment: could use deepcopy here
         serialized = StringIO.StringIO()
         dump_to_file(serialized, originals)
         serialized.seek(0)
-        #print serialized.getvalue()
         duplicates = load_from_file(serialized)
 
+        main = context.application.main
+        main.tree_selection.unselect_all()
         for duplicate in duplicates:
             highest_index += 1
             primitive.Add(duplicate, parent, index=highest_index)
+            main.toggle_selection(duplicate, True)
 
 
 class EditConfiguration(Immediate):
