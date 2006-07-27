@@ -223,7 +223,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
 class TranslateDialog(ImmediateWithMemory):
     description = "Apply translation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate objects", order=(0, 4, 1, 2, 1, 2))
-    
+
     translation = FieldsDialogSimple(
         "Translation",
         fields.composed.Translation(
@@ -244,10 +244,10 @@ class TranslateDialog(ImmediateWithMemory):
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
-    
+
     def init_parameters(self):
         self.parameters.translation = Translation()
-    
+
     def ask_parameters(self):
         cache = context.application.cache
         last = cache.nodes[-1]

@@ -185,7 +185,7 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
     store_last_parameters = True
 
     analyze_selection = staticmethod(RememberParametersMixin.analyze_selection)
-    
+
     def __init__(self, parameters=None):
         RememberParametersMixin.__init__(self, parameters)
         if self.parameters is None:
@@ -210,7 +210,7 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
 
     def ask_parameters(self):
         raise NotImplementedError
-    
+
     def want_repeat(self):
         RememberParametersMixin.want_repeat(self)
 
