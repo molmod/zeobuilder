@@ -33,8 +33,8 @@ RADIO_BUTTONS = 2
 
 
 class Table(Group):
-    def __init__(self, fields, label_text=None, border_width=12, buttons=NO_BUTTONS):
-        Group.__init__(self, fields, label_text, border_width)
+    def __init__(self, fields, label_text=None, buttons=NO_BUTTONS):
+        Group.__init__(self, fields, label_text)
         self.buttons = buttons
 
     def create_widgets(self):
@@ -56,6 +56,7 @@ class Table(Group):
                 data_widget_left = first_edit
                 data_widget_right = first_edit + 3
                 if field.high_widget:
+                    self.data_widget.set_row_spacings(12)
                     container = field.get_widgets_short_container()
                     container.set_border_width(0)
                     self.data_widget.attach(
@@ -122,8 +123,8 @@ class Table(Group):
 
 
 class HBox(Group):
-    def __init__(self, fields, label_text=None, border_width=6):
-        Group.__init__(self, fields, label_text, border_width)
+    def __init__(self, fields, label_text=None):
+        Group.__init__(self, fields, label_text)
 
     def create_widgets(self):
         Group.create_widgets(self)
@@ -135,8 +136,8 @@ class HBox(Group):
 
 
 class Notebook(Group):
-    def __init__(self, named_fields, label_text=None, border_width=6):
-        Group.__init__(self, [field for (name, field) in named_fields], label_text, border_width)
+    def __init__(self, named_fields, label_text=None):
+        Group.__init__(self, [field for (name, field) in named_fields], label_text)
         self.named_fields = named_fields
 
     def create_widgets(self):
@@ -148,6 +149,7 @@ class Notebook(Group):
                     field.get_widgets_short_container(),
                     gtk.Label(name)
                 )
+                field.container.set_border_width(12)
 
     def show(self, field):
         Group.show(self, field)

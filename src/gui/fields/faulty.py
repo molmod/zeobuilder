@@ -72,8 +72,8 @@ class Entry(Faulty):
 class Float(Entry):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
-        Entry.__init__(self, label_text, border_width, attribute_name, show_popup, history_name, invalid_message)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
+        Entry.__init__(self, label_text, attribute_name, show_popup, history_name, invalid_message)
         self.low = low
         self.high = high
         self.low_inclusive = low_inclusive
@@ -106,8 +106,8 @@ class Float(Entry):
 class Int(Entry):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, minimum=None, maximum=None):
-        Entry.__init__(self, label_text, border_width, attribute_name, show_popup, invalid_message, history_name)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, minimum=None, maximum=None):
+        Entry.__init__(self, label_text, attribute_name, show_popup, invalid_message, history_name)
         self.minimum = minimum
         self.maximum = maximum
 

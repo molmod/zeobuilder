@@ -28,8 +28,8 @@ __all__ = ["Read", "Edit", "Faulty", "Composed", "Group"]
 
 
 class Read(Single, ReadMixin):
-    def __init__(self, label_text=None, border_width=None, attribute_name=None):
-        Single.__init__(self, label_text, border_width)
+    def __init__(self, label_text=None, attribute_name=None):
+        Single.__init__(self, label_text)
         ReadMixin.__init__(self, attribute_name)
 
     def applicable(self, instance):
@@ -37,8 +37,8 @@ class Read(Single, ReadMixin):
 
 
 class Edit(Single, EditMixin):
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None):
-        Single.__init__(self, label_text, border_width)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None):
+        Single.__init__(self, label_text)
         EditMixin.__init__(self, attribute_name, show_popup, history_name)
 
     def applicable(self, instance):
@@ -54,8 +54,8 @@ class Edit(Single, EditMixin):
 
 
 class Faulty(Single, FaultyMixin):
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None):
-        Single.__init__(self, label_text, border_width)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None):
+        Single.__init__(self, label_text)
         FaultyMixin.__init__(self, attribute_name, show_popup, history_name, invalid_message)
 
     def applicable(self, instance):
@@ -73,8 +73,8 @@ class Faulty(Single, FaultyMixin):
 class Composed(Multiple, FaultyMixin):
     high_widget = True
 
-    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
-        Multiple.__init__(self, fields, label_text, border_width)
+    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
+        Multiple.__init__(self, fields, label_text)
         FaultyMixin.__init__(self, attribute_name, show_popup, history_name, invalid_message)
         self.show_field_popups = show_field_popups
 
@@ -153,8 +153,8 @@ class Composed(Multiple, FaultyMixin):
 
 
 class TabulateComposed(Composed):
-    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, vertical=True, horizontal_flat=False):
-        Composed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, history_name, invalid_message, show_field_popups)
+    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, vertical=True, horizontal_flat=False):
+        Composed.__init__(self, fields, label_text, attribute_name, show_popup, history_name, invalid_message, show_field_popups)
         self.vertical = vertical
         self.horizontal_flat = horizontal_flat
         if not vertical and horizontal_flat:
@@ -197,12 +197,13 @@ class TabulateComposed(Composed):
     def tabulate_widgets_horizontal(self, flat):
         cols = len(self.fields)
         self.data_widget = gtk.HBox()
-        self.data_widget.set_spacing(6)
+        self.data_widget.set_spacing(18)
         for index, field in enumerate(self.fields):
             if flat:
                 container = field.get_widgets_flat_container(self.show_field_popups)
             else:
                 container = field.get_widgets_short_container(self.show_field_popups)
+            container.set_border_width(0)
             self.data_widget.pack_start(container)
 
 

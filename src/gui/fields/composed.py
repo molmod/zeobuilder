@@ -41,7 +41,7 @@ __all__ = ["Vector", "Translation", "Rotation", "Box", "Color",
 class Vector(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, vector_name="r"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, vector_name="r"):
         if length: FieldClass = Length
         else: FieldClass = Float
         fields = [
@@ -60,7 +60,6 @@ class Vector(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -81,11 +80,10 @@ class Vector(TabulateComposed):
 class Translation(Vector):
     Popup = popups.Translation
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t"):
         Vector.__init__(
             self,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -110,7 +108,7 @@ class Translation(Vector):
 class Rotation(TabulateComposed):
     Popup = popups.Rotation
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n"):
         fields = [
             Float(
                 label_text="%s.%s" % (axis_name, suffix),
@@ -130,7 +128,6 @@ class Rotation(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -155,11 +152,10 @@ class Rotation(TabulateComposed):
 class BoxSize(Vector):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
         Vector.__init__(
             self,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -175,11 +171,10 @@ class BoxSize(Vector):
 class Color(Vector):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5):
         Vector.__init__(
             self,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -197,10 +192,9 @@ class Color(Vector):
 class BoxRegion(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True):
         fields = [
             Vector(
-                border_width=border_width,
                 low=low,
                 high=high,
                 low_inclusive=low_inclusive,
@@ -216,7 +210,6 @@ class BoxRegion(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -238,13 +231,12 @@ class BoxRegion(TabulateComposed):
 class Interval(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, interval_name="x"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, interval_name="x"):
         if length: FieldClass = Length
         else: FieldClass = Float
         fields = [
             FieldClass(
                 label_text="%s.%s" % (interval_name, suffix),
-                border_width=border_width,
                 invalid_message="Invalid %s.%s" % (interval_name, suffix),
                 low=low,
                 high=high,
@@ -259,7 +251,6 @@ class Interval(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -282,11 +273,10 @@ class Interval(TabulateComposed):
 class CellMatrix(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
         fields = [
             Vector(
                 label_text="Ridge %s" % ridge,
-                border_width=border_width,
                 invalid_message="A component of ridge %s has a wrong syntax." % ridge,
                 scientific=scientific,
                 decimals=decimals,
@@ -298,7 +288,6 @@ class CellMatrix(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -336,7 +325,7 @@ class CellMatrix(TabulateComposed):
 class CellActive(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
         fields = [
             CheckButton(
                 label_text="Active in %s direction" % ridge,
@@ -346,7 +335,6 @@ class CellActive(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -367,7 +355,7 @@ class CellActive(TabulateComposed):
 class Repetitions(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
         fields = [
             Int(
                 label_text=ridge,
@@ -379,7 +367,6 @@ class Repetitions(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
@@ -400,7 +387,7 @@ class Repetitions(TabulateComposed):
 class Units(TabulateComposed):
     Popup = popups.Translation
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False, border_width=6):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False):
         fields = [
             ComboBox(
                 choices=[(UNIT, suffices[UNIT]) for UNIT in measures[measure]],
@@ -412,7 +399,6 @@ class Units(TabulateComposed):
             self,
             fields,
             label_text=label_text,
-            border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
             show_field_popups=show_field_popups,

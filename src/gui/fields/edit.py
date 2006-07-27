@@ -85,8 +85,8 @@ class CheckButton(Edit):
 class ComboBox(Edit):
     Popup = popups.Default
 
-    def __init__(self, choices, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None):
-        Edit.__init__(self, label_text, border_width, attribute_name, show_popup, history_name)
+    def __init__(self, choices, label_text=None, attribute_name=None, show_popup=True, history_name=None):
+        Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
         self.choices = choices
         self.paths = {}
 
@@ -155,8 +155,8 @@ class List(Edit):
     Popup = popups.Default
     high_widget = True
 
-    def __init__(self, columns, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None):
-        Edit.__init__(self, label_text, border_width, attribute_name, show_popup, history_name)
+    def __init__(self, columns, label_text=None, attribute_name=None, show_popup=True, history_name=None):
+        Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
         self.columns = columns
         self.paths = {}
         self.records = []
@@ -252,8 +252,8 @@ class Element(Edit):
                         (0, 1, "1 K"), (0, 2, "2 L"), (0, 3, "3 M"), (0, 4, "4 N"), (0, 5, "5 O"),  (0, 6, "6 P"),
                         (0, 7, "7 Q"), (3, 9, "6 P"), (3, 10, "7 Q")]
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None):
-        Edit.__init__(self, label_text, border_width, attribute_name, show_popup, history_name)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None):
+        Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
 
     def create_widgets(self):
         Edit.create_widgets(self)
@@ -328,8 +328,8 @@ class TextView(Edit):
     Popup = popups.Default
     high_widget = True
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, line_breaks=False):
-        Edit.__init__(self, label_text, border_width, attribute_name, show_popup, history_name)
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, line_breaks=False):
+        Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
         self.line_breaks = line_breaks
         self.attribute_is_stream = False
 

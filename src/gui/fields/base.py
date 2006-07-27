@@ -27,7 +27,7 @@ __all__ = ["Single", "Multiple"]
 class Single(object):
     high_widget = False
 
-    def __init__(self, label_text=None, border_width=6):
+    def __init__(self, label_text=None):
         self.label_text = label_text
         self.data_widget = None
         self.label = None
@@ -35,7 +35,6 @@ class Single(object):
         self.instance = None
         self.instances = None
         self.parent = None
-        self.border_width = border_width
 
     def get_active(self):
         return self.instance is not None or self.instances is not None
@@ -72,7 +71,7 @@ class Single(object):
             if bu_popup is not None:
                 container.pack_start(bu_popup)
         self.container = container
-        self.container.set_border_width(self.border_width)
+        self.container.set_border_width(6)
         return container
 
     def get_widgets_short_container(self, show_popup=True):
@@ -96,12 +95,12 @@ class Single(object):
                 container.pack_start(bu_popup, expand=False)
             hbox = gtk.HBox()
             l = gtk.Label()
-            l.set_size_request(10, 1)
+            l.set_size_request(18, 1)
             hbox.pack_start(l, expand=False)
             hbox.pack_start(data_widget)
             container.pack_start(hbox)
         self.container = container
-        self.container.set_border_width(self.border_width)
+        self.container.set_border_width(6)
         return container
 
     def applicable(self, instance):
@@ -135,8 +134,8 @@ class Single(object):
 
 
 class Multiple(Single):
-    def __init__(self, fields, label_text=None, border_width=6):
-        Single.__init__(self, label_text, border_width)
+    def __init__(self, fields, label_text=None):
+        Single.__init__(self, label_text)
         self.fields = fields
         for field in self.fields:
             field.parent = self
