@@ -134,8 +134,10 @@ class RotateDialog(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def ask_parameters(self):
+    def init_parameters(self):
         self.parameters.rotation = Rotation()
+
+    def ask_parameters(self):
         if self.rotation.run(self.parameters.rotation) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
@@ -175,18 +177,22 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
+    def init_parameters(self):
+        self.parameters.complete = Complete()
+
     def ask_parameters(self):
         cache = context.application.cache
         nodes = cache.nodes
         parent = cache.parent
-        self.parameters.complete = Complete()
 
         last = nodes[-1]
         if isinstance(last, Vector):
             last_but_one = nodes[-2]
             if (len(nodes) >= 2) and isinstance(last_but_one, Vector):
-                b1, e1 = last.translations_relative_to(parent)
-                b2, e2 = last_but_one.translations_relative_to(parent)
+                b1 = last.children[0].translation_relative_to(parent)
+                e1 = last.children[1].translation_relative_to(parent)
+                b2 = last_but_one.children[0].translation_relative_to(parent)
+                e2 = last_but_one.children[1].translation_relative_to(parent)
                 if (b1 is not None) and (e1 is not None) and (b2 is not None) and (e2 is not None):
                     if last.children[0].target == last_but_one.children[0].target:
                         self.parameters.complete.translation_vector = copy.copy(b1)
@@ -194,7 +200,8 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
                     rotation_vector = numpy.cross(e1 - b1, e2 - b2)
                     self.parameters.complete.set_rotation_properties(angle, rotation_vector, False)
             else:
-                b, e = last.translations_relative_to(self.parent)
+                b = last.children[0].translation_relative_to(self.parent)
+                e = last.children[1].translation_relative_to(self.parent)
                 if (b is not None) and (e is not None):
                     self.parameters.complete.translation_vector = b
                     self.parameters.complete.set_rotation_properties(45.0, e - b, False)
@@ -216,7 +223,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
 class TranslateDialog(ImmediateWithMemory):
     description = "Apply translation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate objects", order=(0, 4, 1, 2, 1, 2))
-
+    
     translation = FieldsDialogSimple(
         "Translation",
         fields.composed.Translation(
@@ -237,18 +244,22 @@ class TranslateDialog(ImmediateWithMemory):
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
-
-    def ask_parameters(self):
+    
+    def init_parameters(self):
         self.parameters.translation = Translation()
+    
+    def ask_parameters(self):
         cache = context.application.cache
         last = cache.nodes[-1]
         if isinstance(last, Vector):
-            b, e = last.translations_relative_to(cache.parent)
+            b = last.children[0].translation_relative_to(cache.parent)
+            e = last.children[1].translation_relative_to(cache.parent)
             if (b is not None) and (e is not None):
                 self.parameters.translation.translation_vector = e - b
+        else:
+            self.use_last_parameters()
         if self.translation.run(self.parameters.translation) != gtk.RESPONSE_OK:
             self.parameters.clear()
-        print self.parameters
 
     def do(self):
         for victim in context.application.cache.translated_nodes:
@@ -460,7 +471,8 @@ class RotateObjectBase(InteractiveWithMemory):
             helper = nodes[1]
             # take the information out of the helper nodes
             if isinstance(helper, Vector):
-                b, e = helper.translations_relative_to(self.victim.parent)
+                b = helper.children[0].translation_relative_to(self.victim.parent)
+                e = helper.children[0].translation_relative_to(self.victim.parent)
                 if not ((b is None) or (e is None)):
                     self.rotation_center = b
                     self.rotation_axis = e - b

@@ -166,9 +166,11 @@ class SelectChildrenByExpression(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def ask_parameters(self):
+    def init_parameters(self):
         self.parameters.expression = "True"
         self.parameters.recursive = self.SELECT_PLAIN
+
+    def ask_parameters(self):
         if self.select_by_expression.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
 

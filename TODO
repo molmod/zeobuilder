@@ -10,7 +10,6 @@ TODO core
 ### User interface
 
     * Rewrite the invalid messages in the dialogs
-    * default values for fieldsdialog and last used values
     * A history for the selection filters (saved in a config file)
 
 

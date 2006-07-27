@@ -33,6 +33,7 @@ __all__ = ["init_actions", "UserError", "CancelException", "ActionError",
 
 def init_actions(actions):
     for action in actions.itervalues():
+        action.last_parameters = Parameters()
         action.clear_cached_analysis_result()
         context.application.cache.connect("cache-invalidated", action.on_cache_invalidated)
 
@@ -115,8 +116,8 @@ class Base(object):
         # creates a new action, assumes that an analyze_selection has already
         # happened so that the context.application.cache
         # has been rebuilt.
-        if self.repeatable:
-            self.__class__()
+        assert self.repeatable
+        self.__class__()
 
 
 #
@@ -149,6 +150,7 @@ class Parameters(object):
     def clear(self):
         self.__dict__ = {}
 
+
 class RememberParametersMixin(object):
     def analyze_selection(parameters=None):
         "Checks wether the 'selected' nodes are appropriate for this action class"
@@ -157,17 +159,14 @@ class RememberParametersMixin(object):
 
     # lets the user give extra parameters to an action, e.g. translation vector coordinates etc.
     def __init__(self, parameters=None):
-        if parameters is None:
-            self.parameters = Parameters()
-        else:
-            self.parameters = parameters
+        self.parameters = parameters
 
     def want_repeat(self):
         return self.analyze_selection(self.parameters)
 
     def repeat(self):
-        if self.repeatable:
-            self.__class__(self.parameters)
+        assert self.repeatable
+        self.__class__(self.parameters)
 
 
 #
@@ -182,17 +181,36 @@ class Immediate(Base, ImmediateMixin):
 
 
 class ImmediateWithMemory(Immediate, RememberParametersMixin):
+    last_parameters = None
+    store_last_parameters = True
+
     analyze_selection = staticmethod(RememberParametersMixin.analyze_selection)
+    
     def __init__(self, parameters=None):
         RememberParametersMixin.__init__(self, parameters)
-        if self.parameters.empty():
+        if self.parameters is None:
+            if self.store_last_parameters:
+                self.use_last_parameters()
+            else:
+                self.parameters = Parameters()
+                self.init_parameters()
             self.ask_parameters()
         if not self.parameters.empty():
+            if self.store_last_parameters:
+                self.__class__.last_parameters = self.parameters
             Immediate.__init__(self)
+
+    def use_last_parameters(self):
+        self.parameters = copy.deepcopy(self.last_parameters)
+        if self.parameters.empty():
+            self.init_parameters()
+
+    def init_parameters(self):
+        raise NotImplementedError
 
     def ask_parameters(self):
         raise NotImplementedError
-
+    
     def want_repeat(self):
         RememberParametersMixin.want_repeat(self)
 

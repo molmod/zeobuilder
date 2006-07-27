@@ -490,6 +490,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
 class UnitCellToCluster(ImmediateWithMemory):
     description = "Convert the unit cell to a cluster"
     menu_info = MenuInfo("default/_Object:special", "_Unit cell to cluster", order=(0, 4, 2, 0))
+    store_last_parameters = False
 
     cuttoff = FieldsDialogSimple(
         "Unit cell to cluster",
@@ -523,7 +524,7 @@ class UnitCellToCluster(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def ask_parameters(self):
+    def init_parameters(self):
         universe = context.application.cache.node
         if universe.cell_active[0]:
             self.parameters.interval_a = numpy.array([-0.5, -0.5 + universe.repetitions[0]], float)
@@ -531,6 +532,8 @@ class UnitCellToCluster(ImmediateWithMemory):
             self.parameters.interval_b = numpy.array([-0.5, -0.5 + universe.repetitions[1]], float)
         if universe.cell_active[2]:
             self.parameters.interval_c = numpy.array([-0.5, -0.5 + universe.repetitions[2]], float)
+
+    def ask_parameters(self):
         if self.cuttoff.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
@@ -655,6 +658,7 @@ class UnitCellToCluster(ImmediateWithMemory):
 class SuperCell(ImmediateWithMemory):
     description = "Convert the unit cell to larger unit cell"
     menu_info = MenuInfo("default/_Object:special", "_Super cell", order=(0, 4, 2, 0))
+    store_last_parameters = False
 
     repetitions = FieldsDialogSimple(
         "Super cell",
@@ -687,14 +691,16 @@ class SuperCell(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def ask_parameters(self):
+    def init_parameters(self):
         universe = context.application.cache.node
         if universe.cell_active[0]:
             self.parameters.repetitions_a = universe.repetitions[0]
         if universe.cell_active[1]:
-            self.parameters.repetitions_b = universe.repetitions[0]
+            self.parameters.repetitions_b = universe.repetitions[1]
         if universe.cell_active[2]:
-            self.parameters.repetitions_c = universe.repetitions[0]
+            self.parameters.repetitions_c = universe.repetitions[2]
+
+    def ask_parameters(self):
         if self.repetitions.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
