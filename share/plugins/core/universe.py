@@ -496,11 +496,13 @@ class UnitCellToCluster(ImmediateWithMemory):
         "Unit cell to cluster",
         fields.group.Table(
             fields=[
-                fields.composed.Interval(
+                fields.composed.Array(
+                    FieldClass=fields.faulty.Float,
+                    array_name=(ridge+".%s"),
+                    suffices=["min", "max"],
                     attribute_name="interval_%s" % ridge.lower(),
-                    invalid_message="Please enter a valid interval for the fractional coordinates of ridge %s" % ridge,
-                    interval_name=ridge,
-                    length=False,
+                    invalid_message="Please enter a valid interval for the fractional coordinate along ridge %s" % ridge,
+                    transpose=True
                 )
                 for ridge in ["A", "B", "C"]
             ],

@@ -20,45 +20,75 @@
 # --
 
 
-from elementary import TabulateComposed
+from elementary import Composed, TabulateComposed
 from faulty import Float, Length, Int
 from edit import CheckButton, ComboBox
-from mixin import InvalidField
+from mixin import InvalidField, EditMixin, FaultyMixin
 import popups
 from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
 from molmod.units import suffices, measures, measure_names
 
-import numpy
+import numpy, gtk
 
 import math
 
 
-__all__ = ["Vector", "Translation", "Rotation", "Box", "Color",
-           "CellMatrix", "CellActive"]
+__all__ = [
+    "Array", "Translation", "Rotation", "CellMatrix", "CellActive",
+    "Repetitions", "Units"
+]
 
 
-class Vector(TabulateComposed):
+class ArrayError(Exception):
+    pass
+
+
+class Array(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, vector_name="r"):
-        if length: FieldClass = Length
-        else: FieldClass = Float
-        fields = [
-            FieldClass(
-                label_text="%s.%s" % (vector_name, suffix),
-                invalid_message="Invalid %s.%s" % (vector_name, suffix),
-                low=low,
-                high=high,
-                low_inclusive=low_inclusive,
-                high_inclusive=high_inclusive,
-                scientific=scientific,
-                decimals=decimals
-            ) for suffix in ["x", "y", "z"]
-        ]
-        TabulateComposed.__init__(
+    def __init__(self, FieldClass, array_name, suffices, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, short=True, transpose=False, **keyval):
+        # make sure that the suffices are given as a numpy array.
+        suffices = numpy.array(suffices)
+        if len(suffices.shape) != 1 and len(suffices.shape) != 2:
+            raise ArrayError("the suffices must be given as one- or two-dimensional iterable objects. (shape=%s)" % len(suffices.shape))
+        self.shape = suffices.shape
+        if len(suffices.shape) == 1:
+            self.suffices = numpy.array([suffices]).transpose()
+        else:
+            self.suffices = suffices
+            
+        self.short = short
+
+        self.transpose = transpose
+        if transpose:
+            self.suffices = self.suffices.transpose()
+            
+        self.high_widget = (self.suffices.shape[0] != 1)
+ 
+ 
+        self.fields_array = numpy.array([
+            [
+                FieldClass(
+                    label_text=(array_name % suffix),
+                    **keyval
+                ) for suffix in row
+            ] for row in self.suffices
+        ])
+
+        fields = self.fields_array.ravel().tolist()
+
+        if issubclass(FieldClass, EditMixin):
+            for field in fields:
+                field.show_popup = show_field_popups
+
+        if issubclass(FieldClass, FaultyMixin):
+            for field in fields:
+                field.invalid_message = "Invalid %s" % field.label_text
+
+        Composed.__init__(
             self,
-            fields,
+            fields=fields,
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
@@ -68,21 +98,93 @@ class Vector(TabulateComposed):
         )
 
     def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == self.shape
 
     def read_from_attribute(self):
-        return tuple(self.attribute)
+        if self.transpose:
+            return tuple(self.attribute.transpose().ravel())
+        else:
+            return tuple(self.attribute.ravel())
 
     def write_to_attribute(self, value):
-        self.attribute = numpy.array(value)
+        if self.transpose:
+            self.attribute = numpy.array(value)
+            if len(self.shape) == 1:
+                self.attribute.shape = self.shape
+            else:
+                self.attribute.shape = (self.shape[0], self.shape[1])
+                self.attribute = self.attribute.transpose()
+        else:
+            self.attribute = numpy.array(value)
+            self.attribute.shape = self.shape
+
+    def create_widgets(self):
+        Composed.create_widgets(self)
+        table = gtk.Table(self.suffices.shape[0], self.suffices.shape[1]*4 - 1)
+        table.set_row_spacings(6)
+        table.set_col_spacings(6)
+        for row_index, row in enumerate(self.fields_array):
+            for col_index, field in enumerate(row):
+                if field.high_widget:
+                    if self.short:
+                        container = field.get_widgets_short_container()
+                    else:
+                        container = field.get_widgets_flat_container()
+                    container.set_border_width(0)
+                    table.attach(
+                        container,
+                        col_index * 4, col_index * 4 + 3,
+                        row_index, row_index+1,
+                        xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
+                    )
+                else:
+                    label, data_widget, bu_popup = field.get_widgets_separate()
+                    container_left = col_index * 4
+                    container_right = container_left + 3
+                    if label is not None:
+                        table.attach(
+                            label,
+                            container_left, container_left + 1,
+                            row_index, row_index + 1,
+                            xoptions=gtk.FILL, yoptions=0,
+                        )
+                        container_left += 1
+                    if bu_popup is not None:
+                        table.attach(
+                            bu_popup,
+                            container_right - 1, container_right,
+                            row_index, row_index + 1,
+                            xoptions=0, yoptions=0,
+                        )
+                        container_right -= 1
+                    table.attach(
+                        data_widget,
+                        container_left, container_right,
+                        row_index, row_index + 1,
+                        xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
+                    )
+                if col_index > 0:
+                    stub = gtk.Label()
+                    stub.set_size_request(6, 1)
+                    table.attach(
+                        stub,
+                        col_index * 4 - 1, col_index * 4,
+                        row_index, row_index + 1,
+                        xoptions=0, yoptions=0,
+                    )
+
+        self.data_widget = table
 
 
-class Translation(Vector):
+class Translation(Array):
     Popup = popups.Translation
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t"):
-        Vector.__init__(
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t.%s"):
+        Array.__init__(
             self,
+            FieldClass=Length,
+            array_name=vector_name,
+            suffices=["x", "y", "z"],
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
@@ -91,8 +193,6 @@ class Translation(Vector):
             show_field_popups=show_field_popups,
             scientific=scientific,
             decimals=decimals,
-            length=True,
-            vector_name=vector_name
         )
 
     def applicable_attribute(self):
@@ -108,10 +208,10 @@ class Translation(Vector):
 class Rotation(TabulateComposed):
     Popup = popups.Rotation
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n.%s"):
         fields = [
             Float(
-                label_text="%s.%s" % (axis_name, suffix),
+                label_text=axis_name % suffix,
                 invalid_message="Invalid component for the %s-axis rotation." % suffix,
                 decimals=decimals,
                 scientific=scientific,
@@ -126,7 +226,7 @@ class Rotation(TabulateComposed):
         ]
         TabulateComposed.__init__(
             self,
-            fields,
+            fields=fields,
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
@@ -149,12 +249,15 @@ class Rotation(TabulateComposed):
         self.attribute.set_rotation_properties(rotation_angle, rotation_axis, invert)
 
 
-class BoxSize(Vector):
+class CellMatrix(Array):
     Popup = popups.Default
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
-        Vector.__init__(
+        Array.__init__(
             self,
+            FieldClass=Length,
+            array_name="%s",
+            suffices=[["A.x", "B.x", "C.x"], ["A.y", "B.y", "C.y"], ["A.z", "B.z", "C.z"]],
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
@@ -163,152 +266,12 @@ class BoxSize(Vector):
             show_field_popups=show_field_popups,
             scientific=scientific,
             decimals=decimals,
-            length=True,
-            vector_name="size",
         )
-
-
-class Color(Vector):
-    Popup = popups.Default
-
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5):
-        Vector.__init__(
-            self,
-            label_text=label_text,
-            attribute_name=attribute_name,
-            show_popup=show_popup,
-            history_name=history_name,
-            invalid_message=invalid_message,
-            show_field_popups=show_field_popups,
-            low=0.0,
-            high=1.0,
-            scientific=False,
-            decimals=decimals,
-            length=False,
-            vector_name="color"
-        )
-
-
-class BoxRegion(TabulateComposed):
-    Popup = popups.Default
-
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True):
-        fields = [
-            Vector(
-                low=low,
-                high=high,
-                low_inclusive=low_inclusive,
-                high_inclusive=high_inclusive,
-                scientific=scientific,
-                decimals=decimals,
-                length=length,
-                name=name,
-            )
-            for name in ["low", "high"]
-        ]
-        TabulateComposed.__init__(
-            self,
-            fields,
-            label_text=label_text,
-            attribute_name=attribute_name,
-            show_popup=show_popup,
-            history_name=history_name,
-            invalid_message=invalid_message,
-            show_field_popups=show_field_popups,
-            vertical=False,
-        )
-
-    def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (2,3)
-
-    def read_from_attribute(self):
-        return tuple(self.attribute)
-
-    def write_to_attribute(self, value):
-        self.attribute = numpy.array(value)
-
-
-class Interval(TabulateComposed):
-    Popup = popups.Default
-
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, interval_name="x"):
-        if length: FieldClass = Length
-        else: FieldClass = Float
-        fields = [
-            FieldClass(
-                label_text="%s.%s" % (interval_name, suffix),
-                invalid_message="Invalid %s.%s" % (interval_name, suffix),
-                low=low,
-                high=high,
-                low_inclusive=low_inclusive,
-                high_inclusive=high_inclusive,
-                scientific=scientific,
-                decimals=decimals,
-            )
-            for suffix in ["min", "max"]
-        ]
-        TabulateComposed.__init__(
-            self,
-            fields,
-            label_text=label_text,
-            attribute_name=attribute_name,
-            show_popup=show_popup,
-            history_name=history_name,
-            invalid_message=invalid_message,
-            show_field_popups=show_field_popups,
-            vertical=False,
-            horizontal_flat=True,
-        )
-
-    def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (2,)
-
-    def read_from_attribute(self):
-        return tuple(self.attribute)
-
-    def write_to_attribute(self, value):
-        self.attribute = numpy.array(value)
-
-
-class CellMatrix(TabulateComposed):
-    Popup = popups.Default
-
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
-        fields = [
-            Vector(
-                label_text="Ridge %s" % ridge,
-                invalid_message="A component of ridge %s has a wrong syntax." % ridge,
-                scientific=scientific,
-                decimals=decimals,
-                length=True,
-                vector_name=ridge,
-            ) for ridge in ["A", "B", "C"]
-        ]
-        TabulateComposed.__init__(
-            self,
-            fields,
-            label_text=label_text,
-            attribute_name=attribute_name,
-            show_popup=show_popup,
-            history_name=history_name,
-            invalid_message=invalid_message,
-            show_field_popups=show_field_popups,
-            vertical=False,
-        )
-
-    def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,3)
-
-    def read_from_attribute(self):
-        return tuple(numpy.transpose(self.attribute))
-
-    def write_to_attribute(self, value):
-        self.attribute = numpy.array(value).transpose()
 
     def check(self):
-        TabulateComposed.check(self)
+        Array.check(self)
         if self.get_active() and self.changed():
-            matrix = numpy.array(self.convert_to_value_wrap(self.read_from_widget())).transpose()
+            matrix = self.convert_to_value(self.read_from_widget())
             for col, name in enumerate(["A", "B", "C"]):
                 norm = math.sqrt(numpy.dot(matrix[:,col], matrix[:,col]))
                 if norm < 1e-6:
@@ -322,18 +285,15 @@ class CellMatrix(TabulateComposed):
                 raise invalid_field
 
 
-class CellActive(TabulateComposed):
+class CellActive(Array):
     Popup = popups.Default
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
-        fields = [
-            CheckButton(
-                label_text="Active in %s direction" % ridge,
-            ) for ridge in ["A", "B", "C"]
-        ]
-        TabulateComposed.__init__(
+        Array.__init__(
             self,
-            fields,
+            FieldClass=CheckButton,
+            array_name="Active in %s direction",
+            suffices=("A", "B", "C"),
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
@@ -342,46 +302,24 @@ class CellActive(TabulateComposed):
             show_field_popups=show_field_popups,
         )
 
-    def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
 
-    def read_from_attribute(self):
-        return tuple(self.attribute)
-
-    def write_to_attribute(self, value):
-        self.attribute = numpy.array(value)
-
-
-class Repetitions(TabulateComposed):
+class Repetitions(Array):
     Popup = popups.Default
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
-        fields = [
-            Int(
-                label_text=ridge,
-                invalid_message="Please enter a vilad repetition value along %s." % ridge,
-                minimum=1
-            ) for ridge in ["A", "B", "C"]
-        ]
-        TabulateComposed.__init__(
+        Array.__init__(
             self,
-            fields,
+            FieldClass=Int,
+            array_name="repetitions along %s",
+            suffices=("A", "B", "C"),
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
             invalid_message=invalid_message,
             show_field_popups=show_field_popups,
+            minimum=1,
         )
-
-    def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
-
-    def read_from_attribute(self):
-        return tuple(self.attribute)
-
-    def write_to_attribute(self, value):
-        self.attribute = numpy.array(value)
 
 
 class Units(TabulateComposed):
