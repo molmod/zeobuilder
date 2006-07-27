@@ -74,7 +74,7 @@ class ReadMixin(object):
         return self.label, self.data_widget, None
 
     def applicable(self, instance):
-        if self.attribute_name not in instance.__dict__:
+        if (self.attribute_name is not None) and (self.attribute_name not in instance.__dict__):
             #print "The attribute_name %s is not in the instance dictionary: %s." % (self.attribute_name, instance.__dict__)
             return False
         else:

@@ -217,6 +217,10 @@ class Group(Multiple):
             field.init_widgets_multiplex(instances)
         Multiple.init_widgets_multiplex(self, instances)
 
+    def get_widgets_separate(self):
+        assert self.data_widget is not None
+        return self.label, self.data_widget, None
+
     def applicable(self, instance):
         for field in self.fields:
             if field.get_active(): return True
