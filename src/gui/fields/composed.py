@@ -211,15 +211,18 @@ class Rotation(TabulateComposed):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n.%s"):
         fields = [
             Float(
-                label_text=axis_name % suffix,
-                invalid_message="Invalid component for the %s-axis rotation." % suffix,
-                decimals=decimals,
-                scientific=scientific,
-            ) for suffix in ["x", "y", "z"]
-        ] + [
-            Float(
                 label_text="Angle",
                 invalid_message="Invalid rotation angle.",
+                decimals=decimals,
+                scientific=scientific,
+            ), Array(
+                FieldClass=Float,
+                array_name=axis_name,
+                suffices=["x", "y", "z"],
+                show_popup=False,
+                invalid_message="Invalid rotation axis",
+                decimals=decimals,
+                scientific=scientific,
             ), CheckButton(
                 label_text="Inversion",
             )
@@ -239,14 +242,10 @@ class Rotation(TabulateComposed):
         return isinstance(self.attribute, MathRotation)
 
     def read_from_attribute(self):
-        temp = self.attribute.get_rotation_properties()
-        return (temp[1][0], temp[1][1], temp[1][2], temp[0], temp[2])
+        return self.attribute.get_rotation_properties()
 
     def write_to_attribute(self, value):
-        rotation_axis = numpy.array([float(value[0]), float(value[1]), float(value[2])])
-        rotation_angle = float(value[3])
-        invert = value[4]
-        self.attribute.set_rotation_properties(rotation_angle, rotation_axis, invert)
+        self.attribute.set_rotation_properties(value[0], value[1], value[2])
 
 
 class CellMatrix(Array):

@@ -233,7 +233,7 @@ class Rotation(Default):
             "Reset",
             gtk.STOCK_REFRESH,
             self.write_to_widget,
-            ('0.0', '0.0', '1.0', '0.0', False)
+            ('0.0', ('1.0', '0.0', '0.0'), False)
        )
 
 
