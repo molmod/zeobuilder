@@ -51,6 +51,7 @@ class CheckButton(Edit):
         Edit.destroy_widgets(self)
 
     def get_widgets_separate(self):
+        assert self.data_widget is not None
         return None, self.data_widget, self.bu_popup
 
     def read_from_widget(self):
@@ -436,4 +437,4 @@ class Color(Edit):
         Edit.on_widget_changed(self, widget)
         self.color_button.remove(self.color_button.get_children()[0])
         self.color_button.add(self.color_child)
-        
+

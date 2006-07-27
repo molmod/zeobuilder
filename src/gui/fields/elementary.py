@@ -41,9 +41,6 @@ class Edit(Single, EditMixin):
         Single.__init__(self, label_text, border_width)
         EditMixin.__init__(self, attribute_name, show_popup)
 
-    def get_widgets_separate(self):
-        return self.label, self.data_widget, self.bu_popup
-
     def applicable(self, instance):
         return EditMixin.applicable(self, instance)
 
@@ -60,9 +57,6 @@ class Faulty(Single, FaultyMixin):
     def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None):
         Single.__init__(self, label_text, border_width)
         FaultyMixin.__init__(self, attribute_name, show_popup, invalid_message)
-
-    def get_widgets_separate(self):
-        return self.label, self.data_widget, self.bu_popup
 
     def applicable(self, instance):
         return FaultyMixin.applicable(self, instance)
@@ -83,9 +77,6 @@ class Composed(Multiple, FaultyMixin):
         Multiple.__init__(self, fields, label_text, border_width)
         FaultyMixin.__init__(self, attribute_name, show_popup, invalid_message)
         self.show_field_popups = show_field_popups
-
-    def get_widgets_separate(self):
-        return self.label, self.data_widget, self.bu_popup
 
     def applicable(self, instance):
         return FaultyMixin.applicable(self, instance)

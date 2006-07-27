@@ -57,10 +57,6 @@ class Single(object):
         self.instances = instances
         self.create_widgets()
 
-    def get_widgets_separate(self):
-        assert self.data_widget is not None
-        return self.label, self.data_widget, None
-
     def get_widgets_flat_container(self, show_popup=True):
         label, data_widget, bu_popup = self.get_widgets_separate()
         if not show_popup:

@@ -69,6 +69,10 @@ class ReadMixin(object):
     def __init__(self, attribute_name=None):
         self.attribute_name = attribute_name
 
+    def get_widgets_separate(self):
+        assert self.data_widget is not None
+        return self.label, self.data_widget, None
+
     def applicable(self, instance):
         if self.attribute_name not in instance.__dict__:
             #print "The attribute_name %s is not in the instance dictionary: %s." % (self.attribute_name, instance.__dict__)
@@ -163,6 +167,10 @@ class EditMixin(ReadMixin):
         if self.bu_popup is not None:
             self.bu_popup.destroy()
             self.bu_popup = None
+
+    def get_widgets_separate(self):
+        assert self.data_widget is not None
+        return self.label, self.data_widget, self.bu_popup
 
     def write(self, instance=None):
         if self.instance is not None and (self.changed() or instance!=None):
