@@ -27,7 +27,7 @@ from mixin import InvalidField, EditMixin, FaultyMixin
 import popups
 from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
-from molmod.units import suffices, measures, measure_names
+from molmod.units import suffices, measures, measure_names, units_by_measure
 
 import numpy, gtk
 
@@ -57,16 +57,16 @@ class Array(TabulateComposed):
             self.suffices = numpy.array([suffices]).transpose()
         else:
             self.suffices = suffices
-            
+
         self.short = short
 
         self.transpose = transpose
         if transpose:
             self.suffices = self.suffices.transpose()
-            
+
         self.high_widget = (self.suffices.shape[0] != 1)
- 
- 
+
+
         self.fields_array = numpy.array([
             [
                 FieldClass(
@@ -328,10 +328,10 @@ class Units(TabulateComposed):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False):
         fields = [
             ComboBox(
-                choices=[(UNIT, suffices[UNIT]) for UNIT in measures[measure]],
-                label_text=measure_name,
-            ) for measure, measure_name
-            in measure_names.iteritems()
+                choices=[(unit, suffices[unit]) for unit in units_by_measure[measure]],
+                label_text=measure_names[measure],
+            ) for measure
+            in measures
         ]
         TabulateComposed.__init__(
             self,

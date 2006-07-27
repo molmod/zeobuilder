@@ -19,25 +19,28 @@
 #
 # --
 
-from molmod.units import suffices, from_unit, to_unit, measures
+
 from zeobuilder import context
+from molmod.units import suffices, from_unit, to_unit, units_by_measure
+
 
 __all__ = ["eval_measure", "express_measure", "express_data_size"]
 
-# * evaluation routines (from string to vaue)
-# These routines should raise a ValueError when some syntactical prombles occur
+
+# * evaluation routines (from string to value)
 
 def eval_measure(s, measure):
-    suffix_UNIT = None
-    for UNIT in measures[measure]:
-        if s[-len(suffices[UNIT]):].lower() == suffices[UNIT].lower():
-            s = s[:-len(suffices[UNIT])]
-            suffix_UNIT = UNIT
+    s = s.lower().strip()
+    suffix_unit = None
+    for unit in units_by_measure[measure]:
+        if measure.endswith(suffices[unit].lower()):
+            s = s[:-len(suffices[unit])]
+            suffix_unit = unit
             break
-    if suffix_UNIT is None:
-        suffix_UNIT = context.application.configuration.default_units[measure]
+    if suffix_unit is None:
+        suffix_unit = context.application.configuration.default_units[measure]
 
-    return from_unit[suffix_UNIT](float(s))
+    return from_unit[suffix_unit](float(s))
 
 # * expression routines (from value to string)
 

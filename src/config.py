@@ -23,7 +23,7 @@
 # class holds the data that is used in other parts of the program
 # and the gui allows the user to change the configuration
 
-from molmod.units import measures
+from molmod.units import measures, units_by_measure
 
 import os.path
 
@@ -31,7 +31,7 @@ __all__ = ["Configuration"]
 
 class Configuration(object):
     def __init__(self, filename):
-        self.default_units = dict((measure, units[0]) for measure, units in measures.iteritems())
+        self.default_units = dict((measure, units[0]) for measure, units in units_by_measure.iteritems())
         self.saved_representations = {}
         self.history_representations = {}
         self.max_history_length = 6
@@ -44,7 +44,7 @@ class Configuration(object):
             self.__dict__.update(eval(f.read()))
             f.close()
         # validate and correct them
-        for measure, units in measures.iteritems():
+        for measure, units in units_by_measure.iteritems():
             if measure not in self.default_units or self.default_units[measure] not in units:
                 self.default_units[measure] = units[0]
         self.default_units = dict((measure, unit) for measure, unit in self.default_units.iteritems() if measure in measures)
