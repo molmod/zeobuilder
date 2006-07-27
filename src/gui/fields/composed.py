@@ -100,23 +100,26 @@ class Array(TabulateComposed):
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == self.shape
 
-    def read_from_attribute(self):
+    def convert_to_representation(self, value):
         if self.transpose:
-            return tuple(self.attribute.transpose().ravel())
+            intermediate = tuple(value.transpose().ravel())
         else:
-            return tuple(self.attribute.ravel())
+            intermediate = tuple(value.ravel())
+        return Composed.convert_to_representation(self, intermediate)
 
-    def write_to_attribute(self, value):
+    def convert_to_value(self, representation):
+        intermediate = Composed.convert_to_value(self, representation)
         if self.transpose:
-            self.attribute = numpy.array(value)
+            result = numpy.array(intermediate)
             if len(self.shape) == 1:
-                self.attribute.shape = self.shape
+                result.shape = self.shape
             else:
-                self.attribute.shape = (self.shape[0], self.shape[1])
-                self.attribute = self.attribute.transpose()
+                result.shape = (self.shape[0], self.shape[1])
+                result = result.transpose()
         else:
-            self.attribute = numpy.array(value)
-            self.attribute.shape = self.shape
+            result = numpy.array(intermediate)
+            result.shape = self.shape
+        return result
 
     def create_widgets(self):
         Composed.create_widgets(self)
