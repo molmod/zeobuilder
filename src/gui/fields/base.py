@@ -66,10 +66,10 @@ class Single(object):
             container = gtk.HBox()
             container.set_spacing(6)
             if label is not None:
-                container.pack_start(label)
-            container.pack_start(data_widget)
+                container.pack_start(label, True, True)
+            container.pack_start(data_widget, True, True)
             if bu_popup is not None:
-                container.pack_start(bu_popup)
+                container.pack_start(bu_popup, False, False)
         self.container = container
         self.container.set_border_width(6)
         return container
@@ -83,21 +83,23 @@ class Single(object):
         else:
             container = gtk.VBox()
             container.set_spacing(6)
+            if label is not None:
+                label.set_alignment(0.0, 1.0)
             if label is not None and bu_popup is not None:
                 hbox = gtk.HBox()
                 hbox.set_spacing(6)
-                hbox.pack_start(label)
-                hbox.pack_start(bu_popup, expand=False)
+                hbox.pack_start(label, True, True)
+                hbox.pack_start(bu_popup, False, False)
                 container.pack_start(hbox)
             elif label is not None:
-                container.pack_start(label)
+                container.pack_start(label, True, False)
             elif bu_popup is not None:
-                container.pack_start(bu_popup, expand=False)
+                container.pack_start(bu_popup, False, False)
             hbox = gtk.HBox()
             l = gtk.Label()
             l.set_size_request(18, 1)
-            hbox.pack_start(l, expand=False)
-            hbox.pack_start(data_widget)
+            hbox.pack_start(l, False, False)
+            hbox.pack_start(data_widget, True, True)
             container.pack_start(hbox)
         self.container = container
         self.container.set_border_width(6)
