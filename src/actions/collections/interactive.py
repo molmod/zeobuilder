@@ -155,7 +155,7 @@ class InteractiveBar(gtk.Table):
                 button.set_interactive_group(group)
             menu_item = gtk.ImageMenuItem()
             image = gtk.Image()
-            image.set_from_pixbuf(load_image(group.image_name, (20, 20)))
+            image.set_from_pixbuf(load_image(group.image_name, (36, 36)))
             menu_item.set_image(image)
             label = gtk.Label(group.description)
             label.set_alignment(0.0, 0.5)
@@ -181,7 +181,15 @@ class InteractiveBar(gtk.Table):
     #
 
     def on_interactive_button_press_event(self, button, event):
-        self.group_menu.popup(None, None, None, event.button, gtk.get_current_event_time())
+        def top_right(menu):
+            xo, yo = button.window.get_origin()
+            return (
+                xo + button.allocation.x + button.allocation.width,
+                yo + button.allocation.y,
+                False
+            )
+
+        self.group_menu.popup(None, None, top_right, event.button, gtk.get_current_event_time())
         self.clicked_button = button
 
     def on_menu_activate(self, menu_item, new_group):

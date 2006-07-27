@@ -82,7 +82,7 @@ class Base(object):
         self.row_count = 0
         self.fill_menu()
 
-        def bottom_left(menu):
+        def top_right(menu):
             xo, yo = button.window.get_origin()
             return (
                 xo + button.allocation.x + button.allocation.width,
