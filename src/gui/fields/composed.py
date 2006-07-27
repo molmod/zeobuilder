@@ -47,7 +47,6 @@ class Vector(TabulateComposed):
         fields = [
             FieldClass(
                 label_text="%s.%s" % (vector_name, suffix),
-                #attribute_name="?",
                 invalid_message="Invalid %s.%s" % (vector_name, suffix),
                 low=low,
                 high=high,
@@ -115,7 +114,6 @@ class Rotation(TabulateComposed):
         fields = [
             Float(
                 label_text="%s.%s" % (axis_name, suffix),
-                attribute_name="?",
                 invalid_message="Invalid component for the %s-axis rotation." % suffix,
                 decimals=decimals,
                 scientific=scientific,
@@ -123,11 +121,9 @@ class Rotation(TabulateComposed):
         ] + [
             Float(
                 label_text="Angle",
-                attribute_name="?",
                 invalid_message="Invalid rotation angle.",
             ), CheckButton(
                 label_text="Inversion",
-                attribute_name="?",
             )
         ]
         TabulateComposed.__init__(
@@ -205,7 +201,6 @@ class BoxRegion(TabulateComposed):
         fields = [
             Vector(
                 border_width=border_width,
-                attribute_name="?",
                 low=low,
                 high=high,
                 low_inclusive=low_inclusive,
@@ -250,7 +245,6 @@ class Interval(TabulateComposed):
             FieldClass(
                 label_text="%s.%s" % (interval_name, suffix),
                 border_width=border_width,
-                attribute_name="?",
                 invalid_message="Invalid %s.%s" % (interval_name, suffix),
                 low=low,
                 high=high,
@@ -293,7 +287,6 @@ class CellMatrix(TabulateComposed):
             Vector(
                 label_text="Ridge %s" % ridge,
                 border_width=border_width,
-                attribute_name="?",
                 invalid_message="A component of ridge %s has a wrong syntax." % ridge,
                 scientific=scientific,
                 decimals=decimals,
@@ -347,7 +340,6 @@ class CellActive(TabulateComposed):
         fields = [
             CheckButton(
                 label_text="Active in %s direction" % ridge,
-                attribute_name="?",
             ) for ridge in ["A", "B", "C"]
         ]
         TabulateComposed.__init__(
@@ -379,7 +371,6 @@ class Repetitions(TabulateComposed):
         fields = [
             Int(
                 label_text=ridge,
-                attribute_name="?",
                 invalid_message="Please enter a vilad repetition value along %s." % ridge,
                 minimum=1
             ) for ridge in ["A", "B", "C"]
@@ -414,7 +405,6 @@ class Units(TabulateComposed):
             ComboBox(
                 choices=[(UNIT, suffices[UNIT]) for UNIT in measures[measure]],
                 label_text=measure_name,
-                attribute_name="?",
             ) for measure, measure_name
             in measure_names.iteritems()
         ]
