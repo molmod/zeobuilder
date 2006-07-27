@@ -94,7 +94,7 @@ class Vector(GLReferentBase):
     #
 
     def revalidate_total_list(self):
-        if self.gl_active:
+        if self.gl_active > 0:
             glNewList(self.total_list, GL_COMPILE)
             if self.visible:
                 glPushName(self.draw_list)
@@ -111,7 +111,7 @@ class Vector(GLReferentBase):
             GLReferentBase.revalidate_draw_list(self)
 
     def revalidate_boundingbox_list(self):
-        if self.gl_active:
+        if self.gl_active > 0:
             #print "Compiling selection list (" + str(self.boundingbox_list) + "): " + str(self.name)
             glNewList(self.boundingbox_list, GL_COMPILE)
             glPushMatrix()

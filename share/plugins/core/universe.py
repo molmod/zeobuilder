@@ -345,7 +345,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
 
 
     def invalidate_box_list(self):
-        if self.gl_active and self.box_list_valid:
+        if self.gl_active > 0 and self.box_list_valid:
             self.box_list_valid = False
             context.application.main.drawing_area.queue_draw()
             context.application.main.drawing_area.scene.add_revalidation(self.revalidate_box_list)
