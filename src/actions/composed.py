@@ -241,7 +241,8 @@ class InteractiveWithMemory(Interactive, RememberParametersMixin):
     def __init__(self, parameters=None):
         RememberParametersMixin.__init__(self, parameters)
         Base.__init__(self)
-        if self.parameters.empty():
+        if self.parameters is None:
+            self.parameters = Parameters()
             self.interactive_init()
         else:
             try:
