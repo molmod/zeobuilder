@@ -98,7 +98,10 @@ def dump_to_file(f, node):
         elif cls == numpy.ArrayType:
             shape = node.shape
             indenter.write_line("<array%s>" % name_key, 1)
-            dump_stage3(indenter, node.shape, use_references, name="shape")
+            indenter.write("<shape>")
+            for value in node.shape:
+                indenter.write("%s " % value)
+            indenter.write("</shape>", True)
             indenter.write("<cells>")
             for value in numpy.ravel(node):
                 indenter.write("%s " % value)
@@ -222,13 +225,13 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
         elif name == "list": current_tag.value = [tag.value for tag in child_tags]
         elif name == "dict": current_tag.value = dict((tag.label, tag.value) for tag in child_tags)
         elif name == "tuple": current_tag.value = tuple(tag.value for tag in child_tags)
+        elif name == "shape":
+            current_tag.value = tuple(int(item) for item in current_tag.content.split())
         elif name == "cells":
             current_tag.value = numpy.array([eval(item) for item in current_tag.content.split()])
         elif name == "array":
             child_dict = dict((tag.name, tag.value) for tag in child_tags)
-            current_tag.value = numpy.reshape(child_dict["cells"], child_dict["tuple"])
-        elif name == "vector": current_tag.value = numpy.array([eval(item) for item in current_tag.content.split()])
-        elif name == "matrix": current_tag.value = numpy.reshape(numpy.array([eval(item) for item in current_tag.content.split()]), (int(current_tag.attributes["rows"]), -1))
+            current_tag.value = numpy.reshape(child_dict["cells"], child_dict["shape"])
         elif name == "grid": current_tag.value = numpy.reshape(numpy.array([eval(item) for item in current_tag.content.split()]), (int(current_tag.attributes["rows"]), int(current_tag.attributes["cols"]), -1))
         elif name == "binary":
             current_tag.value = StringIO.StringIO()
