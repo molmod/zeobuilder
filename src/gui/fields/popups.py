@@ -90,7 +90,7 @@ class Base(object):
                 False
             )
 
-        self.menu.popup(None, None, bottom_left, mouse_button, time)
+        self.menu.popup(None, None, top_right, mouse_button, time)
 
     def fill_menu(self):
         raise NotImplementedError
@@ -191,6 +191,7 @@ class Length(Default):
     "A popup that can convert lengths to other unit systems"
 
     def fill_menu(self):
+        Default.fill_menu(self)
         representation = self.field.read_from_widget()
         from mixin import ambiguous
         if representation == ambiguous: return
@@ -201,7 +202,7 @@ class Length(Default):
                 unit_suffix = suffices[UNIT]
                 alternative_representation = express_measure(length, measure=LENGTH, unit=UNIT)
                 self.add_item(
-                    "Convert to %s (%f)" % (unit_suffix, alternative_representation),
+                    "Convert to %s" % alternative_representation,
                     None,
                     self.write_to_widget,
                     alternative_representation
@@ -216,6 +217,7 @@ class Length(Default):
 
 class Translation(Default):
     def fill_menu(self):
+        Default.fill_menu(self)
         self.add_item(
             "Reset",
             gtk.STOCK_REFRESH,
@@ -226,6 +228,7 @@ class Translation(Default):
 
 class Rotation(Default):
     def fill_menu(self):
+        Default.fill_menu(self)
         self.add_item(
             "Reset",
             gtk.STOCK_REFRESH,
@@ -236,6 +239,7 @@ class Rotation(Default):
 
 class Element(Base):
     def fill_menu(self):
+        Default.fill_menu(self)
         from mixin import ambiguous
         if self.field.original == ambiguous:
             str_original = str(self.field.original)
