@@ -33,7 +33,7 @@ def eval_measure(s, measure):
     s = s.lower().strip()
     suffix_unit = None
     for unit in units_by_measure[measure]:
-        if measure.endswith(suffices[unit].lower()):
+        if s.endswith(suffices[unit].lower()):
             s = s[:-len(suffices[unit])]
             suffix_unit = unit
             break
