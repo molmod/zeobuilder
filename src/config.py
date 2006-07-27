@@ -32,6 +32,9 @@ __all__ = ["Configuration"]
 class Configuration(object):
     def __init__(self, filename):
         self.default_units = dict((measure, units[0]) for measure, units in measures.iteritems())
+        self.saved_representations = {}
+        self.history_representations = {}
+        self.max_history_length = 6
         self.load_from_file(filename)
 
     def load_from_file(self, filename):
@@ -50,3 +53,26 @@ class Configuration(object):
         f = file(filename, "w")
         f.write(str(self.__dict__))
         f.close()
+        
+    def get_saved_representations(self, history_name):
+        result = self.saved_representations.get(history_name)
+        if result is None:
+            result = {}
+            self.saved_representations[history_name] = result
+        return result
+
+        
+    def get_history_representations(self, history_name):
+        result = self.history_representations.get(history_name)
+        if result is None:
+            result = []
+            self.history_representations[history_name] = result
+        return result
+        
+    def add_to_history(self, history_name, representation):
+        history_representations = self.get_history_representations(history_name)
+        if representation in history_representations:
+            history_representations.remove(representation)
+        if len(history_representations) > self.max_history_length:
+            del history_representations[-1]
+        history_representations.insert(0, representation)

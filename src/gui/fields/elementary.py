@@ -37,9 +37,9 @@ class Read(Single, ReadMixin):
 
 
 class Edit(Single, EditMixin):
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None):
         Single.__init__(self, label_text, border_width)
-        EditMixin.__init__(self, attribute_name, show_popup)
+        EditMixin.__init__(self, attribute_name, show_popup, history_name)
 
     def applicable(self, instance):
         return EditMixin.applicable(self, instance)
@@ -54,9 +54,9 @@ class Edit(Single, EditMixin):
 
 
 class Faulty(Single, FaultyMixin):
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None):
         Single.__init__(self, label_text, border_width)
-        FaultyMixin.__init__(self, attribute_name, show_popup, invalid_message)
+        FaultyMixin.__init__(self, attribute_name, show_popup, history_name, invalid_message)
 
     def applicable(self, instance):
         return FaultyMixin.applicable(self, instance)
@@ -73,9 +73,9 @@ class Faulty(Single, FaultyMixin):
 class Composed(Multiple, FaultyMixin):
     high_widget = True
 
-    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False):
+    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
         Multiple.__init__(self, fields, label_text, border_width)
-        FaultyMixin.__init__(self, attribute_name, show_popup, invalid_message)
+        FaultyMixin.__init__(self, attribute_name, show_popup, history_name, invalid_message)
         self.show_field_popups = show_field_popups
 
     def applicable(self, instance):
@@ -95,8 +95,8 @@ class Composed(Multiple, FaultyMixin):
 
 
 class TabulateComposed(Composed):
-    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, vertical=True, horizontal_flat=False):
-        Composed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups)
+    def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, vertical=True, horizontal_flat=False):
+        Composed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, history_name, invalid_message, show_field_popups)
         self.vertical = vertical
         self.horizontal_flat = horizontal_flat
         if not vertical and horizontal_flat:

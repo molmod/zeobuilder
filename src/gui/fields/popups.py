@@ -19,38 +19,64 @@
 #
 # --
 
+
+from zeobuilder import context
 from zeobuilder.transformations import Translation, Rotation
-from molmod.data import periodic
 from zeobuilder.conversion import express_measure
+from zeobuilder.gui.simple import ask_name
+
+from molmod.data import periodic
 from molmod.units import suffices, LENGTH, measures
 
 import gtk
 
-__all__ = ["Base", "Default", "Length", "Translation", "Rotation", "Element"]
 
+__all__ = ["Base", "Default", "Length", "Translation", "Rotation", "Element"]
 
 
 class Base(object):
     "Base class for popupmenu near each field"
+    
     def __init__(self, field, parent_window):
         self.menu = gtk.Menu()
         self.field = field
         self.parent_window = parent_window
+        self.row_count = 0
 
     def add_separator(self):
         mi = gtk.SeparatorMenuItem()
         mi.show()
         self.menu.append(mi)
+        self.row_count += 1
 
-    def add_item(self, label, on_activate, *args):
-        "Adds a new menuitem with the corresponding event_handler"
-        mi = gtk.MenuItem(label)
+    def create_item(self, label_text, stock_id, on_activate, *args):
+        if len(label_text) > 50:
+            label_text = label_text[:47] + "..."
+        if stock_id is None:
+            mi = gtk.MenuItem(label_text)
+        else:
+            mi = gtk.ImageMenuItem(stock_id)
+            mi.get_child().set_label(label_text)
         if on_activate is None:
             mi.set_sensitive(False)
         else:
             mi.connect("activate", on_activate, *args)
         mi.show()
-        self.menu.append(mi)
+        return mi
+
+    def add_item(self, label_text, stock_id, on_activate, *args):
+        self.menu.append(self.create_item(label_text, stock_id, on_activate, *args))
+        self.row_count += 1
+
+    def attach_items(self, descriptions):
+        for index, description in enumerate(descriptions):
+            label_text = description[0]
+            stock_id = description[1]
+            on_activate = description[2]
+            args = description[3:]
+            mi = self.create_item(label_text, stock_id, on_activate, *args)
+            self.menu.attach(mi, index, index+1, self.row_count, self.row_count+1)
+        self.row_count += 1
 
     def popup(self, button, time):
         if len(self.menu.get_children()) > 0:
@@ -59,17 +85,99 @@ class Base(object):
     def write_to_widget(self, widget, representation):
         self.field.write_to_widget(representation)
 
+
 class Default(Base):
-    "The default popup for a field, only has a revert function"
+    "The default popup for a field."
+    
     def __init__(self, field, parent_window):
         Base.__init__(self, field, parent_window)
-        from mixin import insensitive
+        from mixin import insensitive, ambiguous
         if field.original != insensitive:
-            self.add_item("Revert to %s" % str(field.original), self.write_to_widget, field.original)
+            self.add_item(
+                "Revert to '%s'" % str(field.original), 
+                gtk.STOCK_UNDO,
+                self.write_to_widget, 
+                field.original,
+            )
+
+        if field.history_name is not None:
+            self.saved_representations = context.application.configuration.get_saved_representations(field.history_name)
+
+            self.add_separator()
+            if field.read_from_widget() == ambiguous:
+                self.add_item(
+                    "Store field", 
+                    gtk.STOCK_ADD, 
+                    None,
+                )
+            else:
+                store_item = self.add_item(
+                    "Store field", 
+                    gtk.STOCK_ADD,
+                    self.on_store_activate, 
+                    field,
+                )
+
+            if len(self.saved_representations) > 0:
+                self.add_separator()
+            saved_keys = self.saved_representations.keys()
+            saved_keys.sort()
+            for key in saved_keys:
+                representation = self.saved_representations[key]
+                self.add_item(
+                    "%s: %s" % (key, representation),
+                    None, 
+                    self.write_to_widget,
+                    representation,
+                )
+            if len(self.saved_representations) > 0:
+                self.add_separator()
+            for key in saved_keys:
+                representation = self.saved_representations[key]
+                self.add_item(
+                    "Delete '%s'" % key,
+                    gtk.STOCK_DELETE, 
+                    self.on_delete_activated,
+                    key,
+                )
+
+            history_representations = context.application.configuration.get_history_representations(field.history_name)
+            if len(history_representations) > 0:
+                self.add_separator()
+            for index, representation in enumerate(history_representations):
+                self.add_item(
+                    "HISTORY %i: %s" % (index, representation), 
+                    None,
+                    self.write_to_widget, 
+                    representation,
+                )
+
+    def unused_name(self):
+        template = "NO NAME %i"
+        counter = 1
+        while True:
+            proposal = template % counter
+            if proposal not in self.saved_representations:
+                return proposal
+            counter += 1
+
+    def on_store_activate(self, widget, field):
+        name = ask_name()
+        if name is None:
+            return
+        name = name.upper()
+        if len(name) == 0:
+            name = self.unused_name()
+        self.saved_representations[name] = field.read_from_widget()
+        
+    def on_delete_activated(self, widget, key):
+        del self.saved_representations[key]
+        self.menu.popdown()
 
 
 class Length(Default):
     "A popup that can convert lengths to other unit systems"
+    
     def __init__(self, field, parent_window):
         Default.__init__(self, field, parent_window)
         representation = self.field.read_from_widget()
@@ -81,21 +189,40 @@ class Length(Default):
             for UNIT in measures[LENGTH]:
                 unit_suffix = suffices[UNIT]
                 alternative_representation = express_measure(length, measure=LENGTH, unit=UNIT)
-                self.add_item("Convert to %s (%f)" % (unit_suffix, alternative_representation), self.write_to_widget, alternative_representation)
+                self.add_item(
+                    "Convert to %s (%f)" % (unit_suffix, alternative_representation), 
+                    None,
+                    self.write_to_widget, 
+                    alternative_representation
+                )
         except ValueError:
-            self.add_item("Convert to ... (invalid entries)", None)
+            self.add_item(
+                "Convert to ... (invalid entries)", 
+                None, 
+                None,
+            )
 
 
 class Translation(Default):
     def __init__(self, field, parent_window):
         Default.__init__(self, field, parent_window)
-        self.add_item("Reset", self.write_to_widget, ('0.0', '0.0', '0.0'))
+        self.add_item(
+            "Reset", 
+            gtk.STOCK_REFRESH,
+            self.write_to_widget, 
+            ('0.0', '0.0', '0.0')
+        )
 
 
 class Rotation(Default):
     def __init__(self, field, parent_window):
         Default.__init__(self, field, parent_window)
-        self.add_item("Reset", self.write_to_widget, ('0.0', '0.0', '1.0', '0.0', False))
+        self.add_item(
+            "Reset", 
+            gtk.STOCK_REFRESH,
+            self.write_to_widget, 
+            ('0.0', '0.0', '1.0', '0.0', False)
+       )
 
 
 class Element(Base):
@@ -106,4 +233,9 @@ class Element(Base):
             str_original = str(field.original)
         else:
             str_original = moldata.periodic.symbol[field.original]
-        self.add_item("Revert to %s" % str_original, self.write_to_widget, field.original)
+        self.add_item(
+            "Revert to %s" % str_original,
+            gtk.STOCK_REFRESH,
+            self.write_to_widget, 
+            field.original
+        )

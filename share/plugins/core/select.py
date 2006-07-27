@@ -146,9 +146,10 @@ class SelectChildrenByExpression(ImmediateWithMemory):
                     show_popup=False
                 ),
                 fields.edit.TextView(
-                    label_text="Expression",
+                    label_text="Filter expression",
                     attribute_name="expression",
-                    show_popup=False
+                    show_popup=True,
+                    history_name="selection_filters",
                 )
             ],
             label_text="Selection rules"
@@ -302,7 +303,8 @@ class EditSelectionFilter(Immediate):
             fields.edit.TextView(
                 label_text="Filter expression",
                 attribute_name="filter_expression",
-                show_popup=False,
+                show_popup=True,
+                history_name="selection_filters",
             )
         ]),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))

@@ -41,7 +41,7 @@ __all__ = ["Vector", "Translation", "Rotation", "Box", "Color",
 class Vector(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, vector_name="r"):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, vector_name="r"):
         if length: FieldClass = Length
         else: FieldClass = Float
         fields = [
@@ -57,7 +57,17 @@ class Vector(TabulateComposed):
                 decimals=decimals
             ) for suffix in ["x", "y", "z"]
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups)
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            history_name=history_name, 
+            invalid_message=invalid_message, 
+            show_field_popups=show_field_popups
+        )
 
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
@@ -72,13 +82,14 @@ class Vector(TabulateComposed):
 class Translation(Vector):
     Popup = popups.Translation
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t"):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t"):
         Vector.__init__(
             self,
             label_text=label_text,
             border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
+            history_name=history_name, 
             invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             scientific=scientific,
@@ -100,7 +111,7 @@ class Translation(Vector):
 class Rotation(TabulateComposed):
     Popup = popups.Rotation
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n"):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n"):
         fields = [
             Float(
                 label_text="%s.%s" % (axis_name, suffix),
@@ -119,7 +130,17 @@ class Rotation(TabulateComposed):
                 attribute_name="?",
             )
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups)
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            history_name=history_name, 
+            invalid_message=invalid_message, 
+            show_field_popups=show_field_popups
+        )
 
     def applicable_attribute(self):
         return isinstance(self.attribute, MathRotation)
@@ -138,13 +159,14 @@ class Rotation(TabulateComposed):
 class BoxSize(Vector):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
         Vector.__init__(
             self,
             label_text=label_text,
             border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
+            history_name=history_name, 
             invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             scientific=scientific,
@@ -157,13 +179,14 @@ class BoxSize(Vector):
 class Color(Vector):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, decimals=5):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5):
         Vector.__init__(
             self,
             label_text=label_text,
             border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
+            history_name=history_name, 
             invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             low=0.0,
@@ -178,13 +201,11 @@ class Color(Vector):
 class BoxRegion(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True):
         fields = [
             Vector(
-                label_text=None,
                 border_width=border_width,
                 attribute_name="?",
-                invalid_message=None,
                 low=low,
                 high=high,
                 low_inclusive=low_inclusive,
@@ -196,7 +217,18 @@ class BoxRegion(TabulateComposed):
             )
             for name in ["low", "high"]
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups, False)
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            history_name=history_name, 
+            invalid_message=invalid_message, 
+            show_field_popups=show_field_popups,
+            vertical=False,
+        )
 
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (2,3)
@@ -211,7 +243,7 @@ class BoxRegion(TabulateComposed):
 class Interval(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, interval_name="x"):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5, length=True, interval_name="x"):
         if length: FieldClass = Length
         else: FieldClass = Float
         fields = [
@@ -229,8 +261,20 @@ class Interval(TabulateComposed):
             )
             for suffix in ["min", "max"]
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups, False, True)
-
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            history_name=history_name, 
+            invalid_message=invalid_message, 
+            show_field_popups=show_field_popups,
+            vertical=False,
+            horizontal_flat=True,
+        )
+        
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (2,)
 
@@ -244,7 +288,7 @@ class Interval(TabulateComposed):
 class CellMatrix(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
         fields = [
             Vector(
                 label_text="Ridge %s" % ridge,
@@ -257,7 +301,18 @@ class CellMatrix(TabulateComposed):
                 vector_name=ridge,
             ) for ridge in ["A", "B", "C"]
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups, False)
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            history_name=history_name, 
+            invalid_message=invalid_message, 
+            show_field_popups=show_field_popups,
+            vertical=False,
+        )
 
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,3)
@@ -288,14 +343,24 @@ class CellMatrix(TabulateComposed):
 class CellActive(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
         fields = [
             CheckButton(
                 label_text="Active in %s direction" % ridge,
                 attribute_name="?",
             ) for ridge in ["A", "B", "C"]
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups)
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            history_name=history_name, 
+            invalid_message=invalid_message, 
+            show_field_popups=show_field_popups,
+        )
 
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
@@ -310,7 +375,7 @@ class CellActive(TabulateComposed):
 class Repetitions(TabulateComposed):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, invalid_message=None, show_field_popups=False):
+    def __init__(self, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
         fields = [
             Int(
                 label_text=ridge,
@@ -319,7 +384,17 @@ class Repetitions(TabulateComposed):
                 minimum=1
             ) for ridge in ["A", "B", "C"]
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, invalid_message, show_field_popups)
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            history_name=history_name, 
+            invalid_message=invalid_message, 
+            show_field_popups=show_field_popups,
+        )
 
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,)
@@ -343,7 +418,15 @@ class Units(TabulateComposed):
             ) for measure, measure_name
             in measure_names.iteritems()
         ]
-        TabulateComposed.__init__(self, fields, label_text, border_width, attribute_name, show_popup, None, show_field_popups)
+        TabulateComposed.__init__(
+            self, 
+            fields, 
+            label_text=label_text, 
+            border_width=border_width, 
+            attribute_name=attribute_name, 
+            show_popup=show_popup, 
+            show_field_popups=show_field_popups,
+        )
 
     def applicable_attribute(self):
         if not isinstance(self.attribute, dict): return False

@@ -20,7 +20,10 @@
 # --
 
 
+from zeobuilder import context
+
 import gtk
+
 
 __all__ = [
     "ReadMixin", "EditMixin", "InvalidField", "FaultyMixin",
@@ -148,10 +151,12 @@ class ReadMixin(object):
 class EditMixin(ReadMixin):
     Popup = None
 
-    def __init__(self, attribute_name=None, show_popup=True):
+    def __init__(self, attribute_name=None, show_popup=True, history_name=None):
         ReadMixin.__init__(self, attribute_name)
-        self.original = None
         self.show_popup = show_popup
+        self.history_name = history_name
+
+        self.original = None
         self.bu_popup = None
 
     def create_widgets(self):
@@ -180,6 +185,8 @@ class EditMixin(ReadMixin):
                 #self.read()
             else:
                 self.write_to_instance(self.convert_to_value_wrap(representation), instance)
+            if self.history_name is not None:
+                context.application.configuration.add_to_history(self.history_name, representation)
 
     def write_multiplex(self):
         if self.instances is not None and self.changed():
@@ -258,8 +265,8 @@ class InvalidField(Exception):
 
 
 class FaultyMixin(EditMixin):
-    def __init__(self, attribute_name=None, show_popup=True, invalid_message=None):
-        EditMixin.__init__(self, attribute_name, show_popup)
+    def __init__(self, attribute_name=None, show_popup=True, history_name=None, invalid_message=None):
+        EditMixin.__init__(self, attribute_name, show_popup, history_name)
         self.invalid_message = invalid_message
 
     def check(self):
