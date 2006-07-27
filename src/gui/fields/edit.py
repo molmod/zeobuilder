@@ -393,7 +393,7 @@ class Color(Edit):
         Edit.create_widgets(self)
         self.color_button = gtk.ColorButton()
         self.color_button.connect("color-set", self.on_widget_changed)
-        self.color_child = self.color_button.get_children()[0]
+        self.color_child = self.color_button.get_child()
         self.ambiguous_label = gtk.Label(str(ambiguous))
         self.ambiguous_label.show_all()
         self.data_widget = self.color_button
@@ -410,7 +410,7 @@ class Color(Edit):
             self.color_button.set_sensitive(False)
         else:
             self.color_button.set_sensitive(True)
-            self.color_button.remove(self.color_button.get_children()[0])
+            self.color_button.remove(self.color_button.get_child())
             if representation == ambiguous:
                 self.color_button.add(self.ambiguous_label)
             else:
@@ -427,7 +427,7 @@ class Color(Edit):
         if not self.color_button.get_property("sensitive"):
             return insensitive
         else:
-            if self.color_button.get_children()[0] == self.ambiguous_label:
+            if self.color_button.get_child() == self.ambiguous_label:
                 return ambiguous
             else:
                 tmp = self.color_button.get_color()
@@ -435,6 +435,6 @@ class Color(Edit):
 
     def on_widget_changed(self, widget):
         Edit.on_widget_changed(self, widget)
-        self.color_button.remove(self.color_button.get_children()[0])
+        self.color_button.remove(self.color_button.get_child())
         self.color_button.add(self.color_child)
 
