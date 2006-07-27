@@ -205,9 +205,16 @@ class Universe(GLPeriodicContainer, FrameAxes):
         self.box_visible = box_visible
         self.invalidate_total_list()
 
+    def set_clipping(self, clipping):
+        self.clipping = clipping
+        self.invalidate_total_list()
+        self.invalidate_box_list()
+        self.update_clip_planes()
+
     published_properties = PublishedProperties({
         "repetitions": Property(numpy.array([1, 1, 1], int), lambda self: self.repetitions, set_repetitions),
         "box_visible": Property(True, lambda self: self.box_visible, set_box_visible),
+        "clipping": Property(True, lambda self: self.clipping, set_clipping),
     })
 
     #
@@ -223,6 +230,10 @@ class Universe(GLPeriodicContainer, FrameAxes):
         DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
             label_text="Show periodic box (if active)",
             attribute_name="box_visible",
+        )),
+        DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
+            label_text="Clip the unit cell contents.",
+            attribute_name="clipping",
         )),
     ])
 
@@ -272,6 +283,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
         self.set_clip_planes()
 
     def set_clip_planes(self):
+        if not self.clipping:
+            return
         scene = context.application.main.drawing_area.scene
         assert len(scene.clip_planes) == 0
         active, inactive = self.get_active_inactive()
@@ -388,11 +401,15 @@ class Universe(GLPeriodicContainer, FrameAxes):
                 for i2 in xrange(b2, n2+1):
                     draw_line(origin+i1*axis1+i2*axis2, origin+i1*axis1+i2*axis2+nd*delta)
 
-        origin = -0.5*sum(self.cell.transpose())
+        origin = -0.5*sum((self.cell*self.cell_active).transpose())
         draw_three(origin)
-        draw_gray(origin, self.cell[:,0], self.cell[:,1], self.repetitions[0], self.repetitions[1], self.cell[:,2], self.repetitions[2])
-        draw_gray(origin, self.cell[:,1], self.cell[:,2], self.repetitions[1], self.repetitions[2], self.cell[:,0], self.repetitions[0])
-        draw_gray(origin, self.cell[:,2], self.cell[:,0], self.repetitions[2], self.repetitions[0], self.cell[:,1], self.repetitions[1])
+        repetitions = self.repetitions*self.cell_active
+        if self.cell_active[2]:
+            draw_gray(origin, self.cell[:,0], self.cell[:,1], repetitions[0], repetitions[1], self.cell[:,2], repetitions[2])
+        if self.cell_active[0]:
+            draw_gray(origin, self.cell[:,1], self.cell[:,2], repetitions[1], repetitions[2], self.cell[:,0], repetitions[0])
+        if self.cell_active[1]:
+            draw_gray(origin, self.cell[:,2], self.cell[:,0], repetitions[2], repetitions[0], self.cell[:,1], repetitions[1])
 
     def draw_box(self):
         def draw_line(begin, end):
@@ -458,10 +475,13 @@ class Universe(GLPeriodicContainer, FrameAxes):
                     glCallList(self.boundingbox_list)
 
                 # repeat the draw list for all the unit cell images.
-                repetitions = (self.repetitions + 2) * self.cell_active + 1 - self.cell_active
+                if self.clipping:
+                    repetitions = (self.repetitions + 2) * self.cell_active + 1 - self.cell_active
+                else:
+                    repetitions = self.repetitions * self.cell_active + 1 - self.cell_active
                 for position in yield_all_positions(repetitions):
                     glPushMatrix()
-                    t = numpy.dot(self.cell, numpy.array(position)-self.cell_active)
+                    t = numpy.dot(self.cell, numpy.array(position)-self.cell_active*self.clipping)
                     glTranslate(t[0], t[1], t[2])
                     glCallList(self.draw_list)
                     glPopMatrix()
