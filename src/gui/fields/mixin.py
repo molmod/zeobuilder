@@ -94,13 +94,12 @@ class ReadMixin(object):
     def applicable_attribute(self):
         return True
 
-    def read(self, instance=None):
-        if self.instance is not None:
-            if instance is None: instance = self.instance
-            self.write_to_widget(self.convert_to_representation_wrap(self.read_from_instance(instance)), True)
+    def read(self):
+        if self.get_active():
+            self.write_to_widget(self.convert_to_representation_wrap(self.read_from_instance(self.instance)), True)
 
     def read_multiplex(self):
-        if self.instances is not None:
+        if self.get_active():
             common = self.convert_to_representation_wrap(self.read_from_instance(self.instances[0]))
             for instance in self.instances[1:]:
                 if common != self.convert_to_representation_wrap(self.read_from_instance(instance)):
@@ -110,7 +109,7 @@ class ReadMixin(object):
             self.set_ambiguous_capability(False)
             self.write_to_widget(common, True)
 
-    def write(self, instance=None):
+    def write(self):
         pass
 
     def write_multiplex(self):
@@ -183,23 +182,18 @@ class EditMixin(ReadMixin):
     def do_popup(self, bu_popup, event):
         self.popup.do_popup(bu_popup, event.button, event.time)
 
-    def write(self, instance=None):
-        if self.instance is not None and (self.changed() or instance!=None):
+    def write(self):
+        if self.get_active() and self.changed():
             representation = self.read_from_widget()
-            if instance is None:
-                self.write_to_instance(self.convert_to_value_wrap(representation), self.instance)
-                #self.read()
-            else:
-                self.write_to_instance(self.convert_to_value_wrap(representation), instance)
+            self.write_to_instance(self.convert_to_value_wrap(representation), self.instance)
             if self.history_name is not None:
                 context.application.configuration.add_to_history(self.history_name, representation)
 
     def write_multiplex(self):
-        if self.instances is not None and self.changed():
+        if self.get_active() and self.changed():
             representation = self.read_from_widget()
             for instance in self.instances:
                 self.write_to_instance(self.convert_to_value_wrap(representation), instance)
-            #self.read_multiplex()
 
     def changed_names(self):
         if self.get_active() and self.changed():

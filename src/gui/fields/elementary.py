@@ -93,6 +93,64 @@ class Composed(Multiple, FaultyMixin):
         Multiple.create_widgets(self)
         FaultyMixin.create_widgets(self)
 
+    def destroy_widgets(self):
+        Multiple.destroy_widgets(self)
+        FaultyMixin.destroy_widgets(self)
+
+    def read(self):
+        FaultyMixin.read(self)
+
+    def read_multiplex(self):
+        FaultyMixin.read_multiplex(self)
+
+    def write(self):
+        FaultyMixin.write(self)
+
+    def write_multiplex(self):
+        FaultyMixin.write_multiplex(self)
+
+    def check(self):
+        if self.get_active():
+            try:
+                Multiple.check(self)
+            except InvalidField, e:
+                if self.invalid_message is not None:
+                    e.prepend_message(self.invalid_message)
+                raise e
+
+    def convert_to_representation(self, value):
+        return tuple(field.convert_to_representation(value[index]) for index, field in enumerate(self.fields))
+
+    def write_to_widget(self, representation, original=False):
+        if representation == ambiguous or representation == insensitive:
+            for field in self.fields:
+                field.write_to_widget(representation, original)
+        else:
+            for index, field in enumerate(self.fields):
+                field.write_to_widget(representation[index], original)
+        FaultyMixin.write_to_widget(self, representation, original)
+
+    def read_from_widget(self):
+        result = tuple(field.read_from_widget() for field in self.fields)
+        if insensitive in result:
+            return insensitive # if one is insensitive, they all are. We know for sure.
+        elif ambiguous in result:
+            # if one is ambiguous, we have to test the all to be sure.
+            all_ambiguous = True
+            for item in result:
+                if item != ambiguous:
+                    all_ambiguous = False
+                    break
+            if all_ambiguous:
+                return ambiguous
+            else:
+                return result
+        else:
+            return result
+
+    def convert_to_value(self, representation):
+        return tuple(field.convert_to_value(representation[index]) for index, field in enumerate(self.fields))
+
 
 class TabulateComposed(Composed):
     def __init__(self, fields, label_text=None, border_width=6, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, vertical=True, horizontal_flat=False):
@@ -146,64 +204,6 @@ class TabulateComposed(Composed):
             else:
                 container = field.get_widgets_short_container(self.show_field_popups)
             self.data_widget.pack_start(container)
-
-    def destroy_widgets(self):
-        Multiple.destroy_widgets(self)
-        FaultyMixin.destroy_widgets(self)
-
-    def read(self, instance=None):
-        FaultyMixin.read(self, instance)
-
-    def read_multiplex(self):
-        FaultyMixin.read_multiplex(self)
-
-    def write(self, instance=None):
-        FaultyMixin.write(self, instance)
-
-    def write_multiplex(self):
-        FaultyMixin.write_multiplex(self)
-
-    def check(self):
-        if self.get_active():
-            try:
-                Multiple.check(self)
-            except InvalidField, e:
-                if self.invalid_message is not None:
-                    e.prepend_message(self.invalid_message)
-                raise e
-
-    def convert_to_representation(self, value):
-        return tuple(field.convert_to_representation(value[index]) for index, field in enumerate(self.fields))
-
-    def write_to_widget(self, representation, original=False):
-        if representation == ambiguous or representation == insensitive:
-            for field in self.fields:
-                field.write_to_widget(representation, original)
-        else:
-            for index, field in enumerate(self.fields):
-                field.write_to_widget(representation[index], original)
-        FaultyMixin.write_to_widget(self, representation, original)
-
-    def read_from_widget(self):
-        result = tuple(field.read_from_widget() for field in self.fields)
-        if insensitive in result:
-            return insensitive # if one is insensitive, they all are. We know for sure.
-        elif ambiguous in result:
-            # if one is ambiguous, we have to test the all to be sure.
-            all_ambiguous = True
-            for item in result:
-                if item != ambiguous:
-                    all_ambiguous = False
-                    break
-            if all_ambiguous:
-                return ambiguous
-            else:
-                return result
-        else:
-            return result
-
-    def convert_to_value(self, representation):
-        return tuple(field.convert_to_value(representation[index]) for index, field in enumerate(self.fields))
 
 
 class Group(Multiple):

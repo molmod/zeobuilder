@@ -96,9 +96,9 @@ class Table(Group):
                     field.sensitive_button.destroy()
                     field.sensitive_button = None
 
-    def read(self, instance=None):
-        Group.read(self, instance=None)
-        if self.buttons != NO_BUTTONS:
+    def read(self):
+        Group.read(self)
+        if self.buttons != NO_BUTTONS and self.get_active():
             for field in self.fields:
                 if field.get_active():
                     field.sensitive_button.set_active(field.read_from_widget() != insensitive)

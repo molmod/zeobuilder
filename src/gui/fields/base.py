@@ -146,23 +146,23 @@ class Multiple(Single):
             field.destroy_widgets()
         Single.destroy_widgets(self)
 
-    def read(self, instance=None):
-        if self.instance is not None:
+    def read(self):
+        if self.get_active():
             for field in self.fields:
                 field.read()
 
     def read_multiplex(self):
-        if self.instances is not None:
+        if self.get_active():
             for field in self.fields:
                 field.read_multiplex()
 
-    def write(self, instance=None):
-        if self.instance is not None:
+    def write(self):
+        if self.get_active():
             for field in self.fields:
                field.write()
 
     def write_multiplex(self):
-        if self.instances is not None:
+        if self.get_active():
             for field in self.fields:
                 field.write_multiplex()
 
