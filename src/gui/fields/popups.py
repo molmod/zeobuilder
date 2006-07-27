@@ -111,6 +111,13 @@ class Default(Base):
                 self.write_to_widget,
                 self.field.original,
             )
+        if self.field.reset_representation is not None:
+            self.add_item(
+                "Reset to '%s'" % str(self.field.reset_representation),
+                gtk.STOCK_REFRESH,
+                self.write_to_widget,
+                self.field.reset_representation
+            )
 
         if self.field.history_name is not None:
             self.saved_representations = context.application.configuration.get_saved_representations(self.field.history_name)
@@ -213,28 +220,6 @@ class Length(Default):
                 None,
                 None,
             )
-
-
-class Translation(Default):
-    def fill_menu(self):
-        Default.fill_menu(self)
-        self.add_item(
-            "Reset",
-            gtk.STOCK_REFRESH,
-            self.write_to_widget,
-            ('0.0', '0.0', '0.0')
-        )
-
-
-class Rotation(Default):
-    def fill_menu(self):
-        Default.fill_menu(self)
-        self.add_item(
-            "Reset",
-            gtk.STOCK_REFRESH,
-            self.write_to_widget,
-            ('0.0', ('1.0', '0.0', '0.0'), False)
-       )
 
 
 class Element(Base):

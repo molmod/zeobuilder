@@ -68,6 +68,7 @@ class Attribute(object):
 
 class ReadMixin(object):
     attribute = Attribute()
+    reset_representation = None
 
     def __init__(self, attribute_name=None):
         self.attribute_name = attribute_name
