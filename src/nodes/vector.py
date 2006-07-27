@@ -164,7 +164,7 @@ class Vector(GLReferentBase):
                         signx = {True: 1, False: -1}[x >= 0]
                         a = -signx * y / x
                         b = signx
-                    self.orientation.set_rotation_properties(math.acos(c) * 180 / math.pi, numpy.array([a, b, 0.0]), False)
+                    self.orientation.set_rotation_properties(math.acos(c), numpy.array([a, b, 0.0]), False)
 
     def set_target(self, reference, target):
         GLReferentBase.set_target(self, reference, target)

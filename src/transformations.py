@@ -241,7 +241,7 @@ class Rotation(Base):
             rotation_axis = rotation_axis / sin_angle
 
         # Finally calculate the rotation_angle:
-        rotation_angle = math.atan2(sin_angle, cos_angle)/math.pi*180
+        rotation_angle = math.atan2(sin_angle, cos_angle)
         return rotation_angle, rotation_axis, invert
 
     def set_rotation_properties(self, rotation_angle, rotation_axis, invert):
@@ -250,8 +250,8 @@ class Rotation(Base):
             x = rotation_axis[0] / norm
             y = rotation_axis[1] / norm
             z = rotation_axis[2] / norm
-            c = math.cos(rotation_angle / 180.0 * math.pi)
-            s = math.sin(rotation_angle / 180.0 * math.pi)
+            c = math.cos(rotation_angle)
+            s = math.sin(rotation_angle)
             self.rotation_matrix = {True: -1, False:1}[invert] * \
                    numpy.array([[x*x*(1-c)+c  , x*y*(1-c)-z*s, x*z*(1-c)+y*s],
                                   [x*y*(1-c)+z*s, y*y*(1-c)+c  , y*z*(1-c)-x*s],

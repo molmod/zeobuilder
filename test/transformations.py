@@ -21,7 +21,7 @@
 
 from zeobuilder.transformations import Complete
 
-import numpy, copy, random
+import numpy, copy, random, math
 import unittest
 
 
@@ -33,7 +33,7 @@ class Apply(unittest.TestCase):
         self.test_transformations = []
         for i in xrange(20):
             test_transformation = Complete()
-            test_transformation.set_rotation_properties(random.random()*360, numpy.random.uniform(-3, 3, 3), random.sample([True, False], 1)[0])
+            test_transformation.set_rotation_properties(random.random()*math.pi*2, numpy.random.uniform(-3, 3, 3), random.sample([True, False], 1)[0])
             test_transformation.translation_vector = numpy.random.uniform(-3, 3, 3)
             self.test_transformations.append(test_transformation)
 

@@ -196,7 +196,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
                 if (b1 is not None) and (e1 is not None) and (b2 is not None) and (e2 is not None):
                     if last.children[0].target == last_but_one.children[0].target:
                         self.parameters.complete.translation_vector = copy.copy(b1)
-                    angle = angle(e1 - b1, e2 - b2) / math.pi * 180
+                    angle = angle(e1 - b1, e2 - b2)
                     rotation_vector = numpy.cross(e1 - b1, e2 - b2)
                     self.parameters.complete.set_rotation_properties(angle, rotation_vector, False)
             else:
@@ -204,7 +204,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
                 e = last.children[1].translation_relative_to(self.parent)
                 if (b is not None) and (e is not None):
                     self.parameters.complete.translation_vector = b
-                    self.parameters.complete.set_rotation_properties(45.0, e - b, False)
+                    self.parameters.complete.set_rotation_properties(math.pi*0.25, e - b, False)
         elif isinstance(last, GLTransformationMixin) and isinstance(last.transformation, Translation):
             self.parameters.complete.translation_vector = last.get_frame_relative_to(parent).translation_vector
         else:
@@ -384,7 +384,7 @@ class RotateMouseMixin(object):
             self.former_x = event.x
             self.former_y = event.y
         if event.button == 3: # Z rotate
-            self.former_rotz = 180/math.pi*math.atan2(-(event.y - self.screen_rotation_center[1]), event.x - self.screen_rotation_center[0])
+            self.former_rotz = math.atan2(-(event.y - self.screen_rotation_center[1]), event.x - self.screen_rotation_center[0])
 
     def button_motion(self, drawing_area, event, start_button):
         if start_button == 2: return
@@ -392,11 +392,11 @@ class RotateMouseMixin(object):
             rotx = (event.x - self.former_x) / float(drawing_area.allocation.width) * 360
             roty = (event.y - self.former_y) / float(drawing_area.allocation.width) * 360
             rotation_axis = numpy.array([-roty, -rotx, 0.0])
-            rotation_angle = math.sqrt(rotx*rotx + roty*roty)
+            rotation_angle = math.sqrt(rotx*rotx + roty*roty)/30
             self.former_x = event.x
             self.former_y = event.y
         if start_button == 3: # Z rotation
-            rotz = 180/math.pi*math.atan2(-(event.y - self.screen_rotation_center[1]), event.x - self.screen_rotation_center[0])
+            rotz = math.atan2(-(event.y - self.screen_rotation_center[1]), event.x - self.screen_rotation_center[0])
             rotation_axis = numpy.array([0.0, 0.0, -1.0])
             rotation_angle = rotz - self.former_rotz
             self.former_rotz = rotz
@@ -414,7 +414,7 @@ class RotateMouseMixin(object):
 
 class RotateKeyboardMixin(object):
     def key_press(self, drawing_area, event):
-        rotation_angle = 5.0
+        rotation_angle = math.pi/36.0
         if event.keyval == 65365:
             rotation_axis = numpy.array([ 0.0,  0.0, -1.0])
         elif event.keyval == 65366:

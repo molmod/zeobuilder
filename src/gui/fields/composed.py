@@ -21,13 +21,13 @@
 
 
 from elementary import Composed, TabulateComposed
-from faulty import Float, Length, Int
+from faulty import Float, Length, Int, MeasureEntry
 from edit import CheckButton, ComboBox
 from mixin import InvalidField, EditMixin, FaultyMixin
 import popups
 from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
-from molmod.units import suffices, measures, measure_names, units_by_measure
+from molmod.units import suffices, measures, measure_names, units_by_measure, ANGLE
 
 import numpy, gtk
 
@@ -45,8 +45,6 @@ class ArrayError(Exception):
 
 
 class Array(TabulateComposed):
-    Popup = popups.Default
-
     def __init__(self, FieldClass, array_name, suffices, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, short=True, transpose=False, **keyval):
         # make sure that the suffices are given as a numpy array.
         suffices = numpy.array(suffices)
@@ -85,6 +83,15 @@ class Array(TabulateComposed):
         if issubclass(FieldClass, FaultyMixin):
             for field in fields:
                 field.invalid_message = "Invalid %s" % field.label_text
+
+        if issubclass(FieldClass, Float):
+            self.decimals = fields[0].decimals
+            self.scientific = fields[0].scientific
+
+        if issubclass(FieldClass, MeasureEntry):
+            self.measure = fields[0].measure
+
+        self.Popup = fields[0].Popup
 
         Composed.__init__(
             self,
@@ -203,10 +210,10 @@ class Translation(Array):
         return isinstance(self.attribute, MathTranslation)
 
     def read_from_attribute(self):
-        return tuple(self.attribute.translation_vector)
+        return self.attribute.translation_vector
 
     def write_to_attribute(self, value):
-        self.attribute.translation_vector = numpy.array(value)
+        self.attribute.translation_vector = value
 
 
 class Rotation(TabulateComposed):
@@ -215,7 +222,8 @@ class Rotation(TabulateComposed):
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n.%s"):
         fields = [
-            Float(
+            MeasureEntry(
+                measure=ANGLE,
                 label_text="Angle",
                 invalid_message="Invalid rotation angle.",
                 decimals=decimals,

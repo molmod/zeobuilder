@@ -19,15 +19,19 @@
 #
 # --
 
+
 from elementary import Faulty
 from mixin import ambiguous, insensitive
-from zeobuilder.conversion import express_measure, eval_measure
-from molmod.units import LENGTH
 import popups
+
+from zeobuilder.conversion import express_measure, eval_measure
+
+from molmod.units import LENGTH, measure_names
 
 import gtk
 
-__all__ = ["Entry", "Float", "Int", "Length", "Name", "Password"]
+
+__all__ = ["Entry", "Float", "Int", "MeasureEntry", "Length", "Name", "Password"]
 
 
 class Entry(Faulty):
@@ -124,17 +128,26 @@ class Int(Entry):
         return value
 
 
-class Length(Float):
-    Popup = popups.Length
+class MeasureEntry(Float):
+    Popup = popups.Measure
+
+    def __init__(self, measure, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
+        Float.__init__(self, label_text, attribute_name, show_popup, history_name, invalid_message, low, high, low_inclusive, high_inclusive, scientific, decimals)
+        self.measure = measure
 
     def convert_to_representation(self, value):
-        return express_measure(value, LENGTH, self.decimals, self.scientific)
+        return express_measure(value, self.measure, self.decimals, self.scientific)
 
     def convert_to_value(self, representation):
         Entry.convert_to_value(self, representation)
-        value = eval_measure(representation, measure=LENGTH)
-        self.check_ranges(value, "length")
+        value = eval_measure(representation, self.measure)
+        self.check_ranges(value, measure_names[self.measure].lower())
         return value
+
+
+class Length(MeasureEntry):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
+        MeasureEntry.__init__(self, LENGTH, label_text, attribute_name, show_popup, history_name, invalid_message, low, high, low_inclusive, high_inclusive, scientific, decimals)
 
 
 class Name(Entry):

@@ -26,12 +26,12 @@ from zeobuilder.conversion import express_measure
 from zeobuilder.gui.simple import ask_name
 
 from molmod.data import periodic
-from molmod.units import suffices, LENGTH, measures
+from molmod.units import suffices, LENGTH, measures, units_by_measure
 
-import gtk
+import gtk, numpy
 
 
-__all__ = ["Base", "Default", "Length", "Translation", "Rotation", "Element"]
+__all__ = ["Base", "Default", "Measure", "Translation", "Rotation", "Element"]
 
 
 class Base(object):
@@ -194,8 +194,8 @@ class Default(Base):
         self.menu.popdown()
 
 
-class Length(Default):
-    "A popup that can convert lengths to other unit systems"
+class Measure(Default):
+    "A popup that can also convert to other units"
 
     def fill_menu(self):
         Default.fill_menu(self)
@@ -204,12 +204,34 @@ class Length(Default):
         if representation == ambiguous: return
         self.add_separator()
         try:
-            length = self.field.convert_to_value(representation)
-            for UNIT in measures[LENGTH]:
-                unit_suffix = suffices[UNIT]
-                alternative_representation = express_measure(length, measure=LENGTH, unit=UNIT)
+            value = self.field.convert_to_value(representation)
+            if isinstance(value, numpy.ndarray):
+                if self.field.transpose:
+                    value = value.transpose()
+                value = value.ravel()
+            for unit in units_by_measure[self.field.measure]:
+                unit_suffix = suffices[unit]
+                if isinstance(value, numpy.ndarray):
+                    alternative_representation = tuple(
+                        express_measure(
+                            item,
+                            self.field.measure,
+                            self.field.decimals,
+                            self.field.scientific,
+                            unit
+                        )
+                        for item in value
+                    )
+                else:
+                    alternative_representation = express_measure(
+                        value,
+                        self.field.measure,
+                        self.field.decimals,
+                        self.field.scientific,
+                        unit
+                    )
                 self.add_item(
-                    "Convert to %s" % alternative_representation,
+                    "Convert to '%s'" % str(alternative_representation),
                     None,
                     self.write_to_widget,
                     alternative_representation
@@ -231,7 +253,7 @@ class Element(Base):
         else:
             str_original = moldata.periodic.symbol[self.field.original]
         self.add_item(
-            "Revert to %s" % str_original,
+            "Revert to '%s'" % str_original,
             gtk.STOCK_REFRESH,
             self.write_to_widget,
             self.field.original
