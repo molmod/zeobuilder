@@ -58,14 +58,14 @@ class Vector(TabulateComposed):
             ) for suffix in ["x", "y", "z"]
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
-            history_name=history_name, 
-            invalid_message=invalid_message, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            invalid_message=invalid_message,
             show_field_popups=show_field_popups
         )
 
@@ -89,7 +89,7 @@ class Translation(Vector):
             border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
-            history_name=history_name, 
+            history_name=history_name,
             invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             scientific=scientific,
@@ -131,14 +131,14 @@ class Rotation(TabulateComposed):
             )
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
-            history_name=history_name, 
-            invalid_message=invalid_message, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            invalid_message=invalid_message,
             show_field_popups=show_field_popups
         )
 
@@ -166,7 +166,7 @@ class BoxSize(Vector):
             border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
-            history_name=history_name, 
+            history_name=history_name,
             invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             scientific=scientific,
@@ -186,7 +186,7 @@ class Color(Vector):
             border_width=border_width,
             attribute_name=attribute_name,
             show_popup=show_popup,
-            history_name=history_name, 
+            history_name=history_name,
             invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             low=0.0,
@@ -218,14 +218,14 @@ class BoxRegion(TabulateComposed):
             for name in ["low", "high"]
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
-            history_name=history_name, 
-            invalid_message=invalid_message, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             vertical=False,
         )
@@ -262,19 +262,19 @@ class Interval(TabulateComposed):
             for suffix in ["min", "max"]
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
-            history_name=history_name, 
-            invalid_message=invalid_message, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             vertical=False,
             horizontal_flat=True,
         )
-        
+
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (2,)
 
@@ -302,14 +302,14 @@ class CellMatrix(TabulateComposed):
             ) for ridge in ["A", "B", "C"]
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
-            history_name=history_name, 
-            invalid_message=invalid_message, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             vertical=False,
         )
@@ -351,14 +351,14 @@ class CellActive(TabulateComposed):
             ) for ridge in ["A", "B", "C"]
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
-            history_name=history_name, 
-            invalid_message=invalid_message, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
         )
 
@@ -385,14 +385,14 @@ class Repetitions(TabulateComposed):
             ) for ridge in ["A", "B", "C"]
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
-            history_name=history_name, 
-            invalid_message=invalid_message, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
         )
 
@@ -419,12 +419,12 @@ class Units(TabulateComposed):
             in measure_names.iteritems()
         ]
         TabulateComposed.__init__(
-            self, 
-            fields, 
-            label_text=label_text, 
-            border_width=border_width, 
-            attribute_name=attribute_name, 
-            show_popup=show_popup, 
+            self,
+            fields,
+            label_text=label_text,
+            border_width=border_width,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
             show_field_popups=show_field_popups,
         )
 

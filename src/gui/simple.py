@@ -64,7 +64,7 @@ def nosave_cancel_save_question(message):
 
 def ask_name():
     dialog = gtk.Dialog(
-        context.title, 
+        context.title,
         context.parent_window,
         flags=0,
         buttons=(
