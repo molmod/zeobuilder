@@ -36,12 +36,10 @@ __all__ = ["Base", "Default", "Length", "Translation", "Rotation", "Element"]
 
 class Base(object):
     "Base class for popupmenu near each field"
-    
-    def __init__(self, field, parent_window):
-        self.menu = gtk.Menu()
+
+    def __init__(self, field):
         self.field = field
-        self.parent_window = parent_window
-        self.row_count = 0
+        self.menu = gtk.Menu()
 
     def add_separator(self):
         mi = gtk.SeparatorMenuItem()
@@ -78,9 +76,24 @@ class Base(object):
             self.menu.attach(mi, index, index+1, self.row_count, self.row_count+1)
         self.row_count += 1
 
-    def popup(self, button, time):
-        if len(self.menu.get_children()) > 0:
-            self.menu.popup(None, None, None, button, time)
+    def do_popup(self, button, mouse_button, time):
+        for child in self.menu.get_children():
+            self.menu.remove(child)
+        self.row_count = 0
+        self.fill_menu()
+
+        def bottom_left(menu):
+            xo, yo = button.window.get_origin()
+            return (
+                xo + button.allocation.x + button.allocation.width,
+                yo + button.allocation.y,
+                False
+            )
+
+        self.menu.popup(None, None, bottom_left, mouse_button, time)
+
+    def fill_menu(self):
+        raise NotImplementedError
 
     def write_to_widget(self, widget, representation):
         self.field.write_to_widget(representation)
@@ -88,34 +101,33 @@ class Base(object):
 
 class Default(Base):
     "The default popup for a field."
-    
-    def __init__(self, field, parent_window):
-        Base.__init__(self, field, parent_window)
+
+    def fill_menu(self):
         from mixin import insensitive, ambiguous
-        if field.original != insensitive:
+        if self.field.original != insensitive:
             self.add_item(
-                "Revert to '%s'" % str(field.original), 
+                "Revert to '%s'" % str(self.field.original),
                 gtk.STOCK_UNDO,
-                self.write_to_widget, 
-                field.original,
+                self.write_to_widget,
+                self.field.original,
             )
 
-        if field.history_name is not None:
-            self.saved_representations = context.application.configuration.get_saved_representations(field.history_name)
+        if self.field.history_name is not None:
+            self.saved_representations = context.application.configuration.get_saved_representations(self.field.history_name)
 
             self.add_separator()
-            if field.read_from_widget() == ambiguous:
+            if self.field.read_from_widget() == ambiguous:
                 self.add_item(
-                    "Store field", 
-                    gtk.STOCK_ADD, 
+                    "Store field",
+                    gtk.STOCK_ADD,
                     None,
                 )
             else:
                 store_item = self.add_item(
-                    "Store field", 
+                    "Store field",
                     gtk.STOCK_ADD,
-                    self.on_store_activate, 
-                    field,
+                    self.on_store_activate,
+                    self.field,
                 )
 
             if len(self.saved_representations) > 0:
@@ -126,7 +138,7 @@ class Default(Base):
                 representation = self.saved_representations[key]
                 self.add_item(
                     "%s: %s" % (key, representation),
-                    None, 
+                    None,
                     self.write_to_widget,
                     representation,
                 )
@@ -136,19 +148,19 @@ class Default(Base):
                 representation = self.saved_representations[key]
                 self.add_item(
                     "Delete '%s'" % key,
-                    gtk.STOCK_DELETE, 
+                    gtk.STOCK_DELETE,
                     self.on_delete_activated,
                     key,
                 )
 
-            history_representations = context.application.configuration.get_history_representations(field.history_name)
+            history_representations = context.application.configuration.get_history_representations(self.field.history_name)
             if len(history_representations) > 0:
                 self.add_separator()
             for index, representation in enumerate(history_representations):
                 self.add_item(
-                    "HISTORY %i: %s" % (index, representation), 
+                    "HISTORY %i: %s" % (index, representation),
                     None,
-                    self.write_to_widget, 
+                    self.write_to_widget,
                     representation,
                 )
 
@@ -169,7 +181,7 @@ class Default(Base):
         if len(name) == 0:
             name = self.unused_name()
         self.saved_representations[name] = field.read_from_widget()
-        
+
     def on_delete_activated(self, widget, key):
         del self.saved_representations[key]
         self.menu.popdown()
@@ -177,9 +189,8 @@ class Default(Base):
 
 class Length(Default):
     "A popup that can convert lengths to other unit systems"
-    
-    def __init__(self, field, parent_window):
-        Default.__init__(self, field, parent_window)
+
+    def fill_menu(self):
         representation = self.field.read_from_widget()
         from mixin import ambiguous
         if representation == ambiguous: return
@@ -190,52 +201,49 @@ class Length(Default):
                 unit_suffix = suffices[UNIT]
                 alternative_representation = express_measure(length, measure=LENGTH, unit=UNIT)
                 self.add_item(
-                    "Convert to %s (%f)" % (unit_suffix, alternative_representation), 
+                    "Convert to %s (%f)" % (unit_suffix, alternative_representation),
                     None,
-                    self.write_to_widget, 
+                    self.write_to_widget,
                     alternative_representation
                 )
         except ValueError:
             self.add_item(
-                "Convert to ... (invalid entries)", 
-                None, 
+                "Convert to ... (invalid entries)",
+                None,
                 None,
             )
 
 
 class Translation(Default):
-    def __init__(self, field, parent_window):
-        Default.__init__(self, field, parent_window)
+    def fill_menu(self):
         self.add_item(
-            "Reset", 
+            "Reset",
             gtk.STOCK_REFRESH,
-            self.write_to_widget, 
+            self.write_to_widget,
             ('0.0', '0.0', '0.0')
         )
 
 
 class Rotation(Default):
-    def __init__(self, field, parent_window):
-        Default.__init__(self, field, parent_window)
+    def fill_menu(self):
         self.add_item(
-            "Reset", 
+            "Reset",
             gtk.STOCK_REFRESH,
-            self.write_to_widget, 
+            self.write_to_widget,
             ('0.0', '0.0', '1.0', '0.0', False)
        )
 
 
 class Element(Base):
-    def __init__(self, field, parent_window):
-        Base.__init__(self, field, parent_window)
+    def fill_menu(self):
         from mixin import ambiguous
-        if field.original == ambiguous:
-            str_original = str(field.original)
+        if self.field.original == ambiguous:
+            str_original = str(self.field.original)
         else:
-            str_original = moldata.periodic.symbol[field.original]
+            str_original = moldata.periodic.symbol[self.field.original]
         self.add_item(
             "Revert to %s" % str_original,
             gtk.STOCK_REFRESH,
-            self.write_to_widget, 
-            field.original
+            self.write_to_widget,
+            self.field.original
         )

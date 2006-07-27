@@ -158,6 +158,7 @@ class EditMixin(ReadMixin):
 
         self.original = None
         self.bu_popup = None
+        self.popup = None
 
     def create_widgets(self):
         if (self.show_popup) and (self.Popup is not None):
@@ -166,16 +167,21 @@ class EditMixin(ReadMixin):
             image = gtk.Image()
             image.set_from_stock(gtk.STOCK_INDEX, gtk.ICON_SIZE_MENU)
             self.bu_popup.add(image)
-            self.bu_popup.connect("button_release_event", self.on_bu_popup_released)
+            self.bu_popup.connect("button_release_event", self.do_popup)
+            self.popup = self.Popup(self)
 
     def destroy_widgets(self):
         if self.bu_popup is not None:
             self.bu_popup.destroy()
             self.bu_popup = None
+            self.popup = None
 
     def get_widgets_separate(self):
         assert self.data_widget is not None
         return self.label, self.data_widget, self.bu_popup
+
+    def do_popup(self, bu_popup, event):
+        self.popup.do_popup(bu_popup, event.button, event.time)
 
     def write(self, instance=None):
         if self.instance is not None and (self.changed() or instance!=None):
@@ -237,9 +243,6 @@ class EditMixin(ReadMixin):
 
     def on_widget_changed(self, widget):
         self.update_label()
-
-    def on_bu_popup_released(self, button, event):
-        self.Popup(self, button.get_parent_window()).popup(event.button, event.time)
 
     def update_label(self):
         if self.label is None:
