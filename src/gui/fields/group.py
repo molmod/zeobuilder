@@ -140,6 +140,11 @@ class Notebook(Group):
         Group.__init__(self, [field for (name, field) in named_fields], label_text)
         self.named_fields = named_fields
 
+    def get_description(self, caller):
+        n = self.data_widget
+        label = n.get_tab_label(n.get_nth_page(n.page_num(caller.container)))
+        return label.get_text()
+
     def create_widgets(self):
         Group.create_widgets(self)
         self.data_widget = gtk.Notebook()

@@ -26,8 +26,12 @@ from zeobuilder import context
 
 import gobject, gtk
 
-__all__ = ["ok_error", "yes_no_question", "nosave_cancel_save_question",
-           "ok_information"]
+
+__all__ = [
+    "ok_error", "yes_no_question", "nosave_cancel_save_question",
+    "ok_information", "ask_name", "field_error"
+]
+
 
 def run_dialog(dialog):
     dialog.set_title(context.title)
@@ -35,32 +39,29 @@ def run_dialog(dialog):
     dialog.destroy()
     return result
 
+
 def ok_error(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
-    result = run_dialog(dialog)
-    dialog.destroy()
-    return result
+    return run_dialog(dialog)
+
 
 def ok_information(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
-    result = run_dialog(dialog)
-    dialog.destroy()
-    return result
+    return run_dialog(dialog)
+
 
 def yes_no_question(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
-    result = run_dialog(dialog)
-    dialog.destroy()
-    return result
+    return run_dialog(dialog)
+
 
 def nosave_cancel_save_question(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, message)
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     dialog.add_button(gtk.STOCK_SAVE, gtk.RESPONSE_OK)
-    result = run_dialog(dialog)
-    dialog.destroy()
-    return result
+    return run_dialog(dialog)
+
 
 def ask_name():
     dialog = gtk.Dialog(
@@ -88,3 +89,19 @@ def ask_name():
         result = None
     dialog.destroy()
     return result
+
+
+error_message="""<big><b>One of the fields you entered is invalid.</b></big>
+
+<b>Location:</b> %s
+<b>Problem:</b> %s
+"""
+
+def field_error(location, problem):
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE, error_message % (location, problem))
+    dialog.label.set_property("use-markup", True)
+    button = dialog.add_button(gtk.STOCK_JUMP_TO, gtk.RESPONSE_OK)
+    result = run_dialog(dialog)
+    dialog.destroy()
+    return result
+

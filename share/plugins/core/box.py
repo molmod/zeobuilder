@@ -64,7 +64,6 @@ class Box(GLGeometricBase, ColorMixin):
             suffices=["Width", "Height", "Depth"],
             label_text="Box size",
             attribute_name="size",
-            invalid_message="Invalid box dimensions.",
         ))
     ])
 

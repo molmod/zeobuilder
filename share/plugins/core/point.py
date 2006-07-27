@@ -67,14 +67,12 @@ class Point(GLGeometricBase, ColorMixin):
         DialogFieldInfo("Geometry", (2, 7), fields.faulty.Length(
             label_text="Spike length",
             attribute_name="spike_length",
-            invalid_message="Invalid spike length.",
             low=0.0,
             low_inclusive=False
         )),
         DialogFieldInfo("Geometry", (2, 8), fields.faulty.Length(
             label_text="Spike thickness",
             attribute_name="spike_thickness",
-            invalid_message="Invalid spike thickness.",
             low=0.0,
             low_inclusive=False
         ))

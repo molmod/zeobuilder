@@ -213,7 +213,7 @@ class Paste(Immediate):
         parent = context.application.cache.node
         main = context.application.main
         main.tree_selection.unselect_all()
-        
+
         def load_func(clipboard, selection_data, user_data):
             string_representation = selection_data.data
             if string_representation is None:

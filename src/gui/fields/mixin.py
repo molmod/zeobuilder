@@ -258,15 +258,8 @@ class InvalidField(Exception):
         self.field = field
         self.message = message
 
-    def prepend_message(self, new_line):
-        self.message = new_line + "\n" + self.message
-
 
 class FaultyMixin(EditMixin):
-    def __init__(self, attribute_name=None, show_popup=True, history_name=None, invalid_message=None):
-        EditMixin.__init__(self, attribute_name, show_popup, history_name)
-        self.invalid_message = invalid_message
-
     def check(self):
         #print self.label_text, self.instances, self.instance, self.get_active()
         if self.get_active() and self.changed():
@@ -274,7 +267,5 @@ class FaultyMixin(EditMixin):
                 self.convert_to_value_wrap(self.read_from_widget())
             except ValueError, e:
                 invalid_field = InvalidField(self, str(e))
-                if self.invalid_message is not None:
-                    invalid_field.prepend_message(self.invalid_message)
                 raise invalid_field
 

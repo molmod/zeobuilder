@@ -316,12 +316,10 @@ class GLTransformationMixin(GLMixin):
         DialogFieldInfo("Translation", (3, 0), fields.composed.Translation(
             label_text="Translation with vector t",
             attribute_name="transformation",
-            invalid_message="Make sure that the fields that describe the translation, are correct.",
         )),
         DialogFieldInfo("Rotation", (4, 0), fields.composed.Rotation(
             label_text="Rotation around axis n",
             attribute_name="transformation",
-            invalid_message="Make sure that the fields that describe the rotation, are correct.",
         )),
         DialogFieldInfo("Rotation", (4, 1), fields.read.Handedness()),
     ])

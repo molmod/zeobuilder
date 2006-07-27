@@ -79,7 +79,6 @@ class UnitCell(MolmodUnitCell):
         DialogFieldInfo("Unit cell", (5, 0), fields.composed.CellMatrix(
             label_text="Cell dimensions",
             attribute_name="cell",
-            invalid_message="Invalid unit cell dimensions",
         )),
         DialogFieldInfo("Unit cell", (5, 1), fields.composed.CellActive(
             label_text="Active directions",
@@ -229,7 +228,6 @@ class Universe(GLPeriodicContainer, FrameAxes):
         DialogFieldInfo("Unit cell", (5, 2), fields.composed.Repetitions(
             label_text="Repetitions",
             attribute_name="repetitions",
-            invalid_message="Please enter valid repetitions",
         )),
         DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
             label_text="Show periodic box (if active)",
@@ -525,7 +523,6 @@ class UnitCellToCluster(ImmediateWithMemory):
                     array_name=(ridge+".%s"),
                     suffices=["min", "max"],
                     attribute_name="interval_%s" % ridge.lower(),
-                    invalid_message="Please enter a valid interval for the fractional coordinate along ridge %s" % ridge,
                     transpose=True
                 )
                 for ridge in ["A", "B", "C"]
@@ -692,7 +689,6 @@ class SuperCell(ImmediateWithMemory):
             fields=[
                 fields.faulty.Int(
                     attribute_name="repetitions_%s" % ridge.lower(),
-                    invalid_message="Please enter a valid repetition number for ridge %s" % ridge,
                     label_text=ridge,
                     minimum=1,
                 )

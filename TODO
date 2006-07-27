@@ -7,11 +7,6 @@ TODO LISTS
 TODO core
 ---------
 
-### User interface
-
-    * Rewrite the invalid messages in the dialogs
-
-
 ### Implementation
 
 	* Code documentation + revision of each module

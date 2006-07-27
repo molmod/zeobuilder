@@ -67,14 +67,12 @@ class Sphere(GLGeometricBase, ColorMixin):
         DialogFieldInfo("Geometry", (2, 2), fields.faulty.Length(
             label_text="Radius",
             attribute_name="radius",
-            invalid_message="Invalid sphere radius.",
             low=0.0,
             low_inclusive=False,
         )),
         DialogFieldInfo("Markup", (1, 3), fields.faulty.Int(
             label_text="Quality",
             attribute_name="quality",
-            invalid_message="Invalid quality",
             minimum=3,
         ))
     ])

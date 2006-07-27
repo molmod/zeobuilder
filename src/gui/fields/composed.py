@@ -45,7 +45,7 @@ class ArrayError(Exception):
 
 
 class Array(TabulateComposed):
-    def __init__(self, FieldClass, array_name, suffices, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, short=True, transpose=False, **keyval):
+    def __init__(self, FieldClass, array_name, suffices, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, short=True, transpose=False, **keyval):
         # make sure that the suffices are given as a numpy array.
         suffices = numpy.array(suffices)
         if len(suffices.shape) != 1 and len(suffices.shape) != 2:
@@ -80,10 +80,6 @@ class Array(TabulateComposed):
             for field in fields:
                 field.show_popup = show_field_popups
 
-        if issubclass(FieldClass, FaultyMixin):
-            for field in fields:
-                field.invalid_message = "Invalid %s" % field.label_text
-
         if issubclass(FieldClass, Float):
             self.decimals = fields[0].decimals
             self.scientific = fields[0].scientific
@@ -100,7 +96,6 @@ class Array(TabulateComposed):
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
-            invalid_message=invalid_message,
             show_field_popups=show_field_popups
         )
 
@@ -190,7 +185,7 @@ class Translation(Array):
     Popup = popups.Default
     reset_representation = ('0.0', '0.0', '0.0')
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t.%s"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t.%s"):
         Array.__init__(
             self,
             FieldClass=Length,
@@ -200,7 +195,6 @@ class Translation(Array):
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
-            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             scientific=scientific,
             decimals=decimals,
@@ -220,12 +214,11 @@ class Rotation(TabulateComposed):
     Popup = popups.Default
     reset_representation = ('0.0', ('1.0', '0.0', '0.0'), False)
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n.%s"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, decimals=5, scientific=False, axis_name="n.%s"):
         fields = [
             MeasureEntry(
                 measure=ANGLE,
                 label_text="Angle",
-                invalid_message="Invalid rotation angle.",
                 decimals=decimals,
                 scientific=scientific,
             ), Array(
@@ -233,7 +226,6 @@ class Rotation(TabulateComposed):
                 array_name=axis_name,
                 suffices=["x", "y", "z"],
                 show_popup=False,
-                invalid_message="Invalid rotation axis",
                 decimals=decimals,
                 scientific=scientific,
             ), CheckButton(
@@ -247,7 +239,6 @@ class Rotation(TabulateComposed):
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
-            invalid_message=invalid_message,
             show_field_popups=show_field_popups
         )
 
@@ -265,7 +256,7 @@ class CellMatrix(Array):
     Popup = popups.Default
     reset_representation = (('10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A'))
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, scientific=False, decimals=5):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=5):
         Array.__init__(
             self,
             FieldClass=Length,
@@ -275,33 +266,27 @@ class CellMatrix(Array):
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
-            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             scientific=scientific,
             decimals=decimals,
         )
 
-    def check(self):
-        Array.check(self)
-        if self.get_active() and self.changed():
-            matrix = self.convert_to_value(self.read_from_widget())
-            for col, name in enumerate(["A", "B", "C"]):
-                norm = math.sqrt(numpy.dot(matrix[:,col], matrix[:,col]))
-                if norm < 1e-6:
-                    invalid_field = InvalidField(self, "The length of ridge %s is (nearly) zero." % name)
-                    invalid_field.prepend_message(self.invalid_message)
-                    raise invalid_field
-                matrix[:,col] /= norm
-            if abs(numpy.linalg.det(matrix)) < 1e-6:
-                invalid_field = InvalidField(self, "The ridges of the unit cell are (nearly) linearly dependent vectors!")
-                invalid_field.prepend_message(self.invalid_message)
-                raise invalid_field
+    def convert_to_value(self, representation):
+        intermediate = Array.convert_to_value(self, representation)
+        for col, name in enumerate(["A", "B", "C"]):
+            norm = math.sqrt(numpy.dot(intermediate[:,col], intermediate[:,col]))
+            if norm < 1e-6:
+                raise ValueError("The length of ridge %s is (nearly) zero." % name)
+            intermediate[:,col] /= norm
+        if abs(numpy.linalg.det(intermediate)) < 1e-6:
+            raise ValueError("The ridges of the unit cell are (nearly) linearly dependent vectors.")
+        return intermediate
 
 
 class CellActive(Array):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
         Array.__init__(
             self,
             FieldClass=CheckButton,
@@ -311,7 +296,6 @@ class CellActive(Array):
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
-            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
         )
 
@@ -319,7 +303,7 @@ class CellActive(Array):
 class Repetitions(Array):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
         Array.__init__(
             self,
             FieldClass=Int,
@@ -329,7 +313,6 @@ class Repetitions(Array):
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
-            invalid_message=invalid_message,
             show_field_popups=show_field_popups,
             minimum=1,
         )

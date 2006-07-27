@@ -54,9 +54,9 @@ class Edit(Single, EditMixin):
 
 
 class Faulty(Single, FaultyMixin):
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None):
         Single.__init__(self, label_text)
-        FaultyMixin.__init__(self, attribute_name, show_popup, history_name, invalid_message)
+        FaultyMixin.__init__(self, attribute_name, show_popup, history_name)
 
     def applicable(self, instance):
         return FaultyMixin.applicable(self, instance)
@@ -73,9 +73,9 @@ class Faulty(Single, FaultyMixin):
 class Composed(Multiple, FaultyMixin):
     high_widget = True
 
-    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False):
+    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
         Multiple.__init__(self, fields, label_text)
-        FaultyMixin.__init__(self, attribute_name, show_popup, history_name, invalid_message)
+        FaultyMixin.__init__(self, attribute_name, show_popup, history_name)
         self.show_field_popups = show_field_popups
 
     def applicable(self, instance):
@@ -110,13 +110,8 @@ class Composed(Multiple, FaultyMixin):
         FaultyMixin.write_multiplex(self)
 
     def check(self):
-        if self.get_active():
-            try:
-                Multiple.check(self)
-            except InvalidField, e:
-                if self.invalid_message is not None:
-                    e.prepend_message(self.invalid_message)
-                raise e
+        Multiple.check(self)
+        FaultyMixin.check(self)
 
     def convert_to_representation(self, value):
         return tuple(field.convert_to_representation(value[index]) for index, field in enumerate(self.fields))
@@ -153,8 +148,8 @@ class Composed(Multiple, FaultyMixin):
 
 
 class TabulateComposed(Composed):
-    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, invalid_message=None, show_field_popups=False, vertical=True, horizontal_flat=False):
-        Composed.__init__(self, fields, label_text, attribute_name, show_popup, history_name, invalid_message, show_field_popups)
+    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, vertical=True, horizontal_flat=False):
+        Composed.__init__(self, fields, label_text, attribute_name, show_popup, history_name, show_field_popups)
         self.vertical = vertical
         self.horizontal_flat = horizontal_flat
         if not vertical and horizontal_flat:

@@ -95,7 +95,6 @@ class ModelObject(Base):
         DialogFieldInfo("Basic", (0, 0), fields.faulty.Name(
             label_text="Name",
             attribute_name="name",
-            invalid_message="Invalid name.",
         )),
     ])
 

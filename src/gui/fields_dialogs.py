@@ -19,13 +19,15 @@
 #
 # --
 
-from simple import *
+from simple import field_error
 import fields
 from zeobuilder import context
 
 import gtk
 
+
 __all__ = ["FieldsDialogBase", "FieldsDialogSimple", "FieldsDialogMultiplex"]
+
 
 class FieldsDialogBase(object):
     def __init__(self, title, main_field, action_buttons):
@@ -82,8 +84,12 @@ class FieldsDialogBase(object):
                 if (response_id == gtk.RESPONSE_APPLY):
                     self.read()
             except fields.mixin.InvalidField, e:
+                trace = e.field.get_trace()
+                if trace is None:
+                    trace = "Position not found. This should never happen. Please contact the authors."
+                field_error(trace, e.message)
                 e.field.show()
-                ok_error(e.message)
+                e.field.grab_focus()
                 self.valid = False
 
     def init_widgets(self, data):

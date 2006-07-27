@@ -36,6 +36,28 @@ class Single(object):
         self.instances = None
         self.parent = None
 
+    def get_description(self, caller):
+        if self.label_text is None:
+            return None
+        else:
+            return self.label_text
+
+    def get_trace(self, caller=None):
+        description = self.get_description(caller)
+        if self.parent is None:
+            trace = None
+        else:
+            trace = self.parent.get_trace(self)
+
+        if description is None and trace is None:
+            return None
+        elif description is None:
+            return trace
+        elif trace is None:
+            return description
+        else:
+            return "%s  <b>-&gt;</b>  %s" % (self.parent.get_trace(self), description)
+
     def get_active(self):
         return self.instance is not None or self.instances is not None
 
@@ -128,11 +150,14 @@ class Single(object):
         self.instance = None
         self.instances = None
 
-    def show(self, field=None):
+    def show(self, caller=None):
         # makes sure the correct notebook page is shown
         # etc. to point at the incorrect field.
         if self.parent is not None:
             self.parent.show(self)
+
+    def grab_focus(self):
+        self.data_widget.grab_focus()
 
 
 class Multiple(Single):
@@ -172,3 +197,5 @@ class Multiple(Single):
             for field in self.fields:
                 field.check()
 
+    def grab_focus(self):
+        self.fields[0].grab_focus()
