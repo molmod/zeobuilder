@@ -190,10 +190,14 @@ class Universe(GLPeriodicContainer, FrameAxes):
     def set_cell(self, cell):
         GLPeriodicContainer.set_cell(self, cell)
         self.update_clip_planes()
+        self.invalidate_total_list()
+        self.invalidate_box_list()
 
     def set_cell_active(self, cell_active):
         GLPeriodicContainer.set_cell_active(self, cell_active)
         self.update_clip_planes()
+        self.invalidate_total_list()
+        self.invalidate_box_list()
 
     def set_repetitions(self, repetitions):
         self.repetitions = repetitions
