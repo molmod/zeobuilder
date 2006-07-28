@@ -534,7 +534,6 @@ class CoreActions(ApplicationTestCase):
     def test_unit_cell_to_cluster(self):
         def fn():
             context.application.model.file_open("input/periodic.zml")
-            context.application.main.toggle_selection(context.application.model.universe, on=True)
             parameters = Parameters()
             parameters.interval_b = numpy.array([0.0, 2.0], float)
             parameters.interval_c = numpy.array([0.0, 2.0], float)
@@ -546,7 +545,6 @@ class CoreActions(ApplicationTestCase):
     def test_super_cell(self):
         def fn():
             context.application.model.file_open("input/periodic.zml")
-            context.application.main.toggle_selection(context.application.model.universe, on=True)
             parameters = Parameters()
             parameters.repetitions_b = 2
             parameters.repetitions_c = 3

@@ -528,18 +528,16 @@ class UnitCellToCluster(ImmediateWithMemory):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
-        node = context.application.cache.node
-        if not isinstance(node, UnitCell): return False
-        if sum(node.cell_active) == 0: return False
-        if hasattr(parameters, "interval_a") and not node.cell_active[0]: return False
-        if hasattr(parameters, "interval_b") and not node.cell_active[1]: return False
-        if hasattr(parameters, "interval_c") and not node.cell_active[2]: return False
+        universe = context.application.model.universe
+        if hasattr(parameters, "interval_a") and not universe.cell_active[0]: return False
+        if hasattr(parameters, "interval_b") and not universe.cell_active[1]: return False
+        if hasattr(parameters, "interval_c") and not universe.cell_active[2]: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
 
     def init_parameters(self):
-        universe = context.application.cache.node
+        universe = context.application.model.universe
         if universe.cell_active[0]:
             self.parameters.interval_a = numpy.array([-0.5, -0.5 + universe.repetitions[0]], float)
         if universe.cell_active[1]:
@@ -552,7 +550,7 @@ class UnitCellToCluster(ImmediateWithMemory):
             self.parameters.clear()
 
     def do(self):
-        universe = context.application.cache.node
+        universe = context.application.model.universe
         def extend_to_cluster(axis, interval):
             if interval is None: return
             assert universe.cell_active[axis]
@@ -694,18 +692,16 @@ class SuperCell(ImmediateWithMemory):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
-        node = context.application.cache.node
-        if not isinstance(node, UnitCell): return False
-        if sum(node.cell_active) == 0: return False
-        if hasattr(parameters, "repetitions_a") and not node.cell_active[0]: return False
-        if hasattr(parameters, "repetitions_b") and not node.cell_active[1]: return False
-        if hasattr(parameters, "repetitions_c") and not node.cell_active[2]: return False
+        universe = context.application.model.universe
+        if hasattr(parameters, "repetitions_a") and not universe.cell_active[0]: return False
+        if hasattr(parameters, "repetitions_b") and not universe.cell_active[1]: return False
+        if hasattr(parameters, "repetitions_c") and not universe.cell_active[2]: return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
 
     def init_parameters(self):
-        universe = context.application.cache.node
+        universe = context.application.model.universe
         if universe.cell_active[0]:
             self.parameters.repetitions_a = universe.repetitions[0]
         if universe.cell_active[1]:
@@ -740,7 +736,7 @@ class SuperCell(ImmediateWithMemory):
 
         # serialize the positioned children
 
-        universe = context.application.cache.node
+        universe = context.application.model.universe
 
         positioned = [
             node
