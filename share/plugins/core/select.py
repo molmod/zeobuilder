@@ -370,7 +370,7 @@ class PickSelection(Interactive):
                 main.toggle_selection(hit, event.button==1)
             self.finish()
         else:
-            if (event.button == 2):
+            if (event.button == 1):
                 main.tree_selection.unselect_all()
             if (event.button != 3):
                 hit = self.get_nearest(main.drawing_area.scene.draw((event.x, event.y, event.x, event.y)),
