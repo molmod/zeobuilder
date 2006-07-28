@@ -27,7 +27,6 @@ from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.zml import dump_to_file, load_from_string, load_from_file
 import zeobuilder.actions.primitive as primitive
-import zeobuilder.gui.fields as fields
 
 import gtk
 
@@ -284,17 +283,13 @@ class EditConfiguration(Immediate):
     description = "Edit configuration"
     menu_info = MenuInfo("default/_Edit:preferences", "_Configuration", image_name=gtk.STOCK_PREFERENCES, order=(0, 1, 3, 0))
 
-    edit_config = FieldsDialogSimple(
-        "Zeobuilder configuration",
-        fields.composed.Units(
-            label_text="Default units",
-            attribute_name="default_units",
-        ),
-        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
-    )
-
     def do(self):
-        self.edit_config.run(context.application.configuration)
+        edit_config = FieldsDialogSimple(
+            "Zeobuilder configuration",
+            context.application.configuration.create_main_field(),
+            ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+        )
+        edit_config.run(context.application.configuration.settings)
 
 
 actions = {

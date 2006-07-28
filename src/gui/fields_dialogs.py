@@ -150,6 +150,7 @@ def create_tabbed_main_field(dialog_fields):
     for category, field_infos in fields_by_category:
         field_infos.sort(key=(lambda dfi: dfi.order))
 
+    #print
     #for category, field_infos in fields_by_category:
     #    print "C", category
     #    for dialog_field_info in field_infos:

@@ -49,13 +49,11 @@ class Application(object):
         gobject.idle_add(self.after_gui)
         gtk.main()
 
-        self.configuration.save_to_file(context.config_filename)
+        self.configuration.save_to_file()
 
     def initialize_config(self):
         from zeobuilder.config import Configuration
-        self.configuration = Configuration(
-            os.path.join(context.config_filename)
-        )
+        self.configuration = Configuration(context.config_filename)
 
     def initialize_plugins(self):
         from zeobuilder.plugins import PluginsCollection
