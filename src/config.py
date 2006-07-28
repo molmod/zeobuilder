@@ -46,19 +46,19 @@ class Configuration(object):
         self.dialog_fields = []
         self.settings = Settings()
         self.load_from_file()
-        
-        # register some widely used settings
+
+        # register some general settings
         from zeobuilder.gui import fields
         from zeobuilder.gui.fields_dialogs import DialogFieldInfo
-        
+
         # 1) Default units
         def corrector_default_units(value):
             for measure, units in units_by_measure.iteritems():
                 if measure not in value or value[measure] not in units:
                     value[measure] = units[0]
             return dict(
-                (measure, unit) 
-                for measure, unit in 
+                (measure, unit)
+                for measure, unit in
                 value.iteritems()
                 if measure in measures
             )
@@ -71,7 +71,7 @@ class Configuration(object):
             )),
             corrector_default_units
         )
-        
+
         # 2) history stuff
         self.register_setting("saved_representations", {})
         self.register_setting("history_representations", {})
@@ -98,19 +98,19 @@ class Configuration(object):
         f = file(self.filename, "w")
         f.write(str(self.settings.__dict__))
         f.close()
-    
+
     def __getattr__(self, name):
         if name not in self.settings.__dict__:
             raise AttributeError("Setting '%s' has not been registered." % name)
         else:
             return self.settings.__dict__[name]
-        
+
     def __setattr__(self, name, value):
         if hasattr(self, "settings") and not hasattr(self, name):
             self.settings.__setattr__(name, value)
         else:
             object.__setattr__(self, name, value)
-    
+
     def register_setting(self, name, default, dialog_field_info=None, corrector=None):
         if name not in self.settings.__dict__:
             self.settings.__setattr__(name, default, True)
@@ -148,4 +148,4 @@ class Configuration(object):
             del history_representations[-1]
         history_representations.insert(0, representation)
 
-    
+

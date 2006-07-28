@@ -45,6 +45,55 @@ class Scene(object):
     def __init__(self):
         self.quadric = gluNewQuadric()
         gluQuadricNormals(self.quadric, GLU_SMOOTH)
+
+        # register configuration settings: default viewer
+        from zeobuilder.gui import fields
+        from zeobuilder.gui.fields_dialogs import DialogFieldInfo
+        config = context.application.configuration
+        config.register_setting(
+            "viewer_distance",
+            100.0*angstrom,
+            DialogFieldInfo("Default Viewer", (1, 0), fields.faulty.Length(
+                label_text="Distance from origin",
+                attribute_name="viewer_distance",
+                low=0.0,
+                low_inclusive=True,
+            )),
+        )
+        config.register_setting(
+            "opening_angle",
+            0.0,
+            DialogFieldInfo("Default Viewer", (1, 1), fields.faulty.Float(
+                label_text="Eye opening angle",
+                attribute_name="opening_angle",
+                low=0.0,
+                low_inclusive=True,
+                high=90.0,
+                high_inclusive=False,
+                show_popup=False,
+            )),
+        )
+        config.register_setting(
+            "window_size",
+            5*angstrom,
+            DialogFieldInfo("Default Viewer", (1, 1), fields.faulty.Length(
+                label_text="Window size",
+                attribute_name="window_size",
+                low=0.0,
+                low_inclusive=False,
+            )),
+        )
+        config.register_setting(
+            "window_depth",
+            200.0*angstrom,
+            DialogFieldInfo("Default Viewer", (1, 1), fields.faulty.Length(
+                label_text="Window depth",
+                attribute_name="window_depth",
+                low=0.0,
+                low_inclusive=False,
+            )),
+        )
+
         self.reset_view()
         self.gl_names = {}
         self.revalidations = []
@@ -212,13 +261,14 @@ class Scene(object):
         glEndList()
 
     def reset_view(self):
+        config = context.application.configuration
         self.center = Translation()
         self.rotation = Rotation()
         self.viewer = Translation()
-        self.viewer.translation_vector[2] = -100.0*angstrom
-        self.opening_angle = 0.0
-        self.window_size = 5*angstrom
-        self.window_depth = 200.0*angstrom
+        self.viewer.translation_vector[2] = -config.viewer_distance
+        self.opening_angle = config.opening_angle
+        self.window_size = config.window_size
+        self.window_depth = config.window_depth
 
     def get_parent_model_view(self, gl_object):
         # determine the model view
