@@ -76,7 +76,7 @@ class Entry(Faulty):
 class Float(Entry):
     Popup = popups.Default
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=2):
         Entry.__init__(self, label_text, attribute_name, show_popup, history_name)
         self.low = low
         self.high = high
@@ -131,7 +131,7 @@ class Int(Entry):
 class MeasureEntry(Float):
     Popup = popups.Measure
 
-    def __init__(self, measure, label_text=None, attribute_name=None, show_popup=True, history_name=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
+    def __init__(self, measure, label_text=None, attribute_name=None, show_popup=True, history_name=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=2):
         Float.__init__(self, label_text, attribute_name, show_popup, history_name, low, high, low_inclusive, high_inclusive, scientific, decimals)
         self.measure = measure
 
@@ -146,7 +146,7 @@ class MeasureEntry(Float):
 
 
 class Length(MeasureEntry):
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=5):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=2):
         MeasureEntry.__init__(self, LENGTH, label_text, attribute_name, show_popup, history_name, low, high, low_inclusive, high_inclusive, scientific, decimals)
 
 

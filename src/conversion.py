@@ -44,7 +44,7 @@ def eval_measure(s, measure):
 
 # * expression routines (from value to string)
 
-def express_measure(val, measure, decimals=5, scientific=False, unit=None):
+def express_measure(val, measure, decimals=2, scientific=False, unit=None):
     if unit is None:
         unit = context.application.configuration.default_units[measure]
 
