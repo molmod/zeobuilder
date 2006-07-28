@@ -122,3 +122,44 @@ class FieldsDialogMultiplex(FieldsDialogBase):
 
     def write(self):
         self.main_field.write_multiplex()
+
+
+class DialogFieldInfo(object):
+    def __init__(self, category, order, field):
+        self.category = category
+        self.order = order
+        self.field = field
+
+
+def create_tabbed_main_field(dialog_fields):
+    unique_dialog_fields = {}
+    categories = set()
+
+    for dialog_field_info in dialog_fields:
+        key = (dialog_field_info.category, dialog_field_info.order, dialog_field_info.field.attribute_name)
+        if key not in unique_dialog_fields:
+            unique_dialog_fields[key] = dialog_field_info
+        categories.add(dialog_field_info.category)
+
+    fields_by_category = dict((category, []) for category in categories)
+    for dialog_field_info in unique_dialog_fields.itervalues():
+        fields_by_category[dialog_field_info.category].append(dialog_field_info)
+    fields_by_category = fields_by_category.items()
+
+    fields_by_category.sort(key=(lambda cf: min(dfi.order for dfi in cf[1])))
+    for category, field_infos in fields_by_category:
+        field_infos.sort(key=(lambda dfi: dfi.order))
+
+    #for category, field_infos in fields_by_category:
+    #    print "C", category
+    #    for dialog_field_info in field_infos:
+    #        print "DFI", dialog_field_info.order, dialog_field_info.field.attribute_name, dialog_field_info.field.label_text
+
+    return fields.group.Notebook([
+        (category, fields.group.Table([
+            dialog_field_info.field
+            for dialog_field_info
+            in field_infos
+        ])) for category, field_infos
+        in fields_by_category
+    ])

@@ -21,12 +21,13 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import PublishedProperties, Property, DialogFieldInfo
+from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui import load_image
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Complete
 import zeobuilder.gui.fields as fields
 

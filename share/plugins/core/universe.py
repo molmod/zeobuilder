@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property, DialogFieldInfo
+from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
 from zeobuilder.nodes.elementary import GLContainerBase
 from zeobuilder.nodes.parent_mixin import ReferentMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
@@ -31,7 +31,7 @@ from zeobuilder.nodes.vector import Vector
 from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui import load_image
-from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
+from zeobuilder.gui.fields_dialogs import FieldsDialogSimple, DialogFieldInfo
 from zeobuilder.transformations import Translation
 from zeobuilder.zml import dump_to_file, load_from_file
 import zeobuilder.actions.primitive as primitive

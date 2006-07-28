@@ -28,44 +28,17 @@ import gtk
 def init_nodes(nodes):
     from reference import Reference, SpatialReference
     from zeobuilder.gui.edit_properties import EditProperties
-    import zeobuilder.gui.fields as fields
+    from zeobuilder.gui.fields_dialogs import create_tabbed_main_field
 
-    dialog_fields = {}
-    categories = set()
+    dialog_fields = []
 
     for node in nodes.itervalues():
-        if not issubclass(node, Reference):
-            node.reference_icon = node.icon.copy()
-            Reference.overlay_icon.composite(
-                node.reference_icon, 0, 0, 20, 20, 0, 0, 1.0, 1.0,
-                gtk.gdk.INTERP_BILINEAR, 255
-            )
-        for dialog_field_info in node.dialog_fields:
-            key = (dialog_field_info.category, dialog_field_info.order, dialog_field_info.field.attribute_name)
-            if key not in dialog_fields:
-                dialog_fields[key] = dialog_field_info
-            categories.add(dialog_field_info.category)
+        node.reference_icon = node.icon.copy()
+        Reference.overlay_icon.composite(
+            node.reference_icon, 0, 0, 20, 20, 0, 0, 1.0, 1.0,
+            gtk.gdk.INTERP_BILINEAR, 255
+        )
+        dialog_fields.extend(node.dialog_fields)
 
-    fields_by_category = dict((category, []) for category in categories)
-    for dialog_field_info in dialog_fields.itervalues():
-        fields_by_category[dialog_field_info.category].append(dialog_field_info)
-    fields_by_category = fields_by_category.items()
-
-    fields_by_category.sort(key=(lambda cf: min(dfi.order for dfi in cf[1])))
-    for category, field_infos in fields_by_category:
-        field_infos.sort(key=(lambda dfi: dfi.order))
-
-    #for category, field_infos in fields_by_category:
-    #    print "C", category
-    #    for dialog_field_info in field_infos:
-    #        print "DFI", dialog_field_info.order, dialog_field_info.field.attribute_name, dialog_field_info.field.label_text
-
-    main_field = fields.group.Notebook([
-        (category, fields.group.Table([
-            dialog_field_info.field
-            for dialog_field_info
-            in field_infos
-        ])) for category, field_infos
-        in fields_by_category
-    ])
+    main_field = create_tabbed_main_field(dialog_fields)
     context.application.edit_properties = EditProperties(main_field)

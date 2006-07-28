@@ -21,11 +21,11 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import DialogFieldInfo
 from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.nodes.elementary import GLReferentBase
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.transformations import Complete
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
 from OpenGL.GL import *

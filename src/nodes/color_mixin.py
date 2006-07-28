@@ -20,7 +20,8 @@
 # --
 
 
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property, DialogFieldInfo
+from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
 from OpenGL.GL import *

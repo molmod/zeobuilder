@@ -24,10 +24,11 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.abstract import ConnectBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property, DialogFieldInfo
+from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.gui import load_image
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Complete
 import zeobuilder.gui.fields as fields
 

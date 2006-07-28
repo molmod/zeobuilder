@@ -22,8 +22,9 @@
 
 from zeobuilder import context
 from zeobuilder.nodes.helpers import BoundingBox
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property, DialogFieldInfo
+from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
 from zeobuilder.nodes.analysis import common_parent
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Translation, Rotation, Complete
 import zeobuilder.gui.fields as fields
 

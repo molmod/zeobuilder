@@ -20,7 +20,8 @@
 # --
 
 from zeobuilder.nodes.base import Base
-from zeobuilder.nodes.meta import PublishedProperties, Property, DialogFieldInfo
+from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 

@@ -20,11 +20,12 @@
 # --
 
 
-from zeobuilder.nodes.meta import PublishedProperties, Property, DialogFieldInfo
+from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.model_object import ModelObject
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui import load_image
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
 import StringIO

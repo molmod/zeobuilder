@@ -95,10 +95,3 @@ class PublishedProperties(dict):
             for name, published_property
             in self.iteritems()
         )
-
-
-class DialogFieldInfo(object):
-    def __init__(self, category, order, field):
-        self.category = category
-        self.order = order
-        self.field = field
