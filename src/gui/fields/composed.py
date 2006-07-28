@@ -126,9 +126,7 @@ class Array(TabulateComposed):
 
     def create_widgets(self):
         Composed.create_widgets(self)
-        table = gtk.Table(self.suffices.shape[0], self.suffices.shape[1]*4 - 1)
-        table.set_row_spacings(6)
-        table.set_col_spacings(6)
+        table = gtk.Table(self.suffices.shape[0], self.suffices.shape[1]*3)
         for row_index, row in enumerate(self.fields_array):
             for col_index, field in enumerate(row):
                 if field.high_widget:
@@ -139,46 +137,42 @@ class Array(TabulateComposed):
                     container.set_border_width(0)
                     table.attach(
                         container,
-                        col_index * 4, col_index * 4 + 3,
+                        col_index * 3, col_index * 3 + 3,
                         row_index, row_index+1,
                         xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
                     )
                 else:
                     label, data_widget, bu_popup = field.get_widgets_separate()
-                    container_left = col_index * 4
-                    container_right = container_left + 3
+                    data_widget_left = col_index * 3
+                    data_widget_right = data_widget_left + 3
                     if label is not None:
                         table.attach(
                             label,
-                            container_left, container_left + 1,
+                            data_widget_left, data_widget_left + 1,
                             row_index, row_index + 1,
                             xoptions=gtk.FILL, yoptions=0,
                         )
-                        container_left += 1
+                        data_widget_left += 1
                     if bu_popup is not None:
                         table.attach(
                             bu_popup,
-                            container_right - 1, container_right,
+                            data_widget_right - 1, data_widget_right,
                             row_index, row_index + 1,
                             xoptions=0, yoptions=0,
                         )
-                        container_right -= 1
+                        data_widget_right -= 1
                     table.attach(
                         data_widget,
-                        container_left, container_right,
+                        data_widget_left, data_widget_right,
                         row_index, row_index + 1,
                         xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
                     )
-                if col_index > 0:
-                    stub = gtk.Label()
-                    stub.set_size_request(6, 1)
-                    table.attach(
-                        stub,
-                        col_index * 4 - 1, col_index * 4,
-                        row_index, row_index + 1,
-                        xoptions=0, yoptions=0,
-                    )
-
+        table.set_row_spacings(6)
+        for col in xrange(self.fields_array.shape[1]*3-1):
+            if col % 3 == 2:
+                table.set_col_spacing(col, 18)
+            else:
+                table.set_col_spacing(col, 6)
         self.data_widget = table
 
 
