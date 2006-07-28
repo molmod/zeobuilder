@@ -183,7 +183,6 @@ class Array(TabulateComposed):
 
 
 class Translation(Array):
-    Popup = popups.Default
     reset_representation = ('0.0', '0.0', '0.0')
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=5, vector_name="t.%s"):
@@ -254,7 +253,6 @@ class Rotation(TabulateComposed):
 
 
 class CellMatrix(Array):
-    Popup = popups.Default
     reset_representation = (('10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A'))
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=5):
@@ -279,8 +277,6 @@ class CellMatrix(Array):
 
 
 class CellActive(Array):
-    Popup = popups.Default
-
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
         Array.__init__(
             self,
@@ -296,8 +292,6 @@ class CellActive(Array):
 
 
 class Repetitions(Array):
-    Popup = popups.Default
-
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
         Array.__init__(
             self,
@@ -314,7 +308,7 @@ class Repetitions(Array):
 
 
 class Units(TabulateComposed):
-    Popup = popups.Translation
+    Popup = popups.Default
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False):
         fields = [
