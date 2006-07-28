@@ -131,6 +131,7 @@ class ActionManager(gobject.GObject):
         action.undo()
         self.record_primitives = True
         self.redo_stack.append(action)
+        self.emit("model-changed")
         context.application.cache.queue_invalidate()
 
     def redo(self):
@@ -140,6 +141,7 @@ class ActionManager(gobject.GObject):
         action.redo()
         self.record_primitives = True
         self.undo_stack.append(action)
+        self.emit("model-changed")
         context.application.cache.queue_invalidate()
 
     def repeat(self):
