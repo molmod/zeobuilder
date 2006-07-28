@@ -555,6 +555,15 @@ class CoreActions(ApplicationTestCase):
             SuperCell(parameters)
         self.run_test_application(fn)
 
+    def test_add_periodicities(self):
+        def fn():
+            context.application.model.file_open("input/periodic.zml")
+            context.application.main.toggle_selection(context.application.model.universe.children[2], on=True)
+            AddPeriodicities = context.application.plugins.get_action("AddPeriodicities")
+            self.assert_(AddPeriodicities.analyze_selection())
+            AddPeriodicities()
+        self.run_test_application(fn)
+
     #def test_connect_bonds_automatically_precursor(self):
     #    from zeobuilder.actions.composed.connect.automated import ConnectAtomsAutomaticallyPhysical
     #    self.load_file("precursor_atoms.zml")

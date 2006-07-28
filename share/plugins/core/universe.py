@@ -27,7 +27,8 @@ from zeobuilder.nodes.parent_mixin import ReferentMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.helpers import FrameAxes
 from zeobuilder.nodes.reference import SpatialReference
-from zeobuilder.actions.composed import ImmediateWithMemory
+from zeobuilder.nodes.vector import Vector
+from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui import load_image
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
@@ -53,22 +54,12 @@ class UnitCell(MolmodUnitCell):
     # Properties
     #
 
-    def set_cell(self, cell):
-        #if abs(numpy.linalg.det(cell)) < 1e-10:
-        #    raise ValueError, "The volume of the unit cell must be significantly larger than zero."
-        self.cell = cell
-        self.update_reciproke()
-
-    def set_cell_active(self, cell_active):
-        self.cell_active = cell_active
-        self.update_reciproke()
-
     published_properties = PublishedProperties({
         # The columns of the cell are the vectors that correspond
         # to the ridges of the parallellepipedum that describe the unit cell. In
         # other words this matrix transforms a unit cube to the unit cell.
-        "cell": Property(numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, set_cell),
-        "cell_active": Property(numpy.array([False, False, False]), lambda self: self.cell_active, set_cell_active),
+        "cell": Property(numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, MolmodUnitCell.set_cell),
+        "cell_active": Property(numpy.array([False, False, False]), lambda self: self.cell_active, MolmodUnitCell.set_cell_active),
     })
 
     #
@@ -511,7 +502,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
 
 class UnitCellToCluster(ImmediateWithMemory):
     description = "Convert the unit cell to a cluster"
-    menu_info = MenuInfo("default/_Object:special", "_Unit cell to cluster", order=(0, 4, 2, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_To cluster", order=(0, 4, 1, 4, 0, 0))
     store_last_parameters = False
 
     cuttoff = FieldsDialogSimple(
@@ -680,7 +671,7 @@ class UnitCellToCluster(ImmediateWithMemory):
 
 class SuperCell(ImmediateWithMemory):
     description = "Convert the unit cell to larger unit cell"
-    menu_info = MenuInfo("default/_Object:special", "_Super cell", order=(0, 4, 2, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Super cell", order=(0, 4, 1, 4, 0, 1))
     store_last_parameters = False
 
     repetitions = FieldsDialogSimple(
@@ -846,7 +837,40 @@ class SuperCell(ImmediateWithMemory):
             primitive.Add(connector, universe)
 
 
+class AddPeriodicities(Immediate):
+    description = "Wraps the universe in a unit cell"
+    menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Add periodicities", order=(0, 4, 1, 4, 0, 2))
+    repeatable = False
 
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        cache = context.application.cache
+        if len(cache.nodes) < 1: return False
+        if len(cache.nodes) + sum(context.application.model.universe.cell_active) > 3: return False
+        for Class in cache.classes:
+            if not issubclass(Class, Vector): return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def do(self):
+        vectors = context.application.cache.nodes
+        universe = context.application.model.root[0]
+        new_unit_cell = MolmodUnitCell()
+        new_unit_cell.cell_active = copy.deepcopy(universe.cell_active)
+        new_unit_cell.cell = copy.deepcopy(universe.cell)
+        try:
+            for vector in vectors:
+                new_unit_cell.add_cell_vector(vector.shortest_vector_relative_to(universe))
+        except ValueError:
+            if len(vectors) == 1:
+                raise UserError("Failed to add the selected vector as cell vector since it would make the unit cell singular.")
+            else:
+                raise UserError("Failed to add the selected vectors as cell vectors since they would make the unit cell singular.")
+        primitive.SetPublishedProperty(universe, "cell", new_unit_cell.cell)
+        primitive.SetPublishedProperty(universe, "cell_active", new_unit_cell.cell_active)
 
 
 
@@ -857,4 +881,5 @@ nodes = {
 actions = {
     "UnitCellToCluster": UnitCellToCluster,
     "SuperCell": SuperCell,
+    "AddPeriodicities": AddPeriodicities,
 }

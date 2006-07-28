@@ -28,6 +28,7 @@ import popups
 from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
 from molmod.units import suffices, measures, measure_names, units_by_measure, ANGLE
+from molmod.unit_cell import check_cell
 
 import numpy, gtk
 
@@ -273,13 +274,7 @@ class CellMatrix(Array):
 
     def convert_to_value(self, representation):
         intermediate = Array.convert_to_value(self, representation)
-        for col, name in enumerate(["A", "B", "C"]):
-            norm = math.sqrt(numpy.dot(intermediate[:,col], intermediate[:,col]))
-            if norm < 1e-6:
-                raise ValueError("The length of ridge %s is (nearly) zero." % name)
-            intermediate[:,col] /= norm
-        if abs(numpy.linalg.det(intermediate)) < 1e-6:
-            raise ValueError("The ridges of the unit cell are (nearly) linearly dependent vectors.")
+        check_cell(intermediate)
         return intermediate
 
 

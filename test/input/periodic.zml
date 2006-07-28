@@ -2,10 +2,7 @@
 <zml_file version='0.1'>
  <list>
   <model_object id='0' class='Universe'>
-   <array label="cell_active">
-    <shape>3 </shape>
-    <cells>False True True </cells>
-   </array>
+   <bool label="clipping">True</bool>
    <array label="repetitions">
     <shape>3 </shape>
     <cells>1 1 1 </cells>
@@ -13,6 +10,10 @@
    <str label="name">Universe</str>
    <bool label="box_visible">True</bool>
    <bool label="expanded">True</bool>
+   <array label="cell_active">
+    <shape>3 </shape>
+    <cells>False True True </cells>
+   </array>
    <array label="cell">
     <shape>3 3 </shape>
     <cells>13.4953438705 1.85230209988 6.35075005672 4.84638371101e-16 13.0977537563 -4.71519135226 -1.99059518868e-16 0.0 8.55192420801 </cells>
@@ -57,7 +58,7 @@
      <transformation label="transformation">
       <array label="translation_vector">
        <shape>3 </shape>
-       <cells>-2.60729769674 0.67578737217 -2.21861688097 </cells>
+       <cells>-6.10822078562 1.6741691718 0.532754758009 </cells>
       </array>
       <array label="rotation_matrix">
        <shape>3 3 </shape>
