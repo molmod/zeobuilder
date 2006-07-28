@@ -19,12 +19,15 @@
 #
 # --
 
+
 from base import Single, Multiple
-from mixin import ReadMixin, EditMixin, FaultyMixin, InvalidField, ambiguous, insensitive
+from mixin import ReadMixin, EditMixin, FaultyMixin, InvalidField, \
+                  TableMixin, ambiguous, insensitive
 
-import gtk
+import gtk, numpy
 
-__all__ = ["Read", "Edit", "Faulty", "Composed", "Group"]
+
+__all__ = ["Read", "Edit", "Faulty", "Composed", "ComposedInTable", "Group"]
 
 
 class Read(Single, ReadMixin):
@@ -74,6 +77,9 @@ class Composed(Multiple, FaultyMixin):
     high_widget = True
 
     def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
+        for field in fields:
+            if isinstance(field, EditMixin):
+                field.show_popup = show_field_popups
         Multiple.__init__(self, fields, label_text)
         FaultyMixin.__init__(self, attribute_name, show_popup, history_name)
         self.show_field_popups = show_field_popups
@@ -86,6 +92,7 @@ class Composed(Multiple, FaultyMixin):
             field.on_widget_changed = self.on_widget_changed
             field.update_label = self.update_label
             field.changed = self.changed
+            field.get_active = self.get_active
             # make the subfields also believe they are active
             field.instance = self.instance
             field.instances = self.instances
@@ -147,59 +154,18 @@ class Composed(Multiple, FaultyMixin):
         return tuple(field.convert_to_value(representation[index]) for index, field in enumerate(self.fields))
 
 
-class TabulateComposed(Composed):
-    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, vertical=True, horizontal_flat=False):
+class ComposedInTable(Composed, TableMixin):
+    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, short=True, cols=1):
         Composed.__init__(self, fields, label_text, attribute_name, show_popup, history_name, show_field_popups)
-        self.vertical = vertical
-        self.horizontal_flat = horizontal_flat
-        if not vertical and horizontal_flat:
-            high = False
-            for field in fields:
-                if field.high_widget:
-                    high = True
-                    break
-            if not high:
-                self.high_widget = False
+        TableMixin.__init__(self, short, cols)
 
     def create_widgets(self):
         Composed.create_widgets(self)
-        if self.vertical:
-            self.tabulate_widgets_vertical()
-        else:
-            self.tabulate_widgets_horizontal(flat=self.horizontal_flat)
+        TableMixin.create_widgets(self)
 
-    def tabulate_widgets_vertical(self):
-        if self.show_field_popups:
-            cols = 3
-        else:
-            cols = 2
-
-        self.data_widget = gtk.Table(3, cols)
-        self.data_widget.set_row_spacings(6)
-        self.data_widget.set_col_spacings(6)
-        for index, field in enumerate(self.fields):
-            data_widget_left = 0
-            data_widget_right = 3
-            label, data_widget, bu_popup = field.get_widgets_separate()
-            if label is not None:
-                self.data_widget.attach(label, 0, 1, index, index+1, xoptions=gtk.FILL, yoptions=0)
-                data_widget_left += 1
-            if self.show_field_popups and bu_popup is not None:
-                data_widget_right -= 1
-                self.data_widget.attach(bu_popup, 2, 3, index, index + 1, xoptions=0, yoptions=0)
-            self.data_widget.attach(data_widget, data_widget_left, data_widget_right, index, index+1, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
-
-    def tabulate_widgets_horizontal(self, flat):
-        cols = len(self.fields)
-        self.data_widget = gtk.HBox()
-        self.data_widget.set_spacing(18)
-        for index, field in enumerate(self.fields):
-            if flat:
-                container = field.get_widgets_flat_container(self.show_field_popups)
-            else:
-                container = field.get_widgets_short_container(self.show_field_popups)
-            container.set_border_width(0)
-            self.data_widget.pack_start(container)
+    def destroy_widgets(self):
+        Composed.destroy_widgets(self)
+        TableMixin.destroy_widgets(self)
 
 
 class Group(Multiple):

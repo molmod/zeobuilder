@@ -20,7 +20,7 @@
 # --
 
 
-from elementary import Composed, TabulateComposed
+from elementary import ComposedInTable
 from faulty import Float, Length, Int, MeasureEntry
 from edit import CheckButton, ComboBox
 from mixin import InvalidField, EditMixin, FaultyMixin
@@ -32,54 +32,44 @@ from molmod.unit_cell import check_cell
 
 import numpy, gtk
 
-import math
+import math, sys
 
 
 __all__ = [
-    "Array", "Translation", "Rotation", "CellMatrix", "CellActive",
+    "ComposedArray", "Translation", "Rotation", "CellMatrix", "CellActive",
     "Repetitions", "Units"
 ]
 
 
-class ArrayError(Exception):
+class ComposedArrayError(Exception):
     pass
 
 
-class Array(TabulateComposed):
-    def __init__(self, FieldClass, array_name, suffices, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, short=True, transpose=False, **keyval):
-        # make sure that the suffices are given as a numpy array.
+class ComposedArray(ComposedInTable):
+    def __init__(self, FieldClass, array_name, suffices, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, short=True, one_row=False, **keyval):
         suffices = numpy.array(suffices)
-        if len(suffices.shape) != 1 and len(suffices.shape) != 2:
-            raise ArrayError("the suffices must be given as one- or two-dimensional iterable objects. (shape=%s)" % len(suffices.shape))
         self.shape = suffices.shape
-        if len(suffices.shape) == 1:
-            self.suffices = numpy.array([suffices]).transpose()
-        else:
-            self.suffices = suffices
 
-        self.short = short
-
-        self.transpose = transpose
-        if transpose:
-            self.suffices = self.suffices.transpose()
-
-        self.high_widget = (self.suffices.shape[0] != 1)
-
-
-        self.fields_array = numpy.array([
-            [
+        if len(self.shape) == 2:
+            cols = self.shape[1]
+            fields = sum([[
                 FieldClass(
                     label_text=(array_name % suffix),
                     **keyval
                 ) for suffix in row
-            ] for row in self.suffices
-        ])
+            ] for row in suffices], [])
+        elif len(self.shape) == 1:
+            if one_row:
+                cols = self.shape[0]
+            else:
+                cols = 1
+            fields = [FieldClass(
+                label_text=(array_name % suffix),
+                **keyval
+            ) for suffix in suffices]
+        else:
+            raise ComposedArrayError("the suffices must be given as one- or two-dimensional iterable objects. (shape=%s)" % len(suffices.shape))
 
-        fields = self.fields_array.ravel().tolist()
-
-        if issubclass(FieldClass, EditMixin):
-            for field in fields:
-                field.show_popup = show_field_popups
 
         if issubclass(FieldClass, Float):
             self.decimals = fields[0].decimals
@@ -90,97 +80,37 @@ class Array(TabulateComposed):
 
         self.Popup = fields[0].Popup
 
-        Composed.__init__(
+        ComposedInTable.__init__(
             self,
             fields=fields,
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
-            show_field_popups=show_field_popups
+            show_field_popups=show_field_popups,
+            short=short,
+            cols=cols,
         )
 
     def applicable_attribute(self):
         return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == self.shape
 
     def convert_to_representation(self, value):
-        if self.transpose:
-            intermediate = tuple(value.transpose().ravel())
-        else:
-            intermediate = tuple(value.ravel())
-        return Composed.convert_to_representation(self, intermediate)
+        intermediate = tuple(value.ravel())
+        return ComposedInTable.convert_to_representation(self, intermediate)
 
     def convert_to_value(self, representation):
-        intermediate = Composed.convert_to_value(self, representation)
-        if self.transpose:
-            result = numpy.array(intermediate)
-            if len(self.shape) == 1:
-                result.shape = self.shape
-            else:
-                result.shape = (self.shape[0], self.shape[1])
-                result = result.transpose()
-        else:
-            result = numpy.array(intermediate)
-            result.shape = self.shape
+        intermediate = ComposedInTable.convert_to_value(self, representation)
+        result = numpy.array(intermediate)
+        result.shape = self.shape
         return result
 
-    def create_widgets(self):
-        Composed.create_widgets(self)
-        table = gtk.Table(self.suffices.shape[0], self.suffices.shape[1]*3)
-        for row_index, row in enumerate(self.fields_array):
-            for col_index, field in enumerate(row):
-                if field.high_widget:
-                    if self.short:
-                        container = field.get_widgets_short_container()
-                    else:
-                        container = field.get_widgets_flat_container()
-                    container.set_border_width(0)
-                    table.attach(
-                        container,
-                        col_index * 3, col_index * 3 + 3,
-                        row_index, row_index+1,
-                        xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
-                    )
-                else:
-                    label, data_widget, bu_popup = field.get_widgets_separate()
-                    data_widget_left = col_index * 3
-                    data_widget_right = data_widget_left + 3
-                    if label is not None:
-                        table.attach(
-                            label,
-                            data_widget_left, data_widget_left + 1,
-                            row_index, row_index + 1,
-                            xoptions=gtk.FILL, yoptions=0,
-                        )
-                        data_widget_left += 1
-                    if bu_popup is not None:
-                        table.attach(
-                            bu_popup,
-                            data_widget_right - 1, data_widget_right,
-                            row_index, row_index + 1,
-                            xoptions=0, yoptions=0,
-                        )
-                        data_widget_right -= 1
-                    table.attach(
-                        data_widget,
-                        data_widget_left, data_widget_right,
-                        row_index, row_index + 1,
-                        xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
-                    )
-        table.set_row_spacings(6)
-        for col in xrange(self.fields_array.shape[1]*3-1):
-            if col % 3 == 2:
-                table.set_col_spacing(col, 18)
-            else:
-                table.set_col_spacing(col, 6)
-        self.data_widget = table
 
-
-class Translation(Array):
+class Translation(ComposedArray):
     reset_representation = ('0.0', '0.0', '0.0')
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=2, vector_name="t.%s"):
-        Array.__init__(
+        ComposedArray.__init__(
             self,
             FieldClass=Length,
             array_name=vector_name,
@@ -204,7 +134,7 @@ class Translation(Array):
         self.attribute.translation_vector = value
 
 
-class Rotation(TabulateComposed):
+class Rotation(ComposedInTable):
     Popup = popups.Default
     reset_representation = ('0.0', ('1.0', '0.0', '0.0'), False)
 
@@ -215,7 +145,7 @@ class Rotation(TabulateComposed):
                 label_text="Angle",
                 decimals=decimals,
                 scientific=scientific,
-            ), Array(
+            ), ComposedArray(
                 FieldClass=Float,
                 array_name=axis_name,
                 suffices=["x", "y", "z"],
@@ -226,7 +156,7 @@ class Rotation(TabulateComposed):
                 label_text="Inversion",
             )
         ]
-        TabulateComposed.__init__(
+        ComposedInTable.__init__(
             self,
             fields=fields,
             label_text=label_text,
@@ -243,14 +173,14 @@ class Rotation(TabulateComposed):
         return self.attribute.get_rotation_properties()
 
     def write_to_attribute(self, value):
-        self.attribute.set_rotation_properties(value[0], value[1], value[2])
+        self.attribute.set_rotation_properties(*value)
 
 
-class CellMatrix(Array):
+class CellMatrix(ComposedArray):
     reset_representation = (('10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A'))
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=2):
-        Array.__init__(
+        ComposedArray.__init__(
             self,
             FieldClass=Length,
             array_name="%s",
@@ -265,14 +195,14 @@ class CellMatrix(Array):
         )
 
     def convert_to_value(self, representation):
-        intermediate = Array.convert_to_value(self, representation)
+        intermediate = ComposedArray.convert_to_value(self, representation)
         check_cell(intermediate)
         return intermediate
 
 
-class CellActive(Array):
+class CellActive(ComposedArray):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
-        Array.__init__(
+        ComposedArray.__init__(
             self,
             FieldClass=CheckButton,
             array_name="Active in %s direction",
@@ -285,9 +215,9 @@ class CellActive(Array):
         )
 
 
-class Repetitions(Array):
+class Repetitions(ComposedArray):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
-        Array.__init__(
+        ComposedArray.__init__(
             self,
             FieldClass=Int,
             array_name="repetitions along %s",
@@ -301,7 +231,7 @@ class Repetitions(Array):
         )
 
 
-class Units(TabulateComposed):
+class Units(ComposedInTable):
     Popup = popups.Default
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False):
@@ -312,13 +242,14 @@ class Units(TabulateComposed):
             ) for measure
             in measures
         ]
-        TabulateComposed.__init__(
+        ComposedInTable.__init__(
             self,
-            fields,
+            fields=fields,
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
             show_field_popups=show_field_popups,
+            cols=3,
         )
 
     def applicable_attribute(self):

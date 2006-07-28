@@ -509,16 +509,17 @@ class UnitCellToCluster(ImmediateWithMemory):
         "Unit cell to cluster",
         fields.group.Table(
             fields=[
-                fields.composed.Array(
+                fields.composed.ComposedArray(
                     FieldClass=fields.faulty.Float,
                     array_name=(ridge+".%s"),
                     suffices=["min", "max"],
                     attribute_name="interval_%s" % ridge.lower(),
-                    transpose=True
+                    one_row=True,
+                    short=False,
                 )
                 for ridge in ["A", "B", "C"]
             ],
-            buttons=fields.group.CHECK_BUTTONS,
+            buttons=fields.mixin.CHECK_BUTTONS,
             label_text="The cutoff region in fractional coordinates:"
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))

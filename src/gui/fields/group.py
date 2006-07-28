@@ -19,83 +19,26 @@
 #
 # --
 
-from elementary import Group, TabulateComposed
-from mixin import EditMixin, ambiguous, insensitive
+from elementary import Group
+from mixin import EditMixin, TableMixin, ambiguous, insensitive, NO_BUTTONS
 
 import gtk
 
 __all__ = ["Table", "Notebook"]
 
 
-NO_BUTTONS = 0
-CHECK_BUTTONS = 1
-RADIO_BUTTONS = 2
-
-
-class Table(Group):
-    def __init__(self, fields, label_text=None, buttons=NO_BUTTONS):
+class Table(Group, TableMixin):
+    def __init__(self, fields, label_text=None, short=True, cols=1, buttons=NO_BUTTONS):
         Group.__init__(self, fields, label_text)
-        self.buttons = buttons
+        TableMixin.__init__(self, short, cols, buttons)
 
     def create_widgets(self):
         Group.create_widgets(self)
-        last_row = 0
-        first_edit = 0
-        if self.buttons == NO_BUTTONS:
-            self.data_widget = gtk.Table(1, 3)
-        else:
-            self.data_widget = gtk.Table(1, 4)
-            first_edit += 1
-        self.data_widget.set_row_spacings(6)
-        self.data_widget.set_col_spacings(6)
-
-        first_radio_button = None
-
-        for field in self.fields:
-            if field.get_active():
-                data_widget_left = first_edit
-                data_widget_right = first_edit + 3
-                if field.high_widget:
-                    self.data_widget.set_row_spacings(12)
-                    container = field.get_widgets_short_container()
-                    container.set_border_width(0)
-                    self.data_widget.attach(
-                        container,
-                        data_widget_left, data_widget_right,
-                        last_row, last_row+1,
-                        xoptions=gtk.EXPAND|gtk.FILL, yoptions=0
-                    )
-                else:
-                    label, data_widget, bu_popup = field.get_widgets_separate()
-                    if label is not None:
-                        self.data_widget.attach(label, first_edit, first_edit+1, last_row, last_row+1, xoptions=gtk.FILL, yoptions=0)
-                        data_widget_left += 1
-                    if bu_popup is not None:
-                        self.data_widget.attach(field.bu_popup, first_edit+2, first_edit+3, last_row, last_row+1, xoptions=0, yoptions=0)
-                        data_widget_right -= 1
-                    self.data_widget.attach(field.data_widget, data_widget_left, data_widget_right, last_row, last_row+1, xoptions=gtk.EXPAND|gtk.FILL, yoptions=0)
-
-                if self.buttons == CHECK_BUTTONS:
-                    toggle_button = gtk.CheckButton()
-                elif self.buttons == RADIO_BUTTONS:
-                    if first_radio_button is None:
-                        toggle_button = gtk.RadioButton()
-                        first_radio_button = toggle_button
-                    else:
-                        toggle_button = gtk.RadioButton(first_radio_button)
-                if self.buttons != NO_BUTTONS:
-                    self.data_widget.attach(toggle_button, 0, 1, last_row, last_row+1, xoptions=gtk.FILL, yoptions=gtk.FILL)
-                    field.old_representation = ambiguous
-                    field.sensitive_button = toggle_button
-                    toggle_button.connect("toggled", self.on_button_toggled, field)
-                last_row += 1
+        TableMixin.create_widgets(self)
 
     def destroy_widgets(self):
-        if self.buttons != NO_BUTTONS:
-            for field in self.fields:
-                if field.get_active():
-                    field.sensitive_button.destroy()
-                    field.sensitive_button = None
+        Group.destroy_widgets(self)
+        TableMixin.destroy_widgets(self)
 
     def read(self):
         Group.read(self)

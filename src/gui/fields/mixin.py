@@ -79,16 +79,16 @@ class ReadMixin(object):
 
     def applicable(self, instance):
         if (self.attribute_name is not None) and (self.attribute_name not in instance.__dict__):
-            #print "The attribute_name %s is not in the instance dictionary: %s." % (self.attribute_name, instance.__dict__)
+            #print "The attribute_name '%s' is not in the instance dictionary: %s." % (self.attribute_name, instance.__dict__)
             return False
         else:
             self.current_instance = instance
             if self.attribute is None:
-                #print "The attribute corresponding to the attribute_name %s is None." % self.attribute_name
+                #print "The attribute corresponding to the attribute_name '%s' is None." % self.attribute_name
                 result = True
             else:
                 result = self.applicable_attribute()
-                #print "The field-specific code for attribute_name %s said %s." % (self.attribute_name, result)
+                #print "The field-specific code for attribute_name '%s' said %s." % (self.attribute_name, result)
             del self.current_instance
             return result
 
@@ -269,3 +269,94 @@ class FaultyMixin(EditMixin):
                 invalid_field = InvalidField(self, str(e))
                 raise invalid_field
 
+
+NO_BUTTONS = 0
+CHECK_BUTTONS = 1
+RADIO_BUTTONS = 2
+
+class TableMixin(object):
+    def __init__(self, short=True, cols=1, buttons=NO_BUTTONS):
+        self.short = short
+        self.cols = cols
+        self.buttons = buttons
+        if not short and len(self.fields) == cols:
+            self.high_widget = False
+            for field in self.fields:
+                if field.high_widget:
+                    self.high_widget = True
+                    break
+
+    def create_widgets(self):
+        rows = len(self.fields) / self.cols + (len(self.fields) % self.cols > 0)
+        table = gtk.Table(rows, self.cols * 4)
+        first_radio_button = None
+        for index, field in enumerate(self.fields):
+            if not field.get_active():
+                continue
+            col = index % self.cols
+            row = index / self.cols
+            left = col * 4
+            right = left + 4
+            if self.buttons != NO_BUTTONS:
+                if self.buttons == CHECK_BUTTONS:
+                    toggle_button = gtk.CheckButton()
+                elif self.buttons == RADIO_BUTTONS:
+                    if first_radio_button is None:
+                        toggle_button = gtk.RadioButton()
+                        first_radio_button = toggle_button
+                    else:
+                        toggle_button = gtk.RadioButton(first_radio_button)
+                table.attach(
+                    toggle_button, left, left + 1, row, row+1,
+                    xoptions=gtk.FILL, yoptions=gtk.FILL
+                )
+                left += 1
+                field.old_representation = ambiguous
+                field.sensitive_button = toggle_button
+                toggle_button.connect("toggled", self.on_button_toggled, field)
+
+            if field.high_widget:
+                if self.short:
+                    container = field.get_widgets_short_container()
+                else:
+                    container = field.get_widgets_flat_container()
+                container.set_border_width(0)
+                table.attach(
+                    container, left, right, row, row + 1,
+                    xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
+                )
+            else:
+                label, data_widget, bu_popup = field.get_widgets_separate()
+                if label is not None:
+                    table.attach(
+                        label, left, left + 1, row, row + 1,
+                        xoptions=gtk.FILL, yoptions=0,
+                    )
+                    left += 1
+                if bu_popup is not None:
+                    table.attach(
+                        bu_popup, right - 1, right, row, row + 1,
+                        xoptions=0, yoptions=0,
+                    )
+                    right -= 1
+                table.attach(
+                    data_widget, left, right, row, row + 1,
+                    xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
+                )
+        table.set_row_spacings(6)
+        for col in xrange(self.cols * 4 - 1):
+            if col % 4 == 3:
+                table.set_col_spacing(col, 24)
+            else:
+                table.set_col_spacing(col, 6)
+        self.data_widget = table
+
+    def destroy_widgets(self):
+        if self.buttons != NO_BUTTONS:
+            for field in self.fields:
+                if field.get_active():
+                    field.sensitive_button.destroy()
+                    field.sensitive_button = None
+
+    def on_button_toggled(self, toggle_button, field):
+        raise NotImplementedError

@@ -59,7 +59,7 @@ class Box(GLGeometricBase, ColorMixin):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Geometry", (2, 6), fields.composed.Array(
+        DialogFieldInfo("Geometry", (2, 6), fields.composed.ComposedArray(
             FieldClass=fields.faulty.Length,
             array_name="%s",
             suffices=["Width", "Height", "Depth"],
