@@ -99,7 +99,7 @@ class Scene(object):
         self.revalidations = []
         self.clip_planes = {}
 
-    def init(self, r=0.0, g=0.0, b=0.0): # gl_context sensitive method
+    def initialize(self): # gl_context sensitive method
         # And then there was light (and material)!
         glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 1)
         glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
@@ -115,14 +115,33 @@ class Scene(object):
         # Some default gl settings
         glDepthFunc(GL_LESS)
         glEnable(GL_DEPTH_TEST)
-        glClearColor(r, g, b, 1.0)
+        glClearColor(0.0, 0.0, 0.0, 1.0)
         #glEnable(GL_LINE_STIPPLE)
 
         self.initialize_rectangle()
+        self.initialize_rotation_center()
 
     def initialize_rectangle(self): # gl_context sensitive method
         self.rectangle_list = glGenLists(1)
         self.compile_rectangle(False, 0.0, 0.0, 0.0, 0.0)
+
+    def initialize_rotation_center(self): # gl_context sensitive method
+        self.rotation_center_list = glGenLists(1)
+        glNewList(self.rotation_center_list, GL_COMPILE)
+        small = 0.1
+        big = 0.3
+        glBegin(GL_POLYGON)
+        glNormal3f(1.0, 0.0, 0.0)
+        glVertex3f(small, 0.0, 0.0)
+        glVertex3f(big, big, 0.0)
+        glVertex3f(0.0, small, 0.0)
+        glVertex3f(-big, big, 0.0)
+        glVertex3f(-small, 0.0, 0.0)
+        glVertex3f(-big, -big, 0.0)
+        glVertex3f(0.0, -small, 0.0)
+        glVertex3f(big, -big, 0.0)
+        glEnd()
+        glEndList()
 
     def add_revalidation(self, revalidation):
         self.revalidations.append(revalidation)
@@ -184,7 +203,7 @@ class Scene(object):
         if selection_box is None:
             glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
             glShadeModel(GL_SMOOTH)
-            self.draw_rotation_center()
+            glCallList(self.rotation_center_list)
         # Then bring the rotation center at the right place
         # Now rotate to the model frame and move back to the model center
         self.rotation.gl_apply_inverse()
@@ -216,21 +235,6 @@ class Scene(object):
         else:
             # draw the selection rectangle (if visible):
             glCallList(self.rectangle_list)
-
-    def draw_rotation_center(self): # gl_context sensitive method
-        small = 0.1
-        big = 0.3
-        glBegin(GL_POLYGON)
-        glNormal3f(1.0, 0.0, 0.0)
-        glVertex3f(small, 0.0, 0.0)
-        glVertex3f(big, big, 0.0)
-        glVertex3f(0.0, small, 0.0)
-        glVertex3f(-big, big, 0.0)
-        glVertex3f(-small, 0.0, 0.0)
-        glVertex3f(-big, -big, 0.0)
-        glVertex3f(0.0, -small, 0.0)
-        glVertex3f(big, -big, 0.0)
-        glEnd()
 
     def compile_rectangle(self, visible, left, top, right, bottom): # gl_context sensitive method
         glNewList(self.rectangle_list, GL_COMPILE)

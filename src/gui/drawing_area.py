@@ -42,8 +42,7 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
 
     def on_realize(self, widget):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
-        self.scene.init(0, 0, 0)
-        #self.scene.init(1, 1, 1)
+        self.scene.initialize()
         self.get_gl_drawable().gl_end()
 
     def on_configure_event(self, widget, event):
