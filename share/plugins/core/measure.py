@@ -28,7 +28,11 @@ from zeobuilder.nodes.vector import Vector
 from zeobuilder.transformations import Translation
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 
-import math, numpy
+from OpenGL.GLUT import *
+from OpenGL.GL import *
+import numpy
+
+import math
 
 
 class MeasurementsDialog(GladeWrapper):
@@ -39,8 +43,9 @@ class MeasurementsDialog(GladeWrapper):
 
         context.application.action_manager.connect("action-started", self.on_action_started)
 
-        self.chain = numpy.zeros((4, 2), float)
-        self.chain_len = 0
+        self.model_objects = []
+        self.points = []
+        self.vectors = []
 
     def on_window_delete_event(self, window, event):
         self.clear()
@@ -52,34 +57,89 @@ class MeasurementsDialog(GladeWrapper):
 
     def clear(self):
         self.window.hide()
-        self.chain_len = 0
+        self.model_objects = []
+        self.points = []
+        self.vectors = []
         self.update_widgets()
         context.application.main.drawing_area.tool_clear()
 
-    def add_point(self, point):
-        if self.chain_len > 0:
-            delta = point - self.chain[self.chain_len-1]
+    def add_object(self, model_object):
+        drawing_area = context.application.main.drawing_area
+
+        vector = drawing_area.vector_of_object(model_object)
+        point = drawing_area.to_reduced(*drawing_area.position_of_vector(vector))
+
+        chain_len = len(self.model_objects)
+        if chain_len > 0:
+            delta = vector - self.vectors[chain_len-1]
             distance = math.sqrt(numpy.dot(delta, delta))
             if distance < 1e-6:
                 return
-        if self.chain_len > 1:
-            delta = point - self.chain[self.chain_len-2]
+        if chain_len > 1:
+            delta = vector - self.vectors[chain_len-2]
             distance = math.sqrt(numpy.dot(delta, delta))
             if distance < 1e-6:
                 return
-        if self.chain_len < 4:
-            self.chain[self.chain_len] = point
-            self.chain_len += 1
-        else:
-            self.chain[0:3] = self.chain[1:4]
-            self.chain[-1] = point
-        context.application.main.drawing_area.tool_chain(self.chain[:self.chain_len])
-        if self.chain_len > 1:
+
+        if chain_len == 4:
+            self.model_objects.pop(0)
+            self.vectors.pop(0)
+            self.points.pop(0)
+        self.model_objects.append(model_object)
+        self.vectors.append(vector)
+        self.points.append(point)
+
+        context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
+        if chain_len > 0:
             self.update_widgets()
             self.window.show()
 
+    def draw_tool_chain(self):
+        font_scale = 0.00015
+        glMatrixMode(GL_MODELVIEW)
+
+        glColor(0, 0, 0)
+        glLineWidth(5)
+        glBegin(GL_LINE_STRIP)
+        for point in self.points:
+            glVertex3f(point[0], point[1], 0.0)
+        glEnd()
+
+        glColor(1, 1, 1)
+        glLineWidth(1)
+        glVertex3f(point[0], point[1], 0.0)
+        glBegin(GL_LINE_STRIP)
+        for point in self.points:
+            glVertex3f(point[0], point[1], 0.0)
+        glEnd()
+
+        if len(self.model_objects) == 4 and \
+           self.model_objects[0] == self.model_objects[3]:
+            num = 3
+        else:
+            num = 4
+
+        glColor(0, 0, 0)
+        glLineWidth(9)
+        for index, point in enumerate(self.points[:num]):
+            glPushMatrix()
+            glTranslate(point[0], point[1], 0.0)
+            glScale(font_scale, font_scale, 1)
+            glRectf(-10, -20, 114, 130)
+            glPopMatrix()
+
+        glColor(1, 1, 1)
+        glLineWidth(1)
+        for index, point in enumerate(self.points[:num]):
+            glPushMatrix()
+            glTranslate(point[0], point[1], 0.0)
+            glScale(font_scale, font_scale, 1)
+            glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, ord(str(index+1)))
+            glPopMatrix()
+
     def update_widgets(self):
         pass
+
 
 class Measure(Interactive):
     description = "Measure distances and angles"
@@ -92,27 +152,12 @@ class Measure(Interactive):
             gl_object = drawing_area.get_nearest(event.x, event.y)
             if isinstance(gl_object, GLTransformationMixin) and \
                isinstance(gl_object.transformation, Translation):
-                self.measurements.add_point(numpy.array(
-                    drawing_area.to_reduced(
-                        *drawing_area.position_of_object(gl_object)
-                    ))
-                )
+                self.measurements.add_object(gl_object)
                 return
             elif isinstance(gl_object, Vector):
-                b = gl_object.children[0].target
-                e = gl_object.children[1].target
-                self.measurements.add_point(numpy.array(
-                    drawing_area.to_reduced(
-                        *drawing_area.position_of_object(b)
-                    ))
-                )
-                self.measurements.add_point(numpy.array(
-                    drawing_area.to_reduced(
-                        *drawing_area.position_of_object(e)
-                    ))
-                )
+                self.measurements.add_object(gl_object.children[0].target)
+                self.measurements.add_object(gl_object.children[1].target)
                 return
-
         self.measurements.clear()
 
 

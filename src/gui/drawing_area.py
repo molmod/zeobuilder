@@ -143,8 +143,8 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         self.queue_draw()
         self.get_gl_drawable().gl_end()
 
-    def tool_custom(self, compile_function):
+    def tool_custom(self, draw_function):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
-        compile_function(self.scene.tool_draw_list)
+        self.scene.compile_tool_custom(draw_function)
         self.queue_draw()
         self.get_gl_drawable().gl_end()

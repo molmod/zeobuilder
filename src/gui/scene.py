@@ -29,7 +29,6 @@ from zeobuilder import context
 from zeobuilder.transformations import Rotation, Translation, Complete
 from molmod.units import angstrom
 
-from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 import numpy
@@ -313,41 +312,8 @@ class Scene(object):
         glEnd()
         glEndList()
 
-    def compile_tool_chain(self, points): # gl_context sensitive method
-        font_scale = 0.00015
+    def compile_tool_custom(self, draw_function):
         glNewList(self.tool_draw_list, GL_COMPILE)
-        glMatrixMode(GL_MODELVIEW)
-
-        glColor(0, 0, 0)
-        glLineWidth(5)
-        glBegin(GL_LINE_STRIP)
-        for point in points:
-            glVertex3f(point[0], point[1], 0.0)
-        glEnd()
-
-        glColor(1, 1, 1)
-        glLineWidth(1)
-        glVertex3f(point[0], point[1], 0.0)
-        glBegin(GL_LINE_STRIP)
-        for point in points:
-            glVertex3f(point[0], point[1], 0.0)
-        glEnd()
-
-        glColor(0, 0, 0)
-        glLineWidth(9)
-        for index, point in enumerate(points):
-            glPushMatrix()
-            glTranslate(point[0], point[1], 0.0)
-            glScale(font_scale, font_scale, 1)
-            glRectf(-10, -20, 114, 130)
-            glPopMatrix()
-
-        glColor(1, 1, 1)
-        glLineWidth(1)
-        for index, point in enumerate(points):
-            glPushMatrix()
-            glTranslate(point[0], point[1], 0.0)
-            glScale(font_scale, font_scale, 1)
-            glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, ord(str(index+1)))
-            glPopMatrix()
+        draw_function()
         glEndList()
+
