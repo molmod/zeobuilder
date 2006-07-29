@@ -343,8 +343,7 @@ class PickSelection(Interactive):
             self.endx = event.x
             self.endy = event.y
             self.rect = True
-            drawing_area.scene.compile_rectangle(True, self.beginx, self.beginy, event.x, event.y)
-            drawing_area.queue_draw()
+            drawing_area.tool_rectangle(self.beginx, self.beginy, event.x, event.y)
 
     def get_nearest(self, selection_list, gl_names):
         if len(selection_list) > 0:
@@ -359,8 +358,7 @@ class PickSelection(Interactive):
             return None
 
     def button_release(self, drawing_area, event):
-        drawing_area.compile_rectangle(False, 0, 0, 0, 0)
-        drawing_area.queue_draw()
+        drawing_area.tool_clear()
         main = context.application.main
         if self.rect:
             left, right = {True: (self.beginx, self.endx), False: (self.endx, self.beginx)}[self.beginx <= self.endx]

@@ -118,12 +118,41 @@ class Scene(object):
         glClearColor(0.0, 0.0, 0.0, 1.0)
         #glEnable(GL_LINE_STIPPLE)
 
-        self.initialize_rectangle()
+        self.initialize_interactive_tool()
         self.initialize_rotation_center()
 
-    def initialize_rectangle(self): # gl_context sensitive method
-        self.rectangle_list = glGenLists(1)
-        self.compile_rectangle(False, 0.0, 0.0, 0.0, 0.0)
+    def initialize_interactive_tool(self): # gl_context sensitive method
+        self.tool_draw_list = glGenLists(1)
+        self.clear_tool_draw_list()
+
+        self.tool_list = glGenLists(1)
+        self.compile_tool_list()
+
+    def compile_tool_list(self): # gl_context sensitive method
+        glNewList(self.tool_list, GL_COMPILE)
+        # reset a few things
+        glDisable(GL_DEPTH_TEST)
+        glDisable(GL_LIGHTING)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()
+        glMatrixMode(GL_MODELVIEW)
+        glLoadIdentity()
+        # change the modelview to screen coordinates
+        viewport = glGetIntegerv(GL_VIEWPORT)
+        w = viewport[2] - viewport[0]
+        h = viewport[3] - viewport[1]
+        glScalef(2.0 / w, -2.0 / h, 1.0);
+        glTranslatef(-w / 2.0, -h / 2.0, 0.0);
+        glLineWidth(1)
+        #glLineStipple(1, -21846)
+        glCallList(self.tool_draw_list)
+        glEnable(GL_DEPTH_TEST)
+        glEnable(GL_LIGHTING)
+        glEndList()
+
+    def clear_tool_draw_list(self): # gl_context sensitive method
+        glNewList(self.tool_draw_list, GL_COMPILE)
+        glEndList()
 
     def initialize_rotation_center(self): # gl_context sensitive method
         self.rotation_center_list = glGenLists(1)
@@ -234,35 +263,7 @@ class Scene(object):
                 return list(temp)
         else:
             # draw the selection rectangle (if visible):
-            glCallList(self.rectangle_list)
-
-    def compile_rectangle(self, visible, left, top, right, bottom): # gl_context sensitive method
-        glNewList(self.rectangle_list, GL_COMPILE)
-        if visible:
-            # reset a few things
-            glDisable(GL_DEPTH_TEST)
-            glDisable(GL_LIGHTING)
-            glMatrixMode(GL_PROJECTION)
-            glLoadIdentity()
-            glMatrixMode(GL_MODELVIEW)
-            glLoadIdentity()
-            # change the modelview to screen coordinates
-            viewport = glGetIntegerv(GL_VIEWPORT)
-            w = viewport[2] - viewport[0]
-            h = viewport[3] - viewport[1]
-            glScalef(2.0 / w, -2.0 / h, 1.0);
-            glTranslatef(-w / 2.0, -h / 2.0, 0.0);
-            glLineWidth(1)
-            #glLineStipple(1, -21846)
-            glBegin(GL_LINE_LOOP)
-            glVertex3f(left,  top,    0.0)
-            glVertex3f(left,  bottom, 0.0)
-            glVertex3f(right, bottom, 0.0)
-            glVertex3f(right, top,    0.0)
-            glEnd()
-            glEnable(GL_DEPTH_TEST)
-            glEnable(GL_LIGHTING)
-        glEndList()
+            glCallList(self.tool_list)
 
     def reset_view(self):
         config = context.application.configuration
@@ -283,3 +284,21 @@ class Scene(object):
         if gl_object is not None:
             model_view.apply_before(gl_object.get_absolute_parentframe())
         return model_view
+
+    def compile_tool_rectangle(self, left, top, right, bottom): # gl_context sensitive method
+        glNewList(self.tool_draw_list, GL_COMPILE)
+        glBegin(GL_LINE_LOOP)
+        glVertex3f(left,  top,    0.0)
+        glVertex3f(left,  bottom, 0.0)
+        glVertex3f(right, bottom, 0.0)
+        glVertex3f(right, top,    0.0)
+        glEnd()
+        glEndList()
+
+    def compile_tool_chain(self, points): # gl_context sensitive method
+        glNewList(self.tool_draw_list, GL_COMPILE)
+        glBegin(GL_LINE_LOOP)
+        for point in points:
+            glVertex3f(point[0], point[1], 0.0)
+        glEnd()
+        glEndList()

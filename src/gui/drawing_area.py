@@ -48,6 +48,7 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
     def on_configure_event(self, widget, event):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
         glViewport(0, 0, event.width, event.height)
+        self.scene.revalidations.append(self.scene.compile_tool_list)
         self.get_gl_drawable().gl_end()
 
     def on_expose_event(self, widget, event):
@@ -82,7 +83,26 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         else:
             return 2/float(viewport[2])/proj_mat[0, 0]
 
-    def compile_rectangle(self, visible, left, top, right, bottom):
+    def tool_clear(self):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
-        self.scene.compile_rectangle(visible, left, top, right, bottom)
+        self.scene.clear_tool_draw_list()
+        self.queue_draw()
+        self.get_gl_drawable().gl_end()
+
+    def tool_rectangle(self, left, top, right, bottom):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        self.scene.compile_tool_rectangle(left, top, right, bottom)
+        self.queue_draw()
+        self.get_gl_drawable().gl_end()
+
+    def tool_chain(self, points):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        self.scene.compile_tool_chain(points)
+        self.queue_draw()
+        self.get_gl_drawable().gl_end()
+
+    def tool_custom(self, compile_function):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        compile_function(self.scene.tool_draw_list)
+        self.queue_draw()
         self.get_gl_drawable().gl_end()
