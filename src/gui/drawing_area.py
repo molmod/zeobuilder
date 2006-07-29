@@ -64,14 +64,14 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         self.get_gl_drawable().gl_end()
 
     def position_of_vector(self, vector):
-        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
         temp = numpy.ones(4, float)
         temp[0:len(vector)] = vector
         temp = numpy.dot(self.scene.projection_matrix, temp)
         temp = temp[0:2]/temp[3] # from homogeneous to Cartesian coordinates
-        viewport = glGetIntegerv(GL_VIEWPORT)
-        temp = numpy.array([int(0.5*(1+temp[0])*viewport[2]), int(0.5*(1-temp[1])*viewport[3])])
-        self.get_gl_drawable().gl_end()
+        temp = numpy.array([
+            int(0.5*(1+temp[0])*self.allocation.width),
+            int(0.5*(1-temp[1])*self.allocation.height)
+        ])
         return temp
 
     def vector_of_object(self, gl_object):
@@ -100,13 +100,10 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
 
     def depth_to_scale(self, depth):
         """ transforms a depth into a scale au/pixel"""
-        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
-        viewport = glGetIntegerv(GL_VIEWPORT)
-        self.get_gl_drawable().gl_end()
         if self.scene.opening_angle > 0.0:
-            return 2/float(viewport[2])/self.scene.projection_matrix[0, 0]*depth
+            return 2/float(self.allocation.width)/self.scene.projection_matrix[0, 0]*depth
         else:
-            return 2/float(viewport[2])/self.scene.projection_matrix[0, 0]
+            return 2/float(self.allocation.width)/self.scene.projection_matrix[0, 0]
 
     def yield_hits(self, selection_box):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
@@ -125,6 +122,14 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         self.scene.clear_tool_draw_list()
         self.queue_draw()
         self.get_gl_drawable().gl_end()
+
+    def to_reduced(self, x, y):
+        w = self.allocation.width
+        h = self.allocation.height
+        if w < h:
+            return (x - 0.5*w)/w, -(y - 0.5*h)/w
+        else:
+            return (x - 0.5*w)/h, -(y - 0.5*h)/h
 
     def tool_rectangle(self, left, top, right, bottom):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return

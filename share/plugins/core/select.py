@@ -343,7 +343,9 @@ class PickSelection(Interactive):
             self.endx = event.x
             self.endy = event.y
             self.rect = True
-            drawing_area.tool_rectangle(self.beginx, self.beginy, event.x, event.y)
+            left, top = drawing_area.to_reduced(self.beginx, self.beginy)
+            right, bottom = drawing_area.to_reduced(event.x, event.y)
+            drawing_area.tool_rectangle(left, top, right, bottom)
 
     def button_release(self, drawing_area, event):
         drawing_area.tool_clear()

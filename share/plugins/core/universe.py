@@ -334,15 +334,10 @@ class Universe(GLPeriodicContainer, FrameAxes):
             add_planes(GL_CLIP_PLANE0, GL_CLIP_PLANE1, ridge_a, repetitions_a, normal_b, normal_c)
             add_planes(GL_CLIP_PLANE2, GL_CLIP_PLANE3, ridge_b, repetitions_b, normal_c, normal_a)
             add_planes(GL_CLIP_PLANE4, GL_CLIP_PLANE5, ridge_c, repetitions_c, normal_a, normal_b)
-        for GL_CLIP_PLANEi in scene.clip_planes:
-            glEnable(GL_CLIP_PLANEi)
         context.application.main.drawing_area.queue_draw()
 
     def unset_clip_planes(self):
-        scene = context.application.main.drawing_area.scene
-        for GL_CLIP_PLANEi in scene.clip_planes:
-            glDisable(GL_CLIP_PLANEi)
-        scene.clip_planes = {}
+        context.application.main.drawing_area.scene.clip_planes = {}
         context.application.main.drawing_area.queue_draw()
 
     #

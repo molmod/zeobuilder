@@ -29,6 +29,7 @@ from zeobuilder import context
 from zeobuilder.transformations import Rotation, Translation, Complete
 from molmod.units import angstrom
 
+from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 import numpy
@@ -136,14 +137,18 @@ class Scene(object):
         glLoadIdentity()
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
-        # change the modelview to screen coordinates
+        # change the modelview to reduced coordinates
         viewport = glGetIntegerv(GL_VIEWPORT)
-        w = viewport[2] - viewport[0]
-        h = viewport[3] - viewport[1]
-        glScalef(2.0 / w, -2.0 / h, 1.0);
-        glTranslatef(-w / 2.0, -h / 2.0, 0.0);
-        glLineWidth(1)
-        #glLineStipple(1, -21846)
+        width = viewport[2] - viewport[0]
+        height = viewport[3] - viewport[1]
+        if width > height:
+            w = float(width) / float(height)
+            h = 1.0
+        else:
+            w = 1.0
+            h = float(height) / float(width)
+        glScalef(2/w, 2/h, 1.0)
+        #glTranslatef(-0.5*w, -0.5*h, 0.0)
         glCallList(self.tool_draw_list)
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_LIGHTING)
@@ -245,6 +250,7 @@ class Scene(object):
 
         # define the clipping planes:
         for GL_CLIP_PLANEi, coefficients in self.clip_planes.iteritems():
+            glEnable(GL_CLIP_PLANEi)
             temp = coefficients.copy()
             glClipPlane(GL_CLIP_PLANEi, coefficients)
 
@@ -255,6 +261,9 @@ class Scene(object):
                     revalidation()
                 self.revalidations = []
             context.application.model.universe.call_list()
+
+        for GL_CLIP_PLANEi in self.clip_planes:
+            glDisable(GL_CLIP_PLANEi)
 
         if selection_box is not None:
             # now let the caller analyze the hits by returning the selection
@@ -294,6 +303,8 @@ class Scene(object):
 
     def compile_tool_rectangle(self, left, top, right, bottom): # gl_context sensitive method
         glNewList(self.tool_draw_list, GL_COMPILE)
+        glColor(1, 1, 1)
+        glLineWidth(1)
         glBegin(GL_LINE_LOOP)
         glVertex3f(left,  top,    0.0)
         glVertex3f(left,  bottom, 0.0)
@@ -303,10 +314,40 @@ class Scene(object):
         glEndList()
 
     def compile_tool_chain(self, points): # gl_context sensitive method
+        font_scale = 0.00015
         glNewList(self.tool_draw_list, GL_COMPILE)
+        glMatrixMode(GL_MODELVIEW)
+
+        glColor(0, 0, 0)
+        glLineWidth(5)
         glBegin(GL_LINE_STRIP)
         for point in points:
-            #print "OpenGL", point
             glVertex3f(point[0], point[1], 0.0)
         glEnd()
+
+        glColor(1, 1, 1)
+        glLineWidth(1)
+        glVertex3f(point[0], point[1], 0.0)
+        glBegin(GL_LINE_STRIP)
+        for point in points:
+            glVertex3f(point[0], point[1], 0.0)
+        glEnd()
+
+        glColor(0, 0, 0)
+        glLineWidth(9)
+        for index, point in enumerate(points):
+            glPushMatrix()
+            glTranslate(point[0], point[1], 0.0)
+            glScale(font_scale, font_scale, 1)
+            glRectf(-10, -20, 114, 130)
+            glPopMatrix()
+
+        glColor(1, 1, 1)
+        glLineWidth(1)
+        for index, point in enumerate(points):
+            glPushMatrix()
+            glTranslate(point[0], point[1], 0.0)
+            glScale(font_scale, font_scale, 1)
+            glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, ord(str(index+1)))
+            glPopMatrix()
         glEndList()

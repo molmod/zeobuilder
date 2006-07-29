@@ -81,6 +81,7 @@ class ActionManager(gobject.GObject):
             #print "BEGIN SubAction %i %s of %s" % (self.sub_action_counter, action, self.current_action)
             return
         self.current_action = action
+        self.emit("action-started")
 
     def append_primitive_to_current_action(self, primitive):
         if not self.record_primitives: return
@@ -176,3 +177,4 @@ class ActionManager(gobject.GObject):
 
 
 gobject.signal_new("model-changed", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+gobject.signal_new("action-started", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
