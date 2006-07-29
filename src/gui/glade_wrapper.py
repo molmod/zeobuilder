@@ -43,10 +43,13 @@ class GladeWrapper(object):
         # will be assigned. if left to none the widget name will be used
 
         # load the glade file
+        self.widgets = None
         for directory in context.share_dirs:
             if os.path.isdir(directory):
                 self.widgets = gtk.glade.XML(os.path.join(directory, glade_file), widget)
                 break
+        if self.widgets is None:
+            raise GladeWrapperError("Could not find glade file %s in any of the share directories %s." % (glade_file, context.share_dirs))
 
         # load the requested widget as widget_dict_name
         if widget_dict_name is None:

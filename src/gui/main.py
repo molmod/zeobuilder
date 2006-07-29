@@ -42,8 +42,8 @@ class Main(GladeWrapper):
         context.application.action_manager.connect("model-changed", self.on_model_changed)
 
         GladeWrapper.__init__(self, "zeobuilder.glade", "wi_main", "window")
-        GladeWrapper.init_callbacks(self, self.__class__)
-        GladeWrapper.init_proxies(self, ["sw_nodes", "hp_main", "vb_main", "menubar"])
+        self.init_callbacks(self.__class__)
+        self.init_proxies(["sw_nodes", "hp_main", "vb_main", "menubar"])
 
         # add model gui:
         self.init_tree_view()
