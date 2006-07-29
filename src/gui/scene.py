@@ -100,7 +100,6 @@ class Scene(object):
         self.clip_planes = {}
 
     def initialize(self): # gl_context sensitive method
-        # And then there was light (and material)!
         glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 1)
         glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
         glMaterial(GL_FRONT, GL_SHININESS, 70.0)
@@ -182,8 +181,9 @@ class Scene(object):
             return 0.0
 
     def draw(self, selection_box=None): # gl_context sensitive method
-        # This function is called when the color and depth buffers have to be refilled,
-        # or when the user points to an object and you want to identify it.
+        # This function is called when the color and depth buffers have to be
+        # refreshed, or when the user points to an object and you want to
+        # identify it.
         viewport = glGetIntegerv(GL_VIEWPORT)
         width = viewport[2]
         height = viewport[3]
@@ -222,6 +222,8 @@ class Scene(object):
             else:
                 h = float(height) / float(width)
                 glOrtho(-self.window_size, self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
+        if selection_box is None:
+            self.projection_matrix = numpy.transpose(numpy.array(glGetFloatv(GL_PROJECTION_MATRIX), float))
 
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
@@ -233,13 +235,13 @@ class Scene(object):
             glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [1.0, 1.0, 1.0, 1.0])
             glShadeModel(GL_SMOOTH)
             glCallList(self.rotation_center_list)
-        # Then bring the rotation center at the right place
-        # Now rotate to the model frame and move back to the model center
+        # Now rotate to the model frame and move back to the model center (reverse)
         self.rotation.gl_apply_inverse()
-        # Move to rotation center (reverse)
-        #glTranslatef(-self.center[0], -self.center[1], -self.center[2])
+        # Then bring the rotation center at the right place (reverse)
         self.center.gl_apply_inverse()
-        #print self.transformation
+
+        if selection_box is None:
+            self.modelview_matrix = numpy.transpose(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX), float))
 
         # define the clipping planes:
         for GL_CLIP_PLANEi, coefficients in self.clip_planes.iteritems():
@@ -261,7 +263,7 @@ class Scene(object):
             # contains the gl_names associated with the encountered vertices.
             return glRenderMode(GL_RENDER)
         else:
-            # draw the selection rectangle (if visible):
+            # draw the interactive tool (e.g. selection rectangle):
             glCallList(self.tool_list)
 
     def reset_view(self):
@@ -290,16 +292,6 @@ class Scene(object):
         else:
             return self.gl_names[nearest[2][-1]]
 
-    def get_parent_model_view(self, gl_object):
-        # determine the model view
-        model_view = Complete()
-        model_view.apply_before(self.viewer)
-        model_view.apply_inverse_before(self.rotation)
-        model_view.apply_inverse_before(self.center)
-        if gl_object is not None:
-            model_view.apply_before(gl_object.get_absolute_parentframe())
-        return model_view
-
     def compile_tool_rectangle(self, left, top, right, bottom): # gl_context sensitive method
         glNewList(self.tool_draw_list, GL_COMPILE)
         glBegin(GL_LINE_LOOP)
@@ -312,8 +304,9 @@ class Scene(object):
 
     def compile_tool_chain(self, points): # gl_context sensitive method
         glNewList(self.tool_draw_list, GL_COMPILE)
-        glBegin(GL_LINE_LOOP)
+        glBegin(GL_LINE_STRIP)
         for point in points:
+            #print "OpenGL", point
             glVertex3f(point[0], point[1], 0.0)
         glEnd()
         glEndList()

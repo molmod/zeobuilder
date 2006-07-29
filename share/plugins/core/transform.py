@@ -463,6 +463,7 @@ class RotateObjectBase(InteractiveWithMemory):
         self.victim = nodes[0]
         self.rotation_axis = None
         self.changed = False
+        rotation_center_object = None
         if len(nodes) == 2:
             helper = nodes[1]
             # take the information out of the helper nodes
@@ -470,7 +471,7 @@ class RotateObjectBase(InteractiveWithMemory):
                 b = helper.children[0].translation_relative_to(self.victim.parent)
                 e = helper.children[0].translation_relative_to(self.victim.parent)
                 if not ((b is None) or (e is None)):
-                    self.rotation_center = b
+                    rotation_center_object.helper.children[0].target
                     self.rotation_axis = e - b
                     norm = numpy.dot(self.rotation_axis, self.rotation_axis)
                     if norm > 0.0:
@@ -478,18 +479,14 @@ class RotateObjectBase(InteractiveWithMemory):
                     else:
                         self.rotation_axis = None
             else:
-                self.rotation_center = copy.copy(helper.get_frame_relative_to(self.victim.parent).translation_vector)
+                rotation_center_object = helper
         else:
-            self.rotation_center = copy.copy(self.victim.transformation.translation_vector)
+            rotation_center_object = self.victim
 
+        self.rotation_center = rotation_center_object.get_frame_relative_to(self.victim.parent).translation_vector
         drawing_area = context.application.main.drawing_area
-        # use the modelview to translate screen coordinates to x,y,z coordinats in the victims parent frame
-        self.model_view = drawing_area.scene.get_parent_model_view(self.victim)
-        # now find the screen position of the center of the object
-        self.screen_rotation_center = drawing_area.position_on_screen(self.model_view.vector_apply(self.rotation_center))
-        #print "rotation_center: " + str(self.rotation_center)
-        # reduce the viewer frame to a 3x3 matrix
-        self.user_to_parent = numpy.transpose(self.model_view.rotation_matrix)
+        self.screen_rotation_center = drawing_area.position_of_object(rotation_center_object)
+        self.user_to_parent = drawing_area.user_to_parent(self.victim)
 
         self.old_transformation = copy.deepcopy(self.victim.transformation)
 
@@ -552,7 +549,7 @@ class RotateWorldBase(Interactive):
     def interactive_init(self):
         Interactive.interactive_init(self)
         drawing_area = context.application.main.drawing_area
-        self.screen_rotation_center = drawing_area.position_on_screen(drawing_area.scene.viewer.translation_vector)
+        self.screen_rotation_center = drawing_area.position_of_vector(drawing_area.scene.viewer.translation_vector)
         self.user_to_parent = None
         self.rotation_axis = None
 
@@ -584,13 +581,16 @@ class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
 
 
 class TranslateMouseMixin(object):
+    #def get_victim_depth(self, drawing_area):
+    #    raise NotImplementedError
+
     def button_press(self, drawing_area, event):
         if event.button == 1: # XY translate
             self.former_x = event.x
             self.former_y = event.y
         elif event.button == 3: # Z translate
             self.former_x = event.x
-        self.depth_scale = drawing_area.center_in_depth_scale(self.victim_depth)
+        self.depth_scale = drawing_area.depth_to_scale(self.get_victim_depth(drawing_area))
 
     def button_motion(self, drawing_area, event, start_button):
         self.has_changed = True
@@ -600,9 +600,8 @@ class TranslateMouseMixin(object):
             self.former_x = event.x
             self.former_y = event.y
         elif start_button == 3: # Z translation
-            delta_z = (1 + abs(self.victim_depth)) * (event.x - self.former_x) * 0.01
+            delta_z = (1 + abs(self.get_victim_depth(drawing_area))) * (event.x - self.former_x) * 0.01
             trans = numpy.array([0.0, 0.0, delta_z])
-            self.update_victim_depth()
             self.former_x = event.x
         if self.user_to_parent is None:
             return trans
@@ -614,24 +613,26 @@ class TranslateMouseMixin(object):
 
 
 class TranslateKeyboardMixin(object):
+    #def get_victim_depth(self, drawing_area):
+    #    raise NotImplementedError
+
     def key_press(self, drawing_area, event):
-        if event.keyval == 65365:
+        if event.keyval == 65365: # page up
             translation_vector = numpy.array([ 0.0,  0.0, -0.1])
-        elif event.keyval == 65366:
+        elif event.keyval == 65366: # page down
             translation_vector = numpy.array([ 0.0,  0.0,  0.1])
-        elif event.keyval == 65363:
+        elif event.keyval == 65363: # right
             translation_vector = numpy.array([ 0.1,  0.0,  0.0])
-        elif event.keyval == 65361:
+        elif event.keyval == 65361: # left
             translation_vector = numpy.array([-0.1,  0.0,  0.0])
-        elif event.keyval == 65364:
-            translation_vector = numpy.array([ 0.0, -0.1,  0.0])
-        elif event.keyval == 65362:
+        elif event.keyval == 65362: # up
             translation_vector = numpy.array([ 0.0,  0.1,  0.0])
+        elif event.keyval == 65364: # down
+            translation_vector = numpy.array([ 0.0, -0.1,  0.0])
         else:
             return None
 
-        self.update_victim_depth()
-        translation_vector *= 0.02 * (1 + abs(self.victim_depth))
+        translation_vector *= 0.02 * (1 + abs(self.get_victim_depth(drawing_area)))
 
         if self.user_to_parent is None:
             return translation_vector
@@ -658,15 +659,13 @@ class TranslateObjectBase(InteractiveWithMemory):
     def interactive_init(self):
         InteractiveWithMemory.interactive_init(self)
         self.victim = context.application.cache.node
-        self.update_victim_depth()
-        self.user_to_parent = numpy.transpose(self.model_view.rotation_matrix)
+        self.user_to_parent = context.application.main.drawing_area.user_to_parent(self.victim)
         self.changed = False
 
         self.old_transformation = copy.deepcopy(self.victim.transformation)
 
-    def update_victim_depth(self):
-        self.model_view = context.application.main.drawing_area.scene.get_parent_model_view(self.victim)
-        self.victim_depth = abs(self.model_view.vector_apply(self.victim.transformation.translation_vector)[2])
+    def get_victim_depth(self, drawing_area):
+        return drawing_area.depth_of_object(self.victim)
 
     def finish(self):
         if self.changed:
@@ -716,13 +715,10 @@ class TranslateWorldBase(Interactive):
 
     def interactive_init(self):
         Interactive.interactive_init(self)
-        self.model_view = context.application.main.drawing_area.scene.get_parent_model_view(None)
-        self.victim_depth = abs(self.model_view.translation_vector[2])
-        self.user_to_parent = numpy.transpose(self.model_view.rotation_matrix)
+        self.user_to_parent = context.application.main.drawing_area.user_to_parent(None)
 
-    def update_victim_depth(self):
-        self.model_view = context.application.main.drawing_area.scene.get_parent_model_view(None)
-        self.victim_depth = abs(self.model_view.translation_vector[2])
+    def get_victim_depth(self, drawing_area):
+        return -drawing_area.scene.modelview_matrix[2,3]
 
 
 class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
@@ -756,11 +752,11 @@ class TranslateViewerBase(Interactive):
 
     def interactive_init(self):
         Interactive.interactive_init(self)
-        self.update_victim_depth()
         self.user_to_parent = None
 
-    def update_victim_depth(self):
-        self.victim_depth = abs(context.application.main.drawing_area.scene.viewer.translation_vector[2])
+    def get_victim_depth(self, drawing_area):
+        scene = drawing_area.scene
+        return -scene.viewer.translation_vector[2] + scene.znear()
 
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):

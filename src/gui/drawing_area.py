@@ -21,6 +21,9 @@
 
 import scene
 
+from zeobuilder.nodes.glmixin import GLTransformationMixin
+from zeobuilder.transformations import Complete
+
 import gtk.gtkgl, gtk.gdkgl, numpy
 from OpenGL.GL import *
 
@@ -60,17 +63,50 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
             glFlush()
         self.get_gl_drawable().gl_end()
 
-    def position_on_screen(self, vector):
+    def position_of_vector(self, vector):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
         temp = numpy.ones(4, float)
-        temp[0:3] = vector
-        proj_mat = numpy.transpose(numpy.array(glGetFloatv(GL_PROJECTION_MATRIX), float)) # transpose because opengl=column-major and numpy=row-major
-        temp = numpy.dot(proj_mat, temp)
+        temp[0:len(vector)] = vector
+        temp = numpy.dot(self.scene.projection_matrix, temp)
+        temp = temp[0:2]/temp[3] # from homogeneous to Cartesian coordinates
         viewport = glGetIntegerv(GL_VIEWPORT)
-        temp = temp[0:2]/temp[3]
         temp = numpy.array([int(0.5*(1+temp[0])*viewport[2]), int(0.5*(1-temp[1])*viewport[3])])
         self.get_gl_drawable().gl_end()
         return temp
+
+    def vector_of_object(self, gl_object):
+        frame = gl_object.get_absolute_frame()
+        tmp = numpy.ones(4, float)
+        tmp[:3] = frame.translation_vector
+        tmp = numpy.dot(self.scene.modelview_matrix, tmp)
+        return tmp[:3]/tmp[3]
+
+    def depth_of_object(self, gl_object):
+        return -self.vector_of_object(gl_object)[-1]
+
+    def position_of_object(self, gl_object):
+        frame = gl_object.get_absolute_frame()
+        tmp = numpy.ones(4, float)
+        tmp[:3] = frame.translation_vector
+        return self.position_of_vector(numpy.dot(self.scene.modelview_matrix, tmp))
+
+    def user_to_parent(self, gl_object):
+        if hasattr(gl_object, "parent") and \
+           isinstance(gl_object.parent, GLTransformationMixin):
+            parent_matrix = gl_object.parent.get_absolute_frame().rotation_matrix
+        else:
+            parent_matrix = numpy.identity(3, float)
+        return numpy.dot(self.scene.modelview_matrix[0:3,0:3], parent_matrix).transpose()
+
+    def depth_to_scale(self, depth):
+        """ transforms a depth into a scale au/pixel"""
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        viewport = glGetIntegerv(GL_VIEWPORT)
+        self.get_gl_drawable().gl_end()
+        if self.scene.opening_angle > 0.0:
+            return 2/float(viewport[2])/self.scene.projection_matrix[0, 0]*depth
+        else:
+            return 2/float(viewport[2])/self.scene.projection_matrix[0, 0]
 
     def yield_hits(self, selection_box):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
@@ -83,17 +119,6 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         hit = self.scene.get_nearest(x, y)
         self.get_gl_drawable().gl_end()
         return hit
-
-    def center_in_depth_scale(self, depth):
-        """ transforms a depth into a scale au/pixel"""
-        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
-        viewport = glGetIntegerv(GL_VIEWPORT)
-        proj_mat = numpy.transpose(numpy.array(glGetFloatv(GL_PROJECTION_MATRIX), float))
-        self.get_gl_drawable().gl_end()
-        if self.scene.opening_angle > 0.0:
-            return 2/float(viewport[2])/proj_mat[0, 0]*depth
-        else:
-            return 2/float(viewport[2])/proj_mat[0, 0]
 
     def tool_clear(self):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
