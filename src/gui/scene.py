@@ -255,12 +255,11 @@ class Scene(object):
             context.application.model.universe.call_list()
 
         if selection_box is not None:
-            # now let the caller analyze the hits.
-            temp = glRenderMode(GL_RENDER)
-            if temp is None:
-                return []
-            else:
-                return list(temp)
+            # now let the caller analyze the hits by returning the selection
+            # buffer. Note: The selection buffer can be used as an iterator
+            # over 3-tupples (near, far, names) where names is tuple that
+            # contains the gl_names associated with the encountered vertices.
+            return glRenderMode(GL_RENDER)
         else:
             # draw the selection rectangle (if visible):
             glCallList(self.tool_list)
@@ -274,6 +273,22 @@ class Scene(object):
         self.opening_angle = config.opening_angle
         self.window_size = config.window_size
         self.window_depth = config.window_depth
+
+    def yield_hits(self, selection_box): # gl_context sensitive method
+        for selection in self.draw(selection_box):
+            yield self.gl_names[selection[2][-1]]
+
+    def get_nearest(self, x, y): # gl_context sensitive method
+        nearest = None
+        for selection in self.draw((x, y, x, y)):
+            if nearest is None:
+                nearest = selection
+            elif selection[0] < nearest[0]:
+                nearest = selection
+        if nearest is None:
+            return None
+        else:
+            return self.gl_names[nearest[2][-1]]
 
     def get_parent_model_view(self, gl_object):
         # determine the model view

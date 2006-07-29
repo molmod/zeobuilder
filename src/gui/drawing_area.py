@@ -72,6 +72,18 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         self.get_gl_drawable().gl_end()
         return temp
 
+    def yield_hits(self, selection_box):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        for hit in self.scene.yield_hits(selection_box):
+            yield hit
+        self.get_gl_drawable().gl_end()
+
+    def get_nearest(self, x, y):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        hit = self.scene.get_nearest(x, y)
+        self.get_gl_drawable().gl_end()
+        return hit
+
     def center_in_depth_scale(self, depth):
         """ transforms a depth into a scale au/pixel"""
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return

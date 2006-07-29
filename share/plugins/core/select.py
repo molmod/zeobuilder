@@ -345,39 +345,37 @@ class PickSelection(Interactive):
             self.rect = True
             drawing_area.tool_rectangle(self.beginx, self.beginy, event.x, event.y)
 
-    def get_nearest(self, selection_list, gl_names):
-        if len(selection_list) > 0:
-            nearest = None
-            for sel in selection_list:
-                if nearest is None:
-                    nearest = sel
-                elif sel[0] < nearest[0]:
-                    nearest = sel
-            return gl_names[nearest[2][len(nearest[2])-1]]
-        else:
-            return None
-
     def button_release(self, drawing_area, event):
         drawing_area.tool_clear()
         main = context.application.main
+        if (event.button == 1):
+            main.tree_selection.unselect_all()
         if self.rect:
-            left, right = {True: (self.beginx, self.endx), False: (self.endx, self.beginx)}[self.beginx <= self.endx]
-            top, bottom = {True: (self.beginy, self.endy), False: (self.endy, self.beginy)}[self.beginy <= self.endy]
-            hits = [main.drawing_area.scene.gl_names[x[2][-1]] for x in main.drawing_area.scene.draw((left, top, right, bottom))]
-            for hit in hits:
-                main.toggle_selection(hit, event.button==1)
-            self.finish()
+            if self.beginx < self.endx:
+                left = self.beginx
+                right = self.endx
+            else:
+                left = self.endx
+                right = self.beginx
+
+            if self.beginy < self.endy:
+                top = self.beginy
+                bottom = self.endy
+            else:
+                top = self.endy
+                bottom = self.beginy
+
+            for hit in drawing_area.yield_hits((left, top, right, bottom)):
+                main.toggle_selection(hit, event.button!=3)
         else:
-            if (event.button == 1):
-                main.tree_selection.unselect_all()
             if (event.button != 3):
-                hit = self.get_nearest(main.drawing_area.scene.draw((event.x, event.y, event.x, event.y)),
-                                       main.drawing_area.scene.gl_names)
+                hit = drawing_area.get_nearest(event.x, event.y)
                 if hit is None:
                     main.tree_selection.unselect_all()
                 else:
                     main.toggle_selection(hit)
-            self.finish()
+
+        self.finish()
 
 
 nodes = {
