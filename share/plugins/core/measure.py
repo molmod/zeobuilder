@@ -87,8 +87,8 @@ class MeasurementsWindow(GladeWrapper):
         self.labels_chain_closed = [self.__dict__[label] for label in labels_chain_closed]
 
         context.application.action_manager.connect("action-started", self.on_action_started)
-        context.application.action_manager.connect("action-ended", self.on_action_ended)
-        context.application.action_manager.connect("action-canceled", self.on_action_ended)
+        context.application.action_manager.connect("action-ends", self.on_action_ended)
+        context.application.action_manager.connect("action-cancels", self.on_action_ended)
 
         self.model_objects = []
         self.points = []
@@ -133,7 +133,9 @@ class MeasurementsWindow(GladeWrapper):
 
         if len(self.model_objects) > 0:
             self.update_widgets()
-        context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
+            context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
+        else:
+            self.clear()
 
     def clear(self):
         self.model_objects = []
@@ -344,16 +346,20 @@ class Measure(Interactive):
             if isinstance(gl_object, GLTransformationMixin) and \
                isinstance(gl_object.transformation, Translation):
                 self.measurements.add_object(gl_object)
+                self.finish()
                 return
             elif isinstance(gl_object, Vector):
                 first = gl_object.children[0].target
                 last = gl_object.children[1].target
                 if len(self.measurements.model_objects) > 0:
-                    if first == self.measurements.model_objects[0] or \
-                       last == self.measurements.model_objects[0]:
+                    if (first == self.measurements.model_objects[0] or \
+                        last  == self.measurements.model_objects[0]) and \
+                       (first != self.measurements.model_objects[-1] or \
+                        last  != self.measurements.model_objects[-1]):
                         self.measurements.reverse()
                 self.measurements.add_object(first)
                 self.measurements.add_object(last)
+                self.finish()
                 return
         self.measurements.clear()
 
