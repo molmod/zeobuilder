@@ -117,10 +117,10 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         self.get_gl_drawable().gl_end()
         return hit
 
-    def tool_clear(self):
+    def tool_clear(self, queue=True):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
         self.scene.clear_tool_draw_list()
-        self.queue_draw()
+        if queue: self.queue_draw()
         self.get_gl_drawable().gl_end()
 
     def to_reduced(self, x, y):

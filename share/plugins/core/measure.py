@@ -25,8 +25,12 @@ from zeobuilder.actions.composed import Interactive
 from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.vector import Vector
-from zeobuilder.transformations import Translation
 from zeobuilder.gui.glade_wrapper import GladeWrapper
+from zeobuilder.transformations import Translation
+from zeobuilder.conversion import express_measure
+
+from molmod.units import LENGTH, ANGLE
+from molmod.vectors import angle
 
 from OpenGL.GLUT import *
 from OpenGL.GL import *
@@ -35,13 +39,56 @@ import numpy
 import math
 
 
-class MeasurementsDialog(GladeWrapper):
+class MeasurementsWindow(GladeWrapper):
     def __init__(self):
         GladeWrapper.__init__(self, "zeobuilder.glade", "wi_measurements", "window")
         self.window.hide()
         self.init_callbacks(self.__class__)
 
+        labels_chain2 = ["distances",
+            "label_12", "distance_12"
+        ]
+        labels_chain3 = ["angles", "distances_to_line",
+            "label_23", "distance_23",
+            "label_123", "angle_123",
+            "label_1_23", "distance_1_23",
+        ]
+        labels_chain_only3 = [
+            "label_12_3", "distance_12_3",
+        ]
+        labels_chain4 = [
+            "dihedral_angles", "out_of_plane_angles",
+            "distances_to_plane", "distances_between_lines",
+            "label_34", "distance_34",
+            "label_234", "angle_234",
+            "label_123_234", "angle_123_234",
+            "label_12_234", "angle_12_234",
+            "label_123_34", "angle_123_34",
+            "label_1_234", "distance_1_234",
+            "label_123_4", "distance_123_4",
+            "label_23_4", "distance_23_4",
+            "label_12_34", "distance_12_34",
+        ]
+        labels_chain_closed = [
+            "label_31", "distance_31",
+            "label_231", "angle_231",
+            "label_312", "angle_312",
+            "label_31_2", "distance_31_2",
+        ]
+
+        self.init_proxies(
+            labels_chain2 + labels_chain3 + labels_chain_only3 + labels_chain4 +
+            labels_chain_closed
+        )
+        self.labels_chain2 = [self.__dict__[label] for label in labels_chain2]
+        self.labels_chain3 = [self.__dict__[label] for label in labels_chain3]
+        self.labels_chain_only3 = [self.__dict__[label] for label in labels_chain_only3]
+        self.labels_chain4 = [self.__dict__[label] for label in labels_chain4]
+        self.labels_chain_closed = [self.__dict__[label] for label in labels_chain_closed]
+
         context.application.action_manager.connect("action-started", self.on_action_started)
+        context.application.action_manager.connect("action-ended", self.on_action_ended)
+        context.application.action_manager.connect("action-canceled", self.on_action_ended)
 
         self.model_objects = []
         self.points = []
@@ -53,10 +100,42 @@ class MeasurementsDialog(GladeWrapper):
 
     def on_action_started(self, action_manager):
         if not isinstance(action_manager.current_action, Measure):
-            self.clear()
+            if len(self.model_objects) == 1:
+                self.clear()
+            else:
+                context.application.main.drawing_area.tool_clear(queue=False)
+
+    def on_action_ended(self, action_manager):
+        if not isinstance(action_manager.current_action, Measure):
+            self.reveal()
+
+    def reveal(self):
+        drawing_area = context.application.main.drawing_area
+
+        # first check wether some modelobjects have disapeared:
+        self.model_objects = [
+            model_object
+            for model_object
+            in self.model_objects
+            if model_object.model == context.application.model
+        ]
+        # update the vectors and the points
+        self.vectors = [
+            drawing_area.vector_of_object(model_object)
+            for model_object
+            in self.model_objects
+        ]
+        self.points = [
+            drawing_area.to_reduced(*drawing_area.position_of_vector(vector))
+            for vector
+            in self.vectors
+        ]
+
+        if len(self.model_objects) > 0:
+            self.update_widgets()
+        context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
 
     def clear(self):
-        self.window.hide()
         self.model_objects = []
         self.points = []
         self.vectors = []
@@ -90,9 +169,14 @@ class MeasurementsDialog(GladeWrapper):
         self.points.append(point)
 
         context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
-        if chain_len > 0:
-            self.update_widgets()
-            self.window.show()
+        self.update_widgets()
+
+    def reverse(self):
+        self.model_objects.reverse()
+        self.vectors.reverse()
+        self.points.reverse()
+        context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
+        self.update_widgets()
 
     def draw_tool_chain(self):
         font_scale = 0.00015
@@ -107,7 +191,6 @@ class MeasurementsDialog(GladeWrapper):
 
         glColor(1, 1, 1)
         glLineWidth(1)
-        glVertex3f(point[0], point[1], 0.0)
         glBegin(GL_LINE_STRIP)
         for point in self.points:
             glVertex3f(point[0], point[1], 0.0)
@@ -138,14 +221,122 @@ class MeasurementsDialog(GladeWrapper):
             glPopMatrix()
 
     def update_widgets(self):
-        pass
+        def show_labels(labels):
+            for label in labels:
+                label.show()
+
+        def hide_labels(labels):
+            for label in labels:
+                label.hide()
+
+        def express_distance(index1, index2):
+            delta = self.vectors[index1] - self.vectors[index2]
+            return express_measure(math.sqrt(numpy.dot(delta, delta)), measure=LENGTH)
+
+        def express_angle(index1, index2, index3):
+            delta1 = self.vectors[index1] - self.vectors[index2]
+            delta2 = self.vectors[index3] - self.vectors[index2]
+            return express_measure(angle(delta1, delta2), measure=ANGLE)
+
+        def express_distance_to_line(index1, index2, index3):
+            delta1 = self.vectors[index1] - self.vectors[index2]
+            delta2 = self.vectors[index2] - self.vectors[index3]
+            delta2 /= math.sqrt(numpy.dot(delta2, delta2))
+            normal = delta1 - delta2*numpy.dot(delta1, delta2)
+            return express_measure(math.sqrt(numpy.dot(normal, normal)), measure=LENGTH)
+
+        def express_dihedral_angle(index1, index2, index3, index4):
+            normal1 = numpy.cross(
+                self.vectors[index1] - self.vectors[index2],
+                self.vectors[index3] - self.vectors[index2]
+            )
+            normal2 = numpy.cross(
+                self.vectors[index2] - self.vectors[index3],
+                self.vectors[index4] - self.vectors[index3]
+            )
+            return express_measure(angle(normal1, normal2), measure=ANGLE)
+
+        def express_out_of_plane_angle(index1, index2, index3, index4):
+            delta = self.vectors[index1] - self.vectors[index2]
+            normal = numpy.cross(
+                self.vectors[index4] - self.vectors[index3],
+                self.vectors[index2] - self.vectors[index3]
+            )
+            return express_measure(0.5*math.pi - angle(normal, delta), measure=ANGLE)
+
+        def express_distance_to_plane(index1, index2, index3, index4):
+            delta = self.vectors[index1] - self.vectors[index2]
+            normal = numpy.cross(
+                self.vectors[index2] - self.vectors[index3],
+                self.vectors[index4] - self.vectors[index3]
+            )
+            normal /= math.sqrt(numpy.dot(normal, normal))
+            return express_measure(abs(numpy.dot(delta, normal)), measure=LENGTH)
+
+        def express_distance_between_lines(index1, index2, index3, index4):
+            delta1 = self.vectors[index1] - self.vectors[index2]
+            delta2 = self.vectors[index3] - self.vectors[index4]
+            normal = numpy.cross(delta1, delta2)
+            normal /= math.sqrt(numpy.dot(normal, normal))
+            delta3 = self.vectors[index1] - self.vectors[index3]
+            return express_measure(abs(numpy.dot(delta3, normal)), measure=LENGTH)
+
+        chain_len = len(self.model_objects)
+        if chain_len > 1:
+            self.window.show()
+
+            if chain_len > 1:
+                show_labels(self.labels_chain2)
+                self.distance_12.set_label(express_distance(0, 1))
+            else:
+                hide_labels(self.labels_chain2)
+
+            if chain_len > 2:
+                show_labels(self.labels_chain3)
+                self.distance_23.set_label(express_distance(1, 2))
+                self.angle_123.set_label(express_angle(0, 1, 2))
+                self.distance_1_23.set_label(express_distance_to_line(0, 1, 2))
+            else:
+                hide_labels(self.labels_chain3)
+
+            if chain_len == 3 or self.model_objects[0] == self.model_objects[-1]:
+                show_labels(self.labels_chain_only3)
+                self.distance_12_3.set_label(express_distance_to_line(2, 1, 0))
+            else:
+                hide_labels(self.labels_chain_only3)
+
+            if chain_len > 3:
+                if self.model_objects[0] == self.model_objects[-1]:
+                    self.distance_31.set_label(express_distance(2, 0))
+                    self.angle_231.set_label(express_angle(1, 2, 0))
+                    self.angle_312.set_label(express_angle(2, 0, 1))
+                    self.distance_31_2.set_label(express_distance_to_line(1, 0, 2))
+                    show_labels(self.labels_chain_closed)
+                    hide_labels(self.labels_chain4)
+                else:
+                    self.distance_34.set_label(express_distance(2, 3))
+                    self.angle_234.set_label(express_angle(1, 2, 3))
+                    self.angle_123_234.set_label(express_dihedral_angle(0, 1, 2, 3))
+                    self.angle_12_234.set_label(express_out_of_plane_angle(0, 1, 2, 3))
+                    self.angle_123_34.set_label(express_out_of_plane_angle(3, 2, 1, 0))
+                    self.distance_1_234.set_label(express_distance_to_plane(0, 1, 2, 3))
+                    self.distance_123_4.set_label(express_distance_to_plane(3, 2, 1, 0))
+                    self.distance_23_4.set_label(express_distance_to_line(3, 1, 2))
+                    self.distance_12_34.set_label(express_distance_between_lines(0, 1, 2, 3))
+                    show_labels(self.labels_chain4)
+                    hide_labels(self.labels_chain_closed)
+            else:
+                hide_labels(self.labels_chain4)
+                hide_labels(self.labels_chain_closed)
+        else:
+            self.window.hide()
 
 
 class Measure(Interactive):
     description = "Measure distances and angles"
     interactive_info = InteractiveInfo("measure.svg", mouse=True)
 
-    measurements = MeasurementsDialog()
+    measurements = MeasurementsWindow()
 
     def button_press(self, drawing_area, event):
         if event.button == 1:
@@ -155,8 +346,14 @@ class Measure(Interactive):
                 self.measurements.add_object(gl_object)
                 return
             elif isinstance(gl_object, Vector):
-                self.measurements.add_object(gl_object.children[0].target)
-                self.measurements.add_object(gl_object.children[1].target)
+                first = gl_object.children[0].target
+                last = gl_object.children[1].target
+                if len(self.measurements.model_objects) > 0:
+                    if first == self.measurements.model_objects[0] or \
+                       last == self.measurements.model_objects[0]:
+                        self.measurements.reverse()
+                self.measurements.add_object(first)
+                self.measurements.add_object(last)
                 return
         self.measurements.clear()
 

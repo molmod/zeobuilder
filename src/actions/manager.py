@@ -109,6 +109,7 @@ class ActionManager(gobject.GObject):
             raise CancelException
         self.current_action.undo()
         self.current_action = None
+        self.emit("action-canceled")
 
     def end_current_action(self):
         assert self.current_action is not None, "Need a current action to end."
@@ -124,6 +125,7 @@ class ActionManager(gobject.GObject):
             self.emit("model-changed")
         self.current_action = None
         context.application.cache.queue_invalidate()
+        self.emit("action-ended")
 
     def undo(self):
         assert len(self.undo_stack) > 0, "No actions available to undo."
@@ -178,3 +180,5 @@ class ActionManager(gobject.GObject):
 
 gobject.signal_new("model-changed", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 gobject.signal_new("action-started", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+gobject.signal_new("action-ended", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+gobject.signal_new("action-canceled", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
