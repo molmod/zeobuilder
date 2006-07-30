@@ -21,7 +21,6 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.abstract import ConnectBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
@@ -201,7 +200,7 @@ class Arrow(Vector, ColorMixin):
 
 class ConnectArrow(ConnectBase):
     description = "Connect with arrow"
-    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Arrow", image_name="plugins/core/arrow.svg")
+    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Arrow", image_name="plugins/core/arrow.svg", order=(0, 4, 1, 3, 0, 0))
 
     def new_connector(self, begin, end):
         return Arrow(targets=[begin, end])
