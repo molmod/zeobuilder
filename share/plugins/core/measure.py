@@ -41,7 +41,7 @@ import math
 
 class MeasurementsWindow(GladeWrapper):
     def __init__(self):
-        GladeWrapper.__init__(self, "zeobuilder.glade", "wi_measurements", "window")
+        GladeWrapper.__init__(self, "plugins/core/gui.glade", "wi_measurements", "window")
         self.window.hide()
         self.init_callbacks(self.__class__)
 
