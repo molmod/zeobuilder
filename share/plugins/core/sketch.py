@@ -266,7 +266,6 @@ class Sketch(Interactive):
                         ),
                         self.parent
                     )
-                print self.first_hit, self.last_hit
                 self.options.connect(self.first_hit, self.last_hit)
             elif self.tool == self.options.tool_special:
                 self.options.move_special(self.first_hit, self.last_hit, self.begin_x, self.begin_y, self.end_x, self.end_y)
