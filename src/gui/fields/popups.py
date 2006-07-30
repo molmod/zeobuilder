@@ -206,8 +206,6 @@ class Measure(Default):
         try:
             value = self.field.convert_to_value(representation)
             if isinstance(value, numpy.ndarray):
-                if self.field.transpose:
-                    value = value.transpose()
                 value = value.ravel()
             for unit in units_by_measure[self.field.measure]:
                 unit_suffix = suffices[unit]
