@@ -281,7 +281,7 @@ class Element(Edit):
                 tip = tip + "\nRadius = " + express_measure(atom_info.radius, LENGTH)
             to_mendeljev.set_tip(bu_element, tip)
             ta_elements.attach(
-                bu_element, 
+                bu_element,
                 int(atom_info.col), int(atom_info.col) + 1,
                 int(atom_info.row), int(atom_info.row) + 1
             )

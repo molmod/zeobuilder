@@ -98,7 +98,7 @@ class UserColorMixin(gobject.GObject):
     #
     # Draw
     #
-    
+
     def get_color(self):
         if self.user_color is not None:
             return self.user_color

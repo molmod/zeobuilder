@@ -202,7 +202,7 @@ class Checkable(Single):
         self.slave = slave
         slave.parent = self
         self.check_button = None
-        
+
     def init_widgets(self, instance):
         self.slave.init_widgets(instance)
         Single.init_widgets(self, instance)
@@ -213,10 +213,10 @@ class Checkable(Single):
 
     def get_active(self):
         return self.slave.get_active()
-    
+
     def applicable(self, instance):
         return self.slave.get_active()
-        
+
     def changed_names(self):
         if not self.get_active():
             return []
@@ -232,17 +232,17 @@ class Checkable(Single):
         self.check_button.connect("toggled", self.check_button_toggled)
         if self.slave.label is not None:
             self.check_button.add(self.slave.label)
-            
+
     def destroy_widgets(self):
         if self.check_button is not None:
             self.check_button.destroy()
             self.check_button = None
         self.slave.destroy_widgets()
         Single.destroy_widgets(self)
-    
+
     def get_widgets_separate(self):
         return self.check_button, self.slave.data_widget, self.slave.bu_popup
-        
+
     def read(self):
         if self.get_active():
             self.slave.read()
@@ -264,7 +264,7 @@ class Checkable(Single):
     def check(self):
         if self.get_active():
             self.slave.check()
-                
+
     def grab_focus(self):
         self.slave.grab_focus()
 

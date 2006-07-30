@@ -111,7 +111,7 @@ class Atom(GLGeometricBase, UserColorMixin):
             return self.user_radius
         else:
             return self.default_radius
-            
+
     def draw(self):
         GLGeometricBase.draw(self)
         UserColorMixin.draw(self)

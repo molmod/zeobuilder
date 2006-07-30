@@ -1,22 +1,22 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
 # Copyright (C) 2005 Toon Verstraelen
-# 
+#
 # This file is part of Zeobuilder.
-# 
+#
 # Zeobuilder is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 2
 # of the License, or (at your option) any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
-# 
+#
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
-# 
+#
 # --
 
 
@@ -51,20 +51,20 @@ class Bond(Vector):
     #
     # Properties
     #
-       
+
     def set_quality(self, quality):
         self.quality = quality
         self.invalidate_draw_list()
-        
+
     def set_bond_type(self, bond_type):
         self.bond_type = bond_type
         self.invalidate_draw_list()
-        
+
     published_properties = PublishedProperties({
         "quality": Property(50, lambda self: self.quality, set_quality),
         "bond_type": Property(BOND_SINGLE, lambda self: self.bond_type, set_bond_type)
     })
-    
+
     #
     # Dialog fields (see action EditProperties)
     #
@@ -87,7 +87,7 @@ class Bond(Vector):
             attribute_name="bond_type",
         )),
     ])
-    
+
     #
     # References
     #
@@ -99,7 +99,7 @@ class Bond(Vector):
             new_target.connect("on_user_radius_changed", self.atom_property_changed),
             new_target.connect("on_user_color_changed", self.atom_property_changed),
         ]
-        
+
     def undefine_target(self, reference, old_target):
         Vector.undefine_target(self, reference, old_target)
         for handler in self.handlers[old_target]:
@@ -110,12 +110,12 @@ class Bond(Vector):
 
     def atom_property_changed(self, atom):
         self.invalidate_boundingbox_list()
-        self.invalidate_draw_list()        
+        self.invalidate_draw_list()
 
     #
     # Draw
     #
-    
+
     def draw(self):
         Vector.draw(self)
         if self.length <= 0: return
@@ -131,8 +131,8 @@ class Bond(Vector):
         gluCylinder(self.quadric, self.begin_radius, half_radius, half_length, self.quality, 1)
         glTranslate(0.0, 0.0, half_length)
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, end.get_color())
-        gluCylinder(self.quadric, half_radius, self.end_radius, half_length, self.quality, 1)    
-            
+        gluCylinder(self.quadric, half_radius, self.end_radius, half_length, self.quality, 1)
+
     def write_pov(self, indenter):
         self.calc_vector_dimensions()
         if self.length <= 0: return
@@ -141,7 +141,7 @@ class Bond(Vector):
         half_position = half_length + self.begin_position
         half_radius = 0.5 * (self.begin_radius + self.end_radius)
         begin = self.children[0].target
-        end = self.children[1].target    
+        end = self.children[1].target
         indenter.write_line("union {", 1)
         indenter.write_line("cone {", 1)
         indenter.write_line("<0.0, 0.0, %f>, %f, <0.0, 0.0, %f>, %f" % (self.begin_position, self.begin_radius, half_position, half_radius))
@@ -155,29 +155,29 @@ class Bond(Vector):
         indenter.write_line("}", -1)
         Vector.write_pov(self, indenter)
         indenter.write_line("}", -1)
-        
+
     #
     # Revalidation
     #
-    
+
     def revalidate_bounding_box(self):
         Vector.revalidate_bounding_box(self)
         if self.length > 0:
             temp = {True: self.begin_radius, False: self.end_radius}[self.begin_radius > self.end_radius]
             self.bounding_box.extend_with_point(numpy.array([-temp, -temp, self.begin_position]))
             self.bounding_box.extend_with_point(numpy.array([temp, temp, self.end_position]))
-    
+
     def calc_vector_dimensions(self):
         Vector.calc_vector_dimensions(self)
         begin = self.children[0].target
         end = self.children[1].target
         if self.length <= 0.0: return
         c = (begin.get_radius() - end.get_radius()) / self.length
-        if abs(c) > 1: 
+        if abs(c) > 1:
             self.begin_radius = 0
             self.end_radius = 0
             self.begin_position = 0
-            self.end_position = 0        
+            self.end_position = 0
         else:
             scale = 0.5
             s = math.sqrt(1 - c**2)
@@ -200,7 +200,7 @@ class ConnectBond(ConnectBase):
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
-    
+
     def new_connector(self, begin, end):
         return Bond(targets=[begin, end], bond_type=self.bond_type)
 
