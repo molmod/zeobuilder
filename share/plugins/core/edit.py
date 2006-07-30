@@ -210,8 +210,6 @@ class Paste(Immediate):
 
     def do(self):
         parent = context.application.cache.node
-        main = context.application.main
-        main.tree_selection.unselect_all()
 
         def load_func(clipboard, selection_data, user_data):
             string_representation = selection_data.data
@@ -221,7 +219,6 @@ class Paste(Immediate):
             for node in nodes:
                 if parent.check_add(node.__class__):
                     primitive.Add(node, parent)
-                    main.toggle_selection(node, True)
 
         clipboard = gtk.clipboard_get()
         clipboard.request_contents("ZML", load_func)
@@ -271,12 +268,9 @@ class Duplicate(Immediate):
         serialized.seek(0)
         duplicates = load_from_file(serialized)
 
-        main = context.application.main
-        main.tree_selection.unselect_all()
         for duplicate in duplicates:
             highest_index += 1
             primitive.Add(duplicate, parent, index=highest_index)
-            main.toggle_selection(duplicate, True)
 
 
 class EditConfiguration(Immediate):

@@ -196,6 +196,11 @@ class Main(GladeWrapper):
         else:
             self.tree_selection.unselect_iter(node.iter)
 
+    def select_nodes(self, nodes):
+        self.tree_selection.unselect_all()
+        for node in nodes:
+            self.toggle_selection(node, on=True)
+
     def on_row_collapsed(self, tree_view, iter, path):
         context.application.model[iter][0].set_expanded(False)
 

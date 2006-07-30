@@ -33,6 +33,8 @@ class PrimitiveError(Exception):
 
 
 class Base(object):
+    changes_selection = False # see actions.composed.Base.__init__
+
     def __init__(self, victim, done=False):
         self.victim = victim
         self.done = done
@@ -57,6 +59,8 @@ class Base(object):
 
 
 class Add(Base):
+    changes_selection = True
+
     def __init__(self, victim, parent, index=-1):
         if not isinstance(parent, ContainerMixin):
             raise PrimitiveError, "ADD: Parent must be a %s." % (ContainerMixin)
@@ -69,6 +73,7 @@ class Add(Base):
     def redo(self):
         Base.redo(self)
         self.parent.add(self.victim, self.index)
+        context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
         Base.undo(self)
@@ -123,6 +128,8 @@ class Delete(Base):
 
 
 class Move(Base):
+    changes_selection = True
+
     def __init__(self, victim, new_parent, new_index=-1):
         if victim.get_fixed():
             raise PrimitiveError, "MOVE: The victim is fixed."
@@ -142,10 +149,12 @@ class Move(Base):
             self.old_parent = self.victim.parent
             self.old_index = self.victim.get_index()
         self.victim.move(self.new_parent, self.new_index)
+        context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
         Base.undo(self)
         self.victim.move(self.old_parent, self.old_index)
+        context.application.main.toggle_selection(self.victim, on=True)
 
 
 class SetPublishedProperty(Base):
