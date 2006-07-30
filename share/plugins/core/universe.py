@@ -271,8 +271,9 @@ class Universe(GLPeriodicContainer, FrameAxes):
     #
 
     def update_clip_planes(self):
-        self.unset_clip_planes()
-        self.set_clip_planes()
+        if self.gl_active > 0:
+            self.unset_clip_planes()
+            self.set_clip_planes()
 
     def set_clip_planes(self):
         if not self.clipping:
