@@ -333,7 +333,8 @@ class PickSelection(Interactive):
     def button_press(self, drawing_area, event):
         self.beginx = event.x
         self.beginy = event.y
-        self.rect = False
+        self.endx = event.x
+        self.endy = event.y
         if event.button == 3:
             context.application.menu.popup(event.button, event.time)
             self.finish()
@@ -342,7 +343,6 @@ class PickSelection(Interactive):
         if startbutton != 3:
             self.endx = event.x
             self.endy = event.y
-            self.rect = True
             left, top = drawing_area.to_reduced(self.beginx, self.beginy)
             right, bottom = drawing_area.to_reduced(event.x, event.y)
             drawing_area.tool_rectangle(left, top, right, bottom)
@@ -352,7 +352,7 @@ class PickSelection(Interactive):
         main = context.application.main
         if (event.button == 1):
             main.tree_selection.unselect_all()
-        if self.rect:
+        if abs(self.beginx - self.endx) > 1 or abs(self.beginy < self.endy) > 1:
             if self.beginx < self.endx:
                 left = self.beginx
                 right = self.endx
