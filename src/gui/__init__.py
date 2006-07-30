@@ -30,7 +30,7 @@ class GUIError(Exception):
 
 def load_image(filename, size=None):
     for directory in context.share_dirs:
-        filepath = os.path.join(directory, "images", filename)
+        filepath = os.path.join(directory, filename)
         if os.path.isfile(filepath):
             if size is None:
                 return gtk.gdk.pixbuf_new_from_file(filepath)

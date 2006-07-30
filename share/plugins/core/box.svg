@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg548"
+   sodipodi:version="0.32"
+   width="18"
+   height="18"
+   sodipodi:docbase="/home/toon/unief/doctoraat/code/work/zeobuilder/share/images"
+   sodipodi:docname="box.svg"
+   inkscape:version="0.43+0.44pre1"
+   version="1.0">
+  <metadata
+     id="metadata31">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs550">
+    <linearGradient
+       id="linearGradient593">
+      <stop
+         style="stop-color:#4c4c4c;stop-opacity:1;"
+         offset="0.000000"
+         id="stop594" />
+      <stop
+         style="stop-color:#dadada;stop-opacity:1;"
+         offset="1.000000"
+         id="stop595" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient590">
+      <stop
+         style="stop-color:#4c4c4c;stop-opacity:1;"
+         offset="0.000000"
+         id="stop591" />
+      <stop
+         style="stop-color:#dadada;stop-opacity:1;"
+         offset="1.000000"
+         id="stop592" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient587">
+      <stop
+         style="stop-color:#4c4c4c;stop-opacity:1;"
+         offset="0.000000"
+         id="stop588" />
+      <stop
+         style="stop-color:#dadada;stop-opacity:1;"
+         offset="1.000000"
+         id="stop589" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient575">
+      <stop
+         style="stop-color:#00007f;stop-opacity:1;"
+         offset="0.000000"
+         id="stop576" />
+      <stop
+         style="stop-color:#0000ff;stop-opacity:1;"
+         offset="1.000000"
+         id="stop577" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient572">
+      <stop
+         style="stop-color:#7f0000;stop-opacity:1;"
+         offset="0.000000"
+         id="stop573" />
+      <stop
+         style="stop-color:#ff0000;stop-opacity:1;"
+         offset="1.000000"
+         id="stop574" />
+    </linearGradient>
+    <linearGradient
+       id="linearGradient566">
+      <stop
+         style="stop-color:#007f00;stop-opacity:1;"
+         offset="0.000000"
+         id="stop567" />
+      <stop
+         style="stop-color:#00ff00;stop-opacity:1;"
+         offset="1.000000"
+         id="stop568" />
+    </linearGradient>
+    <linearGradient
+       xlink:href="#linearGradient587"
+       id="linearGradient569"
+       x1="68.635692"
+       y1="46.43628"
+       x2="116.4"
+       y2="-3.1937804"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       gradientTransform="matrix(0.158349,0,0,0.395901,0.145503,0.145504)" />
+    <radialGradient
+       xlink:href="#linearGradient566"
+       id="radialGradient570"
+       cx="0.50000006"
+       cy="0.5000003"
+       fx="0.50000006"
+       fy="0.5000003"
+       r="0.5"
+       gradientUnits="objectBoundingBox"
+       gradientTransform="scale(0.999991,1.000009)"
+       spreadMethod="pad" />
+    <linearGradient
+       xlink:href="#linearGradient590"
+       id="linearGradient571"
+       x1="47.071923"
+       y1="-3.7507103"
+       x2="-2.9639846"
+       y2="46.667162"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       gradientTransform="matrix(0.395901,0,0,0.158349,0.134858,-0.369056)" />
+    <linearGradient
+       xlink:href="#linearGradient593"
+       id="linearGradient578"
+       x1="-2.0743512"
+       y1="18.354977"
+       x2="52.511185"
+       y2="71.999375"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       gradientTransform="matrix(0.250381,0,0,0.250381,0.145503,0.145504)" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     showgrid="true"
+     snaptogrid="true"
+     gridspacingx="1px"
+     gridspacingy="1px"
+     gridtolerance="10000"
+     width="18px"
+     height="18px"
+     grid_units="px"
+     gridoriginx="0.5px"
+     gridoriginy="0.5px"
+     inkscape:grid-points="true"
+     inkscape:grid-bbox="true"
+     inkscape:zoom="18.450667"
+     inkscape:cx="8.7929734"
+     inkscape:cy="8.6188551"
+     inkscape:window-width="906"
+     inkscape:window-height="613"
+     inkscape:window-x="0"
+     inkscape:window-y="49"
+     inkscape:current-layer="svg548" />
+  <rect
+     style="font-size:12px;fill:url(#linearGradient578);fill-rule:evenodd;stroke:black;stroke-width:1.00000036;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     id="rect571"
+     width="12"
+     height="12"
+     x="0.5"
+     y="5.5" />
+  <path
+     style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.00000036;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 0.59973574,5.4259798 C 0.61866201,5.4259798 0.63758827,5.4259798 0.65651453,5.4259798"
+     id="path582" />
+  <path
+     style="fill:url(#linearGradient571);fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.00000036;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 0.5,5.5 L 5.5,0.5 L 17.5,0.5 L 12.5,5.5 L 0.5,5.5 z "
+     id="path583"
+     sodipodi:nodetypes="ccccc" />
+  <path
+     style="fill:url(#linearGradient569);fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.00000036;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 12.5,5.5 L 17.5,0.5 L 17.5,12.5 L 12.5,17.5 L 12.5,5.5 z "
+     id="path585"
+     sodipodi:nodetypes="ccccc" />
+</svg>

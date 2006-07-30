@@ -342,7 +342,7 @@ class MeasurementsWindow(GladeWrapper):
 
 class Measure(Interactive):
     description = "Measure distances and angles"
-    interactive_info = InteractiveInfo("measure.svg", mouse=True)
+    interactive_info = InteractiveInfo("plugins/core/measure.svg", mouse=True)
 
     measurements = MeasurementsWindow()
 
@@ -385,7 +385,7 @@ actions = {
 
 interactive_groups = {
     "measure": InteractiveGroup(
-        image_name="measure.svg",
+        image_name="plugins/core/measure.svg",
         description="Measurement tool",
         order=4
     )

@@ -20,11 +20,10 @@
 # --
 
 
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
 from zeobuilder.nodes.model_object import ModelObject
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.gui import load_image
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
@@ -32,7 +31,7 @@ import StringIO
 
 
 class Notes(ModelObject):
-    icon = load_image("notes.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/notes.svg")
 
     #
     # Properties
@@ -60,7 +59,7 @@ class Notes(ModelObject):
 
 class AddNotes(AddBase):
     description = "Add notes"
-    menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Notes", image_name="notes.svg", order=(0, 4, 1, 0, 1, 1))
+    menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Notes", image_name="plugins/core/notes.svg", order=(0, 4, 1, 0, 1, 1))
 
     def analyze_selection():
         return AddBase.analyze_selection(Notes)

@@ -47,7 +47,7 @@ class AboutDialog(BaseDialog):
     def __init__(self):
         BaseDialog.__init__(self, "di_about")
         BaseDialog.init_proxies(self, ["im_logo"])
-        self.im_logo.set_from_pixbuf(load_image("zeobuilder.svg", (64, 64)))
+        self.im_logo.set_from_pixbuf(load_image("zeobuilder.svg", (72, 72)))
 
     def response_loop(self):
         response = BaseDialog.response_loop(self)

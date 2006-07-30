@@ -21,14 +21,13 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
 from zeobuilder.nodes.parent_mixin import ParentMixin
 from zeobuilder.nodes.elementary import ReferentBase
 from zeobuilder.nodes.reference import Reference
 from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, Interactive, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
-from zeobuilder.gui import load_image
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
@@ -217,7 +216,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
 
 
 class SavedSelection(ReferentBase):
-    icon = load_image("saved_selection.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/saved_selection.svg")
 
     def create_references(self):
         return []
@@ -241,7 +240,7 @@ class SavedSelection(ReferentBase):
 
 class SaveSelection(Immediate):
     description = "Save selection"
-    menu_info = MenuInfo("default/_Select:saved", "_Save selection", image_name="saved_selection.svg", order=(0, 3, 1, 0))
+    menu_info = MenuInfo("default/_Select:saved", "_Save selection", image_name="plugins/core/saved_selection.svg", order=(0, 3, 1, 0))
 
     def analyze_selection():
         # A) calling ancestor
@@ -328,7 +327,7 @@ class EditSelectionFilter(Immediate):
 
 class PickSelection(Interactive):
     description = "Pick a selection"
-    interactive_info = InteractiveInfo("selection_picker.svg", mouse=True)
+    interactive_info = InteractiveInfo("plugins/core/selection_picker.svg", mouse=True)
 
     def button_press(self, drawing_area, event):
         self.beginx = event.x
@@ -398,7 +397,7 @@ actions = {
 
 interactive_groups = {
     "selection": InteractiveGroup(
-        image_name="selection_picker.svg",
+        image_name="plugins/core/selection_picker.svg",
         description="Selection Picker",
         initial_mask=0,
         order=0

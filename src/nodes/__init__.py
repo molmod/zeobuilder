@@ -21,6 +21,7 @@
 
 
 from zeobuilder import context
+from zeobuilder.gui import load_image
 
 import gtk
 
@@ -33,9 +34,10 @@ def init_nodes(nodes):
     dialog_fields = []
 
     for node in nodes.itervalues():
+        node.icon = load_image(node.info.icon_name, (18, 18))
         node.reference_icon = node.icon.copy()
         Reference.overlay_icon.composite(
-            node.reference_icon, 0, 0, 20, 20, 0, 0, 1.0, 1.0,
+            node.reference_icon, 0, 0, 18, 18, 0, 0, 1.0, 1.0,
             gtk.gdk.INTERP_BILINEAR, 255
         )
         dialog_fields.extend(node.dialog_fields)

@@ -28,7 +28,6 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.analysis import common_parent
-from zeobuilder.gui import load_image
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.transformations import Translation
@@ -167,7 +166,7 @@ class SketchOptions(GladeWrapper):
 
 class Sketch(Interactive):
     description = "Sketch objects and connectors"
-    interactive_info = InteractiveInfo("geom_sketch.svg", mouse=True)
+    interactive_info = InteractiveInfo("plugins/core/geom_sketch.svg", mouse=True)
 
     options = SketchOptions()
 
@@ -297,7 +296,7 @@ class SketchInteractiveGroup(InteractiveGroup):
 
 interactive_groups = {
     "geom_sketch": SketchInteractiveGroup(
-        image_name="geom_sketch.svg",
+        image_name="plugins/core/geom_sketch.svg",
         description="Geometric sketch tool",
         order=5
     )

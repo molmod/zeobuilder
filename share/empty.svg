@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
-"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
 <svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg548"
    sodipodi:version="0.32"
-   width="20mm"
-   height="20mm"
-   sodipodi:docbase="/home/toon/unief/doctoraat/code/zeobuilder/scalable"
-   sodipodi:docname="/home/toon/unief/doctoraat/code/zeobuilder/scalable/empty"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink">
+   width="18"
+   height="18"
+   sodipodi:docbase="/home/toon/unief/doctoraat/code/work/zeobuilder/share/images"
+   sodipodi:docname="empty.svg"
+   inkscape:version="0.43+0.44pre1"
+   version="1.0">
+  <metadata
+     id="metadata18">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <defs
      id="defs550">
     <linearGradient
@@ -50,10 +66,10 @@
     <linearGradient
        xlink:href="#linearGradient566"
        id="linearGradient569"
-       x1="0.00000009"
-       y1="0.00000029"
-       x2="1.00000000"
-       y2="0.00000029"
+       x1="9e-08"
+       y1="2.9e-07"
+       x2="1"
+       y2="2.9e-07"
        gradientUnits="objectBoundingBox"
        gradientTransform="scale(0.999991,1.000009)"
        spreadMethod="pad" />
@@ -61,20 +77,20 @@
        xlink:href="#linearGradient566"
        id="radialGradient570"
        cx="0.50000006"
-       cy="0.50000030"
+       cy="0.5000003"
        fx="0.50000006"
-       fy="0.50000030"
-       r="0.50000000"
+       fy="0.5000003"
+       r="0.5"
        gradientUnits="objectBoundingBox"
        gradientTransform="scale(0.999991,1.000009)"
        spreadMethod="pad" />
     <linearGradient
        xlink:href="#linearGradient572"
        id="linearGradient571"
-       x1="-0.00001579"
-       y1="-0.00000030"
+       x1="-1.5789999e-05"
+       y1="-3.0000001e-07"
        x2="0.99998409"
-       y2="-0.00000030"
+       y2="-3.0000001e-07"
        gradientUnits="objectBoundingBox"
        gradientTransform="translate(-1.038867e-6,-4.822152e-8)"
        spreadMethod="pad" />
@@ -92,6 +108,22 @@
      id="base"
      showgrid="true"
      snaptogrid="true"
-     gridspacingx="0.5mm"
-     gridspacingy="0.5mm" />
+     gridspacingx="1px"
+     gridspacingy="1px"
+     width="18px"
+     height="18px"
+     gridoriginx="0.5px"
+     gridoriginy="0.5px"
+     gridempspacing="6"
+     inkscape:grid-points="true"
+     gridtolerance="10000"
+     grid_units="px"
+     inkscape:zoom="22.666667"
+     inkscape:cx="9"
+     inkscape:cy="9"
+     inkscape:window-width="906"
+     inkscape:window-height="613"
+     inkscape:window-x="5"
+     inkscape:window-y="73"
+     inkscape:current-layer="svg548" />
 </svg>

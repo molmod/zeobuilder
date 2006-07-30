@@ -21,16 +21,16 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.elementary import GLFrameBase
-from zeobuilder.nodes.helpers import FrameAxes
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.gui import load_image
+from zeobuilder.nodes.meta import ModelObjectInfo
+from zeobuilder.nodes.elementary import GLFrameBase
+from zeobuilder.nodes.helpers import FrameAxes
 from zeobuilder.transformations import Complete
 
 
 class Frame(GLFrameBase, FrameAxes):
-    icon = load_image("frame.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/frame.svg")
 
     def initnonstate(self):
         GLFrameBase.initnonstate(self, Complete)
@@ -79,7 +79,7 @@ class Frame(GLFrameBase, FrameAxes):
 
 class AddFrame(AddBase):
     description = "Add frame"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Frame", image_name="frame.svg", order=(0, 4, 1, 0, 0, 3))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Frame", image_name="plugins/core/frame.svg", order=(0, 4, 1, 0, 0, 3))
 
     def analyze_selection():
         return AddBase.analyze_selection(Frame)

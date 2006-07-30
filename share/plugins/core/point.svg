@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
-"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
 <svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg548"
    sodipodi:version="0.32"
-   width="20mm"
-   height="20mm"
-   sodipodi:docbase="/home/toon/unief/doctoraat/code/zeobuilder/scalable/"
-   sodipodi:docname="/home/toon/unief/doctoraat/code/zeobuilder/scalable/point.svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink">
+   width="18"
+   height="18"
+   sodipodi:docbase="/home/toon/unief/doctoraat/code/work/zeobuilder/share/images"
+   sodipodi:docname="point.svg"
+   inkscape:version="0.43+0.44pre1"
+   version="1.0">
+  <metadata
+     id="metadata20">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <defs
      id="defs550">
     <linearGradient
@@ -50,30 +66,31 @@
     <linearGradient
        xlink:href="#linearGradient566"
        id="linearGradient569"
-       x1="0.00000009"
-       y1="0.00000029"
-       x2="1.00000000"
-       y2="0.00000029"
+       x1="9e-08"
+       y1="2.9e-07"
+       x2="1"
+       y2="2.9e-07"
        gradientUnits="objectBoundingBox"
        gradientTransform="scale(0.999991,1.000009)"
        spreadMethod="pad" />
     <radialGradient
        xlink:href="#linearGradient575"
        id="radialGradient570"
-       cx="0.35384616"
-       cy="0.39843750"
-       fx="0.35384616"
-       fy="0.39843750"
-       r="0.58039039"
-       gradientUnits="objectBoundingBox"
-       spreadMethod="pad" />
+       cx="24.520048"
+       cy="27.8496"
+       fx="24.520048"
+       fy="27.8496"
+       r="43.336657"
+       gradientUnits="userSpaceOnUse"
+       spreadMethod="pad"
+       gradientTransform="matrix(0.291005,0,0,0.282699,-1.050818,-1.013066)" />
     <linearGradient
        xlink:href="#linearGradient572"
        id="linearGradient571"
-       x1="-0.00001579"
-       y1="-0.00000030"
+       x1="-1.5789999e-05"
+       y1="-3.0000001e-07"
        x2="0.99998409"
-       y2="-0.00000030"
+       y2="-3.0000001e-07"
        gradientUnits="objectBoundingBox"
        gradientTransform="translate(-1.038867e-6,-4.822152e-8)"
        spreadMethod="pad" />
@@ -94,11 +111,28 @@
      id="base"
      showgrid="true"
      snaptogrid="true"
-     gridspacingx="0.5mm"
-     gridspacingy="0.5mm" />
+     gridspacingx="0.5px"
+     gridspacingy="0.5px"
+     width="18px"
+     height="18px"
+     grid_units="px"
+     gridoriginx="0.5px"
+     gridoriginy="0.5px"
+     gridempspacing="6"
+     inkscape:grid-bbox="false"
+     gridtolerance="10000"
+     inkscape:grid-points="true"
+     inkscape:zoom="25.474481"
+     inkscape:cx="9.2607029"
+     inkscape:cy="8.8373565"
+     inkscape:window-width="906"
+     inkscape:window-height="693"
+     inkscape:window-x="0"
+     inkscape:window-y="49"
+     inkscape:current-layer="svg548" />
   <path
-     style="fill:url(#radialGradient570);fill-rule:evenodd;stroke:#000000;stroke-opacity:1;stroke-width:2.83465;stroke-linejoin:round;stroke-linecap:round;fill-opacity:1;stroke-dasharray:none;"
-     d="M 5.31496 5.31496 L 35.4331 24.8031 L 65.5512 5.31496 L 46.063 35.4331 L 63.7795 65.5512 L 35.4331 46.063 L 5.31496 65.5512 L 24.8032 35.4331 L 5.31496 5.31496 z "
+     style="fill:url(#radialGradient570);fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.00000012;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 0.49585979,0.48946882 L 9.2603776,5.9987491 L 17.5,0.5 L 12.353727,9.0038413 L 17.50931,17.518201 L 9.2603776,12.008904 L 0.49585979,17.518201 L 6.1670273,9.0038413 L 0.49585979,0.48946882 z "
      id="path755"
      sodipodi:nodetypes="ccccccccc" />
 </svg>

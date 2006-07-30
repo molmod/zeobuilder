@@ -24,10 +24,9 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.abstract import ConnectBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.nodes.vector import Vector
-from zeobuilder.gui import load_image
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Complete
 import zeobuilder.gui.fields as fields
@@ -38,7 +37,7 @@ import math, numpy
 
 
 class Arrow(Vector, ColorMixin):
-    icon = load_image("arrow.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/arrow.svg")
 
     #
     # Properties
@@ -202,7 +201,7 @@ class Arrow(Vector, ColorMixin):
 
 class ConnectArrow(ConnectBase):
     description = "Connect with arrow"
-    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Arrow", image_name="arrow.svg")
+    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Arrow", image_name="plugins/core/arrow.svg")
 
     def new_connector(self, begin, end):
         return Arrow(targets=[begin, end])

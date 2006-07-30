@@ -517,7 +517,7 @@ class RotateObjectBase(InteractiveWithMemory):
 
 class RotateObjectMouse(RotateObjectBase, RotateMouseMixin):
     description = "Rotate object"
-    interactive_info = InteractiveInfo("rotate.svg", mouse=True, order=0)
+    interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=0)
 
     def button_motion(self, drawing_area, event, start_button):
         self.apply_rotation(RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
@@ -526,7 +526,7 @@ class RotateObjectMouse(RotateObjectBase, RotateMouseMixin):
 
 class RotateObjectKeyboard(RotateObjectBase, RotateKeyboardMixin):
     description = "Rotate object"
-    interactive_info = InteractiveInfo("rotate.svg", keyboard=True, order=0)
+    interactive_info = InteractiveInfo("plugins/core/rotate.svg", keyboard=True, order=0)
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -556,7 +556,7 @@ class RotateWorldBase(Interactive):
 
 class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
     description = "Rotate world"
-    interactive_info = InteractiveInfo("rotate.svg", mouse=True, order=1)
+    interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=1)
 
     def button_motion(self, drawing_area, event, start_button):
         drawing_area.scene.rotation.apply_before(RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
@@ -565,7 +565,7 @@ class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
 
 class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
     description = "Rotate world"
-    interactive_info = InteractiveInfo("rotate.svg", keyboard=True, order=1)
+    interactive_info = InteractiveInfo("plugins/core/rotate.svg", keyboard=True, order=1)
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -680,7 +680,7 @@ class TranslateObjectBase(InteractiveWithMemory):
 
 class TranslateObjectMouse(TranslateObjectBase, TranslateMouseMixin):
     description = "Translate the selected object"
-    interactive_info = InteractiveInfo("translate.svg", mouse=True, order=0)
+    interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=0)
 
     def button_motion(self, drawing_area, event, start_button):
         self.victim.transformation.translation_vector += TranslateMouseMixin.button_motion(self, drawing_area, event, start_button)
@@ -692,7 +692,7 @@ class TranslateObjectMouse(TranslateObjectBase, TranslateMouseMixin):
 
 class TranslateObjectKeyboard(TranslateObjectBase, TranslateKeyboardMixin):
     description = "Translate the selected object"
-    interactive_info = InteractiveInfo("translate.svg", keyboard=True, order=0)
+    interactive_info = InteractiveInfo("plugins/core/translate.svg", keyboard=True, order=0)
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -723,7 +723,7 @@ class TranslateWorldBase(Interactive):
 
 class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
     description = "Translate world"
-    interactive_info = InteractiveInfo("translate.svg", mouse=True, order=1)
+    interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=1)
 
     def button_motion(self, drawing_area, event, start_button):
         drawing_area.scene.center.translation_vector -= TranslateMouseMixin.button_motion(self, drawing_area, event, start_button)
@@ -732,7 +732,7 @@ class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
 
 class TranslateWorldKeyboard(TranslateWorldBase, TranslateKeyboardMixin):
     description = "Translate world"
-    interactive_info = InteractiveInfo("translate.svg", keyboard=True, order=1)
+    interactive_info = InteractiveInfo("plugins/core/translate.svg", keyboard=True, order=1)
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -761,7 +761,7 @@ class TranslateViewerBase(Interactive):
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
     description = "Translate the viewer position"
-    interactive_info = InteractiveInfo("translate_viewer.svg", mouse=True, order=0)
+    interactive_info = InteractiveInfo("plugins/core/translate_viewer.svg", mouse=True, order=0)
 
     def button_motion(self, drawing_area, event, start_button):
         scene = drawing_area.scene
@@ -775,7 +775,7 @@ class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
 
 class TranslateViewerKeyboard(TranslateViewerBase, TranslateKeyboardMixin):
     description = "Translate the viewer position"
-    interactive_info = InteractiveInfo("translate_viewer.svg", keyboard=True, order=0)
+    interactive_info = InteractiveInfo("plugins/core/translate_viewer.svg", keyboard=True, order=0)
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -805,19 +805,19 @@ actions = {
 
 interactive_groups = {
     "rotation": InteractiveGroup(
-        image_name="rotate.svg",
+        image_name="plugins/core/rotate.svg",
         description="Rotation tool",
         initial_mask=gtk.gdk.CONTROL_MASK,
         order=1
     ),
     "translation": InteractiveGroup(
-        image_name="translate.svg",
+        image_name="plugins/core/translate.svg",
         description="Translation tool",
         initial_mask=gtk.gdk.SHIFT_MASK,
         order=2
     ),
     "viewer_translation": InteractiveGroup(
-        image_name="translate_viewer.svg",
+        image_name="plugins/core/translate_viewer.svg",
         description="Viewer Translation tool",
         initial_mask=(gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
         order=3

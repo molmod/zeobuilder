@@ -44,9 +44,17 @@ setup(
     url='http://molmod.ugent.be/zeobuilder/',
     package_dir = {'zeobuilder': 'src'},
     data_files=[
-        ('share/zeobuilder/%s/images' % version, glob.glob('share/images/*.svg')),
-        ('share/zeobuilder/%s/plugins/core' % version, glob.glob('share/plugins/core/*.py')),
-        ('share/zeobuilder/%s/' % version, ['share/zeobuilder.glade'])
+        ('share/zeobuilder/%s/' % version, [
+            "share/zeobuilder.glade", "share/zeobuilder.svg",
+            "share/no_action.svg", "share/reference.svg"
+        ]),
+    ] + [
+        ('share/zeobuilder/%s/plugins/%s' % (version, plugin), 
+            glob.glob('share/plugins/%s/*.py' % plugin) + 
+            glob.glob('share/plugins/%s/*.svg' % plugin) + 
+            glob.glob('share/plugins/%s/*.glade' % plugin)
+        ) for plugin
+        in ["core", "molecular"]
     ],
     packages=[
         'zeobuilder',

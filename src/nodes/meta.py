@@ -95,3 +95,8 @@ class PublishedProperties(dict):
             for name, published_property
             in self.iteritems()
         )
+
+
+class ModelObjectInfo(object):
+    def __init__(self, icon_name):
+        self.icon_name = icon_name

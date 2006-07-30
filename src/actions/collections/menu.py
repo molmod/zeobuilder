@@ -150,7 +150,7 @@ class Place(MenuActionContainer):
                         else:
                             menu_item = gtk.ImageMenuItem(name)
                             menu_item.get_image().set_from_pixbuf(
-                                load_image(item.menu_info.image_name, (20, 20))
+                                load_image(item.menu_info.image_name, (18, 18))
                             )
                     else:
                         menu_item = gtk.MenuItem(name)

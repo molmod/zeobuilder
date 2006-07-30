@@ -21,12 +21,11 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import PublishedProperties, Property
-from zeobuilder.nodes.elementary import GLGeometricBase
-from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.gui import load_image
+from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
+from zeobuilder.nodes.elementary import GLGeometricBase
+from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Complete
 import zeobuilder.gui.fields as fields
@@ -36,7 +35,7 @@ import copy, numpy
 
 
 class Box(GLGeometricBase, ColorMixin):
-    icon = load_image("box.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/box.svg")
 
     def initnonstate(self):
         GLGeometricBase.initnonstate(self, Complete)
@@ -132,7 +131,7 @@ class Box(GLGeometricBase, ColorMixin):
 
 class AddBox(AddBase):
     description = "Add box"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Box", image_name="box.svg", order=(0, 4, 1, 0, 0, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Box", image_name="plugins/core/box.svg", order=(0, 4, 1, 0, 0, 0))
 
     def analyze_selection():
         return AddBase.analyze_selection(Box)

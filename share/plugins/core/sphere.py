@@ -21,12 +21,11 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.gui import load_image
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Translation
 import zeobuilder.gui.fields as fields
@@ -37,7 +36,7 @@ import numpy
 
 
 class Sphere(GLGeometricBase, ColorMixin):
-    icon = load_image("sphere.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/sphere.svg")
 
     def initnonstate(self):
         GLGeometricBase.initnonstate(self, Translation)
@@ -105,7 +104,7 @@ class Sphere(GLGeometricBase, ColorMixin):
 
 class AddSphere(AddBase):
     description = "Add sphere"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Sphere", image_name="sphere.svg", order=(0, 4, 1, 0, 0, 1))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Sphere", image_name="plugins/core/sphere.svg", order=(0, 4, 1, 0, 0, 1))
 
     def analyze_selection():
         return AddBase.analyze_selection(Sphere)

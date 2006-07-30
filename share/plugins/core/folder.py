@@ -21,20 +21,19 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import PublishedProperties, Property
-from zeobuilder.nodes.elementary import ContainerBase
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.gui import load_image
+from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
+from zeobuilder.nodes.elementary import ContainerBase
 
 
 class Folder(ContainerBase):
-    icon = load_image("folder.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/folder.svg")
 
 
 class AddFolder(AddBase):
     description = "Add folder"
-    menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Folder", image_name="folder.svg", order=(0, 4, 1, 0, 1, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Folder", image_name="plugins/core/folder.svg", order=(0, 4, 1, 0, 1, 0))
 
     def analyze_selection():
         return AddBase.analyze_selection(Folder)

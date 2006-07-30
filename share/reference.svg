@@ -1,17 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
-"http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
 <!-- Created with Sodipodi ("http://www.sodipodi.com/") -->
 <svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    id="svg548"
    sodipodi:version="0.32"
-   width="20mm"
-   height="20mm"
-   sodipodi:docbase="/home/toon/unief/doctoraat/code/zeobuilder/scalable/"
-   sodipodi:docname="/home/toon/unief/doctoraat/code/zeobuilder/scalable/reference.svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink">
+   width="18"
+   height="18"
+   sodipodi:docbase="/home/toon/unief/doctoraat/code/work/zeobuilder/share/images"
+   sodipodi:docname="reference.svg"
+   inkscape:version="0.43+0.44pre1"
+   version="1.0">
+  <metadata
+     id="metadata20">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
   <defs
      id="defs550">
     <linearGradient
@@ -54,10 +70,10 @@
        xlink:href="#linearGradient566"
        id="radialGradient570"
        cx="0.50000006"
-       cy="0.50000030"
+       cy="0.5000003"
        fx="0.50000006"
-       fy="0.50000030"
-       r="0.50000000"
+       fy="0.5000003"
+       r="0.5"
        gradientUnits="objectBoundingBox"
        gradientTransform="scale(0.999991,1.000009)"
        spreadMethod="pad" />
@@ -65,9 +81,9 @@
        xlink:href="#linearGradient572"
        id="linearGradient571"
        x1="0.38461539"
-       y1="0.42968750"
+       y1="0.4296875"
        x2="0.55384618"
-       y2="0.60156250"
+       y2="0.6015625"
        gradientUnits="objectBoundingBox"
        spreadMethod="pad" />
     <linearGradient
@@ -84,23 +100,37 @@
      id="base"
      showgrid="true"
      snaptogrid="true"
-     gridspacingx="1mm"
-     gridspacingy="1mm"
-     gridoriginx="0.5mm"
-     gridoriginy="0.5mm" />
+     gridspacingx="0.5px"
+     gridspacingy="0.5px"
+     gridoriginx="0.5px"
+     gridoriginy="0.5px"
+     width="18px"
+     height="18px"
+     grid_units="px"
+     gridempspacing="6"
+     inkscape:grid-bbox="true"
+     gridtolerance="10000"
+     inkscape:grid-points="true"
+     inkscape:zoom="19.526955"
+     inkscape:cx="9.14121"
+     inkscape:cy="8.5061904"
+     inkscape:window-width="1280"
+     inkscape:window-height="725"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:current-layer="svg548" />
   <rect
-     style="font-size:12;fill:#ffffff;fill-rule:evenodd;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;"
+     style="font-size:12px;fill:white;fill-rule:evenodd;stroke:black;stroke-width:1.00000024;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect925"
-     width="31.889759"
-     height="31.889759"
-     x="37.204727"
-     y="1.771659"
-     ry="1.78013058"
-     rx="0.00000000" />
+     width="7"
+     height="7"
+     x="8.5"
+     y="0.49999988"
+     ry="0"
+     rx="0" />
   <path
-     style="fill:#000000;fill-rule:evenodd;stroke:black;stroke-opacity:1;stroke-width:2.83465;stroke-linejoin:round;stroke-linecap:round;fill-opacity:1;stroke-dasharray:none;"
-     d="M 63.7795 7.08662 L 53.0083 7.0075 L 57.9814 10.8503 L 46.063 19.4882 L 51.3779 24.8032 L 60.0158 12.6587 L 63.8586 18.0839 L 63.7795 7.08662 z "
+     style="fill:black;fill-opacity:1;fill-rule:evenodd;stroke:black;stroke-width:1.00000024;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+     d="M 13.5,2.4999998 L 11.5,2.4999998 L 13,2.9999998 L 10.5,4.4999998 L 11.5,5.4999998 L 13,2.9999998 L 13.5,4.4999998 L 13.5,2.4999998 z "
      id="path926"
-     sodipodi:nodetypes="cccccccc"
-     transform="translate(-1.771663,1.771604)" />
+     sodipodi:nodetypes="cccccccc" />
 </svg>

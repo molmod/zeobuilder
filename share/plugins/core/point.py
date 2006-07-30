@@ -21,12 +21,11 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.gui import load_image
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Translation
 import zeobuilder.gui.fields as fields
@@ -36,7 +35,7 @@ import numpy
 
 
 class Point(GLGeometricBase, ColorMixin):
-    icon = load_image("point.svg", (20, 20))
+    info = ModelObjectInfo("plugins/core/point.svg")
 
     def initnonstate(self):
         GLGeometricBase.initnonstate(self, Translation)
@@ -156,7 +155,7 @@ class Point(GLGeometricBase, ColorMixin):
 
 class AddPoint(AddBase):
     description = "Add point"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Point", image_name="point.svg", order=(0, 4, 1, 0, 0, 2))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Point", image_name="plugins/core/point.svg", order=(0, 4, 1, 0, 0, 2))
 
     def analyze_selection():
         return AddBase.analyze_selection(Point)
