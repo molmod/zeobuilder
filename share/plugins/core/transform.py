@@ -756,7 +756,7 @@ class TranslateViewerBase(Interactive):
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return -scene.viewer.translation_vector[2] + scene.znear()
+        return -scene.viewer.translation_vector[2] - scene.znear()
 
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
