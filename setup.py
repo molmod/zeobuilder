@@ -49,9 +49,9 @@ setup(
             "share/no_action.svg", "share/reference.svg"
         ]),
     ] + [
-        ('share/zeobuilder/%s/plugins/%s' % (version, plugin), 
-            glob.glob('share/plugins/%s/*.py' % plugin) + 
-            glob.glob('share/plugins/%s/*.svg' % plugin) + 
+        ('share/zeobuilder/%s/plugins/%s' % (version, plugin),
+            glob.glob('share/plugins/%s/*.py' % plugin) +
+            glob.glob('share/plugins/%s/*.svg' % plugin) +
             glob.glob('share/plugins/%s/*.glade' % plugin)
         ) for plugin
         in ["core", "molecular"]
