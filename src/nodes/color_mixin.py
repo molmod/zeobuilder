@@ -25,13 +25,13 @@ from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
 from OpenGL.GL import *
-import numpy
+import numpy, gobject
 
 
 __all__ = ["ColorMixin", "UserColorMixin"]
 
 
-class ColorMixin(object):
+class ColorMixin(gobject.GObject):
 
     __metaclass__ = NodeClass
 
@@ -66,7 +66,7 @@ class ColorMixin(object):
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color)
 
 
-class UserColorMixin(object):
+class UserColorMixin(gobject.GObject):
 
     __metaclass__ = NodeClass
 
@@ -79,7 +79,7 @@ class UserColorMixin(object):
         self.invalidate_draw_list()
 
     published_properties = PublishedProperties({
-        "user_color": Property(None, lambda self: self.user_color, set_user_color)
+        "user_color": Property(None, lambda self: self.user_color, set_user_color, signal=True)
     })
 
     #

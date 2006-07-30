@@ -64,13 +64,18 @@ class Atom(GLGeometricBase, UserColorMixin):
         self.number = number
         atom_info = periodic[number]
         self.default_radius = atom_info.radius
-        self.default_color = numpy.array([atom_info.red, atom_info.green, atom_info.blue, 1.0], float)
+        color = [atom_info.red, atom_info.green, atom_info.blue, 1.0]
+        if None in color:
+            self.default_color = numpy.array([0.7, 0.7, 0.7, 1.0], float)
+        else:
+            self.default_color = numpy.array(color, float)
         self.invalidate_draw_list()
+        self.invalidate_boundingbox_list()
 
     published_properties = PublishedProperties({
-        "user_radius": Property(None, lambda self: self.user_radius, set_user_radius),
+        "user_radius": Property(None, lambda self: self.user_radius, set_user_radius, signal=True),
         "quality": Property(50, lambda self: self.quality, set_quality),
-        "number": Property(6, lambda self: self.number, set_number),
+        "number": Property(6, lambda self: self.number, set_number, signal=True),
     })
 
     #

@@ -29,7 +29,7 @@ from zeobuilder.transformations import Rotation, Translation, Complete
 import gtk, numpy
 
 
-__all__ = ["CoreActions"]
+__all__ = ["CoreActions", "MolecularActions"]
 
 
 class CoreActions(ApplicationTestCase):
@@ -138,10 +138,11 @@ class CoreActions(ApplicationTestCase):
         def fn():
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
-            context.application.main.toggle_selection(context.application.model.folder, on=True)
+            context.application.main.select_nodes([context.application.model.folder])
             AddFolder = context.application.plugins.get_action("AddFolder")
             self.assert_(AddFolder.analyze_selection())
             AddFolder()
+            context.application.main.select_nodes([context.application.model.folder])
             SelectChildren = context.application.plugins.get_action("SelectChildren")
             self.assert_(SelectChildren.analyze_selection())
             SelectChildren()
@@ -151,13 +152,15 @@ class CoreActions(ApplicationTestCase):
         def fn():
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
-            context.application.main.toggle_selection(context.application.model.folder, on=True)
+            context.application.main.select_nodes([context.application.model.folder])
             AddFolder = context.application.plugins.get_action("AddFolder")
             self.assert_(AddFolder.analyze_selection())
             AddFolder()
+            context.application.main.select_nodes([context.application.model.folder])
             AddNotes = context.application.plugins.get_action("AddNotes")
             self.assert_(AddNotes.analyze_selection())
             AddNotes()
+            context.application.main.select_nodes([context.application.model.folder])
             SelectChildrenByExpression = context.application.plugins.get_action("SelectChildrenByExpression")
             parameters = Parameters()
             parameters.recursive = SelectChildrenByExpression.SELECT_PLAIN
@@ -284,17 +287,16 @@ class CoreActions(ApplicationTestCase):
         def fn():
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
-            context.application.main.toggle_selection(context.application.model.universe, on=True)
+            context.application.main.select_nodes([context.application.model.universe])
             AddPoint = context.application.plugins.get_action("AddPoint")
             self.assert_(AddPoint.analyze_selection())
             AddPoint()
+            context.application.main.select_nodes([context.application.model.universe])
             AddPoint = context.application.plugins.get_action("AddPoint")
             self.assert_(AddPoint.analyze_selection())
             AddPoint()
+            context.application.main.select_nodes(context.application.model.universe.children)
             #context.application.model.universe.children[1].transformation.translation_vector = numpy.array([1.0, 0.0, 0.0], float)
-            context.application.main.toggle_selection(context.application.model.universe, on=False)
-            context.application.main.toggle_selection(context.application.model.universe.children[0], on=True)
-            context.application.main.toggle_selection(context.application.model.universe.children[1], on=True)
             ConnectArrow = context.application.plugins.get_action("ConnectArrow")
             self.assert_(ConnectArrow.analyze_selection())
             ConnectArrow()
@@ -401,10 +403,11 @@ class CoreActions(ApplicationTestCase):
         def fn():
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
-            context.application.main.toggle_selection(context.application.model.universe, on=True)
+            context.application.main.select_nodes([context.application.model.universe])
             AddPoint = context.application.plugins.get_action("AddPoint")
             self.assert_(AddPoint.analyze_selection())
             AddPoint()
+            context.application.main.select_nodes([context.application.model.universe])
             Repeat = context.application.plugins.get_action("Repeat")
             self.assert_(Repeat.analyze_selection())
             Repeat()
@@ -562,6 +565,72 @@ class CoreActions(ApplicationTestCase):
             AddPeriodicities()
         self.run_test_application(fn)
 
+
+class MolecularActions(ApplicationTestCase):
+    def test_add_atom(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+        self.run_test_application(fn)
+
+    def test_connect_single_bond(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes(context.application.model.universe.children)
+            ConnectSingleBond = context.application.plugins.get_action("ConnectSingleBond")
+            self.assert_(ConnectSingleBond.analyze_selection())
+            ConnectSingleBond()
+        self.run_test_application(fn)
+
+    def test_connect_double_bond(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes(context.application.model.universe.children)
+            ConnectDoubleBond = context.application.plugins.get_action("ConnectDoubleBond")
+            self.assert_(ConnectDoubleBond.analyze_selection())
+            ConnectDoubleBond()
+        self.run_test_application(fn)
+
+    def test_connect_triple_bond(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes(context.application.model.universe.children)
+            ConnectTripleBond = context.application.plugins.get_action("ConnectTripleBond")
+            self.assert_(ConnectTripleBond.analyze_selection())
+            ConnectTripleBond()
+        self.run_test_application(fn)
+
     #def test_connect_bonds_automatically_precursor(self):
     #    from zeobuilder.actions.composed.connect.automated import ConnectAtomsAutomaticallyPhysical
     #    self.load_file("precursor_atoms.zml")
@@ -576,6 +645,8 @@ class CoreActions(ApplicationTestCase):
     #    self.assert_(ConnectAtomsAutomaticallyPhysical.analyse_nodes())
     #    ConnectAtomsAutomaticallyPhysical()
 
+
+#class ZeoliteActions(ApplicationTestCase):
     #def test_connect_merge_overlapping_atoms_mfi(self):
     #    from zeobuilder.actions.composed.atomic import MergeOverlappingAtoms
     #    self.load_file("mfi_atoms.zml")
