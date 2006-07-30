@@ -34,9 +34,10 @@ class NodeClass(gobject.GObjectMeta):
             cls.published_properties = PublishedProperties()
         for pname, published_property in cls.published_properties.iteritems():
             if published_property.signal:
-                signal_name = "on-%s-changed" % pname
+                signal_name = ("on-%s-changed" % pname).replace("_", "-")
                 published_property.signal_name = signal_name
-                gobject.signal_new(signal_name, cls, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+                if gobject.signal_lookup(signal_name, cls) == 0:
+                    gobject.signal_new(signal_name, cls, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
         # inherit all the properties from the base classes
         for base in bases:
             if hasattr(base, "published_properties"):
