@@ -131,18 +131,13 @@ class MeasurementsWindow(GladeWrapper):
             in self.vectors
         ]
 
-        if len(self.model_objects) > 0:
-            self.update_widgets()
-            context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
-        else:
-            self.clear()
+        self.update_widgets()
 
     def clear(self):
         self.model_objects = []
         self.points = []
         self.vectors = []
         self.update_widgets()
-        context.application.main.drawing_area.tool_clear()
 
     def add_object(self, model_object):
         drawing_area = context.application.main.drawing_area
@@ -170,15 +165,21 @@ class MeasurementsWindow(GladeWrapper):
         self.vectors.append(vector)
         self.points.append(point)
 
-        context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
         self.update_widgets()
 
     def reverse(self):
-        self.model_objects.reverse()
-        self.vectors.reverse()
-        self.points.reverse()
-        context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
-        self.update_widgets()
+        if len(self.model_objects) > 0:
+            self.model_objects.reverse()
+            self.vectors.reverse()
+            self.points.reverse()
+            self.update_widgets()
+
+    def remove_last_object(self):
+        if len(self.model_objects) > 0:
+            self.model_objects.pop()
+            self.vectors.pop()
+            self.points.pop()
+            self.update_widgets()
 
     def draw_tool_chain(self):
         font_scale = 0.00015
@@ -284,6 +285,11 @@ class MeasurementsWindow(GladeWrapper):
             return express_measure(abs(numpy.dot(delta3, normal)), measure=LENGTH)
 
         chain_len = len(self.model_objects)
+        if chain_len > 0:
+            context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
+        else:
+            context.application.main.drawing_area.tool_clear()
+
         if chain_len > 1:
             self.window.show()
 
@@ -361,7 +367,16 @@ class Measure(Interactive):
                 self.measurements.add_object(last)
                 self.finish()
                 return
+        elif event.button == 2:
+            self.measurements.reverse()
+            self.finish()
+            return
+        elif event.button == 3:
+            self.measurements.remove_last_object()
+            self.finish()
+            return
         self.measurements.clear()
+        self.finish()
 
 
 actions = {
