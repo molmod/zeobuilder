@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Interactive as Interactiveaction
+from zeobuilder.actions.composed import Interactive as InteractiveAction
 from zeobuilder.gui import load_image
 
 import gtk.gdk, copy
@@ -208,7 +208,7 @@ class InteractiveBar(gtk.Table):
     def button_press(self, drawing_area, event):
         current_action = context.application.action_manager.current_action
         if current_action is not None:
-            if isinstance(current_action, Interactiveaction):
+            if isinstance(current_action, InteractiveAction):
                 # a button_release did'nt happen for some reason
                 current_action.finish()
             else:
@@ -225,14 +225,14 @@ class InteractiveBar(gtk.Table):
     def button_motion(self, drawing_area, event):
         current_action = context.application.action_manager.current_action
         if (current_action is not None) and \
-           isinstance(current_action, Interactiveaction) and \
+           isinstance(current_action, InteractiveAction) and \
            hasattr(current_action, "button_motion"):
             current_action.button_motion(drawing_area, event, self.start_button)
 
     def button_release(self, drawing_area, event):
         current_action = context.application.action_manager.current_action
         if current_action is not None and \
-           isinstance(current_action, Interactiveaction) and \
+           isinstance(current_action, InteractiveAction) and \
            hasattr(current_action, "button_release"):
             current_action.button_release(drawing_area, event)
         self.start_button = 0
@@ -241,7 +241,7 @@ class InteractiveBar(gtk.Table):
         if event.keyval in [65406, 65505, 65506, 65507, 65508, 65513, 65515]: return False
         current_action = context.application.action_manager.current_action
         if current_action is not None:
-            if not isinstance(current_action, Interactiveaction):
+            if not isinstance(current_action, InteractiveAction):
                 return
         else:
             interactive_group = self.buttons[event.state & (gtk.gdk.SHIFT_MASK | gtk.gdk.CONTROL_MASK)].interactive_group
@@ -257,7 +257,7 @@ class InteractiveBar(gtk.Table):
     def key_release(self, widget, event):
         current_action = context.application.action_manager.current_action
         if current_action is not None and \
-           isinstance(current_action, Interactiveaction) and \
+           isinstance(current_action, InteractiveAction) and \
            hasattr(current_action, "key_release"):
             current_action.key_release(context.application.main.drawing_area, event)
             return True
