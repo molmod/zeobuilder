@@ -27,6 +27,9 @@ from zeobuilder.transformations import Complete
 import gtk.gtkgl, gtk.gdkgl, numpy
 from OpenGL.GL import *
 
+import math
+
+
 __all__ = ["DrawingArea"]
 
 
@@ -105,6 +108,40 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         else:
             return 2/float(self.allocation.width)/self.scene.projection_matrix[0, 0]
 
+    def vector_in_plane(self, x, y, plane_vector):
+        """Returns a vector that corresponds to (x, y).
+
+        Arguments:
+            x, y  --  The pixel coordinates where you want to know the vector
+            plane_vector -- the vector that defines the plane where the returned
+                            vector will lie in.
+
+        Return value:
+            A vector in model coordinates to corresponds to (x, y). This
+            vector lies in the plane that (i) goes through plane_vector
+            and (ii) is orthogonal to the viewer direction.
+        """
+        (
+            viewing_direction, distance_eye_viewer, eye_position,
+            viewer_position, top_left, left_to_right, top_to_bottom
+        ) = self.scene.get_camera_properties()
+
+        width = self.allocation.width
+        height = self.allocation.height
+
+        window_vector = top_left + left_to_right * float(x)/width + top_to_bottom * float(y)/height
+        pointing_direction = window_vector - eye_position
+        delta_eye_center = eye_position - plane_vector
+        distance_eye_plane = abs(numpy.dot(viewing_direction, delta_eye_center))
+        result = eye_position + pointing_direction/distance_eye_viewer*distance_eye_plane
+        #print "window_vector", window_vector
+        #print "pointing_direction", pointing_direction
+        #print "delta_eye_center", delta_eye_center
+        #print "distance_eye_plane", distance_eye_plane
+        #print "result", result
+        #print
+        return result
+
     def yield_hits(self, selection_box):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
         for hit in self.scene.yield_hits(selection_box):
@@ -134,6 +171,12 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
     def tool_rectangle(self, left, top, right, bottom):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
         self.scene.compile_tool_rectangle(left, top, right, bottom)
+        self.queue_draw()
+        self.get_gl_drawable().gl_end()
+
+    def tool_line(self, x1, y1, x2, y2):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        self.scene.compile_tool_line(x1, y1, x2, y2)
         self.queue_draw()
         self.get_gl_drawable().gl_end()
 

@@ -77,11 +77,11 @@ class InteractiveGroup(object):
                 self.mouse_candidate = action
                 break
 
-    def connect(self):
+    def activate(self):
         self.handler_id = context.application.cache.connect("cache-invalidated", self.on_cache_invalidated)
         self.on_cache_invalidated(None)
 
-    def disconnect(self):
+    def deactivate(self):
         context.application.cache.disconnect(self.handler_id)
 
 
@@ -99,14 +99,14 @@ class InteractiveButton(gtk.Button):
         self.tooltips.set_tip(self, "There are no actions associated with '%s'." % self.keys_description)
         self.image.set_from_pixbuf(empty_pixbuf)
         if self.interactive_group is not None:
-            self.interactive_group.disconnect()
+            self.interactive_group.deactivate()
             self.interactive_group = None
 
     def set_interactive_group(self, interactive_group):
         self.tooltips.set_tip(self, interactive_group.description)
         self.image.set_from_pixbuf(interactive_group.pixbuf)
         self.interactive_group = interactive_group
-        self.interactive_group.connect()
+        self.interactive_group.activate()
 
 
 class InteractiveBar(gtk.Table):

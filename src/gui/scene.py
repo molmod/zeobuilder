@@ -212,20 +212,16 @@ class Scene(object):
         # Apply the frustum matrix
         znear = self.znear()
         zfar = znear + self.window_depth
-        if self.opening_angle > 0.0:
-            if width > height:
-                w = float(width) / float(height)
-                glFrustum(-w*self.window_size, w*self.window_size, -self.window_size, self.window_size, znear, zfar)
-            else:
-                h = float(height) / float(width)
-                glFrustum(-self.window_size, self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
+        if width > height:
+            w = 0.5*float(width) / float(height)
+            h = 0.5
         else:
-            if width > height:
-                w = float(width) / float(height)
-                glOrtho(-w*self.window_size, w*self.window_size, -self.window_size, self.window_size, znear, zfar)
-            else:
-                h = float(height) / float(width)
-                glOrtho(-self.window_size, self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
+            w = 0.5
+            h = 0.5*float(height) / float(width)
+        if self.opening_angle > 0.0:
+            glFrustum(-w*self.window_size, w*self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
+        else:
+            glOrtho(-self.window_size, self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
         if selection_box is None:
             self.projection_matrix = numpy.transpose(numpy.array(glGetFloatv(GL_PROJECTION_MATRIX), float))
 
@@ -286,7 +282,7 @@ class Scene(object):
 
     def yield_hits(self, selection_box): # gl_context sensitive method
         for selection in self.draw(selection_box):
-            yield self.gl_names[selection[2][-1]]
+            yield self.gl_names.get(selection[2][-1])
 
     def get_nearest(self, x, y): # gl_context sensitive method
         nearest = None
@@ -298,7 +294,7 @@ class Scene(object):
         if nearest is None:
             return None
         else:
-            return self.gl_names[nearest[2][-1]]
+            return self.gl_names.get(nearest[2][-1])
 
     def compile_tool_rectangle(self, left, top, right, bottom): # gl_context sensitive method
         glNewList(self.tool_draw_list, GL_COMPILE)
@@ -309,6 +305,16 @@ class Scene(object):
         glVertex3f(left,  bottom, 0.0)
         glVertex3f(right, bottom, 0.0)
         glVertex3f(right, top,    0.0)
+        glEnd()
+        glEndList()
+
+    def compile_tool_line(self, x1, y1, x2, y2):
+        glNewList(self.tool_draw_list, GL_COMPILE)
+        glColor(1, 1, 1)
+        glLineWidth(1)
+        glBegin(GL_LINES)
+        glVertex3f(x1, y1, 0.0)
+        glVertex3f(x2, y2, 0.0)
         glEnd()
         glEndList()
 
@@ -342,9 +348,13 @@ class Scene(object):
             self.modelview_matrix[:3,:3].transpose(),
             -self.modelview_matrix[:3,3] - numpy.array([0.5*w*self.window_size, -0.5*h*self.window_size, distance_eye_viewer])
         )
-        bottom_right = numpy.dot(
+        left_to_right = numpy.dot(
             self.modelview_matrix[:3,:3].transpose(),
-            -self.modelview_matrix[:3,3] - numpy.array([-0.5*w*self.window_size, 0.5*h*self.window_size, distance_eye_viewer])
+            numpy.array([w*self.window_size, 0.0, 0.0])
+        )
+        top_to_bottom = numpy.dot(
+            self.modelview_matrix[:3,:3].transpose(),
+            numpy.array([0.0, -h*self.window_size, 0.0])
         )
         #print
         #print "viewing_direction  ", viewing_direction
@@ -352,6 +362,7 @@ class Scene(object):
         #print "eye_position       ", eye_position
         #print "viewer_position    ", viewer_position
         #print "top_left           ", top_left
-        #print "bottom_right       ", bottom_right
+        #print "left_to_right      ", left_to_right
+        #print "top_to_bottom      ", top_to_bottom
         #print
-        return viewing_direction, distance_eye_viewer, eye_position, viewer_position, top_left, bottom_right
+        return viewing_direction, distance_eye_viewer, eye_position, viewer_position, top_left, left_to_right, top_to_bottom
