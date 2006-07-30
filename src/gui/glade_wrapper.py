@@ -37,7 +37,7 @@ class GladeWrapperError(Exception):
 
 
 class GladeWrapper(object):
-    def __init__(self, glade_file, widget, widget_dict_name=None):
+    def __init__(self, glade_file, widget_name, widget_dict_name=None):
         "This method loads the widget from the glade XML file"
         # widget_dict_name is the name of the attribute to which the widget
         # will be assigned. if left to none the widget name will be used
@@ -46,17 +46,17 @@ class GladeWrapper(object):
         self.widgets = None
         for directory in context.share_dirs:
             if os.path.isdir(directory):
-                self.widgets = gtk.glade.XML(os.path.join(directory, glade_file), widget)
+                self.widgets = gtk.glade.XML(os.path.join(directory, glade_file), widget_name)
                 break
         if self.widgets is None:
             raise GladeWrapperError("Could not find glade file %s in any of the share directories %s." % (glade_file, context.share_dirs))
 
         # load the requested widget as widget_dict_name
         if widget_dict_name is None:
-            widget_dict_name = widget
-        widget = self.widgets.get_widget(widget)
+            widget_dict_name = widget_name
+        widget = self.widgets.get_widget(widget_name)
         if widget is None:
-            raise GladeWrapperError, "The widget (" + widget + ") passed to the constructor does not exist."
+            raise GladeWrapperError, "The widget '%s' passed to the constructor does not exist." % widget_name
         else:
             self.__dict__[widget_dict_name] = widget
 
