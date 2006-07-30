@@ -53,10 +53,8 @@ class Model(gobject.GObject):
         assert model_object.parent is None
         self.root.append(model_object)
         model_object.set_model(self)
-        model_object.fixed = True
 
     def remove_from_root(self, model_object):
-        model_object.fixed = False
         model_object.unset_model()
         self.root.remove(model_object)
 

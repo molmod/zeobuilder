@@ -68,15 +68,18 @@ class ModelObject(Base):
 
     def initnonstate(self):
         self.references = []
-        self.fixed = False
 
     #
     # Properties
     #
 
-    def default_name(self):
-        temp = str(self.__class__)
+    def class_name(cls):
+        temp = str(cls)
         return temp[temp.rfind(".")+1:-2]
+    class_name = classmethod(class_name)
+
+    def default_name(self):
+        return self.class_name()
 
     def get_name(self):
         return self.name
@@ -122,7 +125,7 @@ class ModelObject(Base):
     #
 
     def get_fixed(self):
-        return self.fixed
+        return self.parent is None
 
     def set_expanded(self, expanded):
         pass

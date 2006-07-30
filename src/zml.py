@@ -130,7 +130,7 @@ def dump_to_file(f, node):
                 if use_references:
                     indenter.write_line("<reference to='%i' />" % identifiers[node])
                 else:
-                    indenter.write_line("<model_object%s id='%i' class='%s'>" % (name_key, identifiers[node], node.default_name()), 1)
+                    indenter.write_line("<model_object%s id='%i' class='%s'>" % (name_key, identifiers[node], node.class_name()), 1)
                     for key, item in node.__getstate__().iteritems():
                         dump_stage3(indenter, item, key!="children", key)
                     indenter.write_line("</model_object>", -1)
