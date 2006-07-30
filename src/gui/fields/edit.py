@@ -249,8 +249,8 @@ class Element(Edit):
     mendeljev_labels = [(1, 0, "1"), (2, 1, "2"), (3, 3, "3"), (4, 3, "4"), (5, 3, "5"),  (6, 3, "6"),
                         (7, 3, "7"), (8, 3, "8"), (9, 3, "9"), (10, 3, "10"), (11, 3, "11"),  (12, 3, "12"),
                         (13, 1, "13"), (14, 1, "14"), (15, 1, "15"), (16, 1, "16"), (17, 1, "17"),  (18, 0, "18"),
-                        (0, 1, "1 K"), (0, 2, "2 L"), (0, 3, "3 M"), (0, 4, "4 N"), (0, 5, "5 O"),  (0, 6, "6 P"),
-                        (0, 7, "7 Q"), (3, 9, "6 P"), (3, 10, "7 Q")]
+                        (0, 1, "K"), (0, 2, "L"), (0, 3, "M"), (0, 4, "N"), (0, 5, "O"),  (0, 6, "P"),
+                        (0, 7, "Q"), (3, 9, "P"), (3, 10, "Q")]
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None):
         Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
@@ -260,25 +260,35 @@ class Element(Edit):
         to_mendeljev = gtk.Tooltips()
         self.buttons = {}
         ta_elements = gtk.Table(11, 19, homogeneous=True)
+        ta_elements.set_row_spacings(0)
+        ta_elements.set_col_spacings(0)
         # Use periodic to fill the table with buttons.
-        for n in periodic.numbers:
-            bu_element = gtk.ToggleButton(periodic.symbol[n])
-            bu_element.connect("toggled", self.on_bu_element_toggled, n)
+        for atom_info in periodic.atoms_by_number.itervalues():
+            bu_element = gtk.ToggleButton("")
+            bu_element.set_property("can-focus", False)
+            label = bu_element.get_child()
+            label.set_label("<small>%s</small>" % atom_info.symbol)
+            label.set_use_markup(True)
+            bu_element.connect("toggled", self.on_bu_element_toggled, atom_info.number)
             bu_element.connect("toggled", self.on_widget_changed)
-            tip = str(n) + ": " + periodic.name[n]
-            if n in periodic.mass:
-                if periodic.artificial[n]==0:
-                    tip = tip + "\nMass = %s" % express_measure(periodic.mass[n], measure=MASS)
+            tip = str(atom_info.number) + ": " + atom_info.name
+            if atom_info.mass is not None:
+                if atom_info.artificial:
+                    tip = tip + "\nMass = *%s" % express_measure(atom_info.mass, measure=MASS)
                 else:
-                    tip = tip + "\nMass = *%s" % express_measure(periodic.mass[n], measure=MASS)
-            if n in periodic.radius: tip = tip + "\nRadius = " + express_measure(periodic.radius[n], LENGTH)
+                    tip = tip + "\nMass = %s" % express_measure(atom_info.mass, measure=MASS)
+            if atom_info.radius is not None:
+                tip = tip + "\nRadius = " + express_measure(atom_info.radius, LENGTH)
             to_mendeljev.set_tip(bu_element, tip)
-            ta_elements.attach(bu_element, int(periodic.col[n]), int(periodic.col[n]) + 1,
-                                    int(periodic.row[n]), int(periodic.row[n]) + 1)
-            self.buttons[n] = bu_element
+            ta_elements.attach(
+                bu_element, 
+                int(atom_info.col), int(atom_info.col) + 1,
+                int(atom_info.row), int(atom_info.row) + 1
+            )
+            self.buttons[atom_info.number] = bu_element
         # also add a few indicative labels
         for c, r, label_text in self.mendeljev_labels:
-            indicative = gtk.Label("<b>" + label_text + "</b>")
+            indicative = gtk.Label("<b><small>" + label_text + "</small></b>")
             indicative.set_use_markup(True)
             ta_elements.attach(indicative, c, c+1, r, r+1)
 
@@ -296,7 +306,7 @@ class Element(Edit):
                 # Put out the former bu_element
                 temp = self.bu_former
                 self.bu_former = widget
-                temp.set_active(gtk.FALSE)
+                temp.set_active(False)
             self.number = number
         else:
             if self.bu_former == widget:
@@ -311,7 +321,7 @@ class Element(Edit):
         else:
             for bu in self.buttons.itervalues():
                 bu.set_sensitive(True)
-                bu.set_active(gtk.FALSE)
+                bu.set_active(False)
             self.bu_former = self.buttons[representation]
             if representation in self.buttons.keys():
                 self.buttons[representation].set_active(True)

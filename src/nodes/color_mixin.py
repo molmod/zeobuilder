@@ -28,7 +28,7 @@ from OpenGL.GL import *
 import numpy
 
 
-__all__ = ["ColorMixin", "DoubleSidedColorMixin"]
+__all__ = ["ColorMixin", "UserColorMixin"]
 
 
 class ColorMixin(object):
@@ -64,11 +64,9 @@ class ColorMixin(object):
 
     def draw(self):
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color)
-        #if self.double_sided:
-        #    glMaterial(GL_BACK, GL_AMBIENT_AND_DIFFUSE, self.color)
 
 
-class DoubleSidedColorMixin(object):
+class UserColorMixin(object):
 
     __metaclass__ = NodeClass
 
@@ -76,17 +74,12 @@ class DoubleSidedColorMixin(object):
     # Properties
     #
 
-    def set_front_color(self, front_color):
-        self.front_color = front_color
-        self.invalidate_draw_list()
-
-    def set_back_color(self, back_color):
-        self.back_color = back_color
+    def set_user_color(self, user_color):
+        self.user_color = user_color
         self.invalidate_draw_list()
 
     published_properties = PublishedProperties({
-        "front_color": Property(numpy.array([0.7, 0.7, 0.7, 1.0]), lambda self: self.front_color, set_front_color),
-        "back_color": Property(numpy.array([0.7, 0.7, 0.7, 1.0]), lambda self: self.back_color, set_back_color),
+        "user_color": Property(None, lambda self: self.user_color, set_user_color)
     })
 
     #
@@ -94,22 +87,26 @@ class DoubleSidedColorMixin(object):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Markup", (1, 0), fields.edit.Color(
-            label_text="Front color",
-            attribute_name="front_color",
+        DialogFieldInfo("Markup", (1, 6), fields.elementary.Checkable(
+            fields.edit.Color(
+                label_text="User define color",
+                attribute_name="user_color",
+            )
         )),
-        DialogFieldInfo("Markup", (1, 1), fields.edit.Color(
-            label_text="Back color",
-            attribute_name="back_color",
-        ))
     ])
 
     #
     # Draw
     #
+    
+    def get_color(self):
+        if self.user_color is not None:
+            return self.user_color
+        else:
+            return self.default_color
+
+    def default_color(self):
+        raise NotImplementedError
 
     def draw(self):
-        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.front_color)
-        glMaterial(GL_BACK, GL_AMBIENT_AND_DIFFUSE, self.back_color)
-
-
+        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.get_color())
