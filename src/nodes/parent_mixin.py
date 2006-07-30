@@ -129,12 +129,6 @@ class ReferentMixin(ParentMixin):
     # State
     #
 
-    def initstate(self, **initstate):
-        targets = initstate.get("targets")
-        if targets is not None:
-            del self.targets
-            self.set_targets(targets)
-
     def initnonstate(self):
         self.children = self.create_references()
         for child in self.children:

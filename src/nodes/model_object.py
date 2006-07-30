@@ -65,6 +65,8 @@ class ModelObject(Base):
             if value is None:
                 value = published_property.get_default(self)
             self.__dict__[name] = value
+        for published_property in self.published_properties.itervalues():
+            published_property.set(self, published_property.get(self))
 
     def initnonstate(self):
         self.references = []

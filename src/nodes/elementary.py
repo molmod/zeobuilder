@@ -59,10 +59,6 @@ class ReferentBase(ModelObject, ReferentMixin):
     # state
     #
 
-    def initstate(self, **initstate):
-        ModelObject.initstate(self, **initstate)
-        ReferentMixin.initstate(self, **initstate)
-
     def initnonstate(self):
         ReferentMixin.initnonstate(self)
         ModelObject.initnonstate(self)
