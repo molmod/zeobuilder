@@ -56,7 +56,6 @@ class Reference(Base):
             self.undefine_target()
         else:
             return
-        if self.parent is not None: self.parent.set_target(self, target)
 
     #
     # Tree
@@ -90,6 +89,7 @@ class Reference(Base):
         if self.model is not None:
             self.target.references.append(self)
         self.icon = self.target.reference_icon
+        self.parent.define_target(self, new_target)
 
     def undefine_target(self):
         assert self.target is not None, "Reference has no target to undefine"
@@ -98,6 +98,7 @@ class Reference(Base):
             old_target.references.remove(self)
         self.target = None
         self.icon = self.overlay_icon
+        self.parent.define_target(self, old_target)
 
     def check_target(self, new_target):
         if isinstance(new_target, Reference): return False

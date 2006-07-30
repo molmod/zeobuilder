@@ -156,10 +156,6 @@ class ReferentMixin(ParentMixin):
         for child, target in zip(self.children, targets):
             child.set_target(target)
 
-    def set_target(self, target, index):
-        self.children[index].unset_target()
-        self.children[index].set_target()
-
     published_properties = PublishedProperties({
         "targets": Property([], get_targets, set_targets),
     })
@@ -178,7 +174,10 @@ class ReferentMixin(ParentMixin):
     # References
     #
 
-    def set_target(self, reference, target):
+    def define_target(self, reference, new_target):
+        pass
+
+    def undefine_target(self, reference, old_target):
         pass
 
     def check_target(self, reference, target):

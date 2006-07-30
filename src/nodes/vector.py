@@ -166,8 +166,8 @@ class Vector(GLReferentBase):
                         b = signx
                     self.orientation.set_rotation_properties(math.acos(c), numpy.array([a, b, 0.0]), False)
 
-    def set_target(self, reference, target):
-        GLReferentBase.set_target(self, reference, target)
+    def define_target(self, reference, new_target):
+        GLReferentBase.define_target(self, reference, new_target)
         self.invalidate_boundingbox_list()
         self.invalidate_draw_list()
 
