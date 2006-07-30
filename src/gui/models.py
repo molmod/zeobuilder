@@ -37,7 +37,7 @@ __all__ = ["Model"]
 class Model(ModelBase, gtk.TreeStore):
     def __init__(self):
         ModelBase.__init__(self)
-        gtk.TreeStore.__init__(self, ModelBase)
+        gtk.TreeStore.__init__(self, NodeBase)
 
     def add_node(self, node):
         #print "Adding node %s (%i)" % (node.get_name(), id(node))
