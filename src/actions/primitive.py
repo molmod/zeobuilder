@@ -59,21 +59,21 @@ class Base(object):
 
 
 class Add(Base):
-    changes_selection = True
-
-    def __init__(self, victim, parent, index=-1):
+    def __init__(self, victim, parent, index=-1, select=True):
         if not isinstance(parent, ContainerMixin):
-            raise PrimitiveError, "ADD: Parent must be a %s." % (ContainerMixin)
+            raise PrimitiveError, "ADD: Parent must be a %s. You gave %s." % (ContainerMixin, parent)
         if not parent.check_add(victim.__class__):
-            raise PrimitiveError, "ADD: Can not add a %s to a %s." % (victim.__class__, parent.__class__)
+            raise PrimitiveError, "ADD: Can not add %s to %s." % (victim, parent)
         self.parent = parent
         self.index = index
+        self.changes_selection = select
         Base.__init__(self, victim, False)
 
     def redo(self):
         Base.redo(self)
         self.parent.add(self.victim, self.index)
-        context.application.main.toggle_selection(self.victim, on=True)
+        if self.changes_selection:
+            context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
         Base.undo(self)
@@ -128,19 +128,18 @@ class Delete(Base):
 
 
 class Move(Base):
-    changes_selection = True
-
-    def __init__(self, victim, new_parent, new_index=-1):
+    def __init__(self, victim, new_parent, new_index=-1, select=True):
         if victim.get_fixed():
             raise PrimitiveError, "MOVE: The victim is fixed."
         if not isinstance(new_parent, ContainerMixin):
-            raise PrimitiveError, "MOVE: New parent must be a %s." % (ContainerMixin)
+            raise PrimitiveError, "MOVE: New parent must be a %s. You gave %s." % (ContainerMixin, new_parent)
         if not new_parent.check_add(victim.__class__):
-            raise PrimitiveError, "MOVE: Can not move a %s to a %s." % (victim.__class__, new_parent.__class__)
+            raise PrimitiveError, "MOVE: Can not move %s to %s." % (victim, new_parent)
         self.new_parent = new_parent
         self.new_index = new_index
         self.old_parent = None
         self.old_index = None
+        self.changes_selection = select
         Base.__init__(self, victim, False)
 
     def redo(self):
@@ -149,12 +148,14 @@ class Move(Base):
             self.old_parent = self.victim.parent
             self.old_index = self.victim.get_index()
         self.victim.move(self.new_parent, self.new_index)
-        context.application.main.toggle_selection(self.victim, on=True)
+        if self.changes_selection:
+            context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
         Base.undo(self)
         self.victim.move(self.old_parent, self.old_index)
-        context.application.main.toggle_selection(self.victim, on=True)
+        if self.changes_selection:
+            context.application.main.toggle_selection(self.victim, on=True)
 
 
 class SetPublishedProperty(Base):
@@ -188,7 +189,7 @@ class SetPublishedProperty(Base):
 class Transform(Base):
     def __init__(self, victim, transformation, done=False, after=True):
         if not isinstance(victim, GLTransformationMixin):
-            raise PrimitiveError, "TRANSFORM: Object is not a transformed model object."
+            raise PrimitiveError, "TRANSFORM: Object must be a %s. You gave %s." % (GLTransformationMixin, victim)
         if victim.get_fixed():
             raise PrimitiveError, "TRANSFORM: Object is fixed."
         self.transformation = transformation
@@ -217,7 +218,7 @@ class Transform(Base):
 class SetTarget(Base):
     def __init__(self, victim, target):
         if not isinstance(victim, Reference):
-            raise PrimitiveError, "TARGET: Reference must be a %s." % (Reference)
+            raise PrimitiveError, "TARGET: Reference must be a %s. You gave %s." % (Reference, victim)
         if not victim.check_target(target):
             raise PrimitiveError, "TARGET: A %s can not refere to to a %s." % (victim, target)
         self.victim = victim
