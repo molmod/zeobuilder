@@ -82,7 +82,7 @@ def dump_to_file(f, node):
         elif cls == bool:
             indenter.write_line("<bool%s>%s</bool>" % (name_key, str(node)))
         elif cls == types.NoneType:
-            indenter.write_line("<none%s/>")
+            indenter.write_line("<none%s/>" % name_key)
         elif cls == list:
             indenter.write_line("<list%s>" % name_key, 1)
             for item in node: dump_stage3(indenter, item, use_references)
