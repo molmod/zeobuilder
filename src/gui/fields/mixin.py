@@ -287,10 +287,12 @@ class TableMixin(object):
                     break
 
     def create_widgets(self):
-        rows = len(self.fields) / self.cols + (len(self.fields) % self.cols > 0)
+        fields_active = sum(field.get_active() for field in self.fields)
+        rows = fields_active / self.cols + (fields_active % self.cols > 0)
         table = gtk.Table(rows, self.cols * 4)
         first_radio_button = None
-        for index, field in enumerate(self.fields):
+        index = 0
+        for field in self.fields:
             if not field.get_active():
                 continue
             col = index % self.cols
@@ -343,6 +345,7 @@ class TableMixin(object):
                     data_widget, left, right, row, row + 1,
                     xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
                 )
+            index += 1
         table.set_row_spacings(6)
         for col in xrange(self.cols * 4 - 1):
             if col % 4 == 3:

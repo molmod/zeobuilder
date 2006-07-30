@@ -60,7 +60,7 @@ class Table(Group, TableMixin):
             #print "  old_representation =", old_representation
             if old_representation != insensitive:
                 #print "  saving old_representation"
-                field.old_representation = field.read_from_widget()
+                field.old_representation = old_representation
             #print "  setting representation = %s" % insensitive
             field.write_to_widget(insensitive)
 

@@ -194,3 +194,86 @@ class Group(Multiple):
         for field in self.fields:
             changed.extend(field.changed_names())
         return changed
+
+
+class Checkable(Single):
+    def __init__(self, slave):
+        Single.__init__(self)
+        self.slave = slave
+        slave.parent = self
+        self.check_button = None
+        
+    def init_widgets(self, instance):
+        self.slave.init_widgets(instance)
+        Single.init_widgets(self, instance)
+
+    def init_widgets_multiplex(self, instances):
+        self.slave.init_widgets_multiplex(instances)
+        Single.init_widgets_multiplex(self, instances)
+
+    def get_active(self):
+        return self.slave.get_active()
+    
+    def applicable(self, instance):
+        return self.slave.get_active()
+        
+    def changed_names(self):
+        if not self.get_active():
+            return []
+        else:
+            return self.slave.changed_names()
+
+    def create_widgets(self):
+        Single.create_widgets(self)
+        self.slave.old_representation = ambiguous
+        self.slave.create_widgets()
+        self.slave.write_to_widget(ambiguous)
+        self.check_button = gtk.CheckButton()
+        self.check_button.connect("toggled", self.check_button_toggled)
+        if self.slave.label is not None:
+            self.check_button.add(self.slave.label)
+            
+    def destroy_widgets(self):
+        if self.check_button is not None:
+            self.check_button.destroy()
+            self.check_button = None
+        self.slave.destroy_widgets()
+        Single.destroy_widgets(self)
+    
+    def get_widgets_separate(self):
+        return self.check_button, self.slave.data_widget, self.slave.bu_popup
+        
+    def read(self):
+        if self.get_active():
+            self.slave.read()
+            self.check_button.set_active(self.slave.read_from_widget() != insensitive)
+
+    def read_multiplex(self):
+        if self.get_active():
+            self.slave.read_multiplex()
+            self.check_button.set_active(self.slave.read_from_widget() != insensitive)
+
+    def write(self):
+        if self.get_active():
+            self.slave.write()
+
+    def write_multiplex(self):
+        if self.get_active():
+            self.slave.write_multiplex()
+
+    def check(self):
+        if self.get_active():
+            self.slave.check()
+                
+    def grab_focus(self):
+        self.slave.grab_focus()
+
+    def check_button_toggled(self, check_button):
+        if check_button.get_active():
+            if self.slave.read_from_widget() == insensitive:
+                self.slave.write_to_widget(self.slave.old_representation)
+        else:
+            old_representation = self.slave.read_from_widget()
+            if old_representation != insensitive:
+                self.slave.old_representation = old_representation
+            self.slave.write_to_widget(insensitive)

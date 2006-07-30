@@ -136,7 +136,7 @@ def create_tabbed_main_field(dialog_fields):
     categories = set()
 
     for dialog_field_info in dialog_fields:
-        key = (dialog_field_info.category, dialog_field_info.order, dialog_field_info.field.attribute_name)
+        key = (dialog_field_info.category, dialog_field_info.order)
         if key not in unique_dialog_fields:
             unique_dialog_fields[key] = dialog_field_info
         categories.add(dialog_field_info.category)
@@ -154,7 +154,7 @@ def create_tabbed_main_field(dialog_fields):
     #for category, field_infos in fields_by_category:
     #    print "C", category
     #    for dialog_field_info in field_infos:
-    #        print "DFI", dialog_field_info.order, dialog_field_info.field.attribute_name, dialog_field_info.field.label_text
+    #        print "DFI", dialog_field_info.order, dialog_field_info.field.label_text
 
     return fields.group.Notebook([
         (category, fields.group.Table([
