@@ -232,7 +232,7 @@ class Scene(object):
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
         # Move to viewer position (reverse)
-        self.viewer.gl_apply()
+        self.viewer.gl_apply_inverse()
         glTranslatef(0.0, 0.0, -znear)
         # Draw the rotation center, only when realy drawing objects:
         if selection_box is None:
@@ -279,7 +279,7 @@ class Scene(object):
         self.center = Translation()
         self.rotation = Rotation()
         self.viewer = Translation()
-        self.viewer.translation_vector[2] = -config.viewer_distance
+        self.viewer.translation_vector[2] = config.viewer_distance
         self.opening_angle = config.opening_angle
         self.window_size = config.window_size
         self.window_depth = config.window_depth
@@ -317,3 +317,41 @@ class Scene(object):
         draw_function()
         glEndList()
 
+    def get_camera_properties(self):
+        #ALL THIS STUFF IS IN MODEL COORDINATES!!!
+        viewport = glGetIntegerv(GL_VIEWPORT)
+        width = viewport[2]
+        height = viewport[3]
+        if width > height:
+            w = float(width) / float(height)
+            h = 1.0
+        else:
+            w = 1.0
+            h = float(height) / float(width)
+        viewing_direction = -self.modelview_matrix[2,:3]
+        distance_eye_viewer =  self.znear()
+        eye_position = numpy.dot(
+            self.modelview_matrix[:3,:3].transpose(),
+            -self.modelview_matrix[:3,3]
+        )
+        viewer_position = numpy.dot(
+            self.modelview_matrix[:3,:3].transpose(),
+            -self.modelview_matrix[:3,3] - numpy.array([0.0, 0.0, distance_eye_viewer])
+        )
+        top_left = numpy.dot(
+            self.modelview_matrix[:3,:3].transpose(),
+            -self.modelview_matrix[:3,3] - numpy.array([0.5*w*self.window_size, -0.5*h*self.window_size, distance_eye_viewer])
+        )
+        bottom_right = numpy.dot(
+            self.modelview_matrix[:3,:3].transpose(),
+            -self.modelview_matrix[:3,3] - numpy.array([-0.5*w*self.window_size, 0.5*h*self.window_size, distance_eye_viewer])
+        )
+        #print
+        #print "viewing_direction  ", viewing_direction
+        #print "distance_eye_viewer", distance_eye_viewer
+        #print "eye_position       ", eye_position
+        #print "viewer_position    ", viewer_position
+        #print "top_left           ", top_left
+        #print "bottom_right       ", bottom_right
+        #print
+        return viewing_direction, distance_eye_viewer, eye_position, viewer_position, top_left, bottom_right
