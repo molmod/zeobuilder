@@ -375,64 +375,69 @@ class RoundRotation(Immediate):
 
 
 class RotateMouseMixin(object):
+    #def get_screen_rotation_center(self):
+    #    raise NotImplementedError
+
     def button_press(self, drawing_area, event):
         if event.button == 1: # XY rotate
             self.former_x = event.x
             self.former_y = event.y
-        if event.button == 3: # Z rotate
-            self.former_rotz = math.atan2(-(event.y - self.screen_rotation_center[1]), event.x - self.screen_rotation_center[0])
+        elif event.button == 3: # Z rotate
+            srcx, srcy = self.screen_rotation_center
+            self.former_rotz = math.atan2(-(event.y - srcy), event.x - srcx)
 
     def button_motion(self, drawing_area, event, start_button):
-        if start_button == 2: return
-        if start_button == 1: # XY rotation
+        if start_button == 2:
+            return
+        elif start_button == 1: # XY rotation
             rotx = (event.x - self.former_x) / float(drawing_area.allocation.width) * 360
             roty = (event.y - self.former_y) / float(drawing_area.allocation.width) * 360
-            rotation_axis = numpy.array([-roty, -rotx, 0.0])
+            rotation_axis = numpy.array([-roty, -rotx, 0.0], float)
             rotation_angle = math.sqrt(rotx*rotx + roty*roty)/30
             self.former_x = event.x
             self.former_y = event.y
-        if start_button == 3: # Z rotation
-            rotz = math.atan2(-(event.y - self.screen_rotation_center[1]), event.x - self.screen_rotation_center[0])
-            rotation_axis = numpy.array([0.0, 0.0, -1.0])
+        elif start_button == 3: # Z rotation
+            srcx, srcy = self.screen_rotation_center
+            rotz = math.atan2(-(event.y - srcy), event.x - srcx)
+            rotation_axis = numpy.array([0.0, 0.0, -1.0], float)
             rotation_angle = rotz - self.former_rotz
             self.former_rotz = rotz
-        if self.eye_to_model_rotation is not None:
-            rotation_axis = numpy.dot(self.eye_to_model_rotation, rotation_axis)
-        if self.rotation_axis is not None:
-            rotation_axis = self.rotation_axis * {True: 1, False: -1}[numpy.dot(self.rotation_axis, rotation_axis) > 0]
-        temp = Rotation()
-        temp.set_rotation_properties(rotation_angle, rotation_axis, False)
-        return temp
+        return rotation_angle, rotation_axis
 
     def button_release(self, drawing_area, event):
         self.finish()
 
 
+class RotateKeyboardError(Exception):
+    pass
+
+
 class RotateKeyboardMixin(object):
     def key_press(self, drawing_area, event):
         rotation_angle = math.pi/36.0
-        if event.keyval == 65365:
-            rotation_axis = numpy.array([ 0.0,  0.0, -1.0])
-        elif event.keyval == 65366:
-            rotation_axis = numpy.array([ 0.0,  0.0,  1.0])
-        elif event.keyval == 65363:
-            rotation_axis = numpy.array([ 0.0, -1.0,  0.0])
+        rotation_axis = numpy.zeros(3, float)
+        if event.keyval == 65363:
+            #print "right"
+            rotation_axis[1] = -1
         elif event.keyval == 65361:
-            rotation_axis = numpy.array([ 0.0,  1.0,  0.0])
-        elif event.keyval == 65364:
-            rotation_axis = numpy.array([-1.0,  0.0,  0.0])
+            #print "left"
+            rotation_axis[1] = +1
         elif event.keyval == 65362:
-            rotation_axis = numpy.array([ 1.0,  0.0,  0.0])
+            #print "up"
+            rotation_axis[0] = +1
+        elif event.keyval == 65364:
+            #print "down"
+            rotation_axis[0] = -1
+        elif event.keyval == 65365:
+            #print "page up, to front"
+            rotation_axis[2] = +1
+        elif event.keyval == 65366:
+            #print "page down, to back"
+            rotation_axis[2] = -1
         else:
-            return None
+            raise RotateKeyboardError("Key %i is not supported" % event.keyval)
 
-        if self.eye_to_model_rotation is not None:
-            rotation_axis = numpy.dot(self.eye_to_model_rotation, rotation_axis)
-        if self.rotation_axis is not None:
-            rotation_axis = self.rotation_axis * {True: 1, False: -1}[numpy.dot(self.rotation_axis, rotation_axis) > 0]
-        temp = Rotation()
-        temp.set_rotation_properties(rotation_angle, rotation_axis, False)
-        return temp
+        return rotation_angle, rotation_axis
 
     def key_release(self, drawing_area, event):
         self.finish()
@@ -487,12 +492,19 @@ class RotateObjectBase(InteractiveWithMemory):
         drawing_area = context.application.main.drawing_area
         self.screen_rotation_center = drawing_area.position_of_object(rotation_center_object)
         self.eye_to_model_rotation = drawing_area.eye_to_model_rotation(self.victim)
-
         self.old_transformation = copy.deepcopy(self.victim.transformation)
 
-
-    def apply_rotation(self, rotation):
+    def do_rotation(self, rotation_angle, rotation_axis):
+        rotation_axis = numpy.dot(self.eye_to_model_rotation, rotation_axis)
+        if self.rotation_axis is not None:
+            if numpy.dot(self.rotation_axis, rotation_axis) > 0:
+                rotation_axis = self.rotation_axis
+            else:
+                rotation_axis = -self.rotation_axis
+        rotation = Rotation()
+        rotation.set_rotation_properties(rotation_angle, rotation_axis, False)
         tr = self.victim.transformation
+
         if isinstance(self.victim.transformation, Translation):
             tr.translation_vector -= self.rotation_center
             tr.translation_vector = numpy.dot(numpy.transpose(rotation.rotation_matrix), tr.translation_vector)
@@ -502,6 +514,7 @@ class RotateObjectBase(InteractiveWithMemory):
         self.victim.revalidate_transformation_list()
         context.application.main.drawing_area.queue_draw()
         #self.victim.invalidate_transformation_list()
+        self.changed = True
 
     def finish(self):
         if self.changed:
@@ -520,8 +533,7 @@ class RotateObjectMouse(RotateObjectBase, RotateMouseMixin):
     interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=0)
 
     def button_motion(self, drawing_area, event, start_button):
-        self.apply_rotation(RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
-        self.changed = True
+        self.do_rotation(*RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
 
 
 class RotateObjectKeyboard(RotateObjectBase, RotateKeyboardMixin):
@@ -530,9 +542,7 @@ class RotateObjectKeyboard(RotateObjectBase, RotateKeyboardMixin):
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
-        rotation = RotateKeyboardMixin.key_press(self, drawing_area, event)
-        if rotation is not None: self.apply_rotation(rotation)
-        self.changed = True
+        self.do_rotation(*RotateKeyboardMixin.key_press(self, drawing_area, event))
 
 
 class RotateWorldBase(Interactive):
@@ -545,13 +555,16 @@ class RotateWorldBase(Interactive):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-
     def interactive_init(self):
         Interactive.interactive_init(self)
         drawing_area = context.application.main.drawing_area
         self.screen_rotation_center = drawing_area.position_of_vector(drawing_area.scene.viewer.translation_vector)
-        self.eye_to_model_rotation = None
-        self.rotation_axis = None
+
+    def do_rotation(self, drawing_area, rotation_angle, rotation_axis):
+        rotation = Rotation()
+        rotation.set_rotation_properties(rotation_angle, rotation_axis, False)
+        drawing_area.scene.rotation.apply_before(rotation)
+        drawing_area.queue_draw()
 
 
 class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
@@ -559,8 +572,7 @@ class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
     interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=1)
 
     def button_motion(self, drawing_area, event, start_button):
-        drawing_area.scene.rotation.apply_before(RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
-        drawing_area.queue_draw()
+        self.do_rotation(drawing_area, *RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
 
 
 class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
@@ -569,10 +581,7 @@ class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
-        rotation = RotateKeyboardMixin.key_press(self, drawing_area, event)
-        if rotation is None: return
-        drawing_area.scene.rotation.apply_before(rotation)
-        drawing_area.queue_draw()
+        self.do_rotation(drawing_area, *RotateKeyboardMixin.key_press(self, drawing_area, event))
 
 
 #
