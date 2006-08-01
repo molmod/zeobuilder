@@ -335,21 +335,17 @@ class PickSelection(Interactive):
         self.beginy = event.y
         self.endx = event.x
         self.endy = event.y
-        if event.button == 3:
-            context.application.menu.popup(event.button, event.time)
-            self.finish()
-        elif event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+        if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
             context.application.action_manager.default_action(
                 context.application.main.drawing_area.get_nearest(event.x, event.y)
             )
 
     def button_motion(self, drawing_area, event, startbutton):
-        if startbutton != 3:
-            self.endx = event.x
-            self.endy = event.y
-            left, top = drawing_area.to_reduced(self.beginx, self.beginy)
-            right, bottom = drawing_area.to_reduced(event.x, event.y)
-            drawing_area.tool_rectangle(left, top, right, bottom)
+        self.endx = event.x
+        self.endy = event.y
+        left, top = drawing_area.to_reduced(self.beginx, self.beginy)
+        right, bottom = drawing_area.to_reduced(event.x, event.y)
+        drawing_area.tool_rectangle(left, top, right, bottom)
 
     def button_release(self, drawing_area, event):
         drawing_area.tool_clear()
@@ -374,12 +370,11 @@ class PickSelection(Interactive):
             for hit in drawing_area.yield_hits((left, top, right, bottom)):
                 main.toggle_selection(hit, event.button!=3)
         else:
-            if (event.button != 3):
-                hit = drawing_area.get_nearest(event.x, event.y)
-                if hit is None:
-                    main.tree_selection.unselect_all()
-                else:
-                    main.toggle_selection(hit)
+            hit = drawing_area.get_nearest(event.x, event.y)
+            if hit is None:
+                main.tree_selection.unselect_all()
+            else:
+                main.toggle_selection(hit, event.button != 3)
 
         self.finish()
 
