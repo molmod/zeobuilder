@@ -1,0 +1,607 @@
+<?xml version='1.0'?>
+<zml_file version='0.1'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <bool label="clipping">True</bool>
+   <str label="name">Universe</str>
+   <bool label="box_visible">True</bool>
+   <array label="repetitions">
+    <shape>3 </shape>
+    <cells>1 1 1 </cells>
+   </array>
+   <array label="cell_active">
+    <shape>3 </shape>
+    <cells>False False False </cells>
+   </array>
+   <array label="cell">
+    <shape>3 3 </shape>
+    <cells>18.897261249 0.0 0.0 0.0 18.897261249 0.0 0.0 0.0 18.897261249 </cells>
+   </array>
+   <bool label="visible">True</bool>
+   <float label="axis_thickness">0.08</float>
+   <bool label="axes_visible">True</bool>
+   <float label="axis_length">1.0</float>
+   <list label="children">
+    <model_object id='1' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">7</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+     </translation>
+     <str label="name">N</str>
+    </model_object>
+    <model_object id='2' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 2.72120561986 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='3' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.58339356275 0.0 3.63457261698 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='4' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.58339356275 0.0 6.37467549809 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='5' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.56557722484 0.0 -0.907068539952 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='6' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.56557722484 0.0 -3.64717142106 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='7' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-5.14897078759 0.0 -4.56053841818 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='8' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.28278955728 2.22185493998 -0.907068539952 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='9' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.00592429140156 4.45913760405 0.0105106567067 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='10' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.28577154511 6.69642215784 -0.90285634042 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='11' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.27982646672 -2.22185305026 -0.911250503866 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='12' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.0118712595166 -4.45913760405 0.00211649325989 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='13' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">6</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.27684258917 -6.69641837839 -0.915462703399 </cells>
+      </array>
+     </translation>
+     <str label="name">C</str>
+    </model_object>
+    <model_object id='14' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-5.14897078759 0.0 -6.6184501682 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='15' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-6.11908059106 -1.68027832985 -3.87456783484 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='16' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-6.11908059106 1.68027832985 -3.87456783484 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='17' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-1.59546742136 1.68027832985 -4.3331420044 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='18' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-1.59546742136 -1.68027832985 -4.3331420044 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='19' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.53568702832 1.68027832985 -0.221097956613 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='20' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.53568702832 -1.68027832985 -0.221097956613 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='21' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.970109803479 1.68027832985 3.40717620319 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='22' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.970109803479 -1.68027832985 3.40717620319 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='23' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.55350336622 -1.68027832985 2.94860203364 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='24' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.55350336622 1.68027832985 2.94860203364 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='25' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.52361127998 0.0 7.06064608143 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='26' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.61328564899 1.68027832985 7.06064608143 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='27' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.61328564899 -1.68027832985 7.06064608143 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='28' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.317902956814 8.37669670823 -0.213724245274 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='29' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.22710609048 6.69448518856 -0.220052938066 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='30' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.28241539151 6.69836101684 -2.96076431098 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='31' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.00256813780374 4.45719685532 2.06841862727 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='32' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-1.94725883677 4.46107457333 -0.672292745647 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='33' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.27943340369 2.22379379899 -2.96497651052 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='34' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.22412221293 2.2199179707 -0.224265137599 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='35' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.27647031312 -2.21991230153 -2.96915847443 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='36' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.22115912236 -2.22378812981 -0.228447101513 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='37' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.0085151059188 -4.46107646305 2.06002446382 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='38' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-1.95320391516 -4.45720063477 -0.680686909093 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='39' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.306734675415 -8.37669670823 -0.22949212006 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='40' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.27348643557 -6.69447951938 -2.97337067396 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='41' class='Atom'>
+     <none label="user_color"/>
+     <none label="user_radius"/>
+     <int label="number">1</int>
+     <bool label="visible">True</bool>
+     <int label="quality">50</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.21817713454 -6.69835534766 -0.232659301045 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='42' class='Folder'>
+   <str label="name">Folder</str>
+   <list label="children">
+   </list>
+  </model_object>
+ </list>
+</zml_file>

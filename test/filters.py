@@ -28,10 +28,10 @@ from zeobuilder.actions.composed import Parameters
 import gtk, numpy
 
 
-__all__ = ["CoreLoadFilters", "CoreDumpFilters"]
+__all__ = ["LoadFilters", "DumpFilters"]
 
 
-class CoreLoadFilters(ApplicationTestCase):
+class LoadFilters(ApplicationTestCase):
     def helper_file_open(self, filename):
         def fn():
             context.application.model.file_open("input/%s" % filename)
@@ -40,16 +40,22 @@ class CoreLoadFilters(ApplicationTestCase):
     def test_zml(self):
         self.helper_file_open("core_objects.zml")
 
+    def test_xyz(self):
+        self.helper_file_open("tpa.xyz")
 
-class CoreDumpFilters(ApplicationTestCase):
-    def helper_file_save(self, filename):
+
+class DumpFilters(ApplicationTestCase):
+    def helper_file_save(self, in_filename, out_filename):
         def fn():
-            context.application.model.file_open("input/core_objects.zml")
-            context.application.model.file_save("output/%s" % filename)
+            context.application.model.file_open("input/%s" % in_filename)
+            context.application.model.file_save("output/%s" % out_filename)
         self.run_test_application(fn)
 
     def test_zml(self):
-        self.helper_file_save("test.zml")
+        self.helper_file_save("core_objects.zml", "test.zml")
 
     def test_pov(self):
-        self.helper_file_save("test.pov")
+        self.helper_file_save("core_objects.zml", "test.pov")
+
+    def test_xyz(self):
+        self.helper_file_save("tpa.zml", "test.xyz")
