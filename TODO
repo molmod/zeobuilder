@@ -7,7 +7,7 @@ TODO LISTS
 TODO core
 ---------
 
-### Implementation
+### Implementation (to be done after the items in the first release are completed)
 
 	* Code documentation + revision of each module
  
@@ -18,8 +18,8 @@ TODO before first release
 
 ### Priority
 
-	* import al the (remaining) old zeobuilder code in this new tree in the form
-	  of plugins (and as external modules).
+	* Import al the (remaining) old zeobuilder code in this new tree in the form
+	  of plugins and external modules.
 	    - dialog field that can select between a standard and a user value
 	      (for the radius and the color of an atom)
 	  	- databases and tables as model objects (in folder)
@@ -30,11 +30,12 @@ TODO before first release
 	  	- that atoms that are candidates for connections in the connections
 	  	  scanner must be made configurable. (a la selection filter)
         - field ElementSimple and popup ElementSimplePopup
+        - ...
 
 
 ### Bugs
 
-    * write_pov on periodic systems is broken
+    * write_pov on periodic systems and molecules is broken
 	* Correct face culling for inverted objects
     * apply lint tools on code to find extra bugs
     * do manual tests in addition to the unit tests.
@@ -56,6 +57,7 @@ TODO before first release
         - lines visualization
         - parameterize stick width
         - menu actions to make style changes on groups
+    * Arrow: margins
 
 
 ### Speed optimizations
@@ -68,7 +70,6 @@ TODO before first release
 
 ### Design and implementation changes
 
-    * Fields: read/write(instance) -> read/write(attribute) ??
     * Simplify the transformation calculus
     * cursor.execute with parameters for optimized large data transfer
     * A default action associated with each node type. (double click)
@@ -76,7 +77,7 @@ TODO before first release
 
 ### More data files with zeolite unit cells
     
-    * Transform those found on the atlas of zeolite frameworks
+    * The atlas of zeolite frameworks
 
 
 ### Non-programming
@@ -134,7 +135,6 @@ TODO following releases
     * Dragging between two zeobuilder processes
     * Dragging multiple selections + Copydrag function
     * MergeAtomsConnectedWithMinimiser
-    * Interactive Action for creating connections of any type
     * Interactive WalkTrough
     * Small molecule creation tool (ala Z-matrix but easier and better)
     * More import and export filters (connection to openbabel)
