@@ -93,13 +93,15 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
         tmp[:3] = frame.translation_vector
         return self.position_of_vector(numpy.dot(self.scene.modelview_matrix, tmp))
 
-    def user_to_parent(self, gl_object):
+    def eye_to_model_rotation(self, gl_object):
         if hasattr(gl_object, "parent") and \
            isinstance(gl_object.parent, GLTransformationMixin):
             parent_matrix = gl_object.parent.get_absolute_frame().rotation_matrix
         else:
             parent_matrix = numpy.identity(3, float)
-        return numpy.dot(self.scene.modelview_matrix[0:3,0:3], parent_matrix).transpose()
+        result = numpy.dot(self.scene.modelview_matrix[0:3,0:3], parent_matrix).transpose().copy()
+        #result [:,1] *= -1
+        return result
 
     def depth_to_scale(self, depth):
         """ transforms a depth into a scale au/pixel"""

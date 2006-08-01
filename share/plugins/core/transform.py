@@ -396,8 +396,8 @@ class RotateMouseMixin(object):
             rotation_axis = numpy.array([0.0, 0.0, -1.0])
             rotation_angle = rotz - self.former_rotz
             self.former_rotz = rotz
-        if self.user_to_parent is not None:
-            rotation_axis = numpy.dot(self.user_to_parent, rotation_axis)
+        if self.eye_to_model_rotation is not None:
+            rotation_axis = numpy.dot(self.eye_to_model_rotation, rotation_axis)
         if self.rotation_axis is not None:
             rotation_axis = self.rotation_axis * {True: 1, False: -1}[numpy.dot(self.rotation_axis, rotation_axis) > 0]
         temp = Rotation()
@@ -426,8 +426,8 @@ class RotateKeyboardMixin(object):
         else:
             return None
 
-        if self.user_to_parent is not None:
-            rotation_axis = numpy.dot(self.user_to_parent, rotation_axis)
+        if self.eye_to_model_rotation is not None:
+            rotation_axis = numpy.dot(self.eye_to_model_rotation, rotation_axis)
         if self.rotation_axis is not None:
             rotation_axis = self.rotation_axis * {True: 1, False: -1}[numpy.dot(self.rotation_axis, rotation_axis) > 0]
         temp = Rotation()
@@ -486,7 +486,7 @@ class RotateObjectBase(InteractiveWithMemory):
         self.rotation_center = rotation_center_object.get_frame_relative_to(self.victim.parent).translation_vector
         drawing_area = context.application.main.drawing_area
         self.screen_rotation_center = drawing_area.position_of_object(rotation_center_object)
-        self.user_to_parent = drawing_area.user_to_parent(self.victim)
+        self.eye_to_model_rotation = drawing_area.eye_to_model_rotation(self.victim)
 
         self.old_transformation = copy.deepcopy(self.victim.transformation)
 
@@ -550,7 +550,7 @@ class RotateWorldBase(Interactive):
         Interactive.interactive_init(self)
         drawing_area = context.application.main.drawing_area
         self.screen_rotation_center = drawing_area.position_of_vector(drawing_area.scene.viewer.translation_vector)
-        self.user_to_parent = None
+        self.eye_to_model_rotation = None
         self.rotation_axis = None
 
 
@@ -580,64 +580,71 @@ class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
 #
 
 
-class TranslateMouseMixin(object):
+class TranslateMixin(object):
     #def get_victim_depth(self, drawing_area):
     #    raise NotImplementedError
 
+    def convert(self, translation, drawing_area):
+        depth = self.get_victim_depth(drawing_area)
+        translation[0:2] *= drawing_area.depth_to_scale(depth)
+        translation[2] *= (1 + abs(self.get_victim_depth(drawing_area))) * 0.01
+        return translation
+
+
+class TranslateMouseMixin(TranslateMixin):
     def button_press(self, drawing_area, event):
         if event.button == 1: # XY translate
             self.former_x = event.x
             self.former_y = event.y
         elif event.button == 3: # Z translate
             self.former_x = event.x
-        self.depth_scale = drawing_area.depth_to_scale(self.get_victim_depth(drawing_area))
 
     def button_motion(self, drawing_area, event, start_button):
-        self.has_changed = True
-        if start_button == 2: return numpy.array([0.0, 0.0, 0.0])
+        translation = numpy.zeros(3, float)
+
+        if start_button == 2:
+            return vector
         elif start_button == 1: # XY translation
-            trans = self.depth_scale * numpy.array([event.x - self.former_x, -(event.y - self.former_y), 0.0])
+            translation[0] =   event.x - self.former_x
+            translation[1] = -(event.y - self.former_y)
             self.former_x = event.x
             self.former_y = event.y
         elif start_button == 3: # Z translation
-            delta_z = (1 + abs(self.get_victim_depth(drawing_area))) * (event.x - self.former_x) * 0.01
-            trans = numpy.array([0.0, 0.0, delta_z])
+            translation[2] = event.x - self.former_x
             self.former_x = event.x
-        if self.user_to_parent is None:
-            return trans
-        else:
-            return numpy.dot(self.user_to_parent, trans)
+
+        return self.convert(translation, drawing_area)
 
     def button_release(self, drawing_area, event):
         self.finish()
 
 
-class TranslateKeyboardMixin(object):
-    #def get_victim_depth(self, drawing_area):
-    #    raise NotImplementedError
-
+class TranslateKeyboardMixin(TranslateMixin):
     def key_press(self, drawing_area, event):
-        if event.keyval == 65365: # page up
-            translation_vector = numpy.array([ 0.0,  0.0, -0.1])
-        elif event.keyval == 65366: # page down
-            translation_vector = numpy.array([ 0.0,  0.0,  0.1])
-        elif event.keyval == 65363: # right
-            translation_vector = numpy.array([ 0.1,  0.0,  0.0])
-        elif event.keyval == 65361: # left
-            translation_vector = numpy.array([-0.1,  0.0,  0.0])
-        elif event.keyval == 65362: # up
-            translation_vector = numpy.array([ 0.0,  0.1,  0.0])
-        elif event.keyval == 65364: # down
-            translation_vector = numpy.array([ 0.0, -0.1,  0.0])
-        else:
-            return None
+        translation = numpy.zeros(3, float)
+        # on key press corresponds to a movement of the mouse with five pixels
+        pixels = 5
 
-        translation_vector *= 0.02 * (1 + abs(self.get_victim_depth(drawing_area)))
+        if event.keyval == 65363:
+            print "right"
+            translation[0] = +pixels
+        elif event.keyval == 65361:
+            print "left"
+            translation[0] = -pixels
+        elif event.keyval == 65362:
+            print "up"
+            translation[1] = +pixels
+        elif event.keyval == 65364:
+            print "down"
+            translation[1] = -pixels
+        elif event.keyval == 65365:
+            print "page up, to front"
+            translation[2] = +pixels
+        elif event.keyval == 65366:
+            print "page down, to back"
+            translation[2] = -pixels
 
-        if self.user_to_parent is None:
-            return translation_vector
-        else:
-            return numpy.dot(self.user_to_parent, translation_vector)
+        return self.convert(translation, drawing_area)
 
     def key_release(self, drawing_area, event):
         self.finish()
@@ -659,13 +666,19 @@ class TranslateObjectBase(InteractiveWithMemory):
     def interactive_init(self):
         InteractiveWithMemory.interactive_init(self)
         self.victim = context.application.cache.node
-        self.user_to_parent = context.application.main.drawing_area.user_to_parent(self.victim)
+        self.eye_to_model_rotation = context.application.main.drawing_area.eye_to_model_rotation(self.victim)
         self.changed = False
 
         self.old_transformation = copy.deepcopy(self.victim.transformation)
 
     def get_victim_depth(self, drawing_area):
         return drawing_area.depth_of_object(self.victim)
+
+    def do_translation(self, vector, drawing_area):
+        self.victim.transformation.translation_vector += numpy.dot(self.eye_to_model_rotation, vector)
+        self.victim.revalidate_transformation_list()
+        drawing_area.queue_draw()
+        self.changed = True
 
     def finish(self):
         if self.changed:
@@ -683,11 +696,7 @@ class TranslateObjectMouse(TranslateObjectBase, TranslateMouseMixin):
     interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=0)
 
     def button_motion(self, drawing_area, event, start_button):
-        self.victim.transformation.translation_vector += TranslateMouseMixin.button_motion(self, drawing_area, event, start_button)
-        self.victim.revalidate_transformation_list()
-        drawing_area.queue_draw()
-        #self.victim.invalidate_transformation_list()
-        self.changed = True
+        self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
 
 
 class TranslateObjectKeyboard(TranslateObjectBase, TranslateKeyboardMixin):
@@ -696,11 +705,7 @@ class TranslateObjectKeyboard(TranslateObjectBase, TranslateKeyboardMixin):
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
-        self.victim.transformation.translation_vector += TranslateKeyboardMixin.key_press(self, drawing_area, event)
-        self.victim.revalidate_transformation_list()
-        context.application.main.drawing_area.queue_draw()
-        #self.victim.invalidate_transformation_list()
-        self.changed = True
+        self.do_translation(TranslateKeyboardMixin.key_press(self, drawing_area, event), drawing_area)
 
 
 class TranslateWorldBase(Interactive):
@@ -715,10 +720,14 @@ class TranslateWorldBase(Interactive):
 
     def interactive_init(self):
         Interactive.interactive_init(self)
-        self.user_to_parent = context.application.main.drawing_area.user_to_parent(None)
+        self.eye_to_model_rotation = context.application.main.drawing_area.eye_to_model_rotation(None)
 
     def get_victim_depth(self, drawing_area):
         return -drawing_area.scene.modelview_matrix[2,3]
+
+    def do_translation(self, vector, drawing_area):
+        drawing_area.scene.center.translation_vector -= numpy.dot(self.eye_to_model_rotation, vector)
+        drawing_area.queue_draw()
 
 
 class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
@@ -726,8 +735,7 @@ class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
     interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=1)
 
     def button_motion(self, drawing_area, event, start_button):
-        drawing_area.scene.center.translation_vector -= TranslateMouseMixin.button_motion(self, drawing_area, event, start_button)
-        drawing_area.queue_draw()
+        self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
 
 
 class TranslateWorldKeyboard(TranslateWorldBase, TranslateKeyboardMixin):
@@ -736,8 +744,7 @@ class TranslateWorldKeyboard(TranslateWorldBase, TranslateKeyboardMixin):
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
-        context.application.main.drawing_area.scene.center.translation_vector -= TranslateKeyboardMixin.key_press(self, drawing_area, event)
-        context.application.main.drawing_area.queue_draw()
+        self.do_translation(TranslateKeyboardMixin.key_press(self, drawing_area, event), drawing_area)
 
 
 class TranslateViewerBase(Interactive):
@@ -750,28 +757,28 @@ class TranslateViewerBase(Interactive):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def interactive_init(self):
-        Interactive.interactive_init(self)
-        self.user_to_parent = None
-
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return -scene.viewer.translation_vector[2] - scene.znear()
+        return scene.viewer.translation_vector[2] + scene.znear()
 
+    def do_translation(self, vector, drawing_area):
+        scene = drawing_area.scene
+        scene.viewer.translation_vector[:2] -= vector[:2]
+        if (scene.opening_angle > 0):
+            scene.viewer.translation_vector[2] -= vector[2]
+        else:
+            scene.window_size *= (1 + 0.01*vector[2])
+            if scene.window_size < 0.001: scene.window_size = 0.001
+            elif scene.window_size > 1000: scene.window_size = 1000
+        drawing_area.queue_draw()
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
     description = "Translate the viewer position"
     interactive_info = InteractiveInfo("plugins/core/translate_viewer.svg", mouse=True, order=0)
 
     def button_motion(self, drawing_area, event, start_button):
-        scene = drawing_area.scene
-        if (scene.opening_angle > 0) or (start_button == 1):
-            scene.viewer.translation_vector += TranslateMouseMixin.button_motion(self, drawing_area, event, start_button)
-        else:
-            scene.window_size *= (1 + 0.01*TranslateMouseMixin.button_motion(self, drawing_area, event, start_button)[-1])
-            if scene.window_size < 0.001: scene.window_size = 0.001
-            elif scene.window_size > 1000: scene.window_size = 1000
-        drawing_area.queue_draw()
+        self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
+
 
 class TranslateViewerKeyboard(TranslateViewerBase, TranslateKeyboardMixin):
     description = "Translate the viewer position"
@@ -779,8 +786,57 @@ class TranslateViewerKeyboard(TranslateViewerBase, TranslateKeyboardMixin):
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
-        context.application.main.drawing_area.scene.viewer.translation_vector += TranslateKeyboardMixin.key_press(self, drawing_area, event)
-        context.application.main.drawing_area.queue_draw()
+        self.do_translation(TranslateKeyboardMixin.key_press(self, drawing_area, event), drawing_area)
+
+
+class TranslateRotationCenterBase(Interactive):
+    def analyze_selection():
+        # A) calling ancestor
+        if not Interactive.analyze_selection(): return False
+        # B) validating
+        if context.application.main is None: return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def interactive_init(self):
+        Interactive.interactive_init(self)
+        self.eye_to_model_rotation = context.application.main.drawing_area.eye_to_model_rotation(None)
+
+    def get_victim_depth(self, drawing_area):
+        scene = drawing_area.scene
+        return scene.viewer.translation_vector[2] + scene.znear()
+
+    def do_translation(self, vector, drawing_area):
+        scene = drawing_area.scene
+        transformed_vector = numpy.dot(self.eye_to_model_rotation, vector)
+        scene.viewer.translation_vector[:2] -= vector[:2]
+        scene.center.translation_vector[:2] += transformed_vector[:2]
+        if (scene.opening_angle > 0):
+            scene.viewer.translation_vector[2] -= vector[2]
+            scene.center.translation_vector[2] += transformed_vector[2]
+        else:
+            scene.window_size *= (1 + 0.01*vector[-1])
+            if scene.window_size < 0.001: scene.window_size = 0.001
+            elif scene.window_size > 1000: scene.window_size = 1000
+        drawing_area.queue_draw()
+
+
+class TranslateRotationCenterMouse(TranslateRotationCenterBase, TranslateMouseMixin):
+    description = "Translate the rotation center"
+    interactive_info = InteractiveInfo("plugins/core/translate_center.svg", mouse=True, order=0)
+
+    def button_motion(self, drawing_area, event, start_button):
+        self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
+
+
+class TranslateRotationCenterKeyboard(TranslateRotationCenterBase, TranslateKeyboardMixin):
+    description = "Translate the rotation center"
+    interactive_info = InteractiveInfo("plugins/core/translate_center.svg", keyboard=True, order=0)
+    sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
+
+    def key_press(self, drawing_area, event):
+        self.do_translation(TranslateKeyboardMixin.key_press(self, drawing_area, event), drawing_area)
 
 
 actions = {
@@ -800,26 +856,34 @@ actions = {
     "TranslateWorldKeyboard": TranslateWorldKeyboard,
     "TranslateViewerMouse": TranslateViewerMouse,
     "TranslateViewerKeyboard": TranslateViewerKeyboard,
+    "TranslateRotationCenterMouse": TranslateRotationCenterMouse,
+    "TranslateRotationCenterKeyboard": TranslateRotationCenterKeyboard,
 }
 
 
 interactive_groups = {
-    "rotation": InteractiveGroup(
+    "rotate": InteractiveGroup(
         image_name="plugins/core/rotate.svg",
-        description="Rotation tool",
+        description="Rotate",
         initial_mask=gtk.gdk.CONTROL_MASK,
-        order=1
+        order=1,
     ),
-    "translation": InteractiveGroup(
+    "translate": InteractiveGroup(
         image_name="plugins/core/translate.svg",
-        description="Translation tool",
+        description="Translate",
         initial_mask=gtk.gdk.SHIFT_MASK,
-        order=2
+        order=2,
     ),
-    "viewer_translation": InteractiveGroup(
+    "translate_viewer": InteractiveGroup(
         image_name="plugins/core/translate_viewer.svg",
-        description="Viewer Translation tool",
+        description="Translate the viewer",
+        initial_mask=None,
+        order=4,
+    ),
+    "translate_center": InteractiveGroup(
+        image_name="plugins/core/translate_center.svg",
+        description="Translate the rotation center",
         initial_mask=(gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
-        order=3
-    )
+        order=3,
+    ),
 }

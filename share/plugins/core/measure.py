@@ -387,6 +387,6 @@ interactive_groups = {
     "measure": InteractiveGroup(
         image_name="plugins/core/measure.svg",
         description="Measurement tool",
-        order=4
+        order=5
     )
 }

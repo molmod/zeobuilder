@@ -297,6 +297,6 @@ interactive_groups = {
     "geom_sketch": SketchInteractiveGroup(
         image_name="plugins/core/geom_sketch.svg",
         description="Geometric sketch tool",
-        order=5
+        order=6
     )
 }
