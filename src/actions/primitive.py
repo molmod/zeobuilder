@@ -33,7 +33,7 @@ class PrimitiveError(Exception):
 
 
 class Base(object):
-    changes_selection = False # see actions.composed.Base.__init__
+    changes_selection = False # see actions.composed.Action.__init__
 
     def __init__(self, victim, done=False):
         self.victim = victim

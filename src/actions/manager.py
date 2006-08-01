@@ -19,15 +19,13 @@
 #
 # --
 
-# Herafter a simple UndoManager class is defined which holds two stocks of Action
-# objects: undo and redo. With these stacks, it records everything the user does
-# in zeobuilder. The methods are self-explaining.
 
-from zeobuilder.actions.composed import CancelException
 from zeobuilder import context
+from zeobuilder.actions.composed import CancelException
 
 import gtk, gobject, profile, pstats
 import copy
+
 
 __all__ = ["ActionManager"]
 
@@ -187,11 +185,11 @@ class ActionManager(gobject.GObject):
         return self.undo_stack.saturated or len(self.undo_stack) > 0
 
     def default_action(self, node):
-        Action = context.application.plugins.get_action(
+        action = context.application.plugins.get_action(
             node.info.default_action_name
         )
-        if Action.analyze_selection():
-            Action()
+        if action.analyze_selection():
+            action()
 
 
 

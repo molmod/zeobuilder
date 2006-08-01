@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Base
+from zeobuilder.actions.composed import Action
 from zeobuilder.gui import load_image
 
 import gtk.gdk
@@ -118,8 +118,8 @@ class SubMenu(MenuActionContainer):
 
 
 class Place(MenuActionContainer):
-    def add_action(self, name, Action):
-        self.add_item(name, Action)
+    def add_action(self, name, action):
+        self.add_item(name, action)
 
     def create_default_item(self):
         return SubMenu()
@@ -140,7 +140,7 @@ class Place(MenuActionContainer):
                     menu_item = gtk.MenuItem(name)
                     menu.append(menu_item)
                     menu_item.set_submenu(new_menu)
-            elif issubclass(item, Base):
+            elif issubclass(item, Action):
                 if not only_show_applicable or item.cached_analyze_selection():
                     something_added = True
                     if item.menu_info.image_name is not None:
@@ -201,9 +201,9 @@ class Menu(object):
         place = self.main_menu.get_item_by_path(path)
         place.add_submenu(submenu_name)
 
-    def add_action(self, Action):
-        place = self.main_menu.get_item_by_path(Action.menu_info.path)
-        place.add_action(Action.menu_info.get_label(), Action)
+    def add_action(self, action):
+        place = self.main_menu.get_item_by_path(action.menu_info.path)
+        place.add_action(action.menu_info.get_label(), action)
 
     def fill_menubar(self, menubar):
         self.fill_menu(menubar, self.on_analyse, False)
@@ -223,17 +223,17 @@ class Menu(object):
     def kill_menu(self, widget):
         widget.destroy()
 
-    def on_activate(self, widget, Action):
+    def on_activate(self, widget, action):
         if self.all_menu_items_sensitive:
-            if not Action.analyze_selection(): return False
-        Action()
+            if not action.analyze_selection(): return False
+        action()
 
-    def on_analyse(self, widget, event, Action):
+    def on_analyse(self, widget, event, action):
         if event.count == 0:
-            widget.set_sensitive(Action.cached_analyze_selection())
+            widget.set_sensitive(action.cached_analyze_selection())
             # Only change label if needed, or else you'll get an infinite stream of expose events
-            if widget.get_child().get_label() != Action.menu_info.get_label():
-                widget.get_child().set_label(Action.menu_info.get_label())
+            if widget.get_child().get_label() != action.menu_info.get_label():
+                widget.get_child().set_label(action.menu_info.get_label())
             self.all_menu_items_sensitive = False
 
     def set_all_menu_items_sensitive(self, accel_group, acceleratable, accel_key, accel_mods):

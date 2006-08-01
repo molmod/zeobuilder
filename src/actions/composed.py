@@ -26,7 +26,7 @@ from zeobuilder.gui.simple import ok_error
 import copy, time
 
 __all__ = ["init_actions", "UserError", "CancelException", "ActionError",
-           "Base", "ImmediateMixin", "Parameters", "RememberParametersMixin",
+           "Action", "ImmediateMixin", "Parameters", "RememberParametersMixin",
            "Immediate", "ImmediateWithMemory", "Interactive",
            "InteractiveWithMemory"]
 
@@ -55,11 +55,11 @@ class ActionError(Exception):
 
 
 #
-# Base
+# Action
 #
 
 
-class Base(object):
+class Action(object):
     "This class holds the base structure of an action."
     # --- STATIC ---
 
@@ -179,9 +179,9 @@ class RememberParametersMixin(object):
 #
 
 
-class Immediate(Base, ImmediateMixin):
+class Immediate(Action, ImmediateMixin):
     def __init__(self):
-        Base.__init__(self)
+        Action.__init__(self)
         ImmediateMixin.__init__(self)
 
 
@@ -223,11 +223,11 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
         RememberParametersMixin.repeat(self)
 
 
-class Interactive(Base):
+class Interactive(Action):
     repeatable = False
 
     def __init__(self):
-        Base.__init__(self)
+        Action.__init__(self)
         self.interactive_init()
 
     def interactive_init(self):
@@ -245,7 +245,7 @@ class InteractiveWithMemory(Interactive, RememberParametersMixin):
 
     def __init__(self, parameters=None):
         RememberParametersMixin.__init__(self, parameters)
-        Base.__init__(self)
+        Action.__init__(self)
         if self.parameters is None:
             self.parameters = Parameters()
             self.interactive_init()
