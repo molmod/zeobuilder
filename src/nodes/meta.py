@@ -65,7 +65,7 @@ class NodeClass(gobject.GObjectMeta):
                 cls.dialog_fields |= base.dialog_fields
         # create a nodeinfo if needed
         if not hasattr(cls, "info"):
-            from base import NodeInfo
+            from node import NodeInfo
             cls.info = NodeInfo()
         # merge the node info with that from the ancestors
         d = {}

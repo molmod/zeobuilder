@@ -25,7 +25,6 @@ from zeobuilder.filters import Indenter, FilterError
 from zeobuilder.transformations import Translation, Rotation, Complete
 from zeobuilder.nodes.parent_mixin import ParentMixin, ContainerMixin, ReferentMixin
 from zeobuilder.nodes.model_object import ModelObject
-from zeobuilder.nodes.base import Base
 
 
 import xml.sax.handler, xml.sax.saxutils, base64, gzip, bz2, numpy, types

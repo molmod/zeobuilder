@@ -19,7 +19,7 @@
 #
 # --
 
-from zeobuilder.nodes.base import Base, NodeInfo
+from zeobuilder.nodes.node import Node, NodeInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
@@ -40,7 +40,7 @@ class ModelObjectInfo(NodeInfo):
             self.icon_name = icon_name
 
 
-class ModelObject(Base):
+class ModelObject(Node):
 
     #
     # State
@@ -48,9 +48,9 @@ class ModelObject(Base):
 
     def __init__(self, **initstate):
         # some debugging code
-        #Base.count += 1
-        #print " PLUS => Initializing " + str(self.__class__) + " (" + str(Base.count) + ") " + hex(id(self))
-        Base.__init__(self)
+        #Node.count += 1
+        #print " PLUS => Initializing " + str(self.__class__) + " (" + str(Node.count) + ") " + hex(id(self))
+        Node.__init__(self)
         # initialisation of non state variables
         self.initnonstate()
         # further initialize the state (the published properties)
@@ -59,8 +59,8 @@ class ModelObject(Base):
     def __del__(self):
         pass
         # some debugging code
-        #Base.count -= 1
-        #print " MIN  => Deleting     " + str(self.__class__) + " (" + str(Base.count) + ") " + hex(id(self))
+        #Node.count -= 1
+        #print " MIN  => Deleting     " + str(self.__class__) + " (" + str(Node.count) + ") " + hex(id(self))
 
     def __getstate__(self):
         return self.published_properties.get_name_value_dict(self)

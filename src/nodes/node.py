@@ -28,7 +28,7 @@ import gtk.gdk, gobject
 import copy
 
 
-__all__ = ["Base", "NodeInfo"]
+__all__ = ["Node", "NodeInfo"]
 
 
 class NodeInfo(object):
@@ -37,7 +37,7 @@ class NodeInfo(object):
             self.default_action_name = default_action_name
 
 
-class Base(gobject.GObject):
+class Node(gobject.GObject):
 
     __metaclass__ = NodeClass
     info = NodeInfo("EditProperties")

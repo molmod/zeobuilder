@@ -22,7 +22,7 @@
 
 from zeobuilder import context
 
-from zeobuilder.nodes.base import Base, NodeInfo
+from zeobuilder.nodes.node import Node, NodeInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import bridge as tree_bridge
@@ -37,12 +37,12 @@ import os
 __all__ = ["Reference", "SpatialReference", "GLTransformedReference"]
 
 
-class Reference(Base):
+class Reference(Node):
     info = NodeInfo("SelectTargets")
     overlay_icon = load_image("reference.svg", (20, 20))
 
     def __init__(self, prefix):
-        Base.__init__(self)
+        Node.__init__(self)
         self.target = None
         self.prefix = prefix
         self.icon = self.overlay_icon
@@ -69,12 +69,12 @@ class Reference(Base):
             return self.prefix + ": " + self.target.name
 
     def set_model(self, model):
-        Base.set_model(self, model)
+        Node.set_model(self, model)
         if self.target is not None:
             self.target.references.append(self)
 
     def unset_model(self):
-        Base.unset_model(self)
+        Node.unset_model(self)
         if self.target is not None:
             self.target.references.remove(self)
 

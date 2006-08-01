@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.base import Base as NodeBase
+from zeobuilder.nodes.node import Node
 from zeobuilder.nodes.parent_mixin import ParentMixin
 from zeobuilder.gui.simple import ok_error
 from zeobuilder.models import Model as ModelBase
@@ -37,7 +37,7 @@ __all__ = ["Model"]
 class Model(ModelBase, gtk.TreeStore):
     def __init__(self):
         ModelBase.__init__(self)
-        gtk.TreeStore.__init__(self, NodeBase)
+        gtk.TreeStore.__init__(self, Node)
 
     def add_node(self, node):
         #print "Adding node %s (%i)" % (node.get_name(), id(node))
