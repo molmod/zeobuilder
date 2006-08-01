@@ -138,9 +138,6 @@ class ModelObject(Base):
     def get_fixed(self):
         return self.parent is None
 
-    def set_expanded(self, expanded):
-        pass
-
 
 gobject.signal_new("on-move", ModelObject, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 

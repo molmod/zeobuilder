@@ -21,6 +21,7 @@
 
 
 from zeobuilder import context
+from zeobuilder.nodes.parent_mixin import ParentMixin
 from zeobuilder.gui.simple import nosave_cancel_save_question
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.drawing_area import DrawingArea
@@ -57,9 +58,8 @@ class Main(GladeWrapper):
         self.tree_view = gtk.TreeView(context.application.model)
         self.sw_nodes.add(self.tree_view)
         self.tree_view.set_headers_visible(False)
-        self.tree_view.connect("row-collapsed", self.on_row_collapsed)
-        self.tree_view.connect("row-expanded", self.on_row_expanded)
         self.tree_view.connect("button-press-event", self.on_tree_view_button_press_event)
+        self.tree_view.connect("row-collapsed", self.on_row_collapsed)
 
         self.tree_selection = self.tree_view.get_selection()
         self.tree_selection.set_mode(gtk.SELECTION_MULTIPLE)
@@ -184,6 +184,18 @@ class Main(GladeWrapper):
         node.set_selected(not is_selected)
         return True
 
+    def on_row_collapsed(self, tree_view, iter, path):
+        # unselect all the nodes that are no longer visible in the tree. The
+        # tree_selection is updated by gtk, but the selection attribute of the
+        # nodes must be updated here:
+        def recursive_unselect_children(node):
+            for child in node.children:
+                child.set_selected(False)
+                if isinstance(child, ParentMixin):
+                    recursive_unselect_children(child)
+
+        recursive_unselect_children(context.application.model[path][0])
+
     def toggle_selection(self, node, on=None):
         if on is None: on = not node.selected
         if on:
@@ -200,12 +212,6 @@ class Main(GladeWrapper):
         self.tree_selection.unselect_all()
         for node in nodes:
             self.toggle_selection(node, on=True)
-
-    def on_row_collapsed(self, tree_view, iter, path):
-        context.application.model[iter][0].set_expanded(False)
-
-    def on_row_expanded(self, tree_view, iter, path):
-        context.application.model[iter][0].set_expanded(True)
 
     # popup menu with actions
 

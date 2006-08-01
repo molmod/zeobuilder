@@ -49,9 +49,6 @@ class ContainerBase(ModelObject, ContainerMixin):
         ContainerMixin.delete_referents(self)
         ModelObject.delete_referents(self)
 
-    def set_expanded(self, expanded):
-        ContainerMixin.set_expanded(self, expanded)
-
 
 class ReferentBase(ModelObject, ReferentMixin):
 
@@ -75,18 +72,12 @@ class ReferentBase(ModelObject, ReferentMixin):
         ReferentMixin.unset_model(self)
         ModelObject.unset_model(self)
 
-    def set_expanded(self, expanded):
-        ReferentMixin.set_expanded(self, expanded)
-
     #
     # Flags
     #
 
     def get_fixed(self):
         return ReferentMixin.get_fixed(self)
-
-    def set_expanded(self, expanded):
-        ReferentMixin.set_expanded(self, expanded)
 
 
 class GLGeometricBase(ModelObject, GLTransformationMixin):
@@ -170,9 +161,6 @@ class GLContainerBase(ModelObject, GLMixin, GLContainerMixin):
     def set_selected(self, selected):
         GLMixin.set_selected(self, selected)
 
-    def set_expanded(self, expanded):
-        GLContainerMixin.set_expanded(self, expanded)
-
 
 class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
 
@@ -235,9 +223,6 @@ class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
 
     def set_selected(self, selected):
         GLTransformationMixin.set_selected(self, selected)
-
-    def set_expanded(self, expanded):
-        GLContainerMixin.set_expanded(self, expanded)
 
 
 class GLReferentBase(ReferentBase, GLMixin):

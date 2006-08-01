@@ -30,20 +30,6 @@ class ParentMixin(object):
     __metaclass__ = NodeClass
 
     #
-    # Properties
-    #
-
-    def default_expanded(self):
-        return True
-
-    def set_expanded(self, expanded):
-        self.expanded = expanded
-
-    published_properties = PublishedProperties({
-        "expanded": Property(default_expanded, lambda self: self.expanded,set_expanded)
-    })
-
-    #
     # Tree
     #
 
@@ -84,13 +70,6 @@ class ContainerMixin(ParentMixin):
     #
     # Tree
     #
-
-    def set_expanded(self, expanded):
-        if not expanded and self.expanded:
-            for child in self.children:
-                child.set_selected(False)
-                child.set_expanded(False)
-        self.expanded = expanded
 
     def add(self, model_object, index=-1):
         #print "ADD TO " + self.name + ":", model_object.name
@@ -144,9 +123,6 @@ class ReferentMixin(ParentMixin):
     # Properties
     #
 
-    def default_expanded(self):
-        return False
-
     def get_targets(self):
         return [child.target for child in self.children]
 
@@ -159,16 +135,6 @@ class ReferentMixin(ParentMixin):
     published_properties = PublishedProperties({
         "targets": Property([], get_targets, set_targets),
     })
-
-    #
-    # Tree
-    #
-
-    def set_expanded(self, expanded):
-        if not expanded and self.expanded:
-            for child in self.children:
-                child.set_selected(False)
-        self.expanded = expanded
 
     #
     # References
