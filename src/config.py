@@ -32,20 +32,14 @@ import os.path
 __all__ = ["Configuration"]
 
 
-class Settings(object):
-    def __setattr__(self, name, value, registered=False):
-        if (name != "__dict__") and (not registered) and (name not in self.__dict__):
-            raise AttributeError("Setting '%s' has not been registered." % name)
-        else:
-            object.__setattr__(self, name, value)
-
-
 class Configuration(object):
     def __init__(self, filename):
+        self.redirecting = False
         self.filename = filename
         self.dialog_fields = []
-        self.settings = Settings()
+        self.settings = {}
         self.load_from_file()
+        self.redirecting = True
 
         # register some general settings
         from zeobuilder.gui import fields
@@ -87,38 +81,39 @@ class Configuration(object):
 
     def load_from_file(self):
         if os.path.isfile(self.filename):
+            from zeobuilder.zml import load_from_file
             f = file(self.filename, "r")
-            try:
-                self.settings.__dict__ = eval(f.read())
-            except Exception:
-                pass
+            self.settings = load_from_file(f)
             f.close()
 
     def save_to_file(self):
+        from zeobuilder.zml import dump_to_file
         f = file(self.filename, "w")
-        f.write(str(self.settings.__dict__))
+        dump_to_file(f, self.settings)
         f.close()
 
     def __getattr__(self, name):
-        if name not in self.settings.__dict__:
+        if len(self.settings) > 0 and name not in self.settings:
             raise AttributeError("Setting '%s' has not been registered." % name)
         else:
-            return self.settings.__dict__[name]
+            return self.settings[name]
 
     def __setattr__(self, name, value):
-        if hasattr(self, "settings") and not hasattr(self, name):
-            self.settings.__setattr__(name, value)
+        if name == "redirecting" or not self.redirecting:
+            object.__setattr__(self, name, value)
+        elif name in self.settings:# and name in self.settings:
+            self.settings[name] = value
         else:
             object.__setattr__(self, name, value)
 
     def register_setting(self, name, default, dialog_field_info=None, corrector=None):
-        if name not in self.settings.__dict__:
-            self.settings.__setattr__(name, default, True)
+        if name not in self.settings:
+            self.settings[name] =  default
         elif corrector is not None:
             # the corrector is a function that validates the initial value
             # of a setting (that has been loaded from the configuration file),
             # and silently corrects it if required
-            self.settings.__setattr__(name, corrector(self.settings.__dict__[name]))
+            self.settings[name] = corrector(self.settings[name])
         if dialog_field_info is not None:
             self.dialog_fields.append(dialog_field_info)
 
