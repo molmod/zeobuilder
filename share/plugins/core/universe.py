@@ -848,7 +848,7 @@ class AddPeriodicities(Immediate):
     def do(self):
         vectors = context.application.cache.nodes
         universe = context.application.model.root[0]
-        new_unit_cell = MolmodUnitCell()
+        new_unit_cell = UnitCell()
         new_unit_cell.cell_active = copy.deepcopy(universe.cell_active)
         new_unit_cell.cell = copy.deepcopy(universe.cell)
         try:
