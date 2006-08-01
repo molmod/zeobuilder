@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
-from zeobuilder.nodes.elementary import GLContainerBase
+from zeobuilder.nodes.elementary import GLContainerBase, GLReferentBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.parent_mixin import ReferentMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
@@ -37,7 +37,7 @@ from zeobuilder.zml import dump_to_file, load_from_file
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 
-from molmod.unit_cell import UnitCell as MolmodUnitCell
+from molmod.unit_cell import UnitCell
 from molmod.units import angstrom
 
 from OpenGL.GL import *
@@ -46,39 +46,10 @@ import numpy, gtk
 import math, copy, StringIO
 
 
-class UnitCell(MolmodUnitCell):
+class GLPeriodicContainer(GLContainerBase, UnitCell):
+
 
     __metaclass__ = NodeClass
-
-    #
-    # Properties
-    #
-
-    published_properties = PublishedProperties({
-        # The columns of the cell are the vectors that correspond
-        # to the ridges of the parallellepipedum that describe the unit cell. In
-        # other words this matrix transforms a unit cube to the unit cell.
-        "cell": Property(numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, MolmodUnitCell.set_cell),
-        "cell_active": Property(numpy.array([False, False, False]), lambda self: self.cell_active, MolmodUnitCell.set_cell_active),
-    })
-
-    #
-    # Dialog fields (see action EditProperties)
-    #
-
-    dialog_fields = set([
-        DialogFieldInfo("Unit cell", (5, 0), fields.composed.CellMatrix(
-            label_text="Cell dimensions",
-            attribute_name="cell",
-        )),
-        DialogFieldInfo("Unit cell", (5, 1), fields.composed.CellActive(
-            label_text="Active directions",
-            attribute_name="cell_active",
-        )),
-    ])
-
-
-class GLPeriodicContainer(GLContainerBase, UnitCell):
 
     #
     # State
@@ -96,26 +67,52 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     # Properties
     #
 
+    def update_vectors(self):
+        for node in self.children:
+            if isinstance(node, GLReferentBase):
+                node.invalidate_draw_list()
+                node.invalidate_boundingbox_list()
+
     def set_cell(self, cell):
         UnitCell.set_cell(self, cell)
         self.update_child_positions()
         self.invalidate_boundingbox_list()
         self.invalidate_draw_list()
-        # for vectors
-        #for child in self.children:
-        #    child.invalidate_draw_list()
-        #    child.invalidate_boundingbox_list()
-
+        self.update_vectors()
 
     def set_cell_active(self, cell_active):
         UnitCell.set_cell_active(self, cell_active)
         self.update_child_positions()
         self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
-        # for vectors
-        #for child in self.children:
-        #    child.invalidate_draw_list()
-        #    child.invalidate_boundingbox_list()
+        self.update_vectors()
+
+    #
+    # Properties
+    #
+
+    published_properties = PublishedProperties({
+        # The columns of the cell are the vectors that correspond
+        # to the ridges of the parallellepipedum that describe the unit cell. In
+        # other words this matrix transforms a unit cube to the unit cell.
+        "cell": Property(numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, set_cell),
+        "cell_active": Property(numpy.array([False, False, False]), lambda self: self.cell_active, set_cell_active),
+    })
+
+    #
+    # Dialog fields (see action EditProperties)
+    #
+
+    dialog_fields = set([
+        DialogFieldInfo("Unit cell", (5, 0), fields.composed.CellMatrix(
+            label_text="Cell dimensions",
+            attribute_name="cell",
+        )),
+        DialogFieldInfo("Unit cell", (5, 1), fields.composed.CellActive(
+            label_text="Active directions",
+            attribute_name="cell_active",
+        )),
+    ])
 
     #
     # Tree
