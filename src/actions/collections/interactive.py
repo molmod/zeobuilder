@@ -55,8 +55,6 @@ class InteractiveGroup(object):
         # actions
         self.keyboard_actions = []
         self.mouse_actions = []
-        self.keyboard_candidate = None
-        self.mouse_candidate = None
         self.handler_id = None
 
     def add_action(self, action):
@@ -65,24 +63,22 @@ class InteractiveGroup(object):
         if action.interactive_info.mouse:
             self.mouse_actions.append(action)
 
-    def on_cache_invalidated(self, cache):
-        self.keyboard_candidate = None
-        for action in self.keyboard_actions:
-            if action.cached_analyze_selection():
-                self.keyboard_candidate = action
-                break
-        self.mouse_candidate = None
+    def get_mouse_candidate(self):
+        result = None
         for action in self.mouse_actions:
             if action.cached_analyze_selection():
-                self.mouse_candidate = action
-                break
+                return action
+
+    def get_keyboard_candidate(self):
+        for action in self.keyboard_actions:
+            if action.cached_analyze_selection():
+                return action
 
     def activate(self):
-        self.handler_id = context.application.cache.connect("cache-invalidated", self.on_cache_invalidated)
-        self.on_cache_invalidated(None)
+        pass
 
     def deactivate(self):
-        context.application.cache.disconnect(self.handler_id)
+        pass
 
 
 class InteractiveButton(gtk.Button):
@@ -206,6 +202,7 @@ class InteractiveBar(gtk.Table):
     #
 
     def button_press(self, drawing_area, event):
+        # make sure there is no action running, else quit.
         current_action = context.application.action_manager.current_action
         if current_action is not None:
             if isinstance(current_action, InteractiveAction):
@@ -213,9 +210,15 @@ class InteractiveBar(gtk.Table):
                 current_action.finish()
             else:
                 return
+        # if the user points an object, treat it as if it is the first selected
+        # object.
+        hit = drawing_area.get_nearest(event.x, event.y)
+        if hit is not None:
+            context.application.cache.nodes.insert(0, hit)
+        # create the action
         interactive_group = self.buttons[event.state & (gtk.gdk.SHIFT_MASK | gtk.gdk.CONTROL_MASK)].interactive_group
         if interactive_group is None: return
-        candidate = interactive_group.mouse_candidate
+        candidate = interactive_group.get_mouse_candidate()
         if candidate is None: return
         current_action = candidate()
         self.start_button = event.button
@@ -246,7 +249,7 @@ class InteractiveBar(gtk.Table):
         else:
             interactive_group = self.buttons[event.state & (gtk.gdk.SHIFT_MASK | gtk.gdk.CONTROL_MASK)].interactive_group
             if interactive_group is None: return
-            candidate = interactive_group.keyboard_candidate
+            candidate = interactive_group.get_keyboard_candidate()
             if (candidate is None) or (event.keyval not in candidate.sensitive_keys): return
             current_action = candidate()
 
