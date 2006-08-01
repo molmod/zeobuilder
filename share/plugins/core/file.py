@@ -38,7 +38,7 @@ class FileNew(Immediate):
         Universe = context.application.plugins.get_node("Universe")
         universe = Universe(axes_visible=False)
         Folder = context.application.plugins.get_node("Folder")
-        folder = Folder(name="Root folder")
+        folder = Folder()
         context.application.main.file_new(universe, folder)
 
 
