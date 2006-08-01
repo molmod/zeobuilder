@@ -19,20 +19,22 @@
 #
 # --
 
+
 from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.reference import Reference
 
-__all__ = ["Base", "PrimitiveError", "Add", "SetAttribute", "Delete", "Move",
-           "SetPublishedProperty", "Transform"]
+
+__all__ = ["PrimitiveError", "Add", "SetAttribute", "Delete", "Move",
+           "SetPublishedProperty", "Transform", "SetTarget"]
 
 
 class PrimitiveError(Exception):
     pass
 
 
-class Base(object):
+class Primitive(object):
     changes_selection = False # see actions.composed.Action.__init__
 
     def __init__(self, victim, done=False):
@@ -58,7 +60,7 @@ class Base(object):
         self.done = False
 
 
-class Add(Base):
+class Add(Primitive):
     def __init__(self, victim, parent, index=-1, select=True):
         if not isinstance(parent, ContainerMixin):
             raise PrimitiveError, "ADD: Parent must be a %s. You gave %s." % (ContainerMixin, parent)
@@ -67,20 +69,20 @@ class Add(Base):
         self.parent = parent
         self.index = index
         self.changes_selection = select
-        Base.__init__(self, victim, False)
+        Primitive.__init__(self, victim, False)
 
     def redo(self):
-        Base.redo(self)
+        Primitive.redo(self)
         self.parent.add(self.victim, self.index)
         if self.changes_selection:
             context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
-        Base.undo(self)
+        Primitive.undo(self)
         self.parent.remove(self.victim)
 
 
-class SetAttribute(Base):
+class SetAttribute(Primitive):
     def __init__(self, victim, attribute_name, value, done=False):
         self.attribute_name = attribute_name
         if done:
@@ -89,45 +91,45 @@ class SetAttribute(Base):
         else:
             self.new_value = value
             self.old_value = None
-        Base.__init__(self, victim, done)
+        Primitive.__init__(self, victim, done)
 
     def redo(self):
-        Base.redo(self)
+        Primitive.redo(self)
         if self.old_value is None:
             self.old_value = eval("self.victim.%s" % self.attribute_name)
         exec("self.victim.%s = self.new_value" % self.attribute_name)
 
     def undo(self):
-        Base.undo(self)
+        Primitive.undo(self)
         if self.new_value is None:
             self.new_value = eval("self.victim.%s" % self.attribute_name)
         exec("self.victim.%s = self.old_value" % self.attribute_name)
 
 
-class Delete(Base):
+class Delete(Primitive):
     def __init__(self, victim):
         if victim.get_fixed():
             raise PrimitiveError, "DELETE: The victim is fixed."
         self.old_parent = None
         self.old_index = None
-        Base.__init__(self, victim, False)
+        Primitive.__init__(self, victim, False)
 
     def init(self):
         self.victim.delete_referents()
 
     def redo(self):
-        Base.redo(self)
+        Primitive.redo(self)
         if self.old_index is None:
             self.old_parent = self.victim.parent
             self.old_index = self.victim.get_index()
         self.old_parent.remove(self.victim)
 
     def undo(self):
-        Base.undo(self)
+        Primitive.undo(self)
         self.old_parent.add(self.victim, self.old_index)
 
 
-class Move(Base):
+class Move(Primitive):
     def __init__(self, victim, new_parent, new_index=-1, select=True):
         if victim.get_fixed():
             raise PrimitiveError, "MOVE: The victim is fixed."
@@ -140,10 +142,10 @@ class Move(Base):
         self.old_parent = None
         self.old_index = None
         self.changes_selection = select
-        Base.__init__(self, victim, False)
+        Primitive.__init__(self, victim, False)
 
     def redo(self):
-        Base.redo(self)
+        Primitive.redo(self)
         if self.old_index is None:
             self.old_parent = self.victim.parent
             self.old_index = self.victim.get_index()
@@ -152,13 +154,13 @@ class Move(Base):
             context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
-        Base.undo(self)
+        Primitive.undo(self)
         self.victim.move(self.old_parent, self.old_index)
         if self.changes_selection:
             context.application.main.toggle_selection(self.victim, on=True)
 
 
-class SetPublishedProperty(Base):
+class SetPublishedProperty(Primitive):
     def __init__(self, victim, name, value, done=False):
         # When using done=True, only call this primitive after the changes
         # to the published properties were made and pass a deep copy
@@ -173,20 +175,20 @@ class SetPublishedProperty(Base):
         else:
             self.new_value = value
             self.old_value = None
-        Base.__init__(self, victim, done)
+        Primitive.__init__(self, victim, done)
 
     def redo(self):
-        Base.redo(self)
+        Primitive.redo(self)
         if self.old_value is None:
             self.old_value = self.published_property.get(self.victim)
         self.published_property.set(self.victim, self.new_value)
 
     def undo(self):
-        Base.undo(self)
+        Primitive.undo(self)
         self.published_property.set(self.victim, self.old_value)
 
 
-class Transform(Base):
+class Transform(Primitive):
     def __init__(self, victim, transformation, done=False, after=True):
         if not isinstance(victim, GLTransformationMixin):
             raise PrimitiveError, "TRANSFORM: Object must be a %s. You gave %s." % (GLTransformationMixin, victim)
@@ -196,10 +198,10 @@ class Transform(Base):
         self.after = after
         if done:
             self.victim.invalidate_transformation_list()
-        Base.__init__(self, victim, done)
+        Primitive.__init__(self, victim, done)
 
     def redo(self):
-        Base.redo(self)
+        Primitive.redo(self)
         if self.after:
             self.victim.transformation.apply_after(self.transformation)
         else:
@@ -207,7 +209,7 @@ class Transform(Base):
         self.victim.invalidate_transformation_list()
 
     def undo(self):
-        Base.undo(self)
+        Primitive.undo(self)
         if self.after:
             self.victim.transformation.apply_inverse_after(self.transformation)
         else:
@@ -215,7 +217,7 @@ class Transform(Base):
         self.victim.invalidate_transformation_list()
 
 
-class SetTarget(Base):
+class SetTarget(Primitive):
     def __init__(self, victim, target):
         if not isinstance(victim, Reference):
             raise PrimitiveError, "TARGET: Reference must be a %s. You gave %s." % (Reference, victim)
@@ -224,15 +226,15 @@ class SetTarget(Base):
         self.victim = victim
         self.new_target = target
         self.old_target = 0
-        Base.__init__(self, victim, False)
+        Primitive.__init__(self, victim, False)
 
     def redo(self):
-        Base.redo(self)
+        Primitive.redo(self)
         if self.old_target == 0:
             self.old_target = self.victim.target
         self.victim.set_target(self.new_target)
 
     def undo(self):
-        Base.undo(self)
+        Primitive.undo(self)
         self.victim.set_target(self.old_target)
 
