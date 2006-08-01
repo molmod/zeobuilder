@@ -221,7 +221,7 @@ class Scene(object):
         if self.opening_angle > 0.0:
             glFrustum(-w*self.window_size, w*self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
         else:
-            glOrtho(-self.window_size, self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
+            glOrtho(-w*self.window_size, w*self.window_size, -h*self.window_size, h*self.window_size, znear, zfar)
         if selection_box is None:
             self.projection_matrix = numpy.transpose(numpy.array(glGetFloatv(GL_PROJECTION_MATRIX), float))
 
