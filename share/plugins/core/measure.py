@@ -29,7 +29,6 @@ from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.transformations import Translation
 from zeobuilder.conversion import express_measure
 
-from molmod.units import LENGTH, ANGLE
 from molmod.vectors import angle
 
 from OpenGL.GLUT import *
@@ -234,19 +233,19 @@ class MeasurementsWindow(GladeWrapper):
 
         def express_distance(index1, index2):
             delta = self.vectors[index1] - self.vectors[index2]
-            return express_measure(math.sqrt(numpy.dot(delta, delta)), measure=LENGTH)
+            return express_measure(math.sqrt(numpy.dot(delta, delta)), measure="Length")
 
         def express_angle(index1, index2, index3):
             delta1 = self.vectors[index1] - self.vectors[index2]
             delta2 = self.vectors[index3] - self.vectors[index2]
-            return express_measure(angle(delta1, delta2), measure=ANGLE)
+            return express_measure(angle(delta1, delta2), measure="Angle")
 
         def express_distance_to_line(index1, index2, index3):
             delta1 = self.vectors[index1] - self.vectors[index2]
             delta2 = self.vectors[index2] - self.vectors[index3]
             delta2 /= math.sqrt(numpy.dot(delta2, delta2))
             normal = delta1 - delta2*numpy.dot(delta1, delta2)
-            return express_measure(math.sqrt(numpy.dot(normal, normal)), measure=LENGTH)
+            return express_measure(math.sqrt(numpy.dot(normal, normal)), measure="Length")
 
         def express_dihedral_angle(index1, index2, index3, index4):
             normal1 = numpy.cross(
@@ -257,7 +256,7 @@ class MeasurementsWindow(GladeWrapper):
                 self.vectors[index2] - self.vectors[index3],
                 self.vectors[index4] - self.vectors[index3]
             )
-            return express_measure(angle(normal1, normal2), measure=ANGLE)
+            return express_measure(angle(normal1, normal2), measure="Angle")
 
         def express_out_of_plane_angle(index1, index2, index3, index4):
             delta = self.vectors[index1] - self.vectors[index2]
@@ -265,7 +264,7 @@ class MeasurementsWindow(GladeWrapper):
                 self.vectors[index4] - self.vectors[index3],
                 self.vectors[index2] - self.vectors[index3]
             )
-            return express_measure(0.5*math.pi - angle(normal, delta), measure=ANGLE)
+            return express_measure(0.5*math.pi - angle(normal, delta), measure="Angle")
 
         def express_distance_to_plane(index1, index2, index3, index4):
             delta = self.vectors[index1] - self.vectors[index2]
@@ -274,7 +273,7 @@ class MeasurementsWindow(GladeWrapper):
                 self.vectors[index4] - self.vectors[index3]
             )
             normal /= math.sqrt(numpy.dot(normal, normal))
-            return express_measure(abs(numpy.dot(delta, normal)), measure=LENGTH)
+            return express_measure(abs(numpy.dot(delta, normal)), measure="Length")
 
         def express_distance_between_lines(index1, index2, index3, index4):
             delta1 = self.vectors[index1] - self.vectors[index2]
@@ -282,7 +281,7 @@ class MeasurementsWindow(GladeWrapper):
             normal = numpy.cross(delta1, delta2)
             normal /= math.sqrt(numpy.dot(normal, normal))
             delta3 = self.vectors[index1] - self.vectors[index3]
-            return express_measure(abs(numpy.dot(delta3, normal)), measure=LENGTH)
+            return express_measure(abs(numpy.dot(delta3, normal)), measure="Length")
 
         chain_len = len(self.model_objects)
         if chain_len > 0:

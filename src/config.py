@@ -31,7 +31,6 @@ import os.path
 
 __all__ = ["Configuration"]
 
-
 class Configuration(object):
     def __init__(self, filename):
         self.redirecting = False
@@ -48,7 +47,7 @@ class Configuration(object):
         # 1) Default units
         def corrector_default_units(value):
             for measure, units in units_by_measure.iteritems():
-                if measure not in value or value[measure] not in units:
+                if (measure not in value) or (value[measure] not in units):
                     value[measure] = units[0]
             return dict(
                 (measure, unit)

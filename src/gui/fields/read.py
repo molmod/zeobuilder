@@ -22,7 +22,6 @@
 from elementary import Read
 from mixin import ambiguous, insensitive
 from zeobuilder.conversion import express_measure, express_data_size
-from molmod.units import LENGTH
 
 import math, gtk, numpy
 
@@ -76,9 +75,9 @@ class Handedness(Label):
 
 class BBox(Label):
     def convert_to_representation(self, value):
-        return (express_measure(value.corners[1][0] - value.corners[0][0], LENGTH),
-                express_measure(value.corners[1][1] - value.corners[0][1], LENGTH),
-                express_measure(value.corners[1][2] - value.corners[0][2], LENGTH))
+        return (express_measure(value.corners[1][0] - value.corners[0][0], "Length"),
+                express_measure(value.corners[1][1] - value.corners[0][1], "Length"),
+                express_measure(value.corners[1][2] - value.corners[0][2], "Length"))
 
     def write_to_widget(self, representation, original=False):
         if isinstance(representation, tuple):
@@ -93,7 +92,7 @@ class BBox(Label):
 
 class Distance(Label):
     def convert_to_representation(self, value):
-        return express_measure(value, LENGTH)
+        return express_measure(value, "Length")
 
 
 class VectorLength(Distance):

@@ -27,7 +27,7 @@ from mixin import InvalidField, EditMixin, FaultyMixin
 import popups
 from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
-from molmod.units import suffices, measures, measure_names, units_by_measure, ANGLE
+from molmod.units import measures, units_by_measure
 from molmod.unit_cell import check_cell
 
 import numpy, gtk
@@ -141,7 +141,7 @@ class Rotation(ComposedInTable):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, decimals=2, scientific=False, axis_name="n.%s"):
         fields = [
             MeasureEntry(
-                measure=ANGLE,
+                measure="Angle",
                 label_text="Angle",
                 decimals=decimals,
                 scientific=scientific,
@@ -237,8 +237,8 @@ class Units(ComposedInTable):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, show_field_popups=False):
         fields = [
             ComboBox(
-                choices=[(unit, suffices[unit]) for unit in units_by_measure[measure]],
-                label_text=measure_names[measure],
+                choices=[(unit, unit) for unit in units_by_measure[measure]],
+                label_text=measure,
             ) for measure
             in measures
         ]
@@ -260,9 +260,9 @@ class Units(ComposedInTable):
         return True
 
     def read_from_attribute(self):
-        return tuple(self.attribute[measure] for measure in measure_names)
+        return tuple(self.attribute[measure] for measure in measures)
 
     def write_to_attribute(self, value):
-        for index, measure in enumerate(measure_names):
+        for index, measure in enumerate(measures):
             self.attribute[measure] = value[index]
 

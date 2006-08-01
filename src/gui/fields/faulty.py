@@ -26,8 +26,6 @@ import popups
 
 from zeobuilder.conversion import express_measure, eval_measure
 
-from molmod.units import LENGTH, measure_names
-
 import gtk
 
 
@@ -141,13 +139,13 @@ class MeasureEntry(Float):
     def convert_to_value(self, representation):
         Entry.convert_to_value(self, representation)
         value = eval_measure(representation, self.measure)
-        self.check_ranges(value, measure_names[self.measure].lower())
+        self.check_ranges(value, self.measure.lower())
         return value
 
 
 class Length(MeasureEntry):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, low=None, high=None, low_inclusive=True, high_inclusive=True, scientific=False, decimals=2):
-        MeasureEntry.__init__(self, LENGTH, label_text, attribute_name, show_popup, history_name, low, high, low_inclusive, high_inclusive, scientific, decimals)
+        MeasureEntry.__init__(self, "Length", label_text, attribute_name, show_popup, history_name, low, high, low_inclusive, high_inclusive, scientific, decimals)
 
 
 class Name(Entry):

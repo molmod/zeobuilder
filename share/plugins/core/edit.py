@@ -283,7 +283,7 @@ class EditConfiguration(Immediate):
             context.application.configuration.create_main_field(),
             ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
         )
-        
+
         class Settings(object):
             pass
         settings = Settings()

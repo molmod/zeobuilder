@@ -88,7 +88,10 @@ def dump_to_file(f, node):
             indenter.write_line("</list>", -1)
         elif cls == dict:
             indenter.write_line("<dict%s>" % name_key, 1)
-            for key,item in node.iteritems(): dump_stage3(indenter, item, use_references, str(key))
+            for key, val in node.iteritems():
+                if not isinstance(key, str):
+                    raise FilterError("ZML supports only strings as dictionary keys.")
+                dump_stage3(indenter, val, use_references, key)
             indenter.write_line("</dict>", -1)
         elif cls == tuple:
             indenter.write_line("<tuple%s>" % name_key, 1)
@@ -154,7 +157,7 @@ def dump_to_file(f, node):
 class ZMLTag(object):
     def __init__(self, name, attributes):
         self.name = name
-        if "label" in attributes: self.label = str(attributes["label"]).lower()
+        if "label" in attributes: self.label = str(attributes["label"])
         else: self.label = None
         self.attributes = attributes
         if self.name == "binary":

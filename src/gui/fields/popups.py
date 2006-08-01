@@ -26,7 +26,7 @@ from zeobuilder.conversion import express_measure
 from zeobuilder.gui.simple import ask_name
 
 from molmod.data import periodic
-from molmod.units import suffices, LENGTH, measures, units_by_measure
+from molmod.units import measures, units_by_measure
 
 import gtk, numpy
 

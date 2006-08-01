@@ -24,7 +24,6 @@ from elementary import Edit
 from mixin import ambiguous, insensitive
 from molmod.data import periodic
 from zeobuilder.conversion import express_measure
-from molmod.units import MASS, LENGTH
 import popups
 
 import gtk, gobject, numpy
@@ -274,11 +273,11 @@ class Element(Edit):
             tip = str(atom_info.number) + ": " + atom_info.name
             if atom_info.mass is not None:
                 if atom_info.artificial:
-                    tip = tip + "\nMass = *%s" % express_measure(atom_info.mass, measure=MASS)
+                    tip = tip + "\nMass = *%s" % express_measure(atom_info.mass, measure="Mass")
                 else:
-                    tip = tip + "\nMass = %s" % express_measure(atom_info.mass, measure=MASS)
+                    tip = tip + "\nMass = %s" % express_measure(atom_info.mass, measure="Mass")
             if atom_info.radius is not None:
-                tip = tip + "\nRadius = " + express_measure(atom_info.radius, LENGTH)
+                tip = tip + "\nRadius = " + express_measure(atom_info.radius, "Length")
             to_mendeljev.set_tip(bu_element, tip)
             ta_elements.attach(
                 bu_element,

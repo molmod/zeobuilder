@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from molmod.units import suffices, from_unit, to_unit, units_by_measure
+from molmod.units import from_unit, to_unit, units_by_measure
 
 
 __all__ = ["eval_measure", "express_measure", "express_data_size"]
@@ -31,25 +31,25 @@ __all__ = ["eval_measure", "express_measure", "express_data_size"]
 
 def eval_measure(s, measure):
     s = s.lower().strip()
-    suffix_unit = None
-    for unit in units_by_measure[measure]:
-        if s.endswith(suffices[unit].lower()):
-            s = s[:-len(suffices[unit])]
-            suffix_unit = unit
+    suffix = None
+    for unit_name in units_by_measure[measure]:
+        if s.endswith(unit_name.lower()):
+            s = s[:-len(unit_name)]
+            suffix = unit_name
             break
-    if suffix_unit is None:
-        suffix_unit = context.application.configuration.default_units[measure]
+    if suffix is None:
+        suffix = context.application.configuration.default_units[measure]
 
-    return from_unit[suffix_unit](float(s))
+    return from_unit[suffix](float(s))
 
 # * expression routines (from value to string)
 
-def express_measure(val, measure, decimals=2, scientific=False, unit=None):
-    if unit is None:
-        unit = context.application.configuration.default_units[measure]
+def express_measure(val, measure, decimals=2, scientific=False, unit_name=None):
+    if unit_name is None:
+        unit_name = context.application.configuration.default_units[measure]
 
     printf_character = {True: "E", False: "F"}[scientific]
-    return ("%.*" + printf_character + " %s") % (decimals, to_unit[unit](val), suffices[unit])
+    return ("%.*" + printf_character + " %s") % (decimals, to_unit[unit_name](val), unit_name)
 
 def express_data_size(val):
     if val < 1024:
