@@ -21,15 +21,16 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property, ModelObjectInfo
+from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError
+from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
 from zeobuilder.nodes.elementary import GLContainerBase
+from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.parent_mixin import ReferentMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.helpers import FrameAxes
 from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.nodes.vector import Vector
-from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError
-from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple, DialogFieldInfo
 from zeobuilder.transformations import Translation
 from zeobuilder.zml import dump_to_file, load_from_file

@@ -19,9 +19,11 @@
 #
 # --
 
+
 import gobject
 
 import copy
+
 
 __all__ = ["NodeClass", "Property", "PublishedProperties", "DialogFieldInfo"]
 
@@ -34,8 +36,12 @@ class NodeClass(gobject.GObjectMeta):
             cls.published_properties = PublishedProperties()
         for pname, published_property in cls.published_properties.iteritems():
             if published_property.signal:
+                # create a signal only when explicitly mentioned in the class
+                # itself (and not when it is inherited).
                 signal_name = ("on-%s-changed" % pname).replace("_", "-")
                 published_property.signal_name = signal_name
+                # avoid signals to be created twice. This happes when a plugin
+                # is loaded twice. (for example in the unit tests)
                 if gobject.signal_lookup(signal_name, cls) == 0:
                     gobject.signal_new(signal_name, cls, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
         # inherit all the properties from the base classes
@@ -57,6 +63,17 @@ class NodeClass(gobject.GObjectMeta):
         for base in bases:
             if hasattr(base, "dialog_fields"):
                 cls.dialog_fields |= base.dialog_fields
+        # create a nodeinfo if needed
+        if not hasattr(cls, "info"):
+            from base import NodeInfo
+            cls.info = NodeInfo()
+        # merge the node info with that from the ancestors
+        d = {}
+        for base in bases:
+            if hasattr(base, "info"):
+                d.update(base.info.__dict__)
+        d.update(cls.info.__dict__)
+        cls.info.__dict__ = d
 
 
 class Property(object):
@@ -96,8 +113,3 @@ class PublishedProperties(dict):
             for name, published_property
             in self.iteritems()
         )
-
-
-class ModelObjectInfo(object):
-    def __init__(self, icon_name):
-        self.icon_name = icon_name

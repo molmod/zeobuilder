@@ -72,7 +72,6 @@ TODO before first release
 
     * Simplify the transformation calculus
     * cursor.execute with parameters for optimized large data transfer
-    * A default action associated with each node type. (double click)
 
 
 ### More data files with zeolite unit cells

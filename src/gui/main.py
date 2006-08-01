@@ -223,9 +223,8 @@ class Main(GladeWrapper):
             return True
         elif event.button == 1:
             if event.type == gtk.gdk._2BUTTON_PRESS:
-                if self.tree_view.row_expanded(path):
-                    self.tree_view.collapse_row(path)
-                else:
-                    self.tree_view.expand_row(path, False)
+                context.application.action_manager.default_action(
+                    context.application.model[path][0]
+                )
                 return True
         return False

@@ -20,10 +20,10 @@
 # --
 
 
-from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
-from zeobuilder.nodes.model_object import ModelObject
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.model_object import ModelObject, ModelObjectInfo
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 

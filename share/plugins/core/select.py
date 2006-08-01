@@ -21,13 +21,14 @@
 
 
 from zeobuilder import context
-from zeobuilder.nodes.meta import PublishedProperties, Property, ModelObjectInfo
-from zeobuilder.nodes.parent_mixin import ParentMixin
-from zeobuilder.nodes.elementary import ReferentBase
-from zeobuilder.nodes.reference import Reference
 from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, Interactive, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
+from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.parent_mixin import ParentMixin
+from zeobuilder.nodes.elementary import ReferentBase
+from zeobuilder.nodes.model_object import ModelObjectInfo
+from zeobuilder.nodes.reference import Reference
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
@@ -216,7 +217,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
 
 
 class SavedSelection(ReferentBase):
-    info = ModelObjectInfo("plugins/core/saved_selection.svg")
+    info = ModelObjectInfo("plugins/core/saved_selection.svg", "RestoreSavedSelection")
 
     def create_references(self):
         return []
@@ -337,6 +338,10 @@ class PickSelection(Interactive):
         if event.button == 3:
             context.application.menu.popup(event.button, event.time)
             self.finish()
+        elif event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
+            context.application.action_manager.default_action(
+                context.application.main.drawing_area.get_nearest(event.x, event.y)
+            )
 
     def button_motion(self, drawing_area, event, startbutton):
         if startbutton != 3:

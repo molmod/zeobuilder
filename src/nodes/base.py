@@ -28,13 +28,19 @@ import gtk.gdk, gobject
 import copy
 
 
-__all__ = ["Base"]
+__all__ = ["Base", "NodeInfo"]
+
+
+class NodeInfo(object):
+    def __init__(self, default_action_name=None):
+        if default_action_name is not None:
+            self.default_action_name = default_action_name
 
 
 class Base(gobject.GObject):
 
     __metaclass__ = NodeClass
-    icon = None
+    info = NodeInfo("EditProperties")
 
     def __init__(self):
         gobject.GObject.__init__(self)

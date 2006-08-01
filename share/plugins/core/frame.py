@@ -23,8 +23,8 @@
 from zeobuilder import context
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import ModelObjectInfo
 from zeobuilder.nodes.elementary import GLFrameBase
+from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.helpers import FrameAxes
 from zeobuilder.transformations import Complete
 

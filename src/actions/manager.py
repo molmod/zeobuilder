@@ -186,6 +186,14 @@ class ActionManager(gobject.GObject):
     def model_changed(self):
         return self.undo_stack.saturated or len(self.undo_stack) > 0
 
+    def default_action(self, node):
+        Action = context.application.plugins.get_action(
+            node.info.default_action_name
+        )
+        if Action.analyze_selection():
+            Action()
+
+
 
 gobject.signal_new("model-changed", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 gobject.signal_new("action-started", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())

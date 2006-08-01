@@ -23,8 +23,9 @@
 from zeobuilder import context
 from zeobuilder.actions.abstract import ConnectBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import ModelObjectInfo, PublishedProperties, Property
+from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.vector import Vector
+from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 

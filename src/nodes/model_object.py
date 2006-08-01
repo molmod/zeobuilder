@@ -19,7 +19,7 @@
 #
 # --
 
-from zeobuilder.nodes.base import Base
+from zeobuilder.nodes.base import Base, NodeInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
@@ -30,7 +30,14 @@ import gobject
 import copy
 
 
-__all__ = ["ModelObject"]
+__all__ = ["ModelObject", "ModelObjectInfo"]
+
+
+class ModelObjectInfo(NodeInfo):
+    def __init__(self, icon_name=None, default_action_name=None):
+        NodeInfo.__init__(self, default_action_name)
+        if icon_name is not None:
+            self.icon_name = icon_name
 
 
 class ModelObject(Base):
