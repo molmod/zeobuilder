@@ -283,7 +283,13 @@ class EditConfiguration(Immediate):
             context.application.configuration.create_main_field(),
             ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
         )
-        edit_config.run(context.application.configuration.settings)
+        
+        class Settings(object):
+            pass
+        settings = Settings()
+        settings.__dict__ = context.application.configuration.settings
+        edit_config.run(settings)
+        context.application.configuration.settings = settings.__dict__
 
 
 actions = {
