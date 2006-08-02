@@ -76,7 +76,7 @@ class Scene(object):
         config.register_setting(
             "window_size",
             5*angstrom,
-            DialogFieldInfo("Default Viewer", (1, 1), fields.faulty.Length(
+            DialogFieldInfo("Default Viewer", (1, 2), fields.faulty.Length(
                 label_text="Window size",
                 attribute_name="window_size",
                 low=0.0,
@@ -86,7 +86,7 @@ class Scene(object):
         config.register_setting(
             "window_depth",
             200.0*angstrom,
-            DialogFieldInfo("Default Viewer", (1, 1), fields.faulty.Length(
+            DialogFieldInfo("Default Viewer", (1, 3), fields.faulty.Length(
                 label_text="Window depth",
                 attribute_name="window_depth",
                 low=0.0,
