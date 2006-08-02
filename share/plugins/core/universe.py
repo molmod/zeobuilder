@@ -61,7 +61,6 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
         for child in self.children:
             if isinstance(child, GLTransformationMixin):
                 self.child_connections[child] = child.connect("on-transformation-list-invalidated", self.on_child_transformation_changed)
-        self.update_reciproke()
 
     #
     # Properties
@@ -134,13 +133,13 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     #
 
     def on_child_transformation_changed(self, child):
-        self.wrap_position_in_cell(child)
+        self.wrap(child)
 
     #
     # Wrapping
     #
 
-    def wrap_position_in_cell(self, child):
+    def wrap(self, child):
         cell_index = self.to_index(child.transformation.translation_vector)
         if cell_index.any():
             translation = Translation()
@@ -151,7 +150,7 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
         if not self.cell_active.any(): return
         for child in self.children:
             if isinstance(child, GLTransformationMixin):
-                self.wrap_position_in_cell(child)
+                self.wrap(child)
 
     def shortest_vector(self, delta):
         return UnitCell.shortest_vector(self, delta)

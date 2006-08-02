@@ -127,9 +127,6 @@ class Single(object):
         self.container.set_border_width(6)
         return container
 
-    def applicable(self, instance):
-        raise NotImplementedError
-
     def create_widgets(self):
         if self.label_text is not None:
             self.label = gtk.Label(self.label_text)
