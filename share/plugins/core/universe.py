@@ -205,7 +205,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
     published_properties = PublishedProperties({
         "repetitions": Property(numpy.array([1, 1, 1], int), lambda self: self.repetitions, set_repetitions),
         "box_visible": Property(True, lambda self: self.box_visible, set_box_visible),
-        "clipping": Property(True, lambda self: self.clipping, set_clipping),
+        "clipping": Property(False, lambda self: self.clipping, set_clipping),
     })
 
     #
@@ -467,7 +467,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
                     repetitions = self.repetitions * self.cell_active + 1 - self.cell_active
                 for position in yield_all_positions(repetitions):
                     glPushMatrix()
-                    t = numpy.dot(self.cell, numpy.array(position)-self.cell_active*self.clipping)
+                    t = numpy.dot(self.cell, numpy.array(position) - self.cell_active * self.clipping)
                     glTranslate(t[0], t[1], t[2])
                     glCallList(self.draw_list)
                     glPopMatrix()
