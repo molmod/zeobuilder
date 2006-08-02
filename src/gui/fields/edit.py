@@ -321,9 +321,12 @@ class Element(Edit):
             for bu in self.buttons.itervalues():
                 bu.set_sensitive(True)
                 bu.set_active(False)
-            self.bu_former = self.buttons[representation]
-            if representation in self.buttons.keys():
-                self.buttons[representation].set_active(True)
+            button = self.buttons.get(representation)
+            if button is not None:
+                self.bu_former = button
+                button.set_active(True)
+            else:
+                self.number = ambiguous
         Edit.write_to_widget(self, representation, original)
 
     def read_from_widget(self):
