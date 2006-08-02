@@ -818,7 +818,9 @@ class TranslateRotationCenterBase(Interactive):
 
     def do_translation(self, vector, drawing_area):
         scene = drawing_area.scene
-        transformed_vector = numpy.dot(self.eye_to_model_rotation, vector)
+        tmp = vector.copy()
+        tmp[2] = 0
+        transformed_vector = numpy.dot(self.eye_to_model_rotation, tmp)
         scene.viewer.translation_vector[:2] -= vector[:2]
         scene.center.translation_vector[:2] += transformed_vector[:2]
         if (scene.opening_angle > 0):
