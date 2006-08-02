@@ -208,7 +208,6 @@ class Measure(Default):
             if isinstance(value, numpy.ndarray):
                 value = value.ravel()
             for unit in units_by_measure[self.field.measure]:
-                unit_suffix = suffices[unit]
                 if isinstance(value, numpy.ndarray):
                     alternative_representation = tuple(
                         express_measure(

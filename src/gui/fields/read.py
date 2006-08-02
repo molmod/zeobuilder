@@ -75,9 +75,14 @@ class Handedness(Label):
 
 class BBox(Label):
     def convert_to_representation(self, value):
-        return (express_measure(value.corners[1][0] - value.corners[0][0], "Length"),
+        if value.corners is None:
+            return "<span foreground=\"red\">NO BBOX INFO FOUND. THIS SHOULD NEVER HAPPEN.</span>"
+        else:
+            return (
+                express_measure(value.corners[1][0] - value.corners[0][0], "Length"),
                 express_measure(value.corners[1][1] - value.corners[0][1], "Length"),
-                express_measure(value.corners[1][2] - value.corners[0][2], "Length"))
+                express_measure(value.corners[1][2] - value.corners[0][2], "Length")
+            )
 
     def write_to_widget(self, representation, original=False):
         if isinstance(representation, tuple):
