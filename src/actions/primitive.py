@@ -193,7 +193,7 @@ class Transform(Primitive):
         if not isinstance(victim, GLTransformationMixin):
             raise PrimitiveError, "TRANSFORM: Object must be a %s. You gave %s." % (GLTransformationMixin, victim)
         if victim.get_fixed():
-            raise PrimitiveError, "TRANSFORM: Object is fixed."
+            raise PrimitiveError, "TRANSFORM: Object %s is fixed." % victim
         self.transformation = transformation
         self.after = after
         if done:

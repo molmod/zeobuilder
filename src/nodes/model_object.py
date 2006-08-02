@@ -136,7 +136,7 @@ class ModelObject(Node):
     #
 
     def get_fixed(self):
-        return self.parent is None
+        return (self.model is not None) and (self.parent is None)
 
 
 gobject.signal_new("on-move", ModelObject, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())

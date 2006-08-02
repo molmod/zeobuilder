@@ -31,9 +31,10 @@ __all__ = ["Application"]
 
 
 class Application(object):
-    def __init__(self, init_fn):
+    def __init__(self, init_fn, quit=False):
         context.application = self
         self.init_fn = init_fn
+        self.quit = quit
 
         self.initialize_config()
         self.initialize_model()
@@ -92,13 +93,16 @@ class Application(object):
 
     def after_gui(self):
         self.init_fn()
+        if self.quit:
+            self.model.file_close()
+            self.main.window.destroy()
+            gtk.main_quit()
 
 
 class TestApplication(Application):
     def __init__(self, init_fn, quit=True):
         self.error_message = None
-        self.quit = quit
-        Application.__init__(self, init_fn)
+        Application.__init__(self, init_fn, quit)
 
     def after_gui(self):
         try:
