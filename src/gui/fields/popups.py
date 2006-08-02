@@ -31,7 +31,7 @@ from molmod.units import measures, units_by_measure
 import gtk, numpy
 
 
-__all__ = ["Base", "Default", "Measure", "Translation", "Rotation", "Element"]
+__all__ = ["Base", "Default", "Measure", "Element"]
 
 
 class Base(object):
@@ -42,10 +42,12 @@ class Base(object):
         self.menu = gtk.Menu()
 
     def add_separator(self):
-        mi = gtk.SeparatorMenuItem()
-        mi.show()
-        self.menu.append(mi)
-        self.row_count += 1
+        if self.row_count > 0 and \
+           not isinstance(self.menu.get_children()[-1], gtk.SeparatorMenuItem):
+            mi = gtk.SeparatorMenuItem()
+            mi.show()
+            self.menu.append(mi)
+            self.row_count += 1
 
     def create_item(self, label_text, stock_id, on_activate, *args):
         if len(label_text) > 50:
@@ -81,6 +83,11 @@ class Base(object):
             self.menu.remove(child)
         self.row_count = 0
         self.fill_menu()
+
+        # check whether the menu ends with a separator and remove
+        last = self.menu.get_children()[-1]
+        if isinstance(last, gtk.SeparatorMenuItem):
+            self.menu.remove(last)
 
         def top_right(menu):
             xo, yo = button.window.get_origin()
@@ -137,8 +144,7 @@ class Default(Base):
                     self.field,
                 )
 
-            if len(self.saved_representations) > 0:
-                self.add_separator()
+            self.add_separator()
             saved_keys = self.saved_representations.keys()
             saved_keys.sort()
             for key in saved_keys:
@@ -149,8 +155,8 @@ class Default(Base):
                     self.write_to_widget,
                     representation,
                 )
-            if len(self.saved_representations) > 0:
-                self.add_separator()
+
+            self.add_separator()
             for key in saved_keys:
                 representation = self.saved_representations[key]
                 self.add_item(
@@ -161,8 +167,8 @@ class Default(Base):
                 )
 
             history_representations = context.application.configuration.get_history_representations(self.field.history_name)
-            if len(history_representations) > 0:
-                self.add_separator()
+
+            self.add_separator()
             for index, representation in enumerate(history_representations):
                 self.add_item(
                     "HISTORY %i: %s" % (index, representation),
@@ -201,7 +207,9 @@ class Measure(Default):
         Default.fill_menu(self)
         representation = self.field.read_from_widget()
         from mixin import ambiguous
-        if representation == ambiguous: return
+        if representation == ambiguous:
+            return
+
         self.add_separator()
         try:
             value = self.field.convert_to_value(representation)

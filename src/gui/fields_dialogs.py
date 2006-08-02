@@ -86,7 +86,7 @@ class FieldsDialogBase(object):
             except fields.mixin.InvalidField, e:
                 trace = e.field.get_trace()
                 if trace is None:
-                    trace = "Position not found. This should never happen. Please contact the authors."
+                    trace = "The problem is due to the combination of all the fields."
                 field_error(trace, e.message)
                 e.field.show()
                 e.field.grab_focus()

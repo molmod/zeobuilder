@@ -91,7 +91,9 @@ def ask_name():
     return result
 
 
-error_message="""<big><b>One of the fields you entered is invalid.</b></big>
+error_message="""<big><b>Some of the fields you entered are invalid.</b></big>
+
+Only the first problem is reported here. Correct it and try again.
 
 <b>Location:</b> %s
 <b>Problem:</b> %s

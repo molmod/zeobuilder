@@ -28,7 +28,7 @@ import popups
 from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
 from molmod.units import measures, units_by_measure
-from molmod.unit_cell import check_cell
+from molmod.unit_cell import check_cell, UnitCell
 
 import numpy, gtk
 
@@ -46,6 +46,8 @@ class ComposedArrayError(Exception):
 
 
 class ComposedArray(ComposedInTable):
+    Popup = None
+
     def __init__(self, FieldClass, array_name, suffices, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, short=True, one_row=False, **keyval):
         suffices = numpy.array(suffices)
         self.shape = suffices.shape
@@ -78,7 +80,8 @@ class ComposedArray(ComposedInTable):
         if issubclass(FieldClass, MeasureEntry):
             self.measure = fields[0].measure
 
-        self.Popup = fields[0].Popup
+        if self.Popup is None:
+            self.Popup = fields[0].Popup
 
         ComposedInTable.__init__(
             self,
@@ -176,7 +179,42 @@ class Rotation(ComposedInTable):
         self.attribute.set_rotation_properties(*value)
 
 
+class Parameters(object):
+    pass
+
+
+class CellMatrixPopup(popups.Measure):
+    def fill_menu(self):
+        popups.Measure.fill_menu(self)
+        self.add_separator()
+        try:
+            cell = self.field.convert_to_value(self.field.read_from_widget())
+            self.add_item("Set parameters ...", None, self.on_set_parameters, cell)
+        except ValueError:
+            self.add_item("Set parameters ... (invalid fields)", None, None)
+
+
+    def on_set_parameters(self, menu, cell):
+        from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
+
+        dialog = FieldsDialogSimple(
+            "Set the cell parameters",
+            CellParameters(
+                attribute_name="cell",
+                show_popup=False,
+            ),
+            ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
+        )
+
+        parameters = Parameters()
+        parameters.cell = cell
+        if dialog.run(parameters) == gtk.RESPONSE_OK:
+            self.field.write_to_widget(self.field.convert_to_representation(parameters.cell))
+
+
+
 class CellMatrix(ComposedArray):
+    Popup = CellMatrixPopup
     reset_representation = (('10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A'))
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=2):
@@ -198,6 +236,57 @@ class CellMatrix(ComposedArray):
         intermediate = ComposedArray.convert_to_value(self, representation)
         check_cell(intermediate)
         return intermediate
+
+
+class CellParameters(ComposedInTable):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
+        ComposedInTable.__init__(
+            self,
+            fields=[
+                ComposedArray(
+                    FieldClass=Length,
+                    array_name="%s",
+                    suffices=["a", "b", "c"],
+                    low=0.0,
+                    low_inclusive=False,
+                    scientific=False,
+                    decimals=2,
+                ),
+                ComposedArray(
+                    FieldClass=MeasureEntry,
+                    array_name="%s",
+                    suffices=["alpha", "beta", "gamma"],
+                    measure="Angle",
+                    low=0.0,
+                    low_inclusive=False,
+                    high=math.pi,
+                    high_inclusive=False,
+                    scientific=False,
+                    decimals=0,
+                ),
+            ],
+            label_text=label_text,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            show_field_popups=show_field_popups,
+            cols=1,
+        )
+
+    def applicable_attribute(self):
+        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,3)
+
+    def convert_to_representation(self, value):
+        unit_cell = UnitCell(value)
+        self.saved_value = value
+        lengths, angles = unit_cell.get_parameters()
+        return ComposedInTable.convert_to_representation(self, (lengths, angles))
+
+    def convert_to_value(self, representation):
+        lengths, angles = ComposedInTable.convert_to_value(self, representation)
+        unit_cell = UnitCell(self.saved_value)
+        unit_cell.set_parameters(lengths, angles)
+        return unit_cell.cell
 
 
 class CellActive(ComposedArray):
