@@ -49,7 +49,7 @@ class ComposedInTable(Composed, TableMixin):
     def create_widgets(self):
         Composed.create_widgets(self)
         TableMixin.create_widgets(self)
-        
+
 
 class ComposedArrayError(Exception):
     pass

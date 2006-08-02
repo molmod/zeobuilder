@@ -56,7 +56,7 @@ class Optional(Single):
 
     def create_widgets(self):
         Single.create_widgets(self)
-        self.slave.old_representation = ambiguous
+        self.old_representation = ambiguous
         self.slave.create_widgets()
         self.slave.write_to_widget(ambiguous)
         self.check_button = gtk.CheckButton()
@@ -102,9 +102,9 @@ class Optional(Single):
     def check_button_toggled(self, check_button):
         if check_button.get_active():
             if self.slave.read_from_widget() == insensitive:
-                self.slave.write_to_widget(self.slave.old_representation)
+                self.slave.write_to_widget(self.old_representation)
         else:
             old_representation = self.slave.read_from_widget()
             if old_representation != insensitive:
-                self.slave.old_representation = old_representation
+                self.old_representation = old_representation
             self.slave.write_to_widget(insensitive)
