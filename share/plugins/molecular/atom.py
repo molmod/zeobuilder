@@ -84,7 +84,7 @@ class Atom(GLGeometricBase, UserColorMixin):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Geometry", (2, 9), fields.elementary.Checkable(
+        DialogFieldInfo("Geometry", (2, 9), fields.optional.Optional(
             fields.faulty.Length(
                 label_text="User defined radius",
                 attribute_name="user_radius",

@@ -87,7 +87,7 @@ class UserColorMixin(gobject.GObject):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Markup", (1, 6), fields.elementary.Checkable(
+        DialogFieldInfo("Markup", (1, 6), fields.optional.Optional(
             fields.edit.Color(
                 label_text="User define color",
                 attribute_name="user_color",

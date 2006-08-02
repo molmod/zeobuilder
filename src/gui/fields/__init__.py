@@ -19,4 +19,4 @@
 #
 # --
 
-import read, edit, faulty, group, composed
+import read, edit, faulty, group, composed, optional
