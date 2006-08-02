@@ -270,15 +270,10 @@ class FaultyMixin(EditMixin):
                 raise invalid_field
 
 
-NO_BUTTONS = 0
-CHECK_BUTTONS = 1
-RADIO_BUTTONS = 2
-
 class TableMixin(object):
-    def __init__(self, short=True, cols=1, buttons=NO_BUTTONS):
+    def __init__(self, short=True, cols=1):
         self.short = short
         self.cols = cols
-        self.buttons = buttons
         if not short and len(self.fields) == cols:
             self.high_widget = False
             for field in self.fields:
@@ -289,7 +284,7 @@ class TableMixin(object):
     def create_widgets(self):
         fields_active = sum(field.get_active() for field in self.fields)
         rows = fields_active / self.cols + (fields_active % self.cols > 0)
-        table = gtk.Table(rows, self.cols * 4)
+        table = gtk.Table(rows, self.cols * 3)
         first_radio_button = None
         index = 0
         for field in self.fields:
@@ -297,25 +292,8 @@ class TableMixin(object):
                 continue
             col = index % self.cols
             row = index / self.cols
-            left = col * 4
-            right = left + 4
-            if self.buttons != NO_BUTTONS:
-                if self.buttons == CHECK_BUTTONS:
-                    toggle_button = gtk.CheckButton()
-                elif self.buttons == RADIO_BUTTONS:
-                    if first_radio_button is None:
-                        toggle_button = gtk.RadioButton()
-                        first_radio_button = toggle_button
-                    else:
-                        toggle_button = gtk.RadioButton(first_radio_button)
-                table.attach(
-                    toggle_button, left, left + 1, row, row+1,
-                    xoptions=gtk.FILL, yoptions=gtk.FILL
-                )
-                left += 1
-                field.old_representation = ambiguous
-                field.sensitive_button = toggle_button
-                toggle_button.connect("toggled", self.on_button_toggled, field)
+            left = col * 3
+            right = left + 3
 
             if field.high_widget:
                 if self.short:
@@ -347,19 +325,10 @@ class TableMixin(object):
                 )
             index += 1
         table.set_row_spacings(6)
-        for col in xrange(self.cols * 4 - 1):
-            if col % 4 == 3:
+        for col in xrange(self.cols * 3 - 1):
+            if col % 3 == 2:
                 table.set_col_spacing(col, 24)
             else:
                 table.set_col_spacing(col, 6)
         self.data_widget = table
 
-    def destroy_widgets(self):
-        if self.buttons != NO_BUTTONS:
-            for field in self.fields:
-                if field.get_active():
-                    field.sensitive_button.destroy()
-                    field.sensitive_button = None
-
-    def on_button_toggled(self, toggle_button, field):
-        raise NotImplementedError

@@ -20,10 +20,10 @@
 # --
 
 
-from elementary import ComposedInTable
+from elementary import Composed
 from faulty import Float, Length, Int, MeasureEntry
 from edit import CheckButton, ComboBox
-from mixin import InvalidField, EditMixin, FaultyMixin
+from mixin import InvalidField, EditMixin, FaultyMixin, TableMixin
 import popups
 from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
@@ -36,10 +36,20 @@ import math, sys
 
 
 __all__ = [
-    "ComposedArray", "Translation", "Rotation", "CellMatrix", "CellActive",
+    "ComposedInTable", "ComposedArray", "Translation", "Rotation", "CellMatrix", "CellActive",
     "Repetitions", "Units"
 ]
 
+
+class ComposedInTable(Composed, TableMixin):
+    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, short=True, cols=1):
+        Composed.__init__(self, fields, label_text, attribute_name, show_popup, history_name, show_field_popups)
+        TableMixin.__init__(self, short, cols)
+
+    def create_widgets(self):
+        Composed.create_widgets(self)
+        TableMixin.create_widgets(self)
+        
 
 class ComposedArrayError(Exception):
     pass

@@ -21,11 +21,10 @@
 
 
 from base import Single, Multiple
-from mixin import ReadMixin, EditMixin, FaultyMixin, \
-                  TableMixin, ambiguous, insensitive
+from mixin import ReadMixin, EditMixin, FaultyMixin, ambiguous, insensitive
 
 
-__all__ = ["Read", "Edit", "Faulty", "Composed", "ComposedInTable", "Group"]
+__all__ = ["Read", "Edit", "Faulty", "Composed", "Group"]
 
 
 class Read(Single, ReadMixin):
@@ -150,20 +149,6 @@ class Composed(Multiple, FaultyMixin):
 
     def convert_to_value(self, representation):
         return tuple(field.convert_to_value(representation[index]) for index, field in enumerate(self.fields))
-
-
-class ComposedInTable(Composed, TableMixin):
-    def __init__(self, fields, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, short=True, cols=1):
-        Composed.__init__(self, fields, label_text, attribute_name, show_popup, history_name, show_field_popups)
-        TableMixin.__init__(self, short, cols)
-
-    def create_widgets(self):
-        Composed.create_widgets(self)
-        TableMixin.create_widgets(self)
-
-    def destroy_widgets(self):
-        Composed.destroy_widgets(self)
-        TableMixin.destroy_widgets(self)
 
 
 class Group(Multiple):

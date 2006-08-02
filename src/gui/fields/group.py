@@ -20,7 +20,7 @@
 # --
 
 from elementary import Group
-from mixin import EditMixin, TableMixin, ambiguous, insensitive, NO_BUTTONS
+from mixin import EditMixin, TableMixin, ambiguous, insensitive
 
 import gtk
 
@@ -28,41 +28,13 @@ __all__ = ["Table", "Notebook"]
 
 
 class Table(Group, TableMixin):
-    def __init__(self, fields, label_text=None, short=True, cols=1, buttons=NO_BUTTONS):
+    def __init__(self, fields, label_text=None, short=True, cols=1):
         Group.__init__(self, fields, label_text)
-        TableMixin.__init__(self, short, cols, buttons)
+        TableMixin.__init__(self, short, cols)
 
     def create_widgets(self):
         Group.create_widgets(self)
         TableMixin.create_widgets(self)
-
-    def destroy_widgets(self):
-        Group.destroy_widgets(self)
-        TableMixin.destroy_widgets(self)
-
-    def read(self):
-        Group.read(self)
-        if self.buttons != NO_BUTTONS and self.get_active():
-            for field in self.fields:
-                if field.get_active():
-                    field.sensitive_button.set_active(field.read_from_widget() != insensitive)
-
-    def on_button_toggled(self, toggle_button, field):
-        if toggle_button.get_active():
-            #print "making sensitive"
-            #print "  current_representation =", field.read_from_widget()
-            if field.read_from_widget() == insensitive:
-                #print "  resetting to old_representation =", field.old_representation
-                field.write_to_widget(field.old_representation)
-        else:
-            #print "making insensitive"
-            old_representation = field.read_from_widget()
-            #print "  old_representation =", old_representation
-            if old_representation != insensitive:
-                #print "  saving old_representation"
-                field.old_representation = old_representation
-            #print "  setting representation = %s" % insensitive
-            field.write_to_widget(insensitive)
 
 
 class HBox(Group):

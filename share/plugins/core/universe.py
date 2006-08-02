@@ -502,17 +502,18 @@ class UnitCellToCluster(ImmediateWithMemory):
         "Unit cell to cluster",
         fields.group.Table(
             fields=[
-                fields.composed.ComposedArray(
-                    FieldClass=fields.faulty.Float,
-                    array_name=(ridge+".%s"),
-                    suffices=["min", "max"],
-                    attribute_name="interval_%s" % ridge.lower(),
-                    one_row=True,
-                    short=False,
+                fields.optional.Optional(
+                    fields.composed.ComposedArray(
+                        FieldClass=fields.faulty.Float,
+                        array_name=(ridge+".%s"),
+                        suffices=["min", "max"],
+                        attribute_name="interval_%s" % ridge.lower(),
+                        one_row=True,
+                        short=False,
+                    )
                 )
                 for ridge in ["A", "B", "C"]
             ],
-            buttons=fields.mixin.CHECK_BUTTONS,
             label_text="The cutoff region in fractional coordinates:"
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
@@ -523,6 +524,7 @@ class UnitCellToCluster(ImmediateWithMemory):
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
         universe = context.application.model.universe
+        if sum(universe.cell_active) == 0: return False
         if hasattr(parameters, "interval_a") and not universe.cell_active[0]: return False
         if hasattr(parameters, "interval_b") and not universe.cell_active[1]: return False
         if hasattr(parameters, "interval_c") and not universe.cell_active[2]: return False
@@ -687,6 +689,7 @@ class SuperCell(ImmediateWithMemory):
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
         universe = context.application.model.universe
+        if sum(universe.cell_active) == 0: return False
         if hasattr(parameters, "repetitions_a") and not universe.cell_active[0]: return False
         if hasattr(parameters, "repetitions_b") and not universe.cell_active[1]: return False
         if hasattr(parameters, "repetitions_c") and not universe.cell_active[2]: return False
