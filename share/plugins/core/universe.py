@@ -242,7 +242,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
 
     def set_selected(self, selected):
         GLPeriodicContainer.set_selected(self, selected)
-        self.invalidate_draw_list()
+        self.invalidate_box_list()
 
     #
     # OpenGL
@@ -476,7 +476,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
             glEndList()
             self.total_list_valid = True
 
-    def extend_bounding_box(self, bounding_box):
+    def revalidate_bounding_box(self):
         GLPeriodicContainer.revalidate_bounding_box(self)
         FrameAxes.extend_bounding_box(self, self.bounding_box)
 
