@@ -21,15 +21,18 @@
 
 
 from zeobuilder import context
+from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
+from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.transformations import Translation
 import zeobuilder.gui.fields as fields
+import zeobuilder.actions.primitive as primitive
 
 from OpenGL.GL import *
 import numpy
@@ -166,10 +169,51 @@ class AddPoint(AddBase):
         AddBase.do(self, Point)
 
 
+class CalculateAverage(Immediate):
+    description = "Add point at average"
+    menu_info = MenuInfo("default/_Object:tools/_Add:special", "_Point at average", order=(0, 4, 1, 0, 2, 0))
+
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating and initialising
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        if len(cache.translations) == 0: return False
+        parent = cache.common_parent
+        if parent == None: return False
+        while not parent.check_add(Point):
+            parent = parent.parent
+            if parent == None: return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def do(self):
+        cache = context.application.cache
+        parent = cache.common_parent
+        while not parent.check_add(Point):
+            parent = parent.parent
+
+        vector_sum = numpy.zeros(3, float)
+        num_vectors = 0
+
+        for node in cache.nodes:
+            if isinstance(node, GLTransformationMixin) and \
+               isinstance(node.transformation, Translation):
+                vector_sum += node.get_frame_relative_to(parent).translation_vector
+                num_vectors += 1
+
+        point = Point(name="Average")
+        point.transformation.translation_vector = vector_sum / num_vectors
+        primitive.Add(point, parent)
+
+
 nodes = {
     "Point": Point
 }
 
 actions = {
     "AddPoint": AddPoint,
+    "CalculateAverage": CalculateAverage,
 }

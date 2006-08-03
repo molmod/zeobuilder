@@ -567,6 +567,15 @@ class CoreActions(ApplicationTestCase):
             AddPeriodicities()
         self.run_test_application(fn)
 
+    def test_calculate_average(self):
+        def fn():
+            context.application.model.file_open("input/core_objects.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[:2])
+            CalculateAverage = context.application.plugins.get_action("CalculateAverage")
+            self.assert_(CalculateAverage.analyze_selection())
+            CalculateAverage()
+        self.run_test_application(fn)
+
 
 class MolecularActions(ApplicationTestCase):
     def test_add_atom(self):
