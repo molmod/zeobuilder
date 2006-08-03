@@ -132,7 +132,7 @@ class ConnectMinimiser(ConnectBase):
 
 class AutoConnectMinimisers(AutoConnectMixin, Immediate):
     description = "Connect overlapping atoms with minimisers"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:bonds", "_Overlapping atoms with minimisers", order=(0, 4, 1, 5, 1, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Builder:minimiser", "_Overlapping atoms with minimisers", order=(0, 4, 1, 6, 0, 0))
 
     def analyze_selection():
         # A) calling ancestor
