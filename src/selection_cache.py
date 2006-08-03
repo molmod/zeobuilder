@@ -128,7 +128,7 @@ class SelectionCache(gobject.GObject):
         return analysis.some_fixed(self.children)
 
     def get_child_classes(self):
-        return analysis.list_classes(self.nodes)
+        return analysis.list_classes(self.children)
 
     # neighbours (the children of the parents of the selected nodes)
     def get_neighbours(self):

@@ -101,11 +101,11 @@ class GLMixin(gobject.GObject):
 
     def initialize_gl(self):
         self.bounding_box = BoundingBox()
-
         self.draw_list = glGenLists(3)
         self.boundingbox_list = self.draw_list + 1
         self.total_list = self.draw_list + 2
         ##print "Created lists (%i, %i, %i): %s" % (self.draw_list, self.boundingbox_list, self.total_list, self.get_name())
+        #assert self.draw_list not in context.application.main.drawing_area.scene.gl_names, "Duplicate Drawlist %i: %s and %s, in model %s and %s" % (self.draw_list, self, context.application.main.drawing_area.scene.gl_names[self.draw_list], self.model, context.application.main.drawing_area.scene.gl_names[self.draw_list].model)
         context.application.main.drawing_area.scene.gl_names[self.draw_list] = self
         self.draw_list_valid = True
         self.boundingbox_list_valid = True

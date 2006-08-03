@@ -62,9 +62,9 @@ class Vector(GLReferentBase):
         GLReferentBase.initialize_gl(self)
         self.quadric = context.application.main.drawing_area.scene.quadric
 
-    def release_gl(self):
-        GLReferentBase.release_gl(self)
+    def cleanup_gl(self):
         self.quadric = None
+        GLReferentBase.cleanup_gl(self)
 
 
     #
