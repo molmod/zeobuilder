@@ -22,7 +22,7 @@
 # --
 
 
-import pygtk, sys
+import pygtk, sys, os
 pygtk.require('2.0')
 
 
@@ -58,16 +58,25 @@ Arguments:
   filename    The name of a file to open after zeobuilder has started.
 """
 
+def fail():
+    print usage
+    sys.exit(1)
+    
+
 if len(sys.argv) == 1:
     init_fn = init_fn_new
 elif len(sys.argv) == 2:
     if sys.argv[1] == "-nofile":
         init_fn = init_fn_nothing
     else:
-        init_fn = InitFnOpen(sys.argv[1])
+        filename = sys.argv[1]
+        if os.path.isfile(filename):
+            init_fn = InitFnOpen(sys.argv[1])
+        else:
+            print "File %s does not exist." % filename
+            fail()
 else:
-    print usage
-    sys.exit(1)
+    fail()
 
 from zeobuilder.application import Application
 Application(init_fn)
