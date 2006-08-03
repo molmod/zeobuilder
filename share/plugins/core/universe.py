@@ -141,10 +141,9 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
 
     def wrap(self, child):
         cell_index = self.to_index(child.transformation.translation_vector)
+        #print cell_index
         if cell_index.any():
-            translation = Translation()
-            translation.translation_vector = -numpy.dot(self.cell, cell_index)
-            primitive.Transform(child, translation)
+            child.transformation.translation_vector -= numpy.dot(self.cell, cell_index)
 
     def update_child_positions(self):
         if not self.cell_active.any(): return

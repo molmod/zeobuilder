@@ -342,6 +342,7 @@ class GLTransformationMixin(GLMixin):
     #
 
     def invalidate_transformation_list(self):
+        ##print "CALL %s: on-transformation-list-invalidated" % self.get_name()
         if self.gl_active > 0 and self.transformation_list_valid:
             self.transformation_list_valid = False
             context.application.main.drawing_area.queue_draw()

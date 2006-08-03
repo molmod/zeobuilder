@@ -98,6 +98,7 @@ class Action(object):
 
     # --- NON STATIC ---
     def __init__(self):
+        #print "ACTION", self
         self.primitives = []
         # the action manager sets this to true when a primitive changes the
         # current selection. It will require that everything is unselected

@@ -38,6 +38,7 @@ class Primitive(object):
     changes_selection = False # see actions.composed.Action.__init__
 
     def __init__(self, victim, done=False):
+        #print "INIT", self
         self.victim = victim
         self.done = done
         if context.application.action_manager is not None:
@@ -52,10 +53,12 @@ class Primitive(object):
         pass
 
     def redo(self):
+        #print "REDO", self
         assert not self.done, "Primitive action is already done. Can not do it twice"
         self.done = True
 
     def undo(self):
+        #print "UNDO", self
         assert self.done, "Primitive action is not yet done. Can not undo it."
         self.done = False
 
