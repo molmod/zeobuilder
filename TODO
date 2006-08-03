@@ -34,7 +34,6 @@ TODO before first release
 ### Bugs
 
     * write_pov on periodic systems and molecules is broken
-	* Correct face culling for inverted objects
     * apply lint tools on code to find extra bugs
     * do manual tests in addition to the unit tests.
 

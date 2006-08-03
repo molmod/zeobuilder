@@ -202,12 +202,7 @@ class GLMixin(gobject.GObject):
             if self.visible:
                 glPushName(self.draw_list)
                 if self.selected: glCallList(self.boundingbox_list)
-                #if self.double_sided:
-                #    glCullFace(GL_FRONT)
                 glCallList(self.draw_list)
-                #if self.double_sided:
-                #    glCullFace(GL_BACK)
-                #    glCallList(self.draw_list)
                 glPopName()
             glEndList()
             self.total_list_valid = True

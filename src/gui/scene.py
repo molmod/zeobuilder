@@ -101,22 +101,18 @@ class Scene(object):
         self.clip_planes = {}
 
     def initialize(self): # gl_context sensitive method
-        glLightModelf(GL_LIGHT_MODEL_TWO_SIDE, 1)
         glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
         glMaterial(GL_FRONT, GL_SHININESS, 70.0)
-        #glMaterial(GL_BACK, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
-        #glMaterial(GL_BACK, GL_SHININESS, 70.0)
         glLight(GL_LIGHT0, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
+        glLight(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
         glLight(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 3.0, 0.0])
         glEnable(GL_LIGHT0)
         glEnable(GL_LIGHTING)
-        #glEnable(GL_CULL_FACE)
 
         # Some default gl settings
         glDepthFunc(GL_LESS)
         glEnable(GL_DEPTH_TEST)
         glClearColor(0.0, 0.0, 0.0, 1.0)
-        #glEnable(GL_LINE_STIPPLE)
 
         self.initialize_interactive_tool()
         self.initialize_rotation_center()
