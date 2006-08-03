@@ -99,8 +99,8 @@ class ActionManager(gobject.GObject):
                 self.current_primitive = primitive
                 primitive.redo()
                 self.current_primitive = None
-                if self.record_primitives and self.active:
-                    self.current_action.primitives.append(primitive)
+            if self.record_primitives and self.active:
+                self.current_action.primitives.append(primitive)
             while len(self.consequences) > 0:
                 self.current_primitive = self.consequences.pop(0)
                 self.current_primitive.redo()
