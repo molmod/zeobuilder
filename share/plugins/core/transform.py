@@ -474,9 +474,9 @@ class RotateObjectBase(InteractiveWithMemory):
             # take the information out of the helper nodes
             if isinstance(helper, Vector):
                 b = helper.children[0].translation_relative_to(self.victim.parent)
-                e = helper.children[0].translation_relative_to(self.victim.parent)
+                e = helper.children[1].translation_relative_to(self.victim.parent)
                 if not ((b is None) or (e is None)):
-                    rotation_center_object.helper.children[0].target
+                    rotation_center_object = helper.children[0].target
                     self.rotation_axis = e - b
                     norm = numpy.dot(self.rotation_axis, self.rotation_axis)
                     if norm > 0.0:
