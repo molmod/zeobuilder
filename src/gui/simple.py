@@ -42,21 +42,25 @@ def run_dialog(dialog):
 
 def ok_error(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
+    dialog.label.set_property("use-markup", True)
     return run_dialog(dialog)
 
 
 def ok_information(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
+    dialog.label.set_property("use-markup", True)
     return run_dialog(dialog)
 
 
 def yes_no_question(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
+    dialog.label.set_property("use-markup", True)
     return run_dialog(dialog)
 
 
 def nosave_cancel_save_question(message):
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, message)
+    dialog.label.set_property("use-markup", True)
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     dialog.add_button(gtk.STOCK_SAVE, gtk.RESPONSE_OK)
