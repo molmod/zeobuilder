@@ -249,7 +249,6 @@ class AutoConnectPhysical(AutoConnectMixin, Immediate):
         if bond_type is None:
             return None
         else:
-            Bond = context.application.plugins.get_node("Bond")
             return Bond(bond_type=bond_type, targets=[atom1, atom2])
 
     def do(self):
@@ -320,7 +319,6 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
              (atom2.number == self.parameters.number1))) and \
            atom1 not in atom2.yield_neighbours():
             if self.parameters.distance >= distance:
-                Bond = context.application.plugins.get_node("Bond")
                 return Bond(bond_type=self.parameters.bond_type, targets=[atom1, atom2])
         return None
 

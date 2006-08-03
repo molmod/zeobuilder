@@ -21,7 +21,8 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.abstract import ConnectBase
+from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
+from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.model_object import ModelObjectInfo
@@ -29,6 +30,8 @@ from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
+
+from molmod.data import periodic
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -127,11 +130,44 @@ class ConnectMinimiser(ConnectBase):
         return Minimiser(targets=[begin, end])
 
 
+class AutoConnectMinimisers(AutoConnectMixin, Immediate):
+    description = "Connect overlapping atoms with minimisers"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:bonds", "_Overlapping atoms with minimisers", order=(0, 4, 1, 5, 1, 0))
+
+    def analyze_selection():
+        # A) calling ancestor
+        if not AutoConnectMixin.analyze_selection(): return False
+        if not Immediate.analyze_selection(): return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def allow_node(self, node):
+        return isinstance(node, context.application.plugins.get_node("Atom"))
+
+    def get_vector(self, atom1, atom2, distance):
+        for reference in atom2.references:
+            referent = reference.parent
+            if isinstance(referent, Minimiser):
+                if (referent.children[0].target == atom1) or \
+                   (referent.children[1].target == atom1):
+                    return None
+
+        if 0.5*(periodic[atom1.number].radius + periodic[atom2.number].radius) >= distance:
+            return Minimiser(targets=[atom1, atom2])
+        else:
+            return None
+
+    def do(self):
+        AutoConnectMixin.do(self, periodic.max_radius)
+
+
 nodes = {
     "Minimiser": Minimiser
 }
 
 
 actions = {
-    "ConnectMinimiser": ConnectMinimiser
+    "ConnectMinimiser": ConnectMinimiser,
+    "AutoConnectMinimisers": AutoConnectMinimisers,
 }

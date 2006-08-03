@@ -735,6 +735,16 @@ class BuilderActions(ApplicationTestCase):
             ConnectMinimiser()
         self.run_test_application(fn)
 
+    def test_auto_connect_minimisers_lau(self):
+        def fn():
+            context.application.model.file_open("input/lau_double.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            AutoConnectMinimisers = context.application.plugins.get_action("AutoConnectMinimisers")
+            self.assert_(AutoConnectMinimisers.analyze_selection())
+            AutoConnectMinimisers()
+        self.run_test_application(fn)
+
+
     #def test_triangular_scan_for_connections(self):
     #    from zeobuilder.actions.composed.scan import TriangularScanForConnections
     #    self.load_file("two_precursors.zml")

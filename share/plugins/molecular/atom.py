@@ -150,9 +150,9 @@ class Atom(GLGeometricBase, UserColorMixin):
         for reference in self.references:
             referent = reference.parent
             if isinstance(referent, Bond):
-                first = reference.parent.children[0].target
+                first = referenct.children[0].target
                 if first == self:
-                    neighbour = reference.parent.children[1].target
+                    neighbour = referenct.children[1].target
                 else:
                     neighbour = first
                 if isinstance(neighbour, Atom):
