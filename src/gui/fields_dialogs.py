@@ -144,7 +144,7 @@ def create_tabbed_main_field(dialog_fields):
             assert existing.field.label_text == dialog_field_info.field.label_text, \
                 "Labels with duplicate order=%s in category %s: '%s' (%s) and '%s' (%s)" % (
                     dialog_field_info.order, dialog_field_info.category,
-                    existing.field.label_text, existing.field, 
+                    existing.field.label_text, existing.field,
                     dialog_field_info.field.label_text, dialog_field_info.field
                 )
         categories.add(dialog_field_info.category)

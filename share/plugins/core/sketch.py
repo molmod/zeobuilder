@@ -147,7 +147,7 @@ class SketchOptions(GladeWrapper):
             if node is not None and node != parent and \
                node.is_indirect_child_of(parent) and \
                node.model == context.application.model and \
-               (not self.cb_erase_filter.get_active() or 
+               (not self.cb_erase_filter.get_active() or
                 eval(self.erase_filter, glbls, {"node": node})):
                 primitive.Delete(node)
 
