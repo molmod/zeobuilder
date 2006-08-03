@@ -228,8 +228,8 @@ class ConnectTripleBond(ConnectBond):
 
 
 class AutoConnectPhysical(AutoConnectMixin, Immediate):
-    description = "Connect atoms based on database"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:bonds", "_Atoms with bonds (database)", order=(0, 4, 1, 5, 1, 0))
+    description = "Add bonds (database)"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (database)", order=(0, 4, 1, 5, 1, 0))
 
     def analyze_selection():
         # A) calling ancestor
@@ -256,8 +256,8 @@ class AutoConnectPhysical(AutoConnectMixin, Immediate):
 
 
 class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
-    description = "Connect atoms based on parameters"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:bonds", "_Atoms with bonds (parameters)", order=(0, 4, 1, 5, 1, 1))
+    description = "Add bonds (parameters)"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (parameters)", order=(0, 4, 1, 5, 1, 1))
 
     bond_specification = FieldsDialogSimple(
         "Bond specification",

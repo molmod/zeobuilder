@@ -724,6 +724,23 @@ class MolecularActions(ApplicationTestCase):
             RearrangeAtoms()
         self.run_test_application(fn)
 
+    def test_saturate_with_hydrogens_tpa(self):
+        def fn():
+            context.application.model.file_open("input/tpa.zml")
+            Atom = context.application.plugins.get_node("Atom")
+            for child in context.application.model.universe.children[::-1]:
+                if isinstance(child, Atom) and child.number == 1:
+                    context.application.model.universe.children.remove(child)
+            context.application.main.select_nodes([context.application.model.universe])
+            AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
+            self.assert_(AutoConnectPhysical.analyze_selection())
+            AutoConnectPhysical()
+            context.application.main.select_nodes([context.application.model.universe])
+            SaturateWithHydrogens = context.application.plugins.get_action("SaturateWithHydrogens")
+            self.assert_(SaturateWithHydrogens.analyze_selection())
+            SaturateWithHydrogens()
+        self.run_test_application(fn)
+
 
 class BuilderActions(ApplicationTestCase):
     def test_connect_double_bond(self):

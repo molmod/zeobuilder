@@ -80,7 +80,7 @@ class CoordinationDialog(object):
 
 class TetraCoordination(Immediate):
     description = "T-site coordination"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:zeolite", "_T-site coordination", order=(0, 4, 1, 5, 3, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_T-site coordination", order=(0, 4, 1, 5, 2, 1))
 
     def analyze_selection():
         # A) calling ancestor

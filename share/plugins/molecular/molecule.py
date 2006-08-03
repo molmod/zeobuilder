@@ -27,17 +27,19 @@ from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.gui.simple import ok_information
-from zeobuilder.transformations import Translation, Complete
+from zeobuilder.transformations import Translation, Complete, Rotation
 import zeobuilder.actions.primitive as primitive
 
-from molmod.data import periodic
+from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 
 import numpy
+
+import math
 
 
 class ChemicalFormula(Immediate):
     description = "Show chemical formula"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:molecular", "_Chemical Formula", order=(0, 4, 1, 5, 2, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Chemical Formula", order=(0, 4, 1, 5, 2, 0))
 
     def analyze_selection():
         if not Immediate.analyze_selection(): return False
@@ -176,8 +178,141 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
         CenterAlignBase.do(self, node, cache.translated_children, c)
 
 
+class SaturateWithHydrogens(Immediate):
+    description = "Saturate with hydrogens"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens", order=(0, 4, 1, 5, 1, 2))
+    opening_angles = {
+        # (hybr, numsit): angle
+          (2,    1):                  0.0,
+          (3,    1):                  0.0,
+          (4,    1):                  0.0,
+          (3,    2):      math.pi/180*60.0,
+          (4,    2):      math.pi/180*54.735610317245346,
+          (4,    3):      math.pi/180*70.528779365509308
+    }
+
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        if len(context.application.cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def do(self):
+        Atom = context.application.plugins.get_node("Atom")
+        Bond = context.application.plugins.get_node("Bond")
+
+        def lone_pairs(number):
+            # very naive implemention for neutral atoms in the second and the
+            # third row
+            if number <= 6:
+                return 0
+            elif number <= 10:
+                return number - 6
+            elif number <= 14:
+                return 0
+            elif number <= 18:
+                return number - 14
+            else:
+                return 0
+
+        def valence_el(number):
+            # very naive implemention for neutral atoms in the second and the
+            # third row
+            if number <= 2:
+                return number
+            elif number <= 10:
+                return number - 2
+            elif number <= 18:
+                return number - 10
+            else:
+                return 0
+
+        def add_hydrogens(atom):
+            existing_bonds = list(atom.yield_bonds())
+            num_bonds = len(existing_bonds)
+            if num_bonds == 0:
+                return
+
+            used_valence = 0
+            oposite_direction = numpy.zeros(3, float)
+            for bond in existing_bonds:
+                shortest_vector = bond.shortest_vector_relative_to(atom.parent)
+                if bond.children[1].target == atom:
+                    shortest_vector *= -1
+                oposite_direction -= shortest_vector
+
+                if bond.bond_type == BOND_SINGLE:
+                    used_valence += 1
+                elif bond.bond_type == BOND_DOUBLE:
+                    used_valence += 2
+                elif bond.bond_type == BOND_TRIPLE:
+                    used_valence += 3
+
+            oposite_direction /= numpy.linalg.norm(oposite_direction)
+
+            num_hydrogens = valence_el(atom.number) - 2*lone_pairs(atom.number) - used_valence
+            if num_hydrogens <= 0:
+                return
+
+            hybride_count = num_hydrogens + lone_pairs(atom.number) + num_bonds - (used_valence - num_bonds)
+            num_sites = num_hydrogens + lone_pairs(atom.number)
+            rotation = Rotation()
+            rotation.set_rotation_properties(2*math.pi / float(num_sites), oposite_direction, False)
+            opening_key = (hybride_count, num_sites)
+            opening_angle = self.opening_angles.get(opening_key)
+            if opening_angle is None:
+                return
+
+            if num_bonds == 1:
+                first_bond = existing_bonds[0]
+                other_atom = first_bond.children[0].target
+                if other_atom == atom:
+                    other_atom = first_bond.children[1].target
+                other_bonds = [bond for bond in other_atom.yield_bonds() if bond != first_bond]
+                if len(other_bonds) > 0:
+                    normal = other_bonds[0].shortest_vector_relative_to(atom.parent)
+                    normal -= numpy.dot(normal, oposite_direction) * oposite_direction
+                    normal /= numpy.linalg.norm(normal)
+                    if other_bonds[0].children[0].target == other_atom:
+                        normal *= -1
+                else:
+                    normal = random_orthonormal(oposite_direction)
+            elif num_bonds == 2:
+                normal = numpy.cross(oposite_direction, existing_bonds[0].shortest_vector_relative_to(atom.parent))
+                normal /= numpy.linalg.norm(normal)
+            elif num_bonds == 3:
+                normal = random_orthonormal(oposite_direction)
+            else:
+                return
+
+            bond_length = bonds.get_length(atom.number, 1, BOND_SINGLE)
+            h_pos = bond_length*(oposite_direction*math.cos(opening_angle) + normal*math.sin(opening_angle))
+
+            for i in range(num_hydrogens):
+                H = Atom(name="auto H", number=1)
+                H.transformation.translation_vector = atom.transformation.translation_vector + h_pos
+                primitive.Add(H, atom.parent)
+                bond = Bond(name="aut H bond", targets=[atom, H])
+                primitive.Add(bond, atom.parent)
+                h_pos = rotation.vector_apply(h_pos)
+
+        def hydrogenate_unsaturated_atoms(nodes):
+            for node in nodes:
+                if isinstance(node, Atom):
+                    add_hydrogens(node)
+                elif isinstance(node, ContainerMixin):
+                    hydrogenate_unsaturated_atoms(node.children)
+
+        hydrogenate_unsaturated_atoms(context.application.cache.nodes)
+
+
+
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
     "CenterOfMassAndPrincipalAxes": CenterOfMassAndPrincipalAxes,
+    "SaturateWithHydrogens": SaturateWithHydrogens,
 }

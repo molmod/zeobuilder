@@ -145,18 +145,22 @@ class Atom(GLGeometricBase, UserColorMixin):
     # Tools
     #
 
-    def yield_neighbours(self):
+    def yield_bonds(self):
         Bond = context.application.plugins.get_node("Bond")
         for reference in self.references:
             referent = reference.parent
             if isinstance(referent, Bond):
-                first = referent.children[0].target
-                if first == self:
-                    neighbour = referent.children[1].target
-                else:
-                    neighbour = first
-                if isinstance(neighbour, Atom):
-                    yield neighbour
+                yield referent
+
+    def yield_neighbours(self):
+        for bond in self.yield_bonds():
+            first = bond.children[0].target
+            if first == self:
+                neighbour = bond.children[1].target
+            else:
+                neighbour = first
+            if isinstance(neighbour, Atom):
+                yield neighbour
 
 
 class AddAtom(AddBase):
@@ -173,7 +177,7 @@ class AddAtom(AddBase):
 
 class MergeOverlappingAtoms(Immediate):
     description = "Merge overlapping atoms"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:atomic", "_Merge overlapping atoms", order=(0, 4, 1, 5, 0, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Merge overlapping atoms", order=(0, 4, 1, 5, 0, 0))
 
     def analyze_selection():
         # A) calling ancestor
@@ -254,7 +258,7 @@ class MergeOverlappingAtoms(Immediate):
 
 class RearrangeAtoms(Immediate):
     description = "Rearrange atoms"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:atomic", "_Rearrange Atoms", order=(0, 4, 1, 5, 0, 1))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Rearrange Atoms", order=(0, 4, 1, 5, 0, 1))
 
     def analyze_selection():
         # A) calling ancestor
