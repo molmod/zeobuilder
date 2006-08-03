@@ -651,9 +651,9 @@ class MolecularActions(ApplicationTestCase):
             AutoConnectPhysical()
         self.run_test_application(fn)
 
-    def test_auto_connect_physical_dfo(self):
+    def test_auto_connect_physical_lau(self):
         def fn():
-            context.application.model.file_open("input/dfo.zml")
+            context.application.model.file_open("input/lau.zml")
             context.application.main.select_nodes([context.application.model.universe])
             AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
             self.assert_(AutoConnectPhysical.analyze_selection())
@@ -674,9 +674,9 @@ class MolecularActions(ApplicationTestCase):
             AutoConnectParameters(parameters)
         self.run_test_application(fn)
 
-    def test_auto_connect_parameters_dfo(self):
+    def test_auto_connect_parameters_lau(self):
         def fn():
-            context.application.model.file_open("input/dfo.zml")
+            context.application.model.file_open("input/lau.zml")
             context.application.main.select_nodes([context.application.model.universe])
             parameters = Parameters()
             parameters.number1 = 14
@@ -688,9 +688,9 @@ class MolecularActions(ApplicationTestCase):
             AutoConnectParameters(parameters)
         self.run_test_application(fn)
 
-    def test_merge_overlapping_atoms_dfo(self):
+    def test_merge_overlapping_atoms_lau(self):
         def fn():
-            context.application.model.file_open("input/dfo.zml")
+            context.application.model.file_open("input/lau_double.zml")
             context.application.main.select_nodes([context.application.model.universe])
             MergeOverlappingAtoms = context.application.plugins.get_action("MergeOverlappingAtoms")
             self.assert_(MergeOverlappingAtoms.analyze_selection())
