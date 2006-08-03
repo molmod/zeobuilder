@@ -688,6 +688,24 @@ class MolecularActions(ApplicationTestCase):
             MergeOverlappingAtoms()
         self.run_test_application(fn)
 
+    def test_center_of_mass(self):
+        def fn():
+            context.application.model.file_open("input/tpa.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            CenterOfMass = context.application.plugins.get_action("CenterOfMass")
+            self.assert_(CenterOfMass.analyze_selection())
+            CenterOfMass()
+        self.run_test_application(fn)
+
+    def test_center_of_mass_and_principal_axes(self):
+        def fn():
+            context.application.model.file_open("input/tpa.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            CenterOfMassAndPrincipalAxes = context.application.plugins.get_action("CenterOfMassAndPrincipalAxes")
+            self.assert_(CenterOfMassAndPrincipalAxes.analyze_selection())
+            CenterOfMassAndPrincipalAxes()
+        self.run_test_application(fn)
+
 
 #class ZeoliteActions(ApplicationTestCase):
     #def test_triangular_scan_for_connections(self):
