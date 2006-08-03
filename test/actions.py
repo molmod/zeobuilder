@@ -642,25 +642,25 @@ class MolecularActions(ApplicationTestCase):
             ConnectTripleBond()
         self.run_test_application(fn)
 
-    def test_connect_bonds_automatically_physical_tpa(self):
+    def test_auto_connect_physical_tpa(self):
         def fn():
             context.application.model.file_open("input/tpa.zml")
             context.application.main.select_nodes([context.application.model.universe])
-            ConnectAtomsAutomaticallyPhysical = context.application.plugins.get_action("ConnectAtomsAutomaticallyPhysical")
-            self.assert_(ConnectAtomsAutomaticallyPhysical.analyze_selection())
-            ConnectAtomsAutomaticallyPhysical()
+            AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
+            self.assert_(AutoConnectPhysical.analyze_selection())
+            AutoConnectPhysical()
         self.run_test_application(fn)
 
-    def test_connect_bonds_automatically_physical_dfo(self):
+    def test_auto_connect_physical_dfo(self):
         def fn():
             context.application.model.file_open("input/dfo.zml")
             context.application.main.select_nodes([context.application.model.universe])
-            ConnectAtomsAutomaticallyPhysical = context.application.plugins.get_action("ConnectAtomsAutomaticallyPhysical")
-            self.assert_(ConnectAtomsAutomaticallyPhysical.analyze_selection())
-            ConnectAtomsAutomaticallyPhysical()
+            AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
+            self.assert_(AutoConnectPhysical.analyze_selection())
+            AutoConnectPhysical()
         self.run_test_application(fn)
 
-    def test_connect_bonds_automatically_specific_tpa(self):
+    def test_auto_connect_parameters_tpa(self):
         def fn():
             context.application.model.file_open("input/tpa.zml")
             context.application.main.select_nodes([context.application.model.universe])
@@ -669,12 +669,12 @@ class MolecularActions(ApplicationTestCase):
             parameters.number2 = 6
             parameters.distance = 3.0
             parameters.bond_type = BOND_SINGLE
-            ConnectAtomsAutomaticallySpecific = context.application.plugins.get_action("ConnectAtomsAutomaticallySpecific")
-            self.assert_(ConnectAtomsAutomaticallySpecific.analyze_selection(parameters))
-            ConnectAtomsAutomaticallySpecific(parameters)
+            AutoConnectParameters = context.application.plugins.get_action("AutoConnectParameters")
+            self.assert_(AutoConnectParameters.analyze_selection(parameters))
+            AutoConnectParameters(parameters)
         self.run_test_application(fn)
 
-    def test_connect_bonds_automatically_specific_dfo(self):
+    def test_auto_connect_parameters_dfo(self):
         def fn():
             context.application.model.file_open("input/dfo.zml")
             context.application.main.select_nodes([context.application.model.universe])
@@ -683,9 +683,9 @@ class MolecularActions(ApplicationTestCase):
             parameters.number2 = 14
             parameters.distance = 6.0
             parameters.bond_type = BOND_SINGLE
-            ConnectAtomsAutomaticallySpecific = context.application.plugins.get_action("ConnectAtomsAutomaticallySpecific")
-            self.assert_(ConnectAtomsAutomaticallySpecific.analyze_selection(parameters))
-            ConnectAtomsAutomaticallySpecific(parameters)
+            AutoConnectParameters = context.application.plugins.get_action("AutoConnectParameters")
+            self.assert_(AutoConnectParameters.analyze_selection(parameters))
+            AutoConnectParameters(parameters)
         self.run_test_application(fn)
 
     def test_merge_overlapping_atoms_dfo(self):

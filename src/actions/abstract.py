@@ -24,12 +24,18 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.nodes.glmixin import GLMixin, GLTransformationMixin
 from zeobuilder.nodes.parent_mixin import ContainerMixin
+from zeobuilder.nodes.analysis import YieldPositionedChildren
 import zeobuilder.actions.primitive as primitive
+
+from molmod.unit_cell import UnitCell
+from molmod.binning import SparseBinnedObjects, IntraAnalyseNeighboringObjects
+
+import numpy
 
 import copy
 
 
-__all__ = ["AddBase", "CenterAlignBase", "ConnectBase"]
+__all__ = ["AddBase", "CenterAlignBase", "ConnectBase", "AutoConnectMixin"]
 
 
 class AddBase(Immediate):
@@ -93,3 +99,48 @@ class ConnectBase(Immediate):
 
     def new_connector(self, begin, end):
         raise NotImplementedError
+
+
+class AutoConnectMixin(object):
+    def analyze_selection():
+        # B) validating
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        if cache.common_root == None: return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def allow_node(self, node):
+        return isinstance(node, GLTransformationMixin) and \
+            isinstance(node.transformation, Translation)
+
+    def get_vector(self, node1, node2, distance):
+        raise NotImplementedError
+
+    def do(self, grid_size):
+        cache = context.application.cache
+        parent = cache.common_root
+
+        unit_cell = None
+        if isinstance(parent, UnitCell):
+            unit_cell = parent
+
+        binned_nodes = SparseBinnedObjects(
+            YieldPositionedChildren(
+                cache.nodes, parent, True,
+                lambda node: self.allow_node(node)
+            ),
+            grid_size
+        )
+
+        def connect_nodes(positioned1, positioned2):
+            delta = parent.shortest_vector(positioned2.vector - positioned1.vector)
+            distance = numpy.linalg.norm(delta)
+            return self.get_vector(positioned1.id, positioned2.id, distance)
+
+        vector_counter = 1
+        for (positioned1, positioned2), vector in IntraAnalyseNeighboringObjects(binned_nodes, connect_nodes)(unit_cell):
+            vector.name += " %i" % vector_counter
+            vector_counter += 1
+            primitive.Add(vector, parent)
