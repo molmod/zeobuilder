@@ -147,9 +147,9 @@ class Atom(GLGeometricBase, UserColorMixin):
 
     def yield_neighbours(self):
         for reference in self.references:
-            first = reference.parent.children[0]
+            first = reference.parent.children[0].target
             if first == self:
-                yield reference.parent.children[1]
+                yield reference.parent.children[1].target
             else:
                 yield first
 
