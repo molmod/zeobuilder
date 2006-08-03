@@ -110,7 +110,7 @@ class Scene(object):
         glLight(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 3.0, 0.0])
         glEnable(GL_LIGHT0)
         glEnable(GL_LIGHTING)
-        glEnable(GL_CULL_FACE)
+        #glEnable(GL_CULL_FACE)
 
         # Some default gl settings
         glDepthFunc(GL_LESS)
