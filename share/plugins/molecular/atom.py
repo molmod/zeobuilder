@@ -252,6 +252,52 @@ class MergeOverlappingAtoms(Immediate):
                 primitive.Delete(atom)
 
 
+class RearrangeAtoms(Immediate):
+    description = "Rearrange atoms"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:atomic", "_Rearrange Atoms", order=(0, 4, 1, 5, 0, 1))
+
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        cache = context.application.cache
+        if cache.node is None: return False
+        Atom = context.application.plugins.get_node("Atom")
+        contains_atoms = False
+        for cls in cache.child_classes:
+            if issubclass(cls, Atom):
+                contains_atoms = True
+                break
+        if not contains_atoms: return False
+        # C) passed all tests
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def do(self):
+        cache = context.application.cache
+        sorted = {}
+        Atom = context.application.plugins.get_node("Atom")
+        for child in cache.children:
+            if isinstance(child, Atom):
+                if child.number in sorted:
+                    sorted[child.number].append(child)
+                else:
+                    sorted[child.number] = [child]
+
+        numbers = sorted.keys()
+        numbers.sort()
+        numbers.reverse()
+
+        counter = 0
+        parent = cache.node
+        for number in numbers:
+            atoms = sorted[number]
+            for atom in atoms:
+                atom.name = "%s" % periodic[number].symbol
+                primitive.Move(atom, parent, new_index=counter)
+                counter += 1
+
+
 nodes = {
     "Atom": Atom
 }
@@ -259,4 +305,5 @@ nodes = {
 actions = {
     "AddAtom": AddAtom,
     "MergeOverlappingAtoms": MergeOverlappingAtoms,
+    "RearrangeAtoms": RearrangeAtoms,
 }

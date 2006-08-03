@@ -715,6 +715,15 @@ class MolecularActions(ApplicationTestCase):
             CenterOfMassAndPrincipalAxes()
         self.run_test_application(fn)
 
+    def test_rearrange_atoms(self):
+        def fn():
+            context.application.model.file_open("input/tpa.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            RearrangeAtoms = context.application.plugins.get_action("RearrangeAtoms")
+            self.assert_(RearrangeAtoms.analyze_selection())
+            RearrangeAtoms()
+        self.run_test_application(fn)
+
 
 class BuilderActions(ApplicationTestCase):
     def test_connect_double_bond(self):
