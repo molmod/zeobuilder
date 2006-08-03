@@ -26,6 +26,8 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Parameters
 from zeobuilder.transformations import Rotation, Translation, Complete
 
+from molmod.data import BOND_SINGLE
+
 import gtk, numpy
 
 
@@ -631,29 +633,63 @@ class MolecularActions(ApplicationTestCase):
             ConnectTripleBond()
         self.run_test_application(fn)
 
-    #def test_connect_bonds_automatically_precursor(self):
-    #    from zeobuilder.actions.composed.connect.automated import ConnectAtomsAutomaticallyPhysical
-    #    self.load_file("precursor_atoms.zml")
-    #    self.set_input_nodes([self.application.model.root[0]])
-    #    self.assert_(ConnectAtomsAutomaticallyPhysical.analyse_nodes())
-    #    ConnectAtomsAutomaticallyPhysical()
+    def test_connect_bonds_automatically_physical_tpa(self):
+        def fn():
+            context.application.model.file_open("input/tpa.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            ConnectAtomsAutomaticallyPhysical = context.application.plugins.get_action("ConnectAtomsAutomaticallyPhysical")
+            self.assert_(ConnectAtomsAutomaticallyPhysical.analyze_selection())
+            ConnectAtomsAutomaticallyPhysical()
+        self.run_test_application(fn)
 
-    #def test_connect_bonds_automatically_mfi(self):
-    #    from zeobuilder.actions.composed.connect.automated import ConnectAtomsAutomaticallyPhysical
-    #    self.load_file("mfi_atoms.zml")
-    #    self.set_input_nodes([self.application.model.root[0]])
-    #    self.assert_(ConnectAtomsAutomaticallyPhysical.analyse_nodes())
-    #    ConnectAtomsAutomaticallyPhysical()
+    def test_connect_bonds_automatically_physical_dfo(self):
+        def fn():
+            context.application.model.file_open("input/dfo.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            ConnectAtomsAutomaticallyPhysical = context.application.plugins.get_action("ConnectAtomsAutomaticallyPhysical")
+            self.assert_(ConnectAtomsAutomaticallyPhysical.analyze_selection())
+            ConnectAtomsAutomaticallyPhysical()
+        self.run_test_application(fn)
+
+    def test_connect_bonds_automatically_specific_tpa(self):
+        def fn():
+            context.application.model.file_open("input/tpa.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            parameters = Parameters()
+            parameters.number1 = 6
+            parameters.number2 = 6
+            parameters.distance = 3.0
+            parameters.bond_type = BOND_SINGLE
+            ConnectAtomsAutomaticallySpecific = context.application.plugins.get_action("ConnectAtomsAutomaticallySpecific")
+            self.assert_(ConnectAtomsAutomaticallySpecific.analyze_selection(parameters))
+            ConnectAtomsAutomaticallySpecific(parameters)
+        self.run_test_application(fn)
+
+    def test_connect_bonds_automatically_specific_dfo(self):
+        def fn():
+            context.application.model.file_open("input/dfo.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            parameters = Parameters()
+            parameters.number1 = 14
+            parameters.number2 = 14
+            parameters.distance = 6.0
+            parameters.bond_type = BOND_SINGLE
+            ConnectAtomsAutomaticallySpecific = context.application.plugins.get_action("ConnectAtomsAutomaticallySpecific")
+            self.assert_(ConnectAtomsAutomaticallySpecific.analyze_selection(parameters))
+            ConnectAtomsAutomaticallySpecific(parameters)
+        self.run_test_application(fn)
+
+    def test_merge_overlapping_atoms_dfo(self):
+        def fn():
+            context.application.model.file_open("input/dfo.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            MergeOverlappingAtoms = context.application.plugins.get_action("MergeOverlappingAtoms")
+            self.assert_(MergeOverlappingAtoms.analyze_selection())
+            MergeOverlappingAtoms()
+        self.run_test_application(fn)
 
 
 #class ZeoliteActions(ApplicationTestCase):
-    #def test_connect_merge_overlapping_atoms_mfi(self):
-    #    from zeobuilder.actions.composed.atomic import MergeOverlappingAtoms
-    #    self.load_file("mfi_atoms.zml")
-    #    self.set_input_nodes([self.application.model.root[0]])
-    #    self.assert_(MergeOverlappingAtoms.analyse_nodes())
-    #    MergeOverlappingAtoms()
-
     #def test_triangular_scan_for_connections(self):
     #    from zeobuilder.actions.composed.scan import TriangularScanForConnections
     #    self.load_file("two_precursors.zml")

@@ -21,19 +21,25 @@
 
 
 from zeobuilder import context
+from zeobuilder.actions.composed import Immediate, ImmediateWithMemory
 from zeobuilder.actions.abstract import ConnectBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.vector import Vector
+from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.model_object import ModelObjectInfo
-from zeobuilder.gui.fields_dialogs import DialogFieldInfo
+from zeobuilder.nodes.analysis import YieldPositionedChildren
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo, FieldsDialogSimple
+import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 
-from molmod.data import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
+from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
+from molmod.unit_cell import UnitCell
+from molmod.binning import SparseBinnedObjects, IntraAnalyseNeighboringObjects
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import numpy
+import numpy, gtk
 
 import math
 
@@ -224,6 +230,161 @@ class ConnectTripleBond(ConnectBond):
     bond_type = BOND_TRIPLE
 
 
+class ConnectAtomsAutomaticallyMixin(object):
+    def analyze_selection():
+        # B) validating
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        Atom = context.application.plugins.get_node("Atom")
+        for Class in cache.classes:
+            if not (issubclass(Class, Atom) or issubclass(Class, GLContainerMixin)): return False
+        if cache.common_root == None: return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def allow_atom(self, atom):
+        return True
+
+    def get_bond_type(self, number1, number2, distance):
+        return None
+
+    def do(self, grid_size):
+        cache = context.application.cache
+        parent = cache.common_root
+
+        unit_cell = None
+        if isinstance(parent, UnitCell):
+            unit_cell = parent
+
+        Atom = context.application.plugins.get_node("Atom")
+
+        binned_atoms = SparseBinnedObjects(
+            YieldPositionedChildren(
+                cache.nodes, parent, True,
+                lambda node: isinstance(node, Atom) and self.allow_atom(node)
+            ),
+            grid_size
+        )
+
+        def connect_atoms(positioned1, positioned2):
+            atom1 = positioned1.id
+            atom2 = positioned2.id
+            if atom1 in atom2.yield_neighbours():
+                return
+            delta = parent.shortest_vector(positioned2.vector - positioned1.vector)
+            distance = math.sqrt(numpy.dot(delta, delta))
+            return self.get_vector(atom1, atom2, distance)
+
+        vector_counter = 1
+        for (positioned1, positioned2), vector in IntraAnalyseNeighboringObjects(binned_atoms, connect_atoms)(unit_cell):
+            vector.name += " %i" % vector_counter
+            vector_counter += 1
+            primitive.Add(vector, parent)
+
+
+class ConnectAtomsAutomaticallyPhysical(ConnectAtomsAutomaticallyMixin, Immediate):
+    description = "Connect atoms based on database"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:bonds", "_Atoms with bonds (database)", order=(0, 4, 1, 5, 1, 0))
+
+    def analyze_selection():
+        # A) calling ancestor
+        if not ConnectAtomsAutomaticallyMixin.analyze_selection(): return False
+        if not Immediate.analyze_selection(): return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def get_vector(self, atom1, atom2, distance):
+        bond_type = bonds.bonded(atom1.number, atom2.number, distance)
+        if bond_type != None:
+            Bond = context.application.plugins.get_node("Bond")
+            return Bond(bond_type=bond_type, targets=[atom1, atom2])
+        else:
+            return None
+
+    def do(self):
+        ConnectAtomsAutomaticallyMixin.do(self, bonds.max_length)
+
+
+class ConnectAtomsAutomaticallySpecific(ConnectAtomsAutomaticallyMixin, ImmediateWithMemory):
+    description = "Connect atoms based on parameters"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:bonds", "_Atoms with bonds (parameters)", order=(0, 4, 1, 5, 1, 1))
+
+    bond_specification = FieldsDialogSimple(
+        "Bond specification",
+        fields.group.Table([
+            fields.faulty.Int(
+                label_text="Atom number 1",
+                attribute_name="number1",
+                show_popup=False,
+                minimum=1,
+                maximum=118
+            ),
+            fields.faulty.Int(
+                label_text="Atom number 2",
+                attribute_name="number2",
+                show_popup=False,
+                minimum=1,
+                maximum=118
+            ),
+            fields.faulty.Length(
+                label_text="Maximum bond length",
+                attribute_name="distance",
+                show_popup=False,
+                low=0.0,
+                low_inclusive=False
+            ),
+            fields.edit.ComboBox(
+                choices=[
+                    (BOND_SINGLE, "Single bond"),
+                    (BOND_DOUBLE, "Double bond"),
+                    (BOND_TRIPLE, "Triple bond")],
+                label_text="Bond type",
+                attribute_name="bond_type"
+            ),
+        ]),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+    )
+
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(): return False
+        if not ConnectAtomsAutomaticallyMixin.analyze_selection(): return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def allow_atom(self, atom):
+        return (
+            atom.number == self.parameters.number1 or
+            atom.number == self.parameters.number2
+        )
+
+    def get_vector(self, atom1, atom2, distance):
+        if ((atom1.number == self.parameters.number1) and
+            (atom2.number == self.parameters.number2)) or \
+           ((atom1.number == self.parameters.number2) and
+            (atom2.number == self.parameters.number1)):
+            if self.parameters.distance >= distance:
+                Bond = context.application.plugins.get_node("Bond")
+                return Bond(bond_type=self.parameters.bond_type, targets=[atom1, atom2])
+        return None
+
+    def init_parameters(self):
+        self.parameters.number1 = 6
+        self.parameters.number2 = 6
+        self.parameters.distance = 0.5
+        self.parameters.bond_type = BOND_SINGLE
+
+    def ask_parameters(self):
+        if self.bond_specification.run(self.parameters) != gtk.RESPONSE_OK:
+            self.parameters = Parameters()
+
+    def do(self):
+        ConnectAtomsAutomaticallyMixin.do(self, max([1, self.parameters.distance]))
+
+
 nodes = {
     "Bond": Bond,
 }
@@ -232,4 +393,6 @@ actions = {
     "ConnectSingleBond": ConnectSingleBond,
     "ConnectDoubleBond": ConnectDoubleBond,
     "ConnectTripleBond": ConnectTripleBond,
+    "ConnectAtomsAutomaticallyPhysical": ConnectAtomsAutomaticallyPhysical,
+    "ConnectAtomsAutomaticallySpecific": ConnectAtomsAutomaticallySpecific,
 }
