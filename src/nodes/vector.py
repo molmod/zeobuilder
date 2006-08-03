@@ -149,11 +149,12 @@ class Vector(GLReferentBase):
             self.length = math.sqrt(numpy.dot(relative_translation, relative_translation))
             if self.length > 0:
                 self.orientation.translation_vector = self.children[0].translation_relative_to(self.parent)
+                #axis = numpy.cross(relative_translation, numpy.array([1.0, 0.0, 0.0]))
                 c = relative_translation[2] / self.length
-                if c == 1.0:
+                if c >= 1.0:
                     self.orientation.set_rotation_properties(0, numpy.array([1.0, 0.0, 0.0]), False)
-                elif c == -1.0:
-                    self.orientation.set_rotation_properties(180, numpy.array([1.0, 0.0, 0.0]), False)
+                elif c <= -1.0:
+                    self.orientation.set_rotation_properties(math.pi, numpy.array([1.0, 0.0, 0.0]), False)
                 else:
                     x, y = relative_translation[0], relative_translation[1]
                     if abs(x) < abs(y):

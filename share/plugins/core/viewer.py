@@ -19,6 +19,7 @@
 #
 # --
 
+
 from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
@@ -26,6 +27,8 @@ from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
 
 import gtk
+
+import math
 
 
 class ViewReset(Immediate):
@@ -83,12 +86,13 @@ class ViewerConfiguration(Immediate):
                     low=0.0,
                     low_inclusive=False,
                 ),
-                fields.faulty.Float(
+                fields.faulty.MeasureEntry(
+                    measure="Angle",
                     label_text="Opening angle",
                     attribute_name="opening_angle",
                     low=0,
                     low_inclusive=True,
-                    high=90,
+                    high=0.5*math.pi,
                     high_inclusive=False,
                     show_popup=False,
                 ),

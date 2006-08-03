@@ -63,12 +63,13 @@ class Scene(object):
         config.register_setting(
             "opening_angle",
             0.0,
-            DialogFieldInfo("Default Viewer", (1, 1), fields.faulty.Float(
+            DialogFieldInfo("Default Viewer", (1, 1), fields.faulty.MeasureEntry(
+                measure="Angle",
                 label_text="Eye opening angle",
                 attribute_name="opening_angle",
                 low=0.0,
                 low_inclusive=True,
-                high=90.0,
+                high=0.5*math.pi,
                 high_inclusive=False,
                 show_popup=False,
             )),
@@ -180,7 +181,7 @@ class Scene(object):
 
     def znear(self):
         if self.opening_angle > 0.0:
-            return 0.5*self.window_size/math.tan(0.5*self.opening_angle*math.pi/180)
+            return 0.5*self.window_size/math.tan(0.5*self.opening_angle)
         else:
             return 0.0
 
