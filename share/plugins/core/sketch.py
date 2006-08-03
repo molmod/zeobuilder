@@ -142,10 +142,13 @@ class SketchOptions(GladeWrapper):
         )
 
     def erase_at(self, x, y, parent):
+        glbls = context.application.plugins.nodes
         for node in context.application.main.drawing_area.yield_hits((x-2, y-2, x+2, y+2)):
             if node is not None and node != parent and \
                node.is_indirect_child_of(parent) and \
-               node.model == context.application.model:
+               node.model == context.application.model and \
+               (not self.cb_erase_filter.get_active() or 
+                eval(self.erase_filter, glbls, {"node": node})):
                 primitive.Delete(node)
 
     def tool_draw(self, x1, y1, x2, y2):
