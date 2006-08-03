@@ -72,6 +72,7 @@ class ActionManager(gobject.GObject):
         self.consequences = []
         # flag
         self.record_primitives = False
+        self.active = True
 
     def begin_new_action(self, action):
         if self.current_action is not None:
@@ -85,7 +86,8 @@ class ActionManager(gobject.GObject):
     def append_primitive_to_current_action(self, primitive):
         assert (
             (self.current_action is not None) or
-            not self.record_primitives
+            not self.record_primitives or
+            not self.active
         ), "Can only add primitives when there is a current_action."
         if self.current_primitive is None:
             if not primitive.done:
@@ -97,12 +99,12 @@ class ActionManager(gobject.GObject):
                 self.current_primitive = primitive
                 primitive.redo()
                 self.current_primitive = None
-                if self.record_primitives:
+                if self.record_primitives and self.active:
                     self.current_action.primitives.append(primitive)
             while len(self.consequences) > 0:
                 self.current_primitive = self.consequences.pop(0)
                 self.current_primitive.redo()
-                if self.record_primitives:
+                if self.record_primitives and self.active:
                     self.current_action.primitives.append(self.current_primitive)
                 self.current_primitive = None
         else:
