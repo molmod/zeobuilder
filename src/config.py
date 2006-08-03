@@ -69,11 +69,11 @@ class Configuration(object):
         self.register_setting("saved_representations", {})
         self.register_setting("history_representations", {})
         self.register_setting(
-            "max_histroy_length",
+            "max_history_length",
             6,
             DialogFieldInfo("General", (0, 1), fields.faulty.Int(
                 label_text="Maximum history length for dialog fields",
-                attribute_name="max_histroy_length",
+                attribute_name="max_history_length",
                 minimum=1
             )),
         )
