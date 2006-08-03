@@ -31,7 +31,7 @@ from molmod.data import BOND_SINGLE
 import gtk, numpy
 
 
-__all__ = ["CoreActions", "MolecularActions"]
+__all__ = ["CoreActions", "MolecularActions", "BuilderActions"]
 
 
 class CoreActions(ApplicationTestCase):
@@ -716,7 +716,25 @@ class MolecularActions(ApplicationTestCase):
         self.run_test_application(fn)
 
 
-#class ZeoliteActions(ApplicationTestCase):
+class BuilderActions(ApplicationTestCase):
+    def test_connect_double_bond(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes([context.application.model.universe])
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            self.assert_(AddAtom.analyze_selection())
+            AddAtom()
+            context.application.main.select_nodes(context.application.model.universe.children)
+            ConnectMinimiser = context.application.plugins.get_action("ConnectMinimiser")
+            self.assert_(ConnectMinimiser.analyze_selection())
+            ConnectMinimiser()
+        self.run_test_application(fn)
+
     #def test_triangular_scan_for_connections(self):
     #    from zeobuilder.actions.composed.scan import TriangularScanForConnections
     #    self.load_file("two_precursors.zml")
