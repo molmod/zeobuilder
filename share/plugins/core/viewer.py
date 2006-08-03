@@ -33,7 +33,7 @@ import math
 
 class ViewReset(Immediate):
     description = "Reset view"
-    menu_info = MenuInfo("default/_View:viewer", "_Reset", order=(0, 2, 0, 0))
+    menu_info = MenuInfo("default/_View:viewer", "_Reset viewer", order=(0, 2, 0, 0))
     repeatable = False
 
     def analyze_selection():
@@ -53,7 +53,7 @@ class ViewReset(Immediate):
 
 class ViewerConfiguration(Immediate):
     description = "Edit viewer configuration"
-    menu_info = MenuInfo("default/_View:viewer", "_Configure", order=(0, 2, 0, 1))
+    menu_info = MenuInfo("default/_View:viewer", "_Configure viewer", order=(0, 2, 0, 1))
     repeatable = False
 
     viewer_configuration = FieldsDialogSimple(
