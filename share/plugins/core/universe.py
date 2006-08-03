@@ -220,7 +220,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
             label_text="Show periodic box (if active)",
             attribute_name="box_visible",
         )),
-        DialogFieldInfo("Markup", (1, 5),fields.edit.CheckButton(
+        DialogFieldInfo("Markup", (1, 6),fields.edit.CheckButton(
             label_text="Clip the unit cell contents.",
             attribute_name="clipping",
         )),

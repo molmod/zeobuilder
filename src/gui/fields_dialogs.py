@@ -137,8 +137,16 @@ def create_tabbed_main_field(dialog_fields):
 
     for dialog_field_info in dialog_fields:
         key = (dialog_field_info.category, dialog_field_info.order)
-        if key not in unique_dialog_fields:
+        existing = unique_dialog_fields.get(key)
+        if existing is None:
             unique_dialog_fields[key] = dialog_field_info
+        else:
+            assert existing.field.label_text == dialog_field_info.field.label_text, \
+                "Labels with duplicate order=%s in category %s: '%s' (%s) and '%s' (%s)" % (
+                    dialog_field_info.order, dialog_field_info.category,
+                    existing.field.label_text, existing.field, 
+                    dialog_field_info.field.label_text, dialog_field_info.field
+                )
         categories.add(dialog_field_info.category)
 
     fields_by_category = dict((category, []) for category in categories)
