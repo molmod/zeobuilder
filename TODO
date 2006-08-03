@@ -20,8 +20,6 @@ TODO before first release
 
 	* Import al the (remaining) old zeobuilder code in this new tree in the form
 	  of plugins and external modules.
-	    - dialog field that can select between a standard and a user value
-	      (for the radius and the color of an atom)
 	  	- databases and tables as model objects (in folder)
 	  	- import and export database
 	  	- fsi that also depends and external coordinates
@@ -56,7 +54,6 @@ TODO before first release
         - alternative visualization for double, triple and hybrid
         - lines visualization
         - parameterize stick width
-        - menu actions to make style changes on groups
     * Arrow: margins
 
 
