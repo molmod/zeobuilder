@@ -222,7 +222,7 @@ class MergeOverlappingAtoms(Immediate):
 
         cf = ClusterFactory()
         for (positioned1, positioned2), foo in IntraAnalyseNeighboringObjects(binned_atoms, overlap)(unit_cell):
-            cf.add_group([positioned1.id, positioned2.id])
+            cf.add_members([positioned1.id, positioned2.id])
         clusters = cf.get_clusters()
         del cf
 
