@@ -44,7 +44,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 import numpy, gtk
 
-import math, copy
+import math, copy, time
 
 
 __all__ = ["Minimizer"]
@@ -176,38 +176,74 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         self.init_proxies(["la_num_iter", "la_average_length", "progress_bar"])
         self.state_indices = None
 
-    def run(self, minimize, involved_frames):
+    def run(self, minimize, involved_frames, update_interval, update_steps):
         self.la_num_iter.set_text("0")
         self.la_average_length.set_text(express_measure(0.0, "Length"))
         self.progress_bar.set_fraction(0.0)
         self.progress_bar.set_text("0%")
         self.minimize = minimize
         self.involved_frames = involved_frames
+
+        self.update_interval = update_interval
+        self.update_steps = update_steps
+        self.last_time = time.time()
+        self.last_step = 0
+        self.status = None
+
         result = ChildProcessDialog.run(self, "/usr/bin/iterative", self.minimize)
+
+        # just to avoid confusion
         del self.minimize
         del self.involved_frames
+        del self.update_interval
+        del self.update_steps
+        del self.last_time
+        del self.last_step
+        del self.status
+
         return result
 
-    def update_gui(self, status):
-        status.state = numpy.array(status.state)
-        self.la_num_iter.set_text("%i" % status.step)
-        self.la_average_length.set_text(express_measure(math.sqrt(status.value), "Length"))
-        self.progress_bar.set_text("%i%%" % int(status.progress*100))
-        self.progress_bar.set_fraction(status.progress)
-        for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
-            (
-                frame.transformation.rotation_matrix,
-                frame.transformation.translation_vector
-            ) = variable.extract_state(state_index, status.state)
-            frame.invalidate_transformation_list()
-        context.application.main.drawing_area.queue_draw()
+
+    def conditional_update_gui(self):
+        if self.last_step > self.update_steps:
+            self.last_step = 0
+        else:
+            self.last_step += 1
+            return
+        current_time = time.time()
+        if self.last_time < current_time:
+            self.last_time = current_time + self.update_interval
+        else:
+            return
+        self.update_gui()
+
+    def update_gui(self):
+        if self.status is not None:
+            self.status.state = numpy.array(self.status.state)
+            self.la_num_iter.set_text("%i" % self.status.step)
+            self.la_average_length.set_text(express_measure(math.sqrt(self.status.value), "Length"))
+            self.progress_bar.set_text("%i%%" % int(self.status.progress*100))
+            self.progress_bar.set_fraction(self.status.progress)
+            for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
+                (
+                    frame.transformation.rotation_matrix,
+                    frame.transformation.translation_vector
+                ) = variable.extract_state(state_index, self.status.state)
+                frame.invalidate_transformation_list()
+            context.application.main.drawing_area.queue_draw()
 
     def on_received(self, com_thread):
+        ChildProcessDialog.on_received(self, com_thread)
         instance = com_thread.stack.pop(0)
         if isinstance(instance, iterative.alg.Status):
-            self.update_gui(instance)
+            self.status = instance
+            self.conditional_update_gui()
         else:
             self.state_indices = instance
+
+    def on_finished(self, com_thread):
+        ChildProcessDialog.on_finished(self, com_thread)
+        self.update_gui()
 
 
 def get_minimizer_problem(cache):
@@ -244,27 +280,6 @@ class MinimizeDistances(ImmediateWithMemory):
     parameters_dialog = FieldsDialogSimple(
         "Minimization parameters",
         fields.group.Table(fields=[
-            fields.edit.CheckButton(
-                label_text="Preconstrain each iteration",
-                attribute_name="preconstrain",
-            ),
-            fields.faulty.Float(
-                label_text="Step size",
-                attribute_name="step_size",
-                low=0.0,
-                low_inclusive=False,
-            ),
-            fields.faulty.Float(
-                label_text="Constraint convergence threshold",
-                attribute_name="constraint_convergence",
-                low=0.0,
-                low_inclusive=False,
-            ),
-            fields.faulty.Int(
-                label_text="Maximum number of shakes",
-                attribute_name="max_shakes",
-                minimum=5,
-            ),
             fields.faulty.Float(
                 label_text="Update interval [s]",
                 attribute_name="update_interval",
@@ -273,7 +288,7 @@ class MinimizeDistances(ImmediateWithMemory):
             ),
             fields.faulty.Int(
                 label_text="Number of iterations between update",
-                attribute_name="update_num_iter",
+                attribute_name="update_steps",
                 minimum=1
             ),
         ]),
@@ -298,12 +313,8 @@ class MinimizeDistances(ImmediateWithMemory):
     analyze_selection = staticmethod(analyze_selection)
 
     def init_parameters(self):
-        self.parameters.preconstrain = True
-        self.parameters.step_size = 0.2
-        self.parameters.constraint_convergence = 1e-10
-        self.parameters.max_num_shakes = 5
         self.parameters.update_interval = 0.4
-        self.parameters.update_num_iter = 1
+        self.parameters.update_steps = 1
 
     def ask_parameters(self):
         if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
@@ -317,14 +328,14 @@ class MinimizeDistances(ImmediateWithMemory):
 
         old_transformations = [(frame, copy.deepcopy(frame.transformation)) for frame in involved_frames]
 
-        cost_function = iterative.expr.Root(1, self.parameters.max_num_shakes, self.parameters.preconstrain)
+        cost_function = iterative.expr.Root(1, 10, True)
         for frame in involved_frames:
             variable = iterative.var.Frame(
                 frame.transformation.rotation_matrix,
                 frame.transformation.translation_vector,
             )
             cost_function.register_state_variable(variable)
-            constraint = iterative.expr.Orthonormality(self.parameters.constraint_convergence)
+            constraint = iterative.expr.Orthonormality(1e-10)
             constraint.register_input_variable(variable)
 
         for minimizer, frames in minimizers.iteritems():
@@ -337,12 +348,11 @@ class MinimizeDistances(ImmediateWithMemory):
 
         minimize = iterative.alg.DefaultMinimize(
             cost_function,
-            0.01,
             numpy.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1.0, 1.0, 1.0]*len(involved_frames), float),
             iterative.stop.NoIncrease()
         )
 
-        if self.report_dialog.run(minimize, involved_frames) != gtk.RESPONSE_OK:
+        if self.report_dialog.run(minimize, involved_frames, self.parameters.update_interval, self.parameters.update_steps) != gtk.RESPONSE_OK:
             for frame, transformation in old_transformations:
                 frame.transformation = transformation
                 frame.invalidate_transformation_list()
