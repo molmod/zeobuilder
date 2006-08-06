@@ -259,7 +259,7 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
     description = "Add bonds (parameters)"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (parameters)", order=(0, 4, 1, 5, 1, 1))
 
-    bond_specification = FieldsDialogSimple(
+    parameters_dialog = FieldsDialogSimple(
         "Bond specification",
         fields.group.Table([
             fields.faulty.Int(
@@ -327,10 +327,6 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
         self.parameters.number2 = 6
         self.parameters.distance = 0.5
         self.parameters.bond_type = BOND_SINGLE
-
-    def ask_parameters(self):
-        if self.bond_specification.run(self.parameters) != gtk.RESPONSE_OK:
-            self.parameters = Parameters()
 
     def do(self):
         AutoConnectMixin.do(self, max([1, self.parameters.distance]))

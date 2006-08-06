@@ -316,10 +316,6 @@ class MinimizeDistances(ImmediateWithMemory):
         self.parameters.update_interval = 0.4
         self.parameters.update_steps = 1
 
-    def ask_parameters(self):
-        if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
-            self.parameters.clear()
-
     def do(self):
         cache = context.application.cache
         parent = cache.parent

@@ -113,7 +113,7 @@ class RotateDialog(ImmediateWithMemory):
     description = "Apply rotation (dialog)"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "R_otate objects", order=(0, 4, 1, 2, 1, 0))
 
-    rotation = FieldsDialogSimple(
+    parameters_dialog = FieldsDialogSimple(
         "Rotation",
         fields.composed.Rotation(
             label_text="Rotate around axis n",
@@ -136,10 +136,6 @@ class RotateDialog(ImmediateWithMemory):
     def init_parameters(self):
         self.parameters.rotation = Rotation()
 
-    def ask_parameters(self):
-        if self.rotation.run(self.parameters.rotation) != gtk.RESPONSE_OK:
-            self.parameters.clear()
-
     def do(self):
         primitive.Transform(context.application.cache.node, self.parameters.rotation, after=False)
 
@@ -148,7 +144,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
     description = "Apply rotation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "Rotate objects around c_enter", order=(0, 4, 1, 2, 1, 1))
 
-    rotation_around_center = FieldsDialogSimple(
+    parameters_dialog = FieldsDialogSimple(
         "Rotation around Center",
         fields.group.Notebook([
             ("Center", fields.composed.Translation(
@@ -207,7 +203,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         else:
             self.parameters.complete.translation_vector = calculate_center(cache.translations)
 
-        if self.rotation_around_center.run(self.parameters.complete) != gtk.RESPONSE_OK:
+        if self.parameters_dialog.run(self.parameters.complete) != gtk.RESPONSE_OK:
             self.parameters.clear()
         else:
             self.parameters.complete.translation_vector -= numpy.dot(self.parameters.complete.rotation_matrix, self.parameters.complete.translation_vector)
@@ -221,7 +217,7 @@ class TranslateDialog(ImmediateWithMemory):
     description = "Apply translation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate objects", order=(0, 4, 1, 2, 1, 2))
 
-    translation = FieldsDialogSimple(
+    parameters_dialog = FieldsDialogSimple(
         "Translation",
         fields.composed.Translation(
             label_text="Translate with vector t",
@@ -254,7 +250,7 @@ class TranslateDialog(ImmediateWithMemory):
                 self.parameters.translation.translation_vector = e - b
         else:
             self.use_last_parameters()
-        if self.translation.run(self.parameters.translation) != gtk.RESPONSE_OK:
+        if self.parameters_dialog.run(self.parameters.translation) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
     def do(self):

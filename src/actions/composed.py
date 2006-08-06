@@ -23,7 +23,10 @@
 from zeobuilder import context
 from zeobuilder.gui.simple import ok_error
 
+import gtk
+
 import copy, time
+
 
 __all__ = ["init_actions", "UserError", "CancelException", "ActionError",
            "Action", "ImmediateMixin", "Parameters", "RememberParametersMixin",
@@ -189,6 +192,7 @@ class Immediate(Action, ImmediateMixin):
 class ImmediateWithMemory(Immediate, RememberParametersMixin):
     last_parameters = None
     store_last_parameters = True
+    parameters_dialog = None
 
     analyze_selection = staticmethod(RememberParametersMixin.analyze_selection)
 
@@ -215,7 +219,11 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
         raise NotImplementedError
 
     def ask_parameters(self):
-        raise NotImplementedError
+        if self.parameters_dialog is None:
+            raise NotImplementedError
+        else:
+            if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
+                self.parameters.clear()
 
     def want_repeat(self):
         RememberParametersMixin.want_repeat(self)

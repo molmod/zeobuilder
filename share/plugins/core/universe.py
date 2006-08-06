@@ -496,7 +496,7 @@ class UnitCellToCluster(ImmediateWithMemory):
     menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_To cluster", order=(0, 4, 1, 4, 0, 0))
     store_last_parameters = False
 
-    cuttoff = FieldsDialogSimple(
+    parameters_dialog = FieldsDialogSimple(
         "Unit cell to cluster",
         fields.group.Table(
             fields=[
@@ -538,10 +538,6 @@ class UnitCellToCluster(ImmediateWithMemory):
             self.parameters.interval_b = numpy.array([-0.5, -0.5 + universe.repetitions[1]], float)
         if universe.cell_active[2]:
             self.parameters.interval_c = numpy.array([-0.5, -0.5 + universe.repetitions[2]], float)
-
-    def ask_parameters(self):
-        if self.cuttoff.run(self.parameters) != gtk.RESPONSE_OK:
-            self.parameters.clear()
 
     def do(self):
         universe = context.application.model.universe
@@ -666,7 +662,7 @@ class SuperCell(ImmediateWithMemory):
     menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Super cell", order=(0, 4, 1, 4, 0, 1))
     store_last_parameters = False
 
-    repetitions = FieldsDialogSimple(
+    parameters_dialog = FieldsDialogSimple(
         "Super cell",
         fields.group.Table(
             fields=[
@@ -703,10 +699,6 @@ class SuperCell(ImmediateWithMemory):
             self.parameters.repetitions_b = universe.repetitions[1]
         if universe.cell_active[2]:
             self.parameters.repetitions_c = universe.repetitions[2]
-
-    def ask_parameters(self):
-        if self.repetitions.run(self.parameters) != gtk.RESPONSE_OK:
-            self.parameters.clear()
 
     def do(self):
         # create the repetitions vector

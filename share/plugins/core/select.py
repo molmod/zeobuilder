@@ -131,7 +131,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
     SELECT_PLAIN = 0
     SELECT_RECURSIVE = 1
     SELECT_RECURSIVE_IF_MATCH = 2
-    select_by_expression = FieldsDialogSimple(
+    parameters_dialog = FieldsDialogSimple(
         "Selection rules",
         fields.group.Table(
             fields=[
@@ -170,10 +170,6 @@ class SelectChildrenByExpression(ImmediateWithMemory):
     def init_parameters(self):
         self.parameters.expression = "True"
         self.parameters.recursive = self.SELECT_PLAIN
-
-    def ask_parameters(self):
-        if self.select_by_expression.run(self.parameters) != gtk.RESPONSE_OK:
-            self.parameters.clear()
 
     def do(self):
         cache = context.application.cache
