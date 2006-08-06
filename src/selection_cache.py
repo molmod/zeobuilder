@@ -35,6 +35,8 @@ __all__ = ["SelectionCache"]
 
 
 class SelectionCache(gobject.GObject):
+    analysis_functions = {}
+
     def __init__(self):
         gobject.GObject.__init__(self)
         self.waiting_to_emit = False
@@ -61,8 +63,11 @@ class SelectionCache(gobject.GObject):
 
     def __getattr__(self, name):
         if name not in self.items:
-            if name.startswith("get_"): raise AttributeError, "Cached variables do not start with get_: %s" % name
-            result = eval("self.get_" + name + "()")
+            function = self.analysis_functions.get(name)
+            if function is None:
+                raise AttributeError, "Cached variables %s does not exist." % name
+            else:
+                result = function(self)
             self.items[name] = result
             return result
         else:
@@ -226,29 +231,14 @@ class SelectionCache(gobject.GObject):
     def get_common_root(self):
         return analysis.common_parent(self.nodes)
 
-    def get_local_problem(self):
-        class LocalProblem:
-            actors = {}
-            variables = []
-        result = LocalProblem()
-        parent = self.parent
-        if parent is None: return None
-        for node in self.nodes:
-            variables = {}
-            for child in node.children:
-                if isinstance(child, Reference):
-                    trace = child.target.trace()
-                    if parent not in trace: return None
-                    parent_pos = trace.index(parent)
-                    if parent_pos == len(trace) - 1: return None
-                    involved_frame = trace[parent_pos + 1]
-                    if not isinstance(involved_frame, GLFrameBase): return None
-                    variables[child.target] = involved_frame
-            if len(variables) > 0:
-                result.actors[node] = variables
-                for variable in variables.itervalues():
-                    if variable not in result.variables: result.variables.append(variable)
-        return result
+
+for name, method in SelectionCache.__dict__.iteritems():
+    if name.startswith("get"):
+        SelectionCache.analysis_functions[name[4:]] = method
+
+
+def init_cache_plugins(cache_plugins):
+    SelectionCache.analysis_functions.update(cache_plugins)
 
 
 gobject.signal_new("cache-invalidated", SelectionCache, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())

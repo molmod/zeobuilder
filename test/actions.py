@@ -756,20 +756,35 @@ class BuilderActions(ApplicationTestCase):
             self.assert_(AddAtom.analyze_selection())
             AddAtom()
             context.application.main.select_nodes(context.application.model.universe.children)
-            ConnectMinimiser = context.application.plugins.get_action("ConnectMinimiser")
-            self.assert_(ConnectMinimiser.analyze_selection())
-            ConnectMinimiser()
+            ConnectMinimizer = context.application.plugins.get_action("ConnectMinimizer")
+            self.assert_(ConnectMinimizer.analyze_selection())
+            ConnectMinimizer()
         self.run_test_application(fn)
 
-    def test_auto_connect_minimisers_lau(self):
+    def test_auto_connect_minimizers_lau(self):
         def fn():
             context.application.model.file_open("input/lau_double.zml")
             context.application.main.select_nodes([context.application.model.universe])
-            AutoConnectMinimisers = context.application.plugins.get_action("AutoConnectMinimisers")
-            self.assert_(AutoConnectMinimisers.analyze_selection())
-            AutoConnectMinimisers()
+            AutoConnectMinimizers = context.application.plugins.get_action("AutoConnectMinimizers")
+            self.assert_(AutoConnectMinimizers.analyze_selection())
+            AutoConnectMinimizers()
         self.run_test_application(fn)
 
+    def test_minimize_distances(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[2:])
+            parameters = Parameters()
+            parameters.preconstrain = True
+            parameters.step_size = 0.2
+            parameters.constraint_convergence = 1e-10
+            parameters.max_num_shakes = 5
+            parameters.update_interval = 0.4
+            parameters.update_num_iter = 1
+            MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
+            self.assert_(MinimizeDistances.analyze_selection())
+            MinimizeDistances()
+        self.run_test_application(fn)
 
     #def test_triangular_scan_for_connections(self):
     #    from zeobuilder.actions.composed.scan import TriangularScanForConnections
@@ -786,23 +801,5 @@ class BuilderActions(ApplicationTestCase):
     #                              self.application.model.root[0].children[1]])
     #    self.assert_(PlanarScanForConnections.analyse_nodes())
     #    PlanarScanForConnections()
-
-    #def test_minmimize_distances(self):
-    #    from zeobuilder.actions.composed.iterate import MinimizeDistances
-    #    from zeobuilder.actions.composed.base import Parameters
-    #    from zeobuilder.model_objects.minimiser import Minimiser
-    #    self.load_file("two_precursors.zml")
-    #
-    #    parameters = Parameters()
-    #    parameters.preconstrain = True
-    #    parameters.step_size = 0.3
-    #    parameters.step_convergence = 1e-7
-    #    parameters.constraint_convergence = 1e-10
-    #    parameters.max_num_shakes = 5
-    #    parameters.update_interval = 0.4
-    #
-    #    self.set_input_nodes([node for node in self.application.model.root[0].children if isinstance(node, Minimiser)])
-    #    MinimizeDistances.analyse_nodes(parameters)
-    #    MinimizeDistances(parameters=parameters)
 
 

@@ -63,20 +63,25 @@ def fail():
     sys.exit(1)
     
 
-if len(sys.argv) == 1:
-    init_fn = init_fn_new
-elif len(sys.argv) == 2:
-    if sys.argv[1] == "-nofile":
-        init_fn = init_fn_nothing
-    else:
-        filename = sys.argv[1]
-        if os.path.isfile(filename):
-            init_fn = InitFnOpen(sys.argv[1])
-        else:
-            print "File %s does not exist." % filename
-            fail()
-else:
-    fail()
 
-from zeobuilder.application import Application
-Application(init_fn)
+def run():
+    if len(sys.argv) == 1:
+        init_fn = init_fn_new
+    elif len(sys.argv) == 2:
+        if sys.argv[1] == "-nofile":
+            init_fn = init_fn_nothing
+        else:
+            filename = sys.argv[1]
+            if os.path.isfile(filename):
+                init_fn = InitFnOpen(sys.argv[1])
+            else:
+                print "File %s does not exist." % filename
+                fail()
+    else:
+        fail()
+    
+    from zeobuilder.application import Application
+    Application(init_fn)
+
+if __name__ == "__main__":
+    run()

@@ -26,3 +26,4 @@ from zeobuilder import context
 context.share_dirs = ["../share"]
 
 import zeobuilder_script
+zeobuilder_script.run()

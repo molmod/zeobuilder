@@ -36,6 +36,7 @@ class PluginsCollection(object):
         self.load_filters = {}
         self.dump_filters = {}
         self.interactive_groups = {}
+        self.cache_plugins = {}
 
         self.modules = set([])
         for directory in context.share_dirs:
@@ -79,6 +80,7 @@ class PluginsCollection(object):
         load("load_filters", self.load_filters)
         load("dump_filters", self.dump_filters)
         load("interactive_groups", self.interactive_groups)
+        load("cache_plugins", self.cache_plugins)
 
     def init_plugins(self):
         from zeobuilder.actions.composed import init_actions
@@ -89,6 +91,9 @@ class PluginsCollection(object):
 
         from zeobuilder.filters import init_filters
         init_filters(self.load_filters, self.dump_filters)
+
+        from zeobuilder.selection_cache import init_cache_plugins
+        init_cache_plugins(self.cache_plugins)
 
     def get_plugin(self, name, plugins):
         plugin = plugins.get(name)
