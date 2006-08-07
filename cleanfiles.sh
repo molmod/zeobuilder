@@ -1,4 +1,3 @@
-#!/usr/bin/bash
 for i in `find * | egrep "\.pyc$|\.py~$|\.pyc~$|\.bak$"` ; do rm -v ${i}; done
 
 rm -v test/zeobuilder
