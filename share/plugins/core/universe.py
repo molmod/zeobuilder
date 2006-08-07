@@ -521,11 +521,11 @@ class UnitCellToCluster(ImmediateWithMemory):
     def init_parameters(self):
         universe = context.application.model.universe
         if universe.cell_active[0]:
-            self.parameters.interval_a = numpy.array([-0.5, -0.5 + universe.repetitions[0]], float)
+            self.parameters.interval_a = numpy.array([0.0, universe.repetitions[0]], float)
         if universe.cell_active[1]:
-            self.parameters.interval_b = numpy.array([-0.5, -0.5 + universe.repetitions[1]], float)
+            self.parameters.interval_b = numpy.array([0.0, universe.repetitions[1]], float)
         if universe.cell_active[2]:
-            self.parameters.interval_c = numpy.array([-0.5, -0.5 + universe.repetitions[2]], float)
+            self.parameters.interval_c = numpy.array([0.0, universe.repetitions[2]], float)
 
     def do(self):
         universe = context.application.model.universe
