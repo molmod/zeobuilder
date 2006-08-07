@@ -353,15 +353,35 @@ class Universe(GLPeriodicContainer, FrameAxes):
                 for i2 in xrange(b2, n2+1):
                     draw_line(origin+i1*axis1+i2*axis2, origin+i1*axis1+i2*axis2+nd*delta)
 
+        def draw_ortho(origin, axis1, axis2, n1, n2, delta):
+            set_color(gray, gray, gray)
+            if n1 == 0 and n2 == 0:
+                return
+            for i1 in xrange(n1+1):
+                for i2 in xrange(n2+1):
+                    draw_line(
+                        origin + i1*axis1 + i2*axis2 - 0.5*delta,
+                        origin + i1*axis1 + i2*axis2 + 0.5*delta
+                    )
+
         origin = numpy.zeros(3, float)
         draw_three(origin)
         repetitions = self.repetitions*self.cell_active
+
         if self.cell_active[2]:
             draw_gray(origin, self.cell[:,0], self.cell[:,1], repetitions[0], repetitions[1], self.cell[:,2], repetitions[2])
+        else:
+            draw_ortho(origin, self.cell[:,0], self.cell[:,1], repetitions[0], repetitions[1], self.cell[:,2])
+
         if self.cell_active[0]:
             draw_gray(origin, self.cell[:,1], self.cell[:,2], repetitions[1], repetitions[2], self.cell[:,0], repetitions[0])
+        else:
+            draw_ortho(origin, self.cell[:,1], self.cell[:,2], repetitions[1], repetitions[2], self.cell[:,0])
+
         if self.cell_active[1]:
             draw_gray(origin, self.cell[:,2], self.cell[:,0], repetitions[2], repetitions[0], self.cell[:,1], repetitions[1])
+        else:
+            draw_ortho(origin, self.cell[:,2], self.cell[:,0], repetitions[2], repetitions[0], self.cell[:,1])
 
     def draw_box(self):
         def draw_line(begin, end):
