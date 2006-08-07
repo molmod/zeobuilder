@@ -141,7 +141,6 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
 
     def wrap(self, child):
         cell_index = self.to_index(child.transformation.translation_vector)
-        #print cell_index
         if cell_index.any():
             child.transformation.translation_vector -= numpy.dot(self.cell, cell_index)
 
@@ -283,8 +282,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
             normal = ridge / length
             repetitions = self.repetitions[active[0]]
             scene.clip_planes = {
-                GL_CLIP_PLANE0: numpy.array(list( normal) + [0.5*length*repetitions + self.clip_margin]),
-                GL_CLIP_PLANE1: numpy.array(list(-normal) + [0.5*length*repetitions + self.clip_margin]),
+                GL_CLIP_PLANE0: numpy.array(list( normal) + [self.clip_margin]),
+                GL_CLIP_PLANE1: numpy.array(list(-normal) + [length*repetitions + self.clip_margin]),
             }
         elif len(active) == 2:
             ridge_a = self.cell[:,active[0]]
@@ -299,8 +298,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
                 ortho = ridge - normal_other*numpy.dot(normal_other, ridge)
                 length = math.sqrt(numpy.dot(ortho, ortho))
                 ortho /= length
-                scene.clip_planes[CP1] = numpy.array(list( ortho) + [0.5*length + self.clip_margin])
-                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [(repetitions-0.5)*length + self.clip_margin])
+                scene.clip_planes[CP1] = numpy.array(list( ortho) + [self.clip_margin])
+                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
 
             add_planes(GL_CLIP_PLANE0, GL_CLIP_PLANE1, ridge_a, repetitions_a, normal_b)
             add_planes(GL_CLIP_PLANE2, GL_CLIP_PLANE3, ridge_b, repetitions_b, normal_a)
@@ -324,8 +323,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
                 if length < 0:
                     ortho *= -1
                 length = abs(length)
-                scene.clip_planes[CP1] = numpy.array(list( ortho) + [0.5*length + self.clip_margin])
-                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [(repetitions-0.5)*length + self.clip_margin])
+                scene.clip_planes[CP1] = numpy.array(list( ortho) + [self.clip_margin])
+                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
 
             add_planes(GL_CLIP_PLANE0, GL_CLIP_PLANE1, ridge_a, repetitions_a, normal_b, normal_c)
             add_planes(GL_CLIP_PLANE2, GL_CLIP_PLANE3, ridge_b, repetitions_b, normal_c, normal_a)
@@ -385,7 +384,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
                 for i2 in xrange(b2, n2+1):
                     draw_line(origin+i1*axis1+i2*axis2, origin+i1*axis1+i2*axis2+nd*delta)
 
-        origin = -0.5*sum((self.cell*self.cell_active).transpose())
+        origin = numpy.zeros(3, float)
         draw_three(origin)
         repetitions = self.repetitions*self.cell_active
         if self.cell_active[2]:
