@@ -357,9 +357,9 @@ class Universe(GLPeriodicContainer, FrameAxes):
     #
 
     def draw_box_helper(self, light, draw_line, set_color):
-        col  = {True: 6.0, False: 4.0}[light]
-        sat  = {True: 0.0, False: 1.0}[light]
-        gray = {True: 6.0, False: 4.0}[light]
+        col  = {True: 4.0, False: 2.5}[light]
+        sat  = {True: 0.0, False: 0.5}[light]
+        gray = {True: 4.0, False: 2.5}[light]
 
         def draw_three(origin):
             if self.cell_active[0]:
