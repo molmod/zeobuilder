@@ -30,20 +30,27 @@ __all__ = ["Base", "Translation", "Rotation", "Complete"]
 
 
 class Base(object):
-    def __init__(self, matrix=None):
-        if matrix is None:
-            self.clear()
-        else:
-            self.from_matrix(matrix)
-
     def clear(self):
         raise NotImplementedError
 
     def from_matrix(self, matrix):
         raise NotImplementedError
 
+    def get_matrix(self):
+        raise NotImplementedError
+
+    def get_inverse_matrix(self):
+        raise NotImplementedError
+
+    def gl_apply(self):
+        raise NotImplementedError
+
+    def gl_apply_inverse(self):
+        raise NotImplementedError
+
     def gl_from_matrix(self, GL_MATRIX):
-        self.from_matrix(numpy.transpose(numpy.array(glGetFloatv(GL_MATRIX), float))) # transpose because opengl=column-major and numpy=row-major
+        # transpose because opengl=column-major and numpy=row-major
+        self.from_matrix(numpy.array(glGetFloatv(GL_MATRIX), float).transpose())
 
     def invert(self):
         raise NotImplementedError
@@ -81,8 +88,17 @@ class Base(object):
     def apply_inverse_before(self, child): # self -> self AFTER !child
         raise NotImplementedError
 
+    def compare(self, other, translation_threshold=1e-3, rotation_threshold=1e-3):
+        raise NotImplementedError
+
+    def assign_shallow(self, other):
+        raise NotImplementedError
+
 
 class Translation(Base):
+    def __init__(self):
+        self.translation_vector = numpy.zeros(3, float)
+
     def __str__(self):
         result = "TRANSLATION\n"
         for i in range(3):
@@ -90,7 +106,26 @@ class Translation(Base):
         return result
 
     def clear(self):
-        self.translation_vector = numpy.zeros(3, float)
+        self.translation_vector[:] = 0
+
+    def from_matrix(self, m):
+        # check wether the translation_vector part is ok
+        z = m[3, 0:3]
+        numpy.power(z,2,z)
+        assert max(z) < 1.0e-6, "The given matrix doesn't have correct translational part"
+        assert m[3,3] == 1.0, "The lower right element of the given matrix must be 1.0."
+        # get the translational part
+        self.translation_vector[:] = m[0:3, 3]
+
+    def get_matrix(self):
+        temp = numpy.identity(4, float)
+        temp[0:3, 3] = self.translation_vector
+        return temp
+
+    def get_inverse_matrix(self):
+        temp = numpy.identity(4, float)
+        temp[0:3, 3] = -self.translation_vector
+        return temp
 
     def gl_apply(self):
         glTranslate(self.translation_vector[0], self.translation_vector[1], self.translation_vector[2])
@@ -122,45 +157,30 @@ class Translation(Base):
     def matrix_apply_inverse_after(self, m):
         return m
 
-    def from_matrix(self, m):
-        # check wether the translation_vector part is ok
-        z = m[3, 0:3]
-        numpy.power(z,2,z)
-        assert max(z) < 1.0e-6, "The given matrix doesn't have correct translational part"
-        assert m[3,3] == 1.0, "The lower right element of the given matrix must be 1.0."
-        # get the translational part
-        self.translation_vector = m[0:3, 3]
-
-    def get_matrix(self):
-        temp = numpy.identity(4, float)
-        temp[0:3, 3] = self.translation_vector
-        return temp
-
-    def get_inverse(self):
-        temp = numpy.identity(4, float)
-        temp[0:3, 3] = -self.translation_vector
-        return temp
-
     def apply_after(self, parent): # self -> parent AFTER self
-        self.translation_vector = parent.vector_apply(self.translation_vector)
+        self.translation_vector[:] = parent.vector_apply(self.translation_vector)
 
     def apply_inverse_after(self, parent): # self -> !parent AFTER self
-        self.translation_vector = parent.vector_apply_inverse(self.translation_vector)
+        self.translation_vector[:] = parent.vector_apply_inverse(self.translation_vector)
 
     def apply_before(self, child): # self -> self AFTER child
-        self.translation_vector = self.vector_apply(child.vector_apply(numpy.zeros(3, float)))
+        self.translation_vector[:] = self.vector_apply(child.vector_apply(numpy.zeros(3, float)))
 
     def apply_inverse_before(self, child): # self -> self AFTER !child
-        self.translation_vector = self.vector_apply(child.vector_apply_inverse(numpy.zeros(3, float)))
+        self.translation_vector[:] = self.vector_apply(child.vector_apply_inverse(numpy.zeros(3, float)))
 
     def compare(self, other, translation_threshold=1e-3, rotation_threshold=1e-3):
         return numpy.sum((self.translation_vector - other.translation_vector)**2) < translation_threshold
 
     def assign_shallow(self, other):
-        if isinstance(other, Translation): self.translation_vector[:] = other.translation_vector
+        if isinstance(other, Translation):
+            self.translation_vector[:] = other.translation_vector
 
 
 class Rotation(Base):
+    def __init__(self):
+        self.rotation_matrix = numpy.identity(3, float)
+
     def __str__(self):
         result = "ROTATION\n"
         for i in range(3):
@@ -168,11 +188,25 @@ class Rotation(Base):
         return result
 
     def clear(self):
-        self.rotation_matrix = numpy.identity(3, float)
+        self.rotation_matrix[:] = 0
+        self.rotation_matrix.ravel()[::4] = 1
+
+    def from_matrix(self, m):
+        self.rotation_matrix[:] = m[0:3, 0:3]
+
+    def get_matrix(self):
+        temp = numpy.identity(4, float)
+        temp[0:3, 0:3] = self.rotation_matrix
+        return temp
+
+    def get_inverse_matrix(self):
+        temp = numpy.identity(4, float)
+        temp[0:3, 0:3] = self.rotation_matrix.transpose()
+        return temp
 
     def gl_apply(self):
         temp = numpy.identity(4, float)
-        temp[0:3, 0:3] = numpy.transpose(self.rotation_matrix)
+        temp[0:3, 0:3] = self.rotation_matrix.transpose()
         glMultMatrixf(temp)
 
     def gl_apply_inverse(self):
@@ -181,13 +215,16 @@ class Rotation(Base):
         glMultMatrixf(temp)
 
     def invert(self):
-        self.rotation_matrix = numpy.transpose(self.rotation_matrix)
+        self.rotation_matrix[:] = self.rotation_matrix.transpose()
+
+    def inversion_rotation(self):
+        self.rotation_matrix *= -1
 
     def vector_apply(self, v):
         return numpy.dot(self.rotation_matrix, v)
 
     def vector_apply_inverse(self, v):
-        return numpy.dot(numpy.transpose(self.rotation_matrix), v)
+        return numpy.dot(self.rotation_matrix.transpose(), v)
 
     def vector_apply_translation(self, v):
         return v
@@ -196,26 +233,32 @@ class Rotation(Base):
         return numpy.dot(self.rotation_matrix, m)
 
     def matrix_apply_inverse_before(self, m):
-        return numpy.dot(numpy.transpose(self.rotation_matrix), m)
+        return numpy.dot(self.rotation_matrix.transpose(), m)
 
     def matrix_apply_after(self, m):
         return numpy.dot(m, self.rotation_matrix)
 
     def matrix_apply_inverse_after(self, m):
-        return numpy.dot(m, numpy.transpose(self.rotation_matrix))
+        return numpy.dot(m, self.rotation_matrix.transpose())
 
-    def from_matrix(self, m):
-        self.rotation_matrix = m[0:3, 0:3]
+    def apply_after(self, parent): # self -> parent AFTER self
+        self.rotation_matrix[:] = parent.matrix_apply_before(self.rotation_matrix)
 
-    def get_matrix(self):
-        temp = numpy.identity(4, float)
-        temp[0:3, 0:3] = self.rotation_matrix
-        return temp
+    def apply_inverse_after(self, parent): # self -> !parent AFTER self
+        self.rotation_matrix[:] = parent.matrix_apply_inverse_before(self.rotation_matrix)
 
-    def get_inverse(self):
-        temp = numpy.identity(4, float)
-        temp[0:3, 0:3] = numpy.transpose(self.rotation_matrix)
-        return temp
+    def apply_before(self, child): # self -> self AFTER child
+        self.rotation_matrix[:] = child.matrix_apply_after(self.rotation_matrix)
+
+    def apply_inverse_before(self, child): # self -> self AFTER !child
+        self.rotation_matrix[:] = child.matrix_apply_inverse_after(self.rotation_matrix)
+
+    def compare(self, other, translation_threshold=1e-3, rotation_threshold=1e-3):
+        return numpy.sum(numpy.ravel((self.rotation_matrix - other.rotation_matrix)**2)) < rotation_threshold
+
+    def assign_shallow(self, other):
+        if isinstance(other, Rotation):
+            self.rotation_matrix[:] = other.rotation_matrix
 
     def get_rotation_properties(self):
         r = self.rotation_matrix
@@ -252,38 +295,19 @@ class Rotation(Base):
             z = rotation_axis[2] / norm
             c = math.cos(rotation_angle)
             s = math.sin(rotation_angle)
-            self.rotation_matrix = {True: -1, False:1}[invert] * \
-                   numpy.array([[x*x*(1-c)+c  , x*y*(1-c)-z*s, x*z*(1-c)+y*s],
-                                  [x*y*(1-c)+z*s, y*y*(1-c)+c  , y*z*(1-c)-x*s],
-                                  [x*z*(1-c)-y*s, y*z*(1-c)+x*s, z*z*(1-c)+c  ]])
+            self.rotation_matrix[:] = (2*invert-1) * numpy.array([
+                [x*x*(1-c)+c  , x*y*(1-c)-z*s, x*z*(1-c)+y*s],
+                [x*y*(1-c)+z*s, y*y*(1-c)+c  , y*z*(1-c)-x*s],
+                [x*z*(1-c)-y*s, y*z*(1-c)+x*s, z*z*(1-c)+c  ]
+            ])
         else:
-            self.rotation_matrix = numpy.identity(3) * {True: -1, False:1}[invert]
-
-    def inversion_rotation(self):
-        self.rotation_matrix *= -1
-
-    def apply_after(self, parent): # self -> parent AFTER self
-        self.rotation_matrix = parent.matrix_apply_before(self.rotation_matrix)
-
-    def apply_inverse_after(self, parent): # self -> !parent AFTER self
-        self.rotation_matrix = parent.matrix_apply_inverse_before(self.rotation_matrix)
-
-    def apply_before(self, child): # self -> self AFTER child
-        self.rotation_matrix = child.matrix_apply_after(self.rotation_matrix)
-
-    def apply_inverse_before(self, child): # self -> self AFTER !child
-        self.rotation_matrix = child.matrix_apply_inverse_after(self.rotation_matrix)
-
-    def compare(self, other, translation_threshold=1e-3, rotation_threshold=1e-3):
-        return numpy.sum(numpy.ravel((self.rotation_matrix - other.rotation_matrix)**2)) < rotation_threshold
-
-    def assign_shallow(self, other):
-        if isinstance(other, Rotation): self.rotation_matrix[:] = other.rotation_matrix
+            self.rotation_matrix[:] = numpy.identity(3) * (2*invert-1)
 
 
 class Complete(Translation, Rotation):
-    def __init__(self, matrix=None):
-        Base.__init__(self, matrix)
+    def __init__(self):
+        self.translation_vector = numpy.zeros(3, float)
+        self.rotation_matrix = numpy.identity(3, float)
 
     def __str__(self):
         result = "COMPLETE\n"
@@ -295,37 +319,6 @@ class Complete(Translation, Rotation):
         Translation.clear(self)
         Rotation.clear(self)
 
-    def invert(self):
-        self.rotation_matrix = numpy.transpose(self.rotation_matrix)
-        self.translation_vector = numpy.dot(self.rotation_matrix, -self.translation_vector)
-
-    def gl_apply(self):
-        glMultMatrixf(numpy.transpose(self.get_matrix()))
-
-    def gl_apply_inverse(self):
-        glMultMatrixf(numpy.transpose(self.get_inverse()))
-
-    def vector_apply(self, v):
-        return numpy.dot(self.rotation_matrix, v) + self.translation_vector
-
-    def vector_apply_inverse(self, v):
-        return numpy.dot(numpy.transpose(self.rotation_matrix), v - self.translation_vector)
-
-    def vector_apply_translation(self, v):
-        return v + self.translation_vector
-
-    def matrix_apply_before(self, m):
-        return numpy.dot(self.rotation_matrix, m)
-
-    def matrix_apply_inverse_before(self, m):
-        return numpy.dot(numpy.transpose(self.rotation_matrix), m)
-
-    def matrix_apply_after(self, m):
-        return numpy.dot(m, self.rotation_matrix)
-
-    def matrix_apply_inverse_after(self, m):
-        return numpy.dot(m, numpy.transpose(self.rotation_matrix))
-
     def from_matrix(self, m):
         Rotation.from_matrix(self, m)
         Translation.from_matrix(self, m)
@@ -335,11 +328,42 @@ class Complete(Translation, Rotation):
         temp[0:3, 0:3] = self.rotation_matrix
         return temp
 
-    def get_inverse(self):
+    def get_inverse_matrix(self):
         invtrans = numpy.dot(-self.translation_vector, self.rotation_matrix)
-        temp = Rotation.get_inverse(self)
+        temp = Rotation.get_inverse_matrix(self)
         temp[0:3, 3] = invtrans
         return temp
+
+    def gl_apply(self):
+        glMultMatrixf(self.get_matrix().transpose())
+
+    def gl_apply_inverse(self):
+        glMultMatrixf(self.get_inverse_matrix().transpose())
+
+    def invert(self):
+        self.rotation_matrix[:] = self.rotation_matrix.transpose()
+        self.translation_vector[:] = numpy.dot(self.rotation_matrix, -self.translation_vector)
+
+    def vector_apply(self, v):
+        return numpy.dot(self.rotation_matrix, v) + self.translation_vector
+
+    def vector_apply_inverse(self, v):
+        return numpy.dot(self.rotation_matrix.transpose(), v - self.translation_vector)
+
+    def vector_apply_translation(self, v):
+        return v + self.translation_vector
+
+    def matrix_apply_before(self, m):
+        return numpy.dot(self.rotation_matrix, m)
+
+    def matrix_apply_inverse_before(self, m):
+        return numpy.dot(self.rotation_matrix.transpose(), m)
+
+    def matrix_apply_after(self, m):
+        return numpy.dot(m, self.rotation_matrix)
+
+    def matrix_apply_inverse_after(self, m):
+        return numpy.dot(m, self.rotation_matrix.transpose())
 
     def apply_after(self, parent): # self -> parent AFTER self
         Translation.apply_after(self, parent)
@@ -358,8 +382,10 @@ class Complete(Translation, Rotation):
         Rotation.apply_inverse_before(self, child)
 
     def compare(self, other, translation_threshold=1e-3, rotation_threshold=1e-3):
-        return numpy.sum((self.translation_vector - other.translation_vector)**2) < translation_threshold and \
-               numpy.sum(numpy.ravel((self.rotation_matrix - other.rotation_matrix)**2)) < rotation_threshold
+        return (
+            numpy.sum((self.translation_vector - other.translation_vector)**2) < translation_threshold and
+            numpy.sum(numpy.ravel((self.rotation_matrix - other.rotation_matrix)**2)) < rotation_threshold
+        )
 
     def assign_shallow(self, other):
         Translation.assign_shallow(self, other)

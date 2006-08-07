@@ -25,7 +25,7 @@ import numpy, copy, random, math
 import unittest
 
 
-__all__ = ["Complete"]
+__all__ = ["Apply"]
 
 
 class Apply(unittest.TestCase):
