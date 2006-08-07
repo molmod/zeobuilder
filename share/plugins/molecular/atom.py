@@ -83,7 +83,7 @@ class Atom(GLGeometricBase, UserColorMixin):
 
     published_properties = PublishedProperties({
         "user_radius": Property(None, lambda self: self.user_radius, set_user_radius, signal=True),
-        "quality": Property(50, lambda self: self.quality, set_quality),
+        "quality": Property(15, lambda self: self.quality, set_quality),
         "number": Property(6, lambda self: self.number, set_number, signal=True),
     })
 

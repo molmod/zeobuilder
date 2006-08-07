@@ -65,7 +65,7 @@ class Bond(Vector):
         self.invalidate_draw_list()
 
     published_properties = PublishedProperties({
-        "quality": Property(50, lambda self: self.quality, set_quality),
+        "quality": Property(15, lambda self: self.quality, set_quality),
         "bond_type": Property(BOND_SINGLE, lambda self: self.bond_type, set_bond_type)
     })
 

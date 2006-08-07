@@ -69,7 +69,7 @@ class Arrow(Vector, ColorMixin):
 
     published_properties = PublishedProperties({
         "radius": Property(0.15, lambda self: self.radius, set_radius),
-        "quality": Property(50, lambda self: self.quality, set_quality),
+        "quality": Property(15, lambda self: self.quality, set_quality),
         "arrow_length": Property(0.6, lambda self: self.arrow_length, set_arrow_length),
         "arrow_radius": Property(0.3, lambda self: self.arrow_radius, set_arrow_radius),
         "arrow_position": Property(0.5, lambda self: self.arrow_position, set_arrow_position)

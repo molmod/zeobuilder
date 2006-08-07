@@ -57,7 +57,7 @@ class Sphere(GLGeometricBase, ColorMixin):
 
     published_properties = PublishedProperties({
         "radius": Property(0.5, lambda self: self.radius, set_radius),
-        "quality": Property(50, lambda self: self.quality, set_quality),
+        "quality": Property(15, lambda self: self.quality, set_quality),
     })
 
     #
