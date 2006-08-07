@@ -287,60 +287,18 @@ class Universe(GLPeriodicContainer, FrameAxes):
         scene = context.application.main.drawing_area.scene
         assert len(scene.clip_planes) == 0
         active, inactive = self.get_active_inactive()
-        if len(active) == 1:
-            ridge = self.cell[:,active[0]]
-            length = math.sqrt(numpy.dot(ridge, ridge))
-            normal = ridge / length
-            repetitions = self.repetitions[active[0]]
-            scene.clip_planes = {
-                GL_CLIP_PLANE0: numpy.array(list( normal) + [self.clip_margin]),
-                GL_CLIP_PLANE1: numpy.array(list(-normal) + [length*repetitions + self.clip_margin]),
-            }
-        elif len(active) == 2:
-            ridge_a = self.cell[:,active[0]]
-            normal_a = ridge_a / math.sqrt(numpy.dot(ridge_a, ridge_a))
-            repetitions_a = self.repetitions[active[0]]
-
-            ridge_b = self.cell[:,active[1]]
-            normal_b = ridge_b / math.sqrt(numpy.dot(ridge_b, ridge_b))
-            repetitions_b = self.repetitions[active[1]]
-
-            def add_planes(CP1, CP2, ridge, repetitions, normal_other):
-                ortho = ridge - normal_other*numpy.dot(normal_other, ridge)
-                length = math.sqrt(numpy.dot(ortho, ortho))
-                ortho /= length
-                scene.clip_planes[CP1] = numpy.array(list( ortho) + [self.clip_margin])
-                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
-
-            add_planes(GL_CLIP_PLANE0, GL_CLIP_PLANE1, ridge_a, repetitions_a, normal_b)
-            add_planes(GL_CLIP_PLANE2, GL_CLIP_PLANE3, ridge_b, repetitions_b, normal_a)
-        elif len(active) == 3:
-            ridge_a = self.cell[:,0]
-            normal_a = ridge_a / math.sqrt(numpy.dot(ridge_a, ridge_a))
-            repetitions_a = self.repetitions[0]
-
-            ridge_b = self.cell[:,1]
-            normal_b = ridge_b / math.sqrt(numpy.dot(ridge_b, ridge_b))
-            repetitions_b = self.repetitions[1]
-
-            ridge_c = self.cell[:,2]
-            normal_c = ridge_c / math.sqrt(numpy.dot(ridge_c, ridge_c))
-            repetitions_c = self.repetitions[2]
-
-            def add_planes(CP1, CP2, ridge, repetitions, normal_other1, normal_other2):
-                ortho = numpy.cross(normal_other1, normal_other2)
-                ortho /= math.sqrt(numpy.dot(ortho, ortho))
-                length = numpy.dot(ortho, ridge)
-                if length < 0:
-                    ortho *= -1
-                length = abs(length)
-                scene.clip_planes[CP1] = numpy.array(list( ortho) + [self.clip_margin])
-                scene.clip_planes[CP2] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
-
-            add_planes(GL_CLIP_PLANE0, GL_CLIP_PLANE1, ridge_a, repetitions_a, normal_b, normal_c)
-            add_planes(GL_CLIP_PLANE2, GL_CLIP_PLANE3, ridge_b, repetitions_b, normal_c, normal_a)
-            add_planes(GL_CLIP_PLANE4, GL_CLIP_PLANE5, ridge_c, repetitions_c, normal_a, normal_b)
-        context.application.main.drawing_area.queue_draw()
+        planes = [
+            (GL_CLIP_PLANE0, GL_CLIP_PLANE1),
+            (GL_CLIP_PLANE2, GL_CLIP_PLANE3),
+            (GL_CLIP_PLANE4, GL_CLIP_PLANE5),
+        ]
+        for index, (PLANE_A, PLANE_B) in zip(active, planes):
+            axis = self.cell[:,index]
+            ortho = self.cell_reciproke[index] / numpy.linalg.norm(self.cell_reciproke[index])
+            length = abs(numpy.dot(ortho, axis))
+            repetitions = self.repetitions[index]
+            scene.clip_planes[PLANE_A] = numpy.array(list( ortho) + [self.clip_margin])
+            scene.clip_planes[PLANE_B] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
 
     def unset_clip_planes(self):
         context.application.main.drawing_area.scene.clip_planes = {}
