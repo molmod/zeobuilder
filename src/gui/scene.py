@@ -188,6 +188,7 @@ class Scene(object):
         viewport = glGetIntegerv(GL_VIEWPORT)
         width = viewport[2]
         height = viewport[3]
+        universe = context.application.model.universe
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         if selection_box is not None:
@@ -235,7 +236,9 @@ class Scene(object):
         # Now rotate to the model frame and move back to the model center (reverse)
         self.rotation.gl_apply_inverse()
         # Then bring the rotation center at the right place (reverse)
-        self.center.gl_apply_inverse()
+        self.rotation_center.gl_apply_inverse()
+        if universe is not None:
+            universe.model_center.gl_apply_inverse()
 
         if selection_box is None:
             self.modelview_matrix = numpy.transpose(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX), float))
@@ -246,13 +249,13 @@ class Scene(object):
             temp = coefficients.copy()
             glClipPlane(GL_CLIP_PLANEi, coefficients)
 
-        if context.application.model.universe is not None:
+        if universe is not None:
             if selection_box is None: # When just picking objects, don't change the call lists, not needed.
                 self.revalidations.reverse()
                 for revalidation in self.revalidations:
                     revalidation()
                 self.revalidations = []
-            context.application.model.universe.call_list()
+            universe.call_list()
 
         for GL_CLIP_PLANEi in self.clip_planes:
             glDisable(GL_CLIP_PLANEi)
@@ -269,7 +272,7 @@ class Scene(object):
 
     def reset_view(self):
         config = context.application.configuration
-        self.center = Translation()
+        self.rotation_center = Translation()
         self.rotation = Rotation()
         self.viewer = Translation()
         self.viewer.translation_vector[2] = config.viewer_distance

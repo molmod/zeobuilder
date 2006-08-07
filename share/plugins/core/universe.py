@@ -168,24 +168,35 @@ class Universe(GLPeriodicContainer, FrameAxes):
     clip_margin = 0.1
 
     #
+    # State
+    #
+
+    def initnonstate(self):
+        GLPeriodicContainer.initnonstate(self)
+        self.model_center = Translation()
+
+    #
     # Properties
     #
 
     def set_cell(self, cell):
         GLPeriodicContainer.set_cell(self, cell)
         self.update_clip_planes()
+        self.model_center.translation_vector = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
         self.invalidate_total_list()
         self.invalidate_box_list()
 
     def set_cell_active(self, cell_active):
         GLPeriodicContainer.set_cell_active(self, cell_active)
         self.update_clip_planes()
+        self.model_center.translation_vector = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
         self.invalidate_total_list()
         self.invalidate_box_list()
 
     def set_repetitions(self, repetitions):
         self.repetitions = repetitions
         self.update_clip_planes()
+        self.model_center.translation_vector = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
         self.invalidate_box_list()
         self.invalidate_total_list()
 
