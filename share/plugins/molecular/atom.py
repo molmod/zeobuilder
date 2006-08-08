@@ -211,7 +211,7 @@ class MergeOverlappingAtoms(Immediate):
                 if isinstance(child, Atom):
                     yield PositionedObject(child, child.transformation.t)
 
-        binned_atoms = SparseBinnedObjects(yield_positioned_atoms, periodic.max_radius)
+        binned_atoms = SparseBinnedObjects(yield_positioned_atoms(), periodic.max_radius)
 
         def overlap(positioned1, positioned2):
             number = positioned1.id.number

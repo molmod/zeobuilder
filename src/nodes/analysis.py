@@ -20,10 +20,8 @@
 # --
 
 
-from molmod.transformations import Translation
-from molmod.binning import PositionedObject
-
 import numpy
+
 
 def common_parent(parents):
     if None in parents: return None
@@ -110,39 +108,3 @@ def calculate_center(translations):
         center /= counter
     return center
 
-
-
-
-class YieldPositionedChildren(object):
-    def __init__(self, nodes, parent, recursive=False, node_filter=None, container_filter=None):
-        self.nodes = nodes
-        self.parent = parent
-        self.recursive = recursive
-        if node_filter == None:
-            self.node_filter = lambda node: True
-        else:
-            self.node_filter = node_filter
-        if container_filter == None:
-            self.container_filter = lambda container: True
-        else:
-            self.container_filter = container_filter
-
-    def __call__(self, node=None):
-        from zeobuilder.nodes.parent_mixin import ContainerMixin
-        from zeobuilder.nodes.glmixin import GLTransformationMixin
-        if node == None:
-            for node in self.nodes:
-                #print "IN", node
-                for positioned_object in self.__call__(node):
-                    yield positioned_object
-            return
-        if isinstance(node, GLTransformationMixin) and \
-           isinstance(node.transformation, Translation) and \
-           self.node_filter(node):
-            #print "PO", node, node.parent#, node.get_frame_up_to(self.parent).t
-            yield PositionedObject(node, node.get_frame_up_to(self.parent).t)
-        elif self.recursive and isinstance(node, ContainerMixin) and self.container_filter(node):
-            for child in node.children:
-                #print "RECUR", node, child
-                for positioned_object in self.__call__(child):
-                    yield positioned_object

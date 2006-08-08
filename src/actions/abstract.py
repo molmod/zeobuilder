@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.nodes.glmixin import GLMixin, GLTransformationMixin
 from zeobuilder.nodes.parent_mixin import ContainerMixin
-from zeobuilder.nodes.analysis import YieldPositionedChildren
+from zeobuilder.binning import YieldPositionedChildren
 import zeobuilder.actions.primitive as primitive
 
 from molmod.unit_cell import UnitCell
@@ -130,7 +130,7 @@ class AutoConnectMixin(object):
             YieldPositionedChildren(
                 cache.nodes, parent, True,
                 lambda node: self.allow_node(node)
-            ),
+            )(),
             grid_size
         )
 
