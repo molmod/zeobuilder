@@ -775,15 +775,11 @@ class BuilderActions(ApplicationTestCase):
             context.application.model.file_open("input/minimizers.zml")
             context.application.main.select_nodes(context.application.model.universe.children[2:])
             parameters = Parameters()
-            parameters.preconstrain = True
-            parameters.step_size = 0.2
-            parameters.constraint_convergence = 1e-10
-            parameters.max_num_shakes = 5
             parameters.update_interval = 0.4
-            parameters.update_num_iter = 1
+            parameters.update_steps = 1
             MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
-            self.assert_(MinimizeDistances.analyze_selection())
-            MinimizeDistances()
+            self.assert_(MinimizeDistances.analyze_selection(parameters))
+            MinimizeDistances(parameters)
         self.run_test_application(fn)
 
     #def test_triangular_scan_for_connections(self):
