@@ -24,9 +24,10 @@ from zeobuilder import context
 from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.nodes.elementary import GLReferentBase
 from zeobuilder.nodes.color_mixin import ColorMixin
-from zeobuilder.transformations import Complete
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
+
+from molmod.transformations import Complete
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
@@ -87,7 +88,7 @@ class Vector(GLReferentBase):
 
     def write_pov(self, indenter):
         GLReferentBase.write_pov(self, indenter)
-        indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f>" % (tuple(numpy.ravel(numpy.transpose(self.orientation.rotation_matrix))) + tuple(self.orientation.translation_vector)))
+        indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f>" % (tuple(numpy.ravel(numpy.transpose(self.orientation.r))) + tuple(self.orientation.t)))
 
     #
     # Revalidation
@@ -148,7 +149,7 @@ class Vector(GLReferentBase):
         else:
             self.length = math.sqrt(numpy.dot(relative_translation, relative_translation))
             if self.length > 0:
-                self.orientation.translation_vector = self.children[0].translation_relative_to(self.parent)
+                self.orientation.t = self.children[0].translation_relative_to(self.parent)
                 #axis = numpy.cross(relative_translation, numpy.array([1.0, 0.0, 0.0]))
                 c = relative_translation[2] / self.length
                 if c >= 1.0:

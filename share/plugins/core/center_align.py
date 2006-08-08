@@ -27,8 +27,9 @@ from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import calculate_center
-from zeobuilder.transformations import Translation, Rotation, Complete
 import zeobuilder.actions.primitive as primitive
+
+from molmod.transformations import Translation, Rotation, Complete
 
 import numpy
 
@@ -54,9 +55,9 @@ class DefineCenter(CenterAlignBase):
 
     def do(self):
         cache = context.application.cache
-        t = Translation()
-        t.translation_vector = copy.deepcopy(cache.node.transformation.translation_vector)
-        CenterAlignBase.do(self, cache.parent, cache.translated_neighbours, t)
+        translation = Translation()
+        translation.t = copy.deepcopy(cache.node.transformation.t)
+        CenterAlignBase.do(self, cache.parent, cache.translated_neighbours, translation)
 
 
 class Align(CenterAlignBase):
@@ -78,9 +79,9 @@ class Align(CenterAlignBase):
 
     def do(self):
         cache = context.application.cache
-        r = Rotation()
-        r.rotation_matrix = copy.deepcopy(cache.node.transformation.rotation_matrix)
-        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbours, r)
+        rotation = Rotation()
+        rotation.r = copy.deepcopy(cache.node.transformation.r)
+        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbours, rotation)
 
 
 class DefineCenterAndAlign(CenterAlignBase):
@@ -123,9 +124,9 @@ class CenterToChildren(CenterAlignBase):
 
     def do(self):
         cache = context.application.cache
-        t = Translation()
-        t.translation_vector = calculate_center(cache.child_translations)
-        CenterAlignBase.do(self, cache.node, cache.translated_children, t)
+        translation = Translation()
+        translation.t = calculate_center(cache.child_translations)
+        CenterAlignBase.do(self, cache.node, cache.translated_children, translation)
 
 
 class AlignUnitCell(Immediate):
@@ -165,8 +166,8 @@ class AlignUnitCell(Immediate):
         new_y = numpy.cross(new_z, new_x)
         new_y /= math.sqrt(numpy.dot(new_y, new_y))
         rotation = Rotation()
-        rotation.rotation_matrix = numpy.array([new_x, new_y, new_z])
-        new_cell = numpy.dot(rotation.rotation_matrix, universe.cell)
+        rotation.r = numpy.array([new_x, new_y, new_z])
+        new_cell = numpy.dot(rotation.r, universe.cell)
         universe.cell_active = numpy.array([False, False, False])
         primitive.SetPublishedProperty(universe, "cell", new_cell)
         for child in context.application.cache.transformed_children:

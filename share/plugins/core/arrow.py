@@ -28,8 +28,9 @@ from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
-from zeobuilder.transformations import Complete
 import zeobuilder.gui.fields as fields
+
+from molmod.transformations import Complete
 
 from OpenGL.GL import *
 from OpenGL.GLU import *

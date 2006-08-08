@@ -24,8 +24,8 @@ from application_test_case import ApplicationTestCase
 
 from zeobuilder import context
 from zeobuilder.actions.composed import Parameters
-from zeobuilder.transformations import Rotation, Translation, Complete
 
+from molmod.transformations import Rotation, Translation, Complete
 from molmod.data import BOND_SINGLE
 
 import gtk, numpy
@@ -298,7 +298,7 @@ class CoreActions(ApplicationTestCase):
             self.assert_(AddPoint.analyze_selection())
             AddPoint()
             context.application.main.select_nodes(context.application.model.universe.children)
-            #context.application.model.universe.children[1].transformation.translation_vector = numpy.array([1.0, 0.0, 0.0], float)
+            #context.application.model.universe.children[1].transformation.t = numpy.array([1.0, 0.0, 0.0], float)
             ConnectArrow = context.application.plugins.get_action("ConnectArrow")
             self.assert_(ConnectArrow.analyze_selection())
             ConnectArrow()
@@ -518,7 +518,7 @@ class CoreActions(ApplicationTestCase):
             parameters.complete = Complete()
             parameters.complete.set_rotation_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False)
             parameters.complete = Translation()
-            parameters.complete.translation_vector = numpy.array([2.0, 4.1, -1.0], float)
+            parameters.complete.t = numpy.array([2.0, 4.1, -1.0], float)
             RotateAroundCenterDialog = context.application.plugins.get_action("RotateAroundCenterDialog")
             self.assert_(RotateAroundCenterDialog.analyze_selection(parameters))
             RotateAroundCenterDialog(parameters)
@@ -530,7 +530,7 @@ class CoreActions(ApplicationTestCase):
             context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
             parameters = Parameters()
             parameters.translation = Translation()
-            parameters.translation.translation_vector = numpy.array([2.0, 4.1, -1.0], float)
+            parameters.translation.t = numpy.array([2.0, 4.1, -1.0], float)
             TranslateDialog = context.application.plugins.get_action("TranslateDialog")
             self.assert_(TranslateDialog.analyze_selection(parameters))
             TranslateDialog(parameters)

@@ -25,8 +25,8 @@ from faulty import Float, Length, Int, MeasureEntry
 from edit import CheckButton, ComboBox
 from mixin import InvalidField, EditMixin, FaultyMixin, TableMixin
 import popups
-from zeobuilder.transformations import Translation as MathTranslation, Rotation as MathRotation
 
+from molmod.transformations import Translation as MathTranslation, Rotation as MathRotation
 from molmod.units import measures, units_by_measure
 from molmod.unit_cell import check_cell, UnitCell
 
@@ -141,10 +141,10 @@ class Translation(ComposedArray):
         return isinstance(self.attribute, MathTranslation)
 
     def read_from_attribute(self):
-        return self.attribute.translation_vector
+        return self.attribute.t
 
     def write_to_attribute(self, value):
-        self.attribute.translation_vector = value
+        self.attribute.t = value
 
 
 class Rotation(ComposedInTable):

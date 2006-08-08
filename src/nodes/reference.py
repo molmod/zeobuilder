@@ -26,8 +26,9 @@ from zeobuilder.nodes.node import Node, NodeInfo
 from zeobuilder.nodes.meta import PublishedProperties, Property
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import bridge as tree_bridge
-from zeobuilder.transformations import Translation
 from zeobuilder.gui import load_image
+
+from molmod.transformations import Translation
 
 import gtk.gdk, gobject
 
@@ -172,6 +173,6 @@ class SpatialReference(Reference):
 
     def translation_relative_to(self, other):
         if self.target is not None:
-            return self.target.get_frame_relative_to(other).translation_vector
+            return self.target.get_frame_relative_to(other).t
         else:
             return None

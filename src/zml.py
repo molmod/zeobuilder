@@ -22,10 +22,10 @@
 
 from zeobuilder import context
 from zeobuilder.filters import Indenter, FilterError
-from zeobuilder.transformations import Translation, Rotation, Complete
 from zeobuilder.nodes.parent_mixin import ParentMixin, ContainerMixin, ReferentMixin
 from zeobuilder.nodes.model_object import ModelObject
 
+from molmod.transformations import Translation, Rotation, Complete
 
 import xml.sax.handler, xml.sax.saxutils, base64, gzip, bz2, numpy, types
 import StringIO, string, gobject
@@ -116,16 +116,16 @@ def dump_to_file(f, node):
             indenter.write("</binary>", True)
         elif cls == Translation:
             indenter.write_line("<translation%s>" % name_key, 1)
-            dump_stage3(indenter, node.translation_vector, use_references, name="translation_vector")
+            dump_stage3(indenter, node.t, use_references, name="translation_vector")
             indenter.write_line("</translation>", -1)
         elif cls == Rotation:
             indenter.write_line("<rotation%s>" % name_key, 1)
-            dump_stage3(indenter, node.rotation_matrix, use_references, name="rotation_matrix")
+            dump_stage3(indenter, node.r, use_references, name="rotation_matrix")
             indenter.write_line("</rotation>", -1)
         elif cls == Complete:
             indenter.write_line("<transformation%s>" % name_key, 1)
-            dump_stage3(indenter, node.translation_vector, use_references, name="translation_vector")
-            dump_stage3(indenter, node.rotation_matrix, use_references, name="rotation_matrix")
+            dump_stage3(indenter, node.t, use_references, name="translation_vector")
+            dump_stage3(indenter, node.r, use_references, name="rotation_matrix")
             indenter.write_line("</transformation>", -1)
         elif issubclass(cls, ModelObject):
             if node in identifiers:
@@ -241,15 +241,15 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             base64.decode(current_tag.content, current_tag.value)
         elif name == "translation":
             current_tag.value = Translation()
-            current_tag.value.translation_vector = child_tags[0].value
+            current_tag.value.t = child_tags[0].value
         elif name == "rotation":
             current_tag.value = Rotation()
-            current_tag.value.rotation_matrix = child_tags[0].value
+            current_tag.value.r = child_tags[0].value
         elif name == "transformation":
             current_tag.value = Complete()
             child_dict = dict((tag.label, tag.value) for tag in child_tags)
-            current_tag.value.rotation_matrix = child_dict["rotation_matrix"]
-            current_tag.value.translation_vector = child_dict["translation_vector"]
+            current_tag.value.r = child_dict["rotation_matrix"]
+            current_tag.value.t = child_dict["translation_vector"]
         elif name == "reference":
             current_tag.value = None
             referent_tag = self.hierarchy[-3][-1]

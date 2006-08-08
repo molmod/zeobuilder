@@ -22,7 +22,8 @@
 import scene
 
 from zeobuilder.nodes.glmixin import GLTransformationMixin
-from zeobuilder.transformations import Complete
+
+from molmod.transformations import Complete
 
 import gtk.gtkgl, gtk.gdkgl, numpy
 from OpenGL.GL import *
@@ -80,7 +81,7 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
     def vector_of_object(self, gl_object):
         frame = gl_object.get_absolute_frame()
         tmp = numpy.ones(4, float)
-        tmp[:3] = frame.translation_vector
+        tmp[:3] = frame.t
         tmp = numpy.dot(self.scene.modelview_matrix, tmp)
         return tmp[:3]/tmp[3]
 
@@ -90,13 +91,13 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
     def position_of_object(self, gl_object):
         frame = gl_object.get_absolute_frame()
         tmp = numpy.ones(4, float)
-        tmp[:3] = frame.translation_vector
+        tmp[:3] = frame.t
         return self.position_of_vector(numpy.dot(self.scene.modelview_matrix, tmp))
 
     def eye_to_model_rotation(self, gl_object):
         if hasattr(gl_object, "parent") and \
            isinstance(gl_object.parent, GLTransformationMixin):
-            parent_matrix = gl_object.parent.get_absolute_frame().rotation_matrix
+            parent_matrix = gl_object.parent.get_absolute_frame().r
         else:
             parent_matrix = numpy.identity(3, float)
         result = numpy.dot(self.scene.modelview_matrix[0:3,0:3], parent_matrix).transpose().copy()

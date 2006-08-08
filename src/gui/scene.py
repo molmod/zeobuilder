@@ -26,7 +26,8 @@
 
 
 from zeobuilder import context
-from zeobuilder.transformations import Rotation, Translation, Complete
+
+from molmod.transformations import Rotation, Translation, Complete
 from molmod.units import angstrom
 
 from OpenGL.GLU import *
@@ -275,7 +276,7 @@ class Scene(object):
         self.rotation_center = Translation()
         self.rotation = Rotation()
         self.viewer = Translation()
-        self.viewer.translation_vector[2] = config.viewer_distance
+        self.viewer.t[2] = config.viewer_distance
         self.opening_angle = config.opening_angle
         self.window_size = config.window_size
         self.window_depth = config.window_depth

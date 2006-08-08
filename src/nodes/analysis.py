@@ -20,6 +20,9 @@
 # --
 
 
+from molmod.transformations import Translation
+from molmod.binning import PositionedObject
+
 import numpy
 
 def common_parent(parents):
@@ -100,8 +103,8 @@ def list_traces_by(nodes):
 def calculate_center(translations):
     center = numpy.zeros(3, float)
     counter = 0
-    for t in translations:
-        center += t.translation_vector
+    for translation in translations:
+        center += translation.t
         counter += 1
     if counter > 0:
         center /= counter
@@ -127,8 +130,6 @@ class YieldPositionedChildren(object):
     def __call__(self, node=None):
         from zeobuilder.nodes.parent_mixin import ContainerMixin
         from zeobuilder.nodes.glmixin import GLTransformationMixin
-        from zeobuilder.transformations import Translation
-        from molmod.binning import PositionedObject
         if node == None:
             for node in self.nodes:
                 #print "IN", node
@@ -138,8 +139,8 @@ class YieldPositionedChildren(object):
         if isinstance(node, GLTransformationMixin) and \
            isinstance(node.transformation, Translation) and \
            self.node_filter(node):
-            #print "PO", node, node.parent#, node.get_frame_up_to(self.parent).translation_vector
-            yield PositionedObject(node, node.get_frame_up_to(self.parent).translation_vector)
+            #print "PO", node, node.parent#, node.get_frame_up_to(self.parent).t
+            yield PositionedObject(node, node.get_frame_up_to(self.parent).t)
         elif self.recursive and isinstance(node, ContainerMixin) and self.container_filter(node):
             for child in node.children:
                 #print "RECUR", node, child

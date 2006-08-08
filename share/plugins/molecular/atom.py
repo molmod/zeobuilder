@@ -30,9 +30,10 @@ from zeobuilder.nodes.color_mixin import UserColorMixin
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
-from zeobuilder.transformations import Translation
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+
+from molmod.transformations import Translation
 
 from molmod.data import periodic
 from molmod.unit_cell import UnitCell
@@ -208,7 +209,7 @@ class MergeOverlappingAtoms(Immediate):
         def yield_positioned_atoms():
             for child in parent.children:
                 if isinstance(child, Atom):
-                    yield PositionedObject(child, child.transformation.translation_vector)
+                    yield PositionedObject(child, child.transformation.t)
 
         binned_atoms = SparseBinnedObjects(yield_positioned_atoms, periodic.max_radius)
 
@@ -239,12 +240,12 @@ class MergeOverlappingAtoms(Immediate):
             # in the following algorithm, we suppose that the cluster of
             # atoms is small compared to the parent's periodic sizes
             # (if the parent is a periodic system)
-            first_pos = overlappers[0].transformation.translation_vector
+            first_pos = overlappers[0].transformation.t
             delta_to_mean = numpy.zeros(3, float)
             for atom in overlappers[1:]:
-                delta_to_mean += parent.shortest_vector(atom.transformation.translation_vector - first_pos)
+                delta_to_mean += parent.shortest_vector(atom.transformation.t - first_pos)
             delta_to_mean /= float(len(overlappers))
-            single.transformation.translation_vector = first_pos + delta_to_mean
+            single.transformation.t = first_pos + delta_to_mean
 
         # modify the model
         for single, overlappers in singles:

@@ -30,9 +30,10 @@ from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.analysis import common_parent
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
-from zeobuilder.transformations import Translation
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+
+from molmod.transformations import Translation
 
 import gtk
 
@@ -112,7 +113,7 @@ class SketchOptions(GladeWrapper):
         new = context.application.plugins.get_node(
             self.object_store.get_value(self.cb_object.get_active_iter(), 0)
         )()
-        new.transformation.translation_vector[:] = position
+        new.transformation.t[:] = position
         primitive.Add(new, parent, select=False)
         return new
 
@@ -125,7 +126,7 @@ class SketchOptions(GladeWrapper):
             new = context.application.plugins.get_node(
                 self.object_store.get_value(self.cb_object.get_active_iter(), 0)
             )(**state)
-            new.transformation.translation_vector[:] = gl_object.transformation.translation_vector
+            new.transformation.t[:] = gl_object.transformation.t
             primitive.Add(new, parent, select=False)
             for reference in gl_object.references[::-1]:
                 reference.set_target(new)
@@ -201,9 +202,9 @@ class Sketch(Interactive):
         if self.parent is None:
             self.parent = context.application.model.universe
         if self.first_hit is None:
-            self.origin = self.parent.get_absolute_frame().translation_vector
+            self.origin = self.parent.get_absolute_frame().t
         else:
-            self.origin = self.first_hit.get_absolute_frame().translation_vector
+            self.origin = self.first_hit.get_absolute_frame().t
         self.end_x = event.x
         self.end_y = event.y
 

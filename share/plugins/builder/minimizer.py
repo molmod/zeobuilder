@@ -226,8 +226,8 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
                 (
-                    frame.transformation.rotation_matrix,
-                    frame.transformation.translation_vector
+                    frame.transformation.r,
+                    frame.transformation.t
                 ) = variable.extract_state(state_index, self.status.state)
                 frame.invalidate_transformation_list()
             context.application.main.drawing_area.queue_draw()
@@ -327,8 +327,8 @@ class MinimizeDistances(ImmediateWithMemory):
         cost_function = iterative.expr.Root(1, 10, True)
         for frame in involved_frames:
             variable = iterative.var.Frame(
-                frame.transformation.rotation_matrix,
-                frame.transformation.translation_vector,
+                frame.transformation.r,
+                frame.transformation.t,
             )
             cost_function.register_state_variable(variable)
             constraint = iterative.expr.Orthonormality(1e-10)
@@ -339,7 +339,7 @@ class MinimizeDistances(ImmediateWithMemory):
             for target, frame in frames.iteritems():
                 cost_term.register_input_variable(
                     cost_function.state_variables[involved_frames.index(frame)],
-                    target.get_frame_up_to(frame).translation_vector
+                    target.get_frame_up_to(frame).t
                 )
 
         minimize = iterative.alg.DefaultMinimize(

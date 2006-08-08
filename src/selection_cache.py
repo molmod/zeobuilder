@@ -25,8 +25,9 @@ from zeobuilder.nodes.parent_mixin import ContainerMixin, ReferentMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.reference import Reference
 from zeobuilder.nodes.elementary import GLFrameBase
-from zeobuilder.transformations import Translation, Rotation
 import zeobuilder.nodes.analysis as analysis
+
+from molmod.transformations import Translation, Rotation
 
 import gobject
 

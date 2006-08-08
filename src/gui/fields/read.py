@@ -23,6 +23,8 @@ from elementary import Read
 from mixin import ambiguous, insensitive
 from zeobuilder.conversion import express_measure, express_data_size
 
+from molmod.transformations import Rotation
+
 import math, gtk, numpy
 
 __all__ = ["Label", "Handedness", "BBox", "Distance", "VectorLength",
@@ -56,7 +58,7 @@ class Label(Read):
 
 class Handedness(Label):
     def read_from_attribute(self):
-        return (numpy.linalg.det(self.attribute.get_absolute_frame().rotation_matrix) > 0)
+        return (numpy.linalg.det(self.attribute.get_absolute_frame().r) > 0)
 
     def convert_to_representation(self, value):
         if value == ambiguous:
@@ -67,7 +69,6 @@ class Handedness(Label):
             return "The selected frames are left-handed."
 
     def applicable_attribute(self):
-        from zeobuilder.transformations import Rotation
         from zeobuilder.nodes.glmixin import GLTransformationMixin
         return isinstance(self.attribute, GLTransformationMixin) and \
                isinstance(self.attribute.transformation, Rotation)

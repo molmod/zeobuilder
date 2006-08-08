@@ -32,10 +32,11 @@ from zeobuilder.nodes.helpers import FrameAxes
 from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple, DialogFieldInfo
-from zeobuilder.transformations import Translation
 from zeobuilder.zml import dump_to_file, load_from_file
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+
+from molmod.transformations import Translation
 
 from molmod.unit_cell import UnitCell
 from molmod.units import angstrom
@@ -140,9 +141,9 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     #
 
     def wrap(self, child):
-        cell_index = self.to_index(child.transformation.translation_vector)
+        cell_index = self.to_index(child.transformation.t)
         if cell_index.any():
-            child.transformation.translation_vector -= numpy.dot(self.cell, cell_index)
+            child.transformation.t -= numpy.dot(self.cell, cell_index)
 
     def update_child_positions(self):
         if not self.cell_active.any(): return
@@ -182,21 +183,21 @@ class Universe(GLPeriodicContainer, FrameAxes):
     def set_cell(self, cell):
         GLPeriodicContainer.set_cell(self, cell)
         self.update_clip_planes()
-        self.model_center.translation_vector = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
         self.invalidate_total_list()
         self.invalidate_box_list()
 
     def set_cell_active(self, cell_active):
         GLPeriodicContainer.set_cell_active(self, cell_active)
         self.update_clip_planes()
-        self.model_center.translation_vector = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
         self.invalidate_total_list()
         self.invalidate_box_list()
 
     def set_repetitions(self, repetitions):
         self.repetitions = repetitions
         self.update_clip_planes()
-        self.model_center.translation_vector = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
         self.invalidate_box_list()
         self.invalidate_total_list()
 
@@ -557,11 +558,11 @@ class UnitCellToCluster(ImmediateWithMemory):
                 nodes = load_from_file(serialized)
                 new_children[cell_index] = {}
                 for node_index, node in enumerate(nodes):
-                    position = node.transformation.translation_vector + universe.cell[:,axis]*cell_index
+                    position = node.transformation.t + universe.cell[:,axis]*cell_index
                     fractional = universe.to_fractional(position)
                     if (fractional[axis] < interval[0]) or (fractional[axis] > interval[1]):
                         continue
-                    node.transformation.translation_vector = position
+                    node.transformation.t = position
                     new_children[cell_index][node_index] = node
 
             new_connectors = []
@@ -587,10 +588,10 @@ class UnitCellToCluster(ImmediateWithMemory):
                     for reference in connector.children[1:]:
                         other_target_orig = reference.target
                         shortest_vector = universe.shortest_vector((
-                            other_target_orig.transformation.translation_vector
-                           -first_target_orig.transformation.translation_vector
+                            other_target_orig.transformation.t
+                           -first_target_orig.transformation.t
                         ))
-                        translation = first_target.transformation.translation_vector + shortest_vector
+                        translation = first_target.transformation.t + shortest_vector
                         other_cell_index = universe.to_index(translation)
                         other_target_index = positioned.index(other_target_orig)
                         other_cell_children = new_children.get(other_cell_index[axis])
@@ -738,7 +739,7 @@ class SuperCell(ImmediateWithMemory):
             nodes = load_from_file(serialized)
             new_children[cell_hash] = nodes
             for node in nodes:
-                node.transformation.translation_vector += numpy.dot(universe.cell, cell_index - 0.5*(repetitions - 1))
+                node.transformation.t += numpy.dot(universe.cell, cell_index - 0.5*(repetitions - 1))
 
         new_connectors = []
         # replicate the objects that connect these positioned objects
@@ -763,10 +764,10 @@ class SuperCell(ImmediateWithMemory):
                 for reference in connector.children[1:]:
                     other_target_orig = reference.target
                     shortest_vector = universe.shortest_vector((
-                        other_target_orig.transformation.translation_vector
-                        -first_target_orig.transformation.translation_vector
+                        other_target_orig.transformation.t
+                        -first_target_orig.transformation.t
                     ))
-                    translation = first_target.transformation.translation_vector + shortest_vector
+                    translation = first_target.transformation.t + shortest_vector
                     other_cell_index = universe.to_index(translation - numpy.dot(universe.cell, -0.5*(repetitions - 1)))
                     other_cell_index %= repetitions
                     other_cell_hash = tuple(other_cell_index)

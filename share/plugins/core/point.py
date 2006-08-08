@@ -30,9 +30,10 @@ from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
-from zeobuilder.transformations import Translation
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+
+from molmod.transformations import Translation
 
 from OpenGL.GL import *
 import numpy
@@ -201,11 +202,11 @@ class CalculateAverage(Immediate):
         for node in cache.nodes:
             if isinstance(node, GLTransformationMixin) and \
                isinstance(node.transformation, Translation):
-                vector_sum += node.get_frame_relative_to(parent).translation_vector
+                vector_sum += node.get_frame_relative_to(parent).t
                 num_vectors += 1
 
         point = Point(name="Average")
-        point.transformation.translation_vector = vector_sum / num_vectors
+        point.transformation.t = vector_sum / num_vectors
         primitive.Add(point, parent)
 
 

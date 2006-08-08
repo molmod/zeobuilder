@@ -27,10 +27,10 @@ from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.gui.simple import ok_information
-from zeobuilder.transformations import Translation, Complete, Rotation
 import zeobuilder.actions.primitive as primitive
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+from molmod.transformations import Translation, Complete, Rotation
 
 import numpy
 
@@ -84,7 +84,7 @@ def yield_particles(node, parent=None):
         if isinstance(child, Atom):
             yield (
                 periodic[child.number].mass,
-                child.get_frame_relative_to(parent).translation_vector
+                child.get_frame_relative_to(parent).t
             )
         elif isinstance(child, GLContainerMixin):
             for particle in yield_particles(child, parent):
@@ -139,12 +139,12 @@ class CenterOfMass(CenterAlignBase):
     def do(self):
         cache = context.application.cache
         node = cache.node
-        t = Translation()
+        translation = Translation()
         mass, com = calculate_center_of_mass(yield_particles(node))
         if mass == 0.0:
             raise UserError("No particles (atoms) found.")
-        t.translation_vector = com
-        CenterAlignBase.do(self, node, cache.translated_children, t)
+        translation.t = com
+        CenterAlignBase.do(self, node, cache.translated_children, translation)
 
 
 class CenterOfMassAndPrincipalAxes(CenterOfMass):
@@ -166,16 +166,16 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
     def do(self):
         cache = context.application.cache
         node = cache.node
-        c = Complete()
+        transformation = Complete()
 
         mass, com = calculate_center_of_mass(yield_particles(node))
         if mass == 0.0:
             raise UserError("No particles (atoms) found.")
-        c.translation_vector = com
+        transformation.t = com
 
         tensor = calculate_inertia_tensor(yield_particles(node), com)
-        c.rotation_matrix = default_rotation_matrix(tensor)
-        CenterAlignBase.do(self, node, cache.translated_children, c)
+        transformation.r = default_rotation_matrix(tensor)
+        CenterAlignBase.do(self, node, cache.translated_children, transformation)
 
 
 class SaturateWithHydrogens(Immediate):
@@ -293,7 +293,7 @@ class SaturateWithHydrogens(Immediate):
 
             for i in range(num_hydrogens):
                 H = Atom(name="auto H", number=1)
-                H.transformation.translation_vector = atom.transformation.translation_vector + h_pos
+                H.transformation.t = atom.transformation.t + h_pos
                 primitive.Add(H, atom.parent)
                 bond = Bond(name="aut H bond", targets=[atom, H])
                 primitive.Add(bond, atom.parent)

@@ -26,7 +26,8 @@ from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.elementary import GLFrameBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.helpers import FrameAxes
-from zeobuilder.transformations import Complete
+
+from molmod.transformations import Complete
 
 
 class Frame(GLFrameBase, FrameAxes):

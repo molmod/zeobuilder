@@ -32,6 +32,5 @@ import unittest
 
 from actions import *
 from filters import *
-from transformations import *
 
 unittest.main()

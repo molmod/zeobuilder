@@ -21,12 +21,12 @@
 
 
 from zeobuilder import context
-from zeobuilder.transformations import Translation, Rotation
 from zeobuilder.conversion import express_measure
 from zeobuilder.gui.simple import ask_name
 
 from molmod.data import periodic
 from molmod.units import measures, units_by_measure
+from molmod.transformations import Translation, Rotation
 
 import gtk, numpy
 

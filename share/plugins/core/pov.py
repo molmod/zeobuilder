@@ -50,11 +50,11 @@ class DumpPOV(DumpFilter):
         if scene.opening_angle > 0.0:
             indenter.write_line("angle     %f" % scene.opening_angle)
 
-        indenter.write_line("translate <%r, %r, %r>" % tuple(-scene.viewer.translation_vector))
+        indenter.write_line("translate <%r, %r, %r>" % tuple(-scene.viewer.t))
         indenter.write_line("translate <0.0, 0.0, %r>" % scene.znear())
-        indenter.write_line("matrix <%r, %r, %r, %r, %r, %r, %r, %r, %r, 0.0, 0.0, 0.0>" % tuple(numpy.ravel(numpy.transpose(scene.rotation.rotation_matrix))))
-        indenter.write_line("translate <%r, %r, %r>" % tuple(scene.rotation_center.translation_vector))
-        indenter.write_line("translate <%r, %r, %r>" % tuple(universe.model_center.translation_vector))
+        indenter.write_line("matrix <%r, %r, %r, %r, %r, %r, %r, %r, %r, 0.0, 0.0, 0.0>" % tuple(numpy.ravel(numpy.transpose(scene.rotation.r))))
+        indenter.write_line("translate <%r, %r, %r>" % tuple(scene.rotation_center.t))
+        indenter.write_line("translate <%r, %r, %r>" % tuple(universe.model_center.t))
 
         indenter.write_line("}", -1)
         indenter.write_line("// background { White }")

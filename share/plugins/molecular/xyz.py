@@ -69,7 +69,7 @@ class LoadXYZ(LoadFilter):
             else:
                 atom = Atom(name=atom_info.symbol, number=atom_info.number)
             try:
-                atom.transformation.translation_vector = from_angstrom(
+                atom.transformation.t = from_angstrom(
                     numpy.array([float(word) for word in words[1:4]])
                 )
             except ValueError:
@@ -103,13 +103,13 @@ class DumpXYZ(DumpFilter):
             return result
 
         def atom_line(atom):
-            coordinate = atom.get_frame_relative_to(universe).translation_vector
+            coordinate = atom.get_frame_relative_to(universe).t
             print >> f, "% 2s % 13.6f% 13.6f% 13.6f" % (
                 (periodic[atom.number].symbol,) + tuple(to_angstrom(coordinate))
             )
 
         def point_line(atom):
-            coordinate = atom.get_frame_relative_to(universe).translation_vector
+            coordinate = atom.get_frame_relative_to(universe).t
             print >> f, " X % 13.6f% 13.6f% 13.6f" % (
                 tuple(to_angstrom(coordinate))
             )

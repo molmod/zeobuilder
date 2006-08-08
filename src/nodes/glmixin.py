@@ -25,8 +25,9 @@ from zeobuilder.nodes.helpers import BoundingBox
 from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
 from zeobuilder.nodes.analysis import common_parent
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
-from zeobuilder.transformations import Translation, Rotation, Complete
 import zeobuilder.gui.fields as fields
+
+from molmod.transformations import Translation, Rotation, Complete
 
 from OpenGL.GL import *
 import gobject, numpy
@@ -363,11 +364,11 @@ class GLTransformationMixin(GLMixin):
     def write_pov(self, indenter):
         GLMixin.write_pov(self, indenter)
         if self.Transformation == Translation:
-            indenter.write_line("translate <%f, %f, %f>" % tuple(self.transformation.translation_vector))
+            indenter.write_line("translate <%f, %f, %f>" % tuple(self.transformation.t))
         elif self.Transformation == Rotation:
-            indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, 0.0, 0.0, 0.0>" % tuple(numpy.ravel(numpy.transpose(self.transformation.rotation_matrix))))
+            indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, 0.0, 0.0, 0.0>" % tuple(numpy.ravel(numpy.transpose(self.transformation.r))))
         else:
-            indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f>" % (tuple(numpy.ravel(numpy.transpose(self.transformation.rotation_matrix))) + tuple(self.transformation.translation_vector)))
+            indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f>" % (tuple(numpy.ravel(numpy.transpose(self.transformation.r))) + tuple(self.transformation.t)))
 
     #
     # Revalidation

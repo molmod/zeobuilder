@@ -28,9 +28,10 @@ from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.analysis import calculate_center, some_fixed, list_by_parent
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
-from zeobuilder.transformations import Translation, Rotation, Complete
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+
+from molmod.transformations import Translation, Rotation, Complete
 
 from molmod.vectors import angle
 from molmod.quaternions import quaternion_product, quaternion_from_rotation_matrix, quaternion_to_rotation_matrix
@@ -88,14 +89,14 @@ class TransformationInvert(Immediate):
         # Translate where possible, if necessary
         translated_nodes = cache.translated_nodes
         if len(translated_nodes) > 0:
-            absolute_inversion_center = translated_nodes[-1].get_absolute_frame().translation_vector
+            absolute_inversion_center = translated_nodes[-1].get_absolute_frame().t
             victims_by_parent = list_by_parent(cache.transformed_nodes[:-1])
             for parent, victims in victims_by_parent.iteritems():
                 local_inversion_center = parent.get_absolute_frame().vector_apply_inverse(absolute_inversion_center)
                 for victim in victims:
-                    t = Translation()
-                    t.translation_vector = 2 * (local_inversion_center - victim.transformation.translation_vector)
-                    primitive.Transform(victim, t)
+                    translation = Translation()
+                    translation.t = 2 * (local_inversion_center - victim.transformation.t)
+                    primitive.Transform(victim, translation)
 
         # Apply an inversion rotation where possible
         r = Rotation()
@@ -188,7 +189,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
                 e2 = last_but_one.children[1].translation_relative_to(parent)
                 if (b1 is not None) and (e1 is not None) and (b2 is not None) and (e2 is not None):
                     if last.children[0].target == last_but_one.children[0].target:
-                        self.parameters.complete.translation_vector = copy.copy(b1)
+                        self.parameters.complete.t = copy.copy(b1)
                     angle = angle(e1 - b1, e2 - b2)
                     rotation_vector = numpy.cross(e1 - b1, e2 - b2)
                     self.parameters.complete.set_rotation_properties(angle, rotation_vector, False)
@@ -196,17 +197,17 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
                 b = last.children[0].translation_relative_to(self.parent)
                 e = last.children[1].translation_relative_to(self.parent)
                 if (b is not None) and (e is not None):
-                    self.parameters.complete.translation_vector = b
+                    self.parameters.complete.t = b
                     self.parameters.complete.set_rotation_properties(math.pi*0.25, e - b, False)
         elif isinstance(last, GLTransformationMixin) and isinstance(last.transformation, Translation):
-            self.parameters.complete.translation_vector = last.get_frame_relative_to(parent).translation_vector
+            self.parameters.complete.t = last.get_frame_relative_to(parent).t
         else:
-            self.parameters.complete.translation_vector = calculate_center(cache.translations)
+            self.parameters.complete.t = calculate_center(cache.translations)
 
         if self.parameters_dialog.run(self.parameters.complete) != gtk.RESPONSE_OK:
             self.parameters.clear()
         else:
-            self.parameters.complete.translation_vector -= numpy.dot(self.parameters.complete.rotation_matrix, self.parameters.complete.translation_vector)
+            self.parameters.complete.t -= numpy.dot(self.parameters.complete.r, self.parameters.complete.t)
 
     def do(self):
         for victim in context.application.cache.transformed_nodes:
@@ -247,7 +248,7 @@ class TranslateDialog(ImmediateWithMemory):
             b = last.children[0].translation_relative_to(cache.parent)
             e = last.children[1].translation_relative_to(cache.parent)
             if (b is not None) and (e is not None):
-                self.parameters.translation.translation_vector = e - b
+                self.parameters.translation.t = e - b
         else:
             self.use_last_parameters()
         if self.parameters_dialog.run(self.parameters.translation) != gtk.RESPONSE_OK:
@@ -297,7 +298,7 @@ class RoundRotation(Immediate):
 
         rounded_quaternions = []
         victim = context.application.cache.node
-        factor, selected_quaternion = quaternion_from_rotation_matrix(victim.transformation.rotation_matrix)
+        factor, selected_quaternion = quaternion_from_rotation_matrix(victim.transformation.r)
 
         step = 15
         for axis_name, axis in self.axes.iteritems():
@@ -361,7 +362,7 @@ class RoundRotation(Immediate):
 
         if user_record.quaternion is not None:
             new_transformation = copy.deepcopy(victim.transformation)
-            new_transformation.rotation_matrix = factor * quaternion_to_rotation_matrix(user_record.quaternion)
+            new_transformation.r = factor * quaternion_to_rotation_matrix(user_record.quaternion)
             primitive.SetPublishedProperty(victim, "transformation", new_transformation)
 
 
@@ -484,7 +485,7 @@ class RotateObjectBase(InteractiveWithMemory):
         else:
             rotation_center_object = self.victim
 
-        self.rotation_center = rotation_center_object.get_frame_relative_to(self.victim.parent).translation_vector
+        self.rotation_center = rotation_center_object.get_frame_relative_to(self.victim.parent).t
         drawing_area = context.application.main.drawing_area
         self.screen_rotation_center = drawing_area.position_of_object(rotation_center_object)
         self.eye_to_model_rotation = drawing_area.eye_to_model_rotation(self.victim)
@@ -499,14 +500,14 @@ class RotateObjectBase(InteractiveWithMemory):
                 rotation_axis = -self.rotation_axis
         rotation = Rotation()
         rotation.set_rotation_properties(rotation_angle, rotation_axis, False)
-        tr = self.victim.transformation
+        transformation = self.victim.transformation
 
         if isinstance(self.victim.transformation, Translation):
-            tr.translation_vector -= self.rotation_center
-            tr.translation_vector = numpy.dot(numpy.transpose(rotation.rotation_matrix), tr.translation_vector)
-            tr.translation_vector += self.rotation_center
+            transformation.t -= self.rotation_center
+            transformation.t = numpy.dot(numpy.transpose(rotation.r), transformation.t)
+            transformation.t += self.rotation_center
         if isinstance(self.victim.transformation, Rotation):
-            tr.rotation_matrix = numpy.dot(numpy.transpose(rotation.rotation_matrix), tr.rotation_matrix)
+            transformation.r = numpy.dot(numpy.transpose(rotation.r), transformation.r)
         self.victim.revalidate_transformation_list()
         context.application.main.drawing_area.queue_draw()
         #self.victim.invalidate_transformation_list()
@@ -554,7 +555,7 @@ class RotateWorldBase(Interactive):
     def interactive_init(self):
         Interactive.interactive_init(self)
         drawing_area = context.application.main.drawing_area
-        self.screen_rotation_center = drawing_area.position_of_vector(drawing_area.scene.viewer.translation_vector)
+        self.screen_rotation_center = drawing_area.position_of_vector(drawing_area.scene.viewer.t)
 
     def do_rotation(self, drawing_area, rotation_angle, rotation_axis):
         rotation = Rotation()
@@ -680,7 +681,7 @@ class TranslateObjectBase(InteractiveWithMemory):
         return drawing_area.depth_of_object(self.victim)
 
     def do_translation(self, vector, drawing_area):
-        self.victim.transformation.translation_vector += numpy.dot(self.eye_to_model_rotation, vector)
+        self.victim.transformation.t += numpy.dot(self.eye_to_model_rotation, vector)
         self.victim.revalidate_transformation_list()
         drawing_area.queue_draw()
         self.changed = True
@@ -731,7 +732,7 @@ class TranslateWorldBase(Interactive):
         return -drawing_area.scene.modelview_matrix[2,3]
 
     def do_translation(self, vector, drawing_area):
-        drawing_area.scene.rotation_center.translation_vector -= numpy.dot(self.eye_to_model_rotation, vector)
+        drawing_area.scene.rotation_center.t -= numpy.dot(self.eye_to_model_rotation, vector)
         drawing_area.queue_draw()
 
 
@@ -764,13 +765,13 @@ class TranslateViewerBase(Interactive):
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return scene.viewer.translation_vector[2] + scene.znear()
+        return scene.viewer.t[2] + scene.znear()
 
     def do_translation(self, vector, drawing_area):
         scene = drawing_area.scene
-        scene.viewer.translation_vector[:2] -= vector[:2]
+        scene.viewer.t[:2] -= vector[:2]
         if (scene.opening_angle > 0):
-            scene.viewer.translation_vector[2] -= vector[2]
+            scene.viewer.t[2] -= vector[2]
         else:
             scene.window_size *= (1 + 0.01*vector[2])
             if scene.window_size < 0.001: scene.window_size = 0.001
@@ -810,18 +811,18 @@ class TranslateRotationCenterBase(Interactive):
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return scene.viewer.translation_vector[2] + scene.znear()
+        return scene.viewer.t[2] + scene.znear()
 
     def do_translation(self, vector, drawing_area):
         scene = drawing_area.scene
         tmp = vector.copy()
         tmp[2] = 0
         transformed_vector = numpy.dot(self.eye_to_model_rotation, tmp)
-        scene.viewer.translation_vector[:2] -= vector[:2]
-        scene.rotation_center.translation_vector[:2] += transformed_vector[:2]
+        scene.viewer.t[:2] -= vector[:2]
+        scene.rotation_center.t[:2] += transformed_vector[:2]
         if (scene.opening_angle > 0):
-            scene.viewer.translation_vector[2] -= vector[2]
-            scene.rotation_center.translation_vector[2] += transformed_vector[2]
+            scene.viewer.t[2] -= vector[2]
+            scene.rotation_center.t[2] += transformed_vector[2]
         else:
             scene.window_size *= (1 + 0.01*vector[-1])
             if scene.window_size < 0.001: scene.window_size = 0.001

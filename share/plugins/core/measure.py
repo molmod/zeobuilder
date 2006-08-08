@@ -26,10 +26,10 @@ from zeobuilder.actions.collections.interactive import InteractiveInfo, Interact
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.gui.glade_wrapper import GladeWrapper
-from zeobuilder.transformations import Translation
 from zeobuilder.conversion import express_measure
 
 from molmod.vectors import angle
+from molmod.transformations import Translation
 
 from OpenGL.GLUT import *
 from OpenGL.GL import *
