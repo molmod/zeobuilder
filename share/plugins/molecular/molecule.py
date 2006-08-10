@@ -105,9 +105,9 @@ def calculate_inertia_tensor(particles, center):
     tensor = numpy.zeros((3,3), float)
     for mass, coordinate in particles:
         delta = coordinate - center
-        tensor += (
-            mass*numpy.dot(delta, delta)*numpy.identity(3, float)
-           -numpy.outerproduct(delta, delta)
+        tensor += mass*(
+            numpy.dot(delta, delta)*numpy.identity(3, float)
+           -numpy.outer(delta, delta)
         )
     return tensor
 
