@@ -216,7 +216,7 @@ class MergeOverlappingAtoms(Immediate):
         def overlap(positioned1, positioned2):
             number = positioned1.id.number
             if number != positioned2.id.number: return
-            delta = parent.shortest_vector(positioned2.vector - positioned1.vector)
+            delta = parent.shortest_vector(positioned2.coordinate - positioned1.coordinate)
             distance = math.sqrt(numpy.dot(delta, delta))
             if distance < periodic[number].radius:
                 return True

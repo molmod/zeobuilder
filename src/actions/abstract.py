@@ -135,7 +135,7 @@ class AutoConnectMixin(object):
         )
 
         def connect_nodes(positioned1, positioned2):
-            delta = parent.shortest_vector(positioned2.vector - positioned1.vector)
+            delta = parent.shortest_vector(positioned2.coordinate - positioned1.coordinate)
             distance = numpy.linalg.norm(delta)
             return self.get_vector(positioned1.id, positioned2.id, distance)
 
