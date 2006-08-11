@@ -22,6 +22,7 @@
 
 from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
+from zeobuilder.undefined import Undefined
 import zeobuilder.gui.fields as fields
 
 from OpenGL.GL import *
@@ -80,7 +81,7 @@ class UserColorMixin(gobject.GObject):
         self.invalidate_draw_list()
 
     published_properties = PublishedProperties({
-        "user_color": Property(None, lambda self: self.user_color, set_user_color, signal=True)
+        "user_color": Property(Undefined(numpy.array([0.7, 0.7, 0.7, 1.0])), lambda self: self.user_color, set_user_color, signal=True)
     })
 
     #
@@ -101,10 +102,10 @@ class UserColorMixin(gobject.GObject):
     #
 
     def get_color(self):
-        if self.user_color is not None:
-            return self.user_color
-        else:
+        if isinstance(self.user_color, Undefined):
             return self.default_color
+        else:
+            return self.user_color
 
     def default_color(self):
         raise NotImplementedError

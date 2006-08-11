@@ -20,7 +20,7 @@
 # --
 
 from elementary import Read
-from mixin import ambiguous, insensitive
+from mixin import ambiguous
 from zeobuilder.conversion import express_measure, express_data_size
 
 from molmod.transformations import Rotation
@@ -46,14 +46,10 @@ class Label(Read):
             return str(value)
 
     def write_to_widget(self, representation, original=False):
-        if representation == insensitive:
-            self.data_widget.set_sensitive(False)
+        if representation == ambiguous:
+            self.data_widget.set_label("<span foreground=\"gray\">%s</span>" % ambiguous)
         else:
-            self.data_widget.set_sensitive(True)
-            if representation == ambiguous:
-                self.data_widget.set_label("<span foreground=\"gray\">%s</span>" % ambiguous)
-            else:
-                self.data_widget.set_label(representation)
+            self.data_widget.set_label(representation)
 
 
 class Handedness(Label):
@@ -70,8 +66,10 @@ class Handedness(Label):
 
     def applicable_attribute(self):
         from zeobuilder.nodes.glmixin import GLTransformationMixin
-        return isinstance(self.attribute, GLTransformationMixin) and \
-               isinstance(self.attribute.transformation, Rotation)
+        return (
+            isinstance(self.attribute, GLTransformationMixin) and
+            isinstance(self.attribute.transformation, Rotation)
+        )
 
 
 class BBox(Label):

@@ -30,6 +30,7 @@ from zeobuilder.nodes.color_mixin import UserColorMixin
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
+from zeobuilder.undefined import Undefined
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 
@@ -83,7 +84,7 @@ class Atom(GLGeometricBase, UserColorMixin):
         self.invalidate_boundingbox_list()
 
     published_properties = PublishedProperties({
-        "user_radius": Property(None, lambda self: self.user_radius, set_user_radius, signal=True),
+        "user_radius": Property(Undefined(0.5), lambda self: self.user_radius, set_user_radius, signal=True),
         "quality": Property(15, lambda self: self.quality, set_quality),
         "number": Property(6, lambda self: self.number, set_number, signal=True),
     })
@@ -117,10 +118,10 @@ class Atom(GLGeometricBase, UserColorMixin):
     #
 
     def get_radius(self):
-        if self.user_radius is not None:
-            return self.user_radius
-        else:
+        if isinstance(self.user_radius, Undefined):
             return self.default_radius
+        else:
+            return self.user_radius
 
     def draw(self):
         GLGeometricBase.draw(self)

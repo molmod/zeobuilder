@@ -22,7 +22,7 @@
 
 
 from base import Single
-from mixin import ambiguous, insensitive
+from mixin import ambiguous
 
 import gtk
 
@@ -56,15 +56,13 @@ class Optional(Single):
 
     def create_widgets(self):
         Single.create_widgets(self)
+        self.data_widget = self.toggle_button
         self.high_widget = self.slave.high_widget
         self.toggle_button.connect("toggled", self.toggle_button_toggled)
         if self.slave.label_text is not None:
             self.toggle_button.add(gtk.Label(self.slave.label_text))
 
     def destroy_widgets(self):
-        if self.toggle_button is not None:
-            self.toggle_button.destroy()
-            self.toggle_button = None
         self.slave.destroy_widgets()
         Single.destroy_widgets(self)
 
@@ -100,16 +98,20 @@ class Optional(Single):
     def toggle_button_toggled(self, toggle_button):
         self.slave.set_sensitive(toggle_button.get_active())
 
-    def get_sensitive(self):
-        return self.slave.get_sensitive()
-
-    def set_sensitive(self, sensitive):
-        self.toggle_button.set_sensitive(sensitive)
-        self.slave.set_sensitive(sensitive)
-
 
 class CheckOptional(Optional):
     def create_widgets(self):
         self.toggle_button = gtk.CheckButton()
+        Optional.create_widgets(self)
+
+
+class RadioOptional(Optional):
+    def create_widgets(self):
+        first = None
+        for field in self.parent.fields:
+            if isinstance(field, RadioOptional):
+                first = field.toggle_button
+                break
+        self.toggle_button = gtk.RadioButton(first)
         Optional.create_widgets(self)
 

@@ -21,7 +21,7 @@
 
 
 from elementary import Faulty
-from mixin import ambiguous, insensitive
+from mixin import ambiguous
 import popups
 
 from zeobuilder.conversion import express_measure, eval_measure
@@ -48,23 +48,16 @@ class Entry(Faulty):
 
     def write_to_widget(self, representation, original=False):
         #print self, representation
-        if representation == insensitive:
-            self.entry.set_sensitive(False)
-        else:
-            self.entry.set_sensitive(True)
-            if representation == ambiguous: representation = ""
-            self.entry.set_text(representation)
+        if representation == ambiguous: representation = ""
+        self.entry.set_text(representation)
         Faulty.write_to_widget(self, representation, original)
 
     def read_from_widget(self):
-        if not self.entry.get_property("sensitive"):
-            return insensitive
+        representation = self.entry.get_text()
+        if representation == "":
+            return ambiguous
         else:
-            representation = self.entry.get_text()
-            if representation == "":
-                return ambiguous
-            else:
-                return representation
+            return representation
 
     def convert_to_value(self, representation):
         if not isinstance(representation, str):

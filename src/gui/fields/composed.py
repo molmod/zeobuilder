@@ -106,7 +106,10 @@ class ComposedArray(ComposedInTable):
         )
 
     def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == self.shape
+        return (
+            isinstance(self.attribute, numpy.ndarray) and
+            self.attribute.shape == self.shape
+        )
 
     def convert_to_representation(self, value):
         intermediate = tuple(value.ravel())
@@ -284,7 +287,10 @@ class CellParameters(ComposedInTable):
         )
 
     def applicable_attribute(self):
-        return isinstance(self.attribute, numpy.ndarray) and self.attribute.shape == (3,3)
+        return (
+            isinstance(self.attribute, numpy.ndarray) and
+            self.attribute.shape == (3,3)
+        )
 
     def convert_to_representation(self, value):
         unit_cell = UnitCell(value)

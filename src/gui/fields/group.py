@@ -20,7 +20,7 @@
 # --
 
 from elementary import Group
-from mixin import EditMixin, TableMixin, ambiguous, insensitive
+from mixin import EditMixin, TableMixin, ambiguous
 
 import gtk
 

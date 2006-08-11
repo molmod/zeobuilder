@@ -21,7 +21,7 @@
 
 
 from base import Single, Multiple
-from mixin import ReadMixin, EditMixin, FaultyMixin, ambiguous, insensitive
+from mixin import ReadMixin, EditMixin, FaultyMixin, ambiguous
 
 
 __all__ = ["Read", "Edit", "Faulty", "Composed", "Group"]
@@ -52,9 +52,6 @@ class Edit(Single, EditMixin):
         Single.destroy_widgets(self)
         EditMixin.destroy_widgets(self)
 
-    def get_sensitive(self):
-        return EditMixin.get_sensitive(self)
-
     def set_sensitive(self, sensitive):
         EditMixin.set_sensitive(self, sensitive)
         Single.set_sensitive(self, sensitive)
@@ -75,9 +72,6 @@ class Faulty(Single, FaultyMixin):
     def destroy_widgets(self):
         Single.destroy_widgets(self)
         FaultyMixin.destroy_widgets(self)
-
-    def get_sensitive(self):
-        return FaultyMixin.get_sensitive(self)
 
     def set_sensitive(self, sensitive):
         FaultyMixin.set_sensitive(self, sensitive)
@@ -135,9 +129,9 @@ class Composed(Multiple, FaultyMixin):
         return tuple(field.convert_to_representation(value[index]) for index, field in enumerate(self.fields))
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous or representation == insensitive:
+        if representation == ambiguous:
             for field in self.fields:
-                field.write_to_widget(representation, original)
+                field.write_to_widget(ambiguous, original)
         else:
             for index, field in enumerate(self.fields):
                 field.write_to_widget(representation[index], original)
@@ -145,9 +139,7 @@ class Composed(Multiple, FaultyMixin):
 
     def read_from_widget(self):
         result = tuple(field.read_from_widget() for field in self.fields)
-        if insensitive in result:
-            return insensitive # if one is insensitive, they all are. We know for sure.
-        elif ambiguous in result:
+        if ambiguous in result:
             # if one is ambiguous, we have to test them all to be sure.
             all_ambiguous = True
             for item in result:
@@ -163,9 +155,6 @@ class Composed(Multiple, FaultyMixin):
 
     def convert_to_value(self, representation):
         return tuple(field.convert_to_value(representation[index]) for index, field in enumerate(self.fields))
-
-    def get_sensitive(self):
-        return FaultyMixin.get_sensitive(self)
 
     def set_sensitive(self, sensitive):
         FaultyMixin.set_sensitive(self, sensitive)

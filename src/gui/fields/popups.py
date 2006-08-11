@@ -110,14 +110,13 @@ class Default(Base):
     "The default popup for a field."
 
     def fill_menu(self):
-        from mixin import insensitive, ambiguous
-        if self.field.original_representation != insensitive:
-            self.add_item(
-                "Revert to '%s'" % str(self.field.original_representation),
-                gtk.STOCK_UNDO,
-                self.write_to_widget,
-                self.field.original_representation,
-            )
+        from mixin import ambiguous
+        self.add_item(
+            "Revert to '%s'" % str(self.field.original_representation),
+            gtk.STOCK_UNDO,
+            self.write_to_widget,
+            self.field.original_representation,
+        )
         if self.field.reset_representation is not None:
             self.add_item(
                 "Reset to '%s'" % str(self.field.reset_representation),

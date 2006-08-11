@@ -21,13 +21,14 @@
 
 
 from zeobuilder import context
+from zeobuilder.undefined import Undefined
 
 import gtk
 
 
 __all__ = [
     "ReadMixin", "EditMixin", "InvalidField", "FaultyMixin",
-    "SpecialState", "ambiguous", "insensitive"
+    "SpecialState", "ambiguous"
 ]
 
 
@@ -35,29 +36,25 @@ changed_indicator = "<span foreground=\"red\">*</span>"
 
 
 class SpecialState(object):
-    pass
+    def __init__(self, label):
+        self.label = label
 
-
-class Ambiguous(SpecialState):
     def __str__(self):
-        return ":::ambiguous:::"
+        return self.label
 
-ambiguous = Ambiguous()
-
-
-class Insensitive(SpecialState):
-    def __str__(self):
-        return ":::insensitive:::"
-
-insensitive = Insensitive()
+ambiguous = SpecialState(":::ambiguous:::")
 
 
 class Attribute(object):
     def __get__(self, owner, ownertype):
         if owner.attribute_name is None:
-            return owner.current_instance
+            result = owner.current_instance
         else:
-            return owner.current_instance.__dict__[owner.attribute_name]
+            result = owner.current_instance.__dict__[owner.attribute_name]
+        if isinstance(result, Undefined):
+            return result.last
+        else:
+            return result
 
     def __set__(self, owner, value):
         if owner.attribute_name is None:
@@ -65,9 +62,18 @@ class Attribute(object):
         else:
             owner.current_instance.__dict__[owner.attribute_name] = value
 
+class AttributeUndefined(object):
+    def __get__(self, owner, ownertype):
+        if owner.attribute_name is None:
+            result = owner.current_instance
+        else:
+            result = owner.current_instance.__dict__[owner.attribute_name]
+        return isinstance(result, Undefined)
+
 
 class ReadMixin(object):
     attribute = Attribute()
+    undefined = AttributeUndefined()
     reset_representation = None
 
     def __init__(self, attribute_name=None):
@@ -83,32 +89,31 @@ class ReadMixin(object):
             return False
         else:
             self.current_instance = instance
-            if self.attribute is None:
-                #print "The attribute corresponding to the attribute_name '%s' is None." % self.attribute_name
-                result = True
-            else:
-                result = self.applicable_attribute()
-                #print "The field-specific code for attribute_name '%s' said %s." % (self.attribute_name, result)
+            return self.applicable_attribute()
             del self.current_instance
-            return result
 
     def applicable_attribute(self):
         return True
 
     def read(self):
         if self.get_active():
-            self.write_to_widget(self.convert_to_representation_wrap(self.read_from_instance(self.instance)), True)
+            self.write_to_widget(self.convert_to_representation(self.read_from_instance(self.instance)), True)
+            self.set_sensitive(not self.undefined_from_instance(self.instance))
 
     def read_multiplex(self):
         if self.get_active():
-            common = self.convert_to_representation_wrap(self.read_from_instance(self.instances[0]))
+            first = self.convert_to_representation(self.read_from_instance(self.instances[0]))
+            first_undefined = self.undefined_from_instance(self.instances[0])
             for instance in self.instances[1:]:
-                if common != self.convert_to_representation_wrap(self.read_from_instance(instance)):
+                next = self.convert_to_representation(self.read_from_instance(self.instances[0]))
+                next_undefined = self.undefined_from_instance(self.instances[0])
+                if first != next or first_undefined != next_undefined:
                     self.set_ambiguous_capability(True)
                     self.write_to_widget(ambiguous, True)
                     return
+            self.set_sensitive(not first_undefined)
             self.set_ambiguous_capability(False)
-            self.write_to_widget(common, True)
+            self.write_to_widget(first, True)
 
     def write(self):
         pass
@@ -127,7 +132,6 @@ class ReadMixin(object):
 
     def read_from_instance(self, instance):
         self.current_instance = instance
-        if self.attribute is None: return None
         result = self.read_from_attribute()
         del self.current_instance
         return result
@@ -135,11 +139,11 @@ class ReadMixin(object):
     def read_from_attribute(self):
         return self.attribute
 
-    def convert_to_representation_wrap(self, value):
-        if value is None:
-            return insensitive
-        else:
-            return self.convert_to_representation(value)
+    def undefined_from_instance(self, instance):
+        self.current_instance = instance
+        result = self.undefined
+        del self.current_instance
+        return result
 
     def convert_to_representation(self, value):
         return value
@@ -158,8 +162,6 @@ class EditMixin(ReadMixin):
 
         # stores the representation read from the instance attribute
         self.original_representation = None
-        # stores the representation when the field is made insensitive
-        self.old_representation = ambiguous
 
         self.bu_popup = None
         self.popup = None
@@ -190,15 +192,25 @@ class EditMixin(ReadMixin):
     def write(self):
         if self.get_active() and self.changed():
             representation = self.read_from_widget()
-            self.write_to_instance(self.convert_to_value_wrap(representation), self.instance)
-            if self.history_name is not None:
-                context.application.configuration.add_to_history(self.history_name, representation)
+            if self.get_sensitive():
+                if self.history_name is not None:
+                    context.application.configuration.add_to_history(self.history_name, representation)
+                value = self.convert_to_value(representation)
+            else:
+                value = Undefined(self.convert_to_value(representation))
+            self.write_to_instance(value, self.instance)
 
     def write_multiplex(self):
         if self.get_active() and self.changed():
             representation = self.read_from_widget()
+            if self.get_sensitive():
+                if self.history_name is not None:
+                    context.application.configuration.add_to_history(self.history_name, representation)
+                value = self.convert_to_value(representation)
+            else:
+                value = Undefined(self.convert_to_value(representation))
             for instance in self.instances:
-                self.write_to_instance(self.convert_to_value_wrap(representation), instance)
+                self.write_to_instance(value, instance)
 
     def changed_names(self):
         if self.get_active() and self.changed():
@@ -207,8 +219,6 @@ class EditMixin(ReadMixin):
             return []
 
     def write_to_widget(self, representation, original=False):
-        if self.bu_popup is not None:
-            self.bu_popup.set_sensitive(representation != insensitive)
         if original:
             self.original_representation = representation
         self.update_label()
@@ -217,12 +227,6 @@ class EditMixin(ReadMixin):
         # This shoud just return the values from the widgets without any
         # conversion.
         raise NotImplementedError
-
-    def convert_to_value_wrap(self, representation):
-        if representation is insensitive:
-            return None
-        else:
-            return self.convert_to_value(representation)
 
     def convert_to_value(self, representation):
         # This should convert a representation in a value
@@ -242,7 +246,7 @@ class EditMixin(ReadMixin):
         return not (
             representation == self.original_representation or
             representation == ambiguous or
-            representation == insensitive
+            not self.get_sensitive()
         )
 
     def on_widget_changed(self, widget):
@@ -264,17 +268,6 @@ class EditMixin(ReadMixin):
         if self.get_active():
             if self.bu_popup is not None:
                 self.bu_popup.set_sensitive(sensitive)
-            if sensitive:
-                if self.read_from_widget() == insensitive:
-                    self.write_to_widget(self.old_representation)
-            else:
-                old_representation = self.read_from_widget()
-                if old_representation != insensitive:
-                    self.old_representation = old_representation
-                self.write_to_widget(insensitive)
-
-    def get_sensitive(self):
-        return (self.read_from_widget() != insensitive)
 
 
 class InvalidField(Exception):
