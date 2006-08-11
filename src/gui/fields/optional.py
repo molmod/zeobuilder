@@ -56,13 +56,11 @@ class Optional(Single):
 
     def create_widgets(self):
         Single.create_widgets(self)
-        self.old_representation = ambiguous
-        self.slave.create_widgets()
-        self.slave.write_to_widget(ambiguous)
+        self.high_widget = self.slave.high_widget
         self.check_button = gtk.CheckButton()
         self.check_button.connect("toggled", self.check_button_toggled)
-        if self.slave.label is not None:
-            self.check_button.add(self.slave.label)
+        if self.slave.label_text is not None:
+            self.check_button.add(gtk.Label(self.slave.label_text))
 
     def destroy_widgets(self):
         if self.check_button is not None:
@@ -72,17 +70,18 @@ class Optional(Single):
         Single.destroy_widgets(self)
 
     def get_widgets_separate(self):
-        return self.check_button, self.slave.data_widget, self.slave.bu_popup
+        label, data_widget, bu_popup = self.slave.get_widgets_separate()
+        return self.check_button, data_widget, bu_popup
 
     def read(self):
         if self.get_active():
             self.slave.read()
-            self.check_button.set_active(self.slave.read_from_widget() != insensitive)
+            self.check_button.set_active(self.slave.get_sensitive())
 
     def read_multiplex(self):
         if self.get_active():
             self.slave.read_multiplex()
-            self.check_button.set_active(self.slave.read_from_widget() != insensitive)
+            self.check_button.set_active(self.slave.get_sensitive())
 
     def write(self):
         if self.get_active():
@@ -100,11 +99,11 @@ class Optional(Single):
         self.slave.grab_focus()
 
     def check_button_toggled(self, check_button):
-        if check_button.get_active():
-            if self.slave.read_from_widget() == insensitive:
-                self.slave.write_to_widget(self.old_representation)
-        else:
-            old_representation = self.slave.read_from_widget()
-            if old_representation != insensitive:
-                self.old_representation = old_representation
-            self.slave.write_to_widget(insensitive)
+        self.slave.set_sensitive(check_button.get_active())
+
+    def get_sensitive(self):
+        return self.slave.get_sensitive()
+
+    def set_sensitive(self, sensitive):
+        self.check_button.set_sensitive(sensitive)
+        self.slave.set_sensitive(sensitive)

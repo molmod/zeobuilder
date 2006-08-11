@@ -112,9 +112,9 @@ class Single(object):
                 hbox.set_spacing(6)
                 hbox.pack_start(label, True, True)
                 hbox.pack_start(bu_popup, False, False)
-                container.pack_start(hbox)
+                container.pack_start(hbox, False, False)
             elif label is not None:
-                container.pack_start(label, True, False)
+                container.pack_start(label, False, False)
             elif bu_popup is not None:
                 container.pack_start(bu_popup, False, False)
             hbox = gtk.HBox()
@@ -122,7 +122,7 @@ class Single(object):
             l.set_size_request(18, 1)
             hbox.pack_start(l, False, False)
             hbox.pack_start(data_widget, True, True)
-            container.pack_start(hbox)
+            container.pack_start(hbox, False, False)
         self.container = container
         self.container.set_border_width(6)
         return container
@@ -155,6 +155,16 @@ class Single(object):
 
     def grab_focus(self):
         self.data_widget.grab_focus()
+
+    def get_sensitive(self):
+        return self.data_widget.get_property("sensitive")
+
+    def set_sensitive(self, sensitive):
+        if self.get_active():
+            if self.label is not None:
+                self.label.set_sensitive(sensitive)
+            self.data_widget.set_sensitive(sensitive)
+
 
 
 class Multiple(Single):
@@ -196,3 +206,18 @@ class Multiple(Single):
 
     def grab_focus(self):
         self.fields[0].grab_focus()
+
+    def get_sensitive(self):
+        if self.get_active():
+            for field in self.fields:
+                if field.get_sensitive():
+                    return True
+            return False
+
+    def set_sensitive(self, sensitive):
+        Single.set_sensitive(self, sensitive)
+        if self.get_active():
+            for field in self.fields:
+                field.set_sensitive(sensitive)
+
+

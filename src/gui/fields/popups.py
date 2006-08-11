@@ -111,12 +111,12 @@ class Default(Base):
 
     def fill_menu(self):
         from mixin import insensitive, ambiguous
-        if self.field.original != insensitive:
+        if self.field.original_representation != insensitive:
             self.add_item(
-                "Revert to '%s'" % str(self.field.original),
+                "Revert to '%s'" % str(self.field.original_representation),
                 gtk.STOCK_UNDO,
                 self.write_to_widget,
-                self.field.original,
+                self.field.original_representation,
             )
         if self.field.reset_representation is not None:
             self.add_item(
@@ -253,13 +253,13 @@ class Element(Base):
     def fill_menu(self):
         Base.fill_menu(self)
         from mixin import ambiguous
-        if self.field.original == ambiguous:
-            str_original = str(self.field.original)
+        if self.field.original_representation == ambiguous:
+            str_original = str(self.field.original_representation)
         else:
-            str_original = moldata.periodic.symbol[self.field.original]
+            str_original = moldata.periodic.symbol[self.field.original_representation]
         self.add_item(
             "Revert to '%s'" % str_original,
             gtk.STOCK_REFRESH,
             self.write_to_widget,
-            self.field.original
+            self.field.original_representation
         )

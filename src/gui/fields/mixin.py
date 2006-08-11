@@ -156,7 +156,11 @@ class EditMixin(ReadMixin):
         self.show_popup = show_popup
         self.history_name = history_name
 
-        self.original = None
+        # stores the representation read from the instance attribute
+        self.original_representation = None
+        # stores the representation when the field is made insensitive
+        self.old_representation = ambiguous
+
         self.bu_popup = None
         self.popup = None
 
@@ -205,7 +209,8 @@ class EditMixin(ReadMixin):
     def write_to_widget(self, representation, original=False):
         if self.bu_popup is not None:
             self.bu_popup.set_sensitive(representation != insensitive)
-        if original: self.original = representation
+        if original:
+            self.original_representation = representation
         self.update_label()
 
     def read_from_widget(self):
@@ -234,7 +239,11 @@ class EditMixin(ReadMixin):
 
     def changed(self):
         representation = self.read_from_widget()
-        return representation != self.original and representation != ambiguous
+        return not (
+            representation == self.original_representation or
+            representation == ambiguous or
+            representation == insensitive
+        )
 
     def on_widget_changed(self, widget):
         self.update_label()
@@ -250,6 +259,22 @@ class EditMixin(ReadMixin):
             #print "OFF", self.attribute_name, id(self), self.label_text
             if len(self.label.get_label()) > len(self.label_text):
                 self.label.set_label(self.label_text)
+
+    def set_sensitive(self, sensitive):
+        if self.get_active():
+            if self.bu_popup is not None:
+                self.bu_popup.set_sensitive(sensitive)
+            if sensitive:
+                if self.read_from_widget() == insensitive:
+                    self.write_to_widget(self.old_representation)
+            else:
+                old_representation = self.read_from_widget()
+                if old_representation != insensitive:
+                    self.old_representation = old_representation
+                self.write_to_widget(insensitive)
+
+    def get_sensitive(self):
+        return (self.read_from_widget() != insensitive)
 
 
 class InvalidField(Exception):
@@ -274,16 +299,18 @@ class TableMixin(object):
     def __init__(self, short=True, cols=1):
         self.short = short
         self.cols = cols
-        if not short and len(self.fields) == cols:
+
+    def create_widgets(self):
+        fields_active = sum(field.get_active() for field in self.fields)
+        rows = fields_active / self.cols + (fields_active % self.cols > 0)
+        if rows > 1 or self.short:
+            self.high_widget = True
+        else:
             self.high_widget = False
             for field in self.fields:
                 if field.high_widget:
                     self.high_widget = True
                     break
-
-    def create_widgets(self):
-        fields_active = sum(field.get_active() for field in self.fields)
-        rows = fields_active / self.cols + (fields_active % self.cols > 0)
         table = gtk.Table(rows, self.cols * 3)
         first_radio_button = None
         index = 0
@@ -298,13 +325,18 @@ class TableMixin(object):
             if field.high_widget:
                 if self.short:
                     container = field.get_widgets_short_container()
+                    table.attach(
+                        container, left, right, row, row + 1,
+                        xoptions=gtk.EXPAND|gtk.FILL,
+                        yoptions=gtk.EXPAND|gtk.FILL,
+                    )
                 else:
                     container = field.get_widgets_flat_container()
+                    table.attach(
+                        container, left, right, row, row + 1,
+                        xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
+                    )
                 container.set_border_width(0)
-                table.attach(
-                    container, left, right, row, row + 1,
-                    xoptions=gtk.EXPAND|gtk.FILL, yoptions=0,
-                )
             else:
                 label, data_widget, bu_popup = field.get_widgets_separate()
                 if label is not None:

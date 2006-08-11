@@ -52,6 +52,13 @@ class Edit(Single, EditMixin):
         Single.destroy_widgets(self)
         EditMixin.destroy_widgets(self)
 
+    def get_sensitive(self):
+        return EditMixin.get_sensitive(self)
+
+    def set_sensitive(self, sensitive):
+        EditMixin.set_sensitive(self, sensitive)
+        Single.set_sensitive(self, sensitive)
+
 
 class Faulty(Single, FaultyMixin):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None):
@@ -68,6 +75,13 @@ class Faulty(Single, FaultyMixin):
     def destroy_widgets(self):
         Single.destroy_widgets(self)
         FaultyMixin.destroy_widgets(self)
+
+    def get_sensitive(self):
+        return FaultyMixin.get_sensitive(self)
+
+    def set_sensitive(self, sensitive):
+        FaultyMixin.set_sensitive(self, sensitive)
+        Single.set_sensitive(self, sensitive)
 
 
 class Composed(Multiple, FaultyMixin):
@@ -134,7 +148,7 @@ class Composed(Multiple, FaultyMixin):
         if insensitive in result:
             return insensitive # if one is insensitive, they all are. We know for sure.
         elif ambiguous in result:
-            # if one is ambiguous, we have to test the all to be sure.
+            # if one is ambiguous, we have to test them all to be sure.
             all_ambiguous = True
             for item in result:
                 if item != ambiguous:
@@ -149,6 +163,13 @@ class Composed(Multiple, FaultyMixin):
 
     def convert_to_value(self, representation):
         return tuple(field.convert_to_value(representation[index]) for index, field in enumerate(self.fields))
+
+    def get_sensitive(self):
+        return FaultyMixin.get_sensitive(self)
+
+    def set_sensitive(self, sensitive):
+        FaultyMixin.set_sensitive(self, sensitive)
+        Multiple.set_sensitive(self, sensitive)
 
 
 class Group(Multiple):
