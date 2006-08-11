@@ -50,7 +50,7 @@ class SketchOptions(GladeWrapper):
             label_text="Filter expression",
             attribute_name="erase_filter",
             show_popup=True,
-            history_name="selection_filters",
+            history_name="filter",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )

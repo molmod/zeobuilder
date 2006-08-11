@@ -149,7 +149,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
                     label_text="Filter expression",
                     attribute_name="expression",
                     show_popup=True,
-                    history_name="selection_filters",
+                    history_name="filter",
                 )
             ],
             label_text="Selection rules"
@@ -300,7 +300,7 @@ class EditSelectionFilter(Immediate):
                 label_text="Filter expression",
                 attribute_name="filter_expression",
                 show_popup=True,
-                history_name="selection_filters",
+                history_name="filter",
             )
         ]),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
