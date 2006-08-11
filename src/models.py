@@ -24,7 +24,7 @@ from zeobuilder.filters import FilterError
 from zeobuilder.plugins import PluginNotFoundError
 from zeobuilder import context
 
-import gzip, bz2, gobject
+import gzip, bz2, gobject, os
 
 
 __all__ = ["Model", "FilenameError"]
@@ -122,6 +122,9 @@ class Model(gobject.GObject):
         self.set_universe(universe)
         self.folder = folder
         self.filename = filename
+        if not os.path.isabs(self.filename):
+            self.filename = os.path.join(os.getcwd(), self.filename)
+        self.filename = os.path.normpath(os.path.realpath(self.filename))
         self.emit("file-opened")
 
     def file_save(self, filename=None, nodes=None):

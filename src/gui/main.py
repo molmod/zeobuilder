@@ -49,6 +49,7 @@ class Main(GladeWrapper):
         # add model gui:
         self.init_tree_view()
         self.init_drawing_area()
+        #self.update_window_title()
 
     def init_tree_view(self):
         self.filter_active = False
@@ -85,14 +86,17 @@ class Main(GladeWrapper):
 
     # internal functions
     def update_window_title(self):
-        temp = "%s %s: " % (context.title, context.version)
         filename = context.application.model.filename
         if filename is None:
-            temp = temp + "(no file)"
+            temp = "Unsaved Model"
         else:
-            temp = temp + "[%s]" % filename
+            dirname = os.path.dirname(filename)
+            homedirname = os.path.expanduser("~")
+            dirname = dirname.replace(homedirname, "~")
+            temp = "%s (%s)" % (os.path.basename(filename), dirname)
         if context.application.action_manager.model_changed():
-            temp = temp + " *"
+            temp = "*" + temp
+        temp = temp + " - " + context.title
         self.window.set_title(temp)
 
     def file_close_check(self):
