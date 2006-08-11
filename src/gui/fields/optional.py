@@ -32,7 +32,7 @@ class Optional(Single):
         Single.__init__(self)
         self.slave = slave
         slave.parent = self
-        self.check_button = None
+        self.toggle_button = None
 
     def init_widgets(self, instance):
         self.slave.init_widgets(instance)
@@ -57,31 +57,30 @@ class Optional(Single):
     def create_widgets(self):
         Single.create_widgets(self)
         self.high_widget = self.slave.high_widget
-        self.check_button = gtk.CheckButton()
-        self.check_button.connect("toggled", self.check_button_toggled)
+        self.toggle_button.connect("toggled", self.toggle_button_toggled)
         if self.slave.label_text is not None:
-            self.check_button.add(gtk.Label(self.slave.label_text))
+            self.toggle_button.add(gtk.Label(self.slave.label_text))
 
     def destroy_widgets(self):
-        if self.check_button is not None:
-            self.check_button.destroy()
-            self.check_button = None
+        if self.toggle_button is not None:
+            self.toggle_button.destroy()
+            self.toggle_button = None
         self.slave.destroy_widgets()
         Single.destroy_widgets(self)
 
     def get_widgets_separate(self):
         label, data_widget, bu_popup = self.slave.get_widgets_separate()
-        return self.check_button, data_widget, bu_popup
+        return self.toggle_button, data_widget, bu_popup
 
     def read(self):
         if self.get_active():
             self.slave.read()
-            self.check_button.set_active(self.slave.get_sensitive())
+            self.toggle_button.set_active(self.slave.get_sensitive())
 
     def read_multiplex(self):
         if self.get_active():
             self.slave.read_multiplex()
-            self.check_button.set_active(self.slave.get_sensitive())
+            self.toggle_button.set_active(self.slave.get_sensitive())
 
     def write(self):
         if self.get_active():
@@ -98,12 +97,19 @@ class Optional(Single):
     def grab_focus(self):
         self.slave.grab_focus()
 
-    def check_button_toggled(self, check_button):
-        self.slave.set_sensitive(check_button.get_active())
+    def toggle_button_toggled(self, toggle_button):
+        self.slave.set_sensitive(toggle_button.get_active())
 
     def get_sensitive(self):
         return self.slave.get_sensitive()
 
     def set_sensitive(self, sensitive):
-        self.check_button.set_sensitive(sensitive)
+        self.toggle_button.set_sensitive(sensitive)
         self.slave.set_sensitive(sensitive)
+
+
+class CheckOptional(Optional):
+    def create_widgets(self):
+        self.toggle_button = gtk.CheckButton()
+        Optional.create_widgets(self)
+

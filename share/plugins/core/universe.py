@@ -489,7 +489,7 @@ class UnitCellToCluster(ImmediateWithMemory):
         "Unit cell to cluster",
         fields.group.Table(
             fields=[
-                fields.optional.Optional(
+                fields.optional.CheckOptional(
                     fields.composed.ComposedArray(
                         FieldClass=fields.faulty.Float,
                         array_name=(ridge+".%s"),

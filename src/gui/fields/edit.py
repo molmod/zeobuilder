@@ -353,7 +353,7 @@ class TextView(Edit):
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_shadow_type(gtk.SHADOW_IN)
         scrolled_window.set_shadow_type(gtk.SHADOW_IN)
-        scrolled_window.set_size_request(350, 250)
+        scrolled_window.set_size_request(250, 100)
         scrolled_window.add(self.text_view)
         self.data_widget = scrolled_window
 
