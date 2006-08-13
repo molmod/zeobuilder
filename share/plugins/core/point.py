@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
@@ -59,10 +59,10 @@ class Point(GLGeometricBase, ColorMixin):
         self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
 
-    published_properties = PublishedProperties({
-        "spike_length": Property(0.3, lambda self: self.spike_length, set_spike_length),
-        "spike_thickness": Property(0.1, lambda self: self.spike_thickness, set_spike_thickness),
-    })
+    properties = [
+        Property("spike_length", 0.3, lambda self: self.spike_length, set_spike_length),
+        Property("spike_thickness", 0.1, lambda self: self.spike_thickness, set_spike_thickness),
+    ]
 
     #
     # Dialog fields (see action EditProperties)

@@ -250,7 +250,7 @@ class SeparateFrame(Immediate):
         primitive.Add(frame, victim.parent, index=victim.get_index())
         primitive.Transform(frame, victim.transformation)
         primitive.Move(victim, frame)
-        primitive.SetPublishedProperty(victim, "transformation", victim.Transformation())
+        primitive.SetProperty(victim, "transformation", victim.Transformation())
 
 
 class SwapVector(Immediate):
@@ -271,7 +271,7 @@ class SwapVector(Immediate):
 
     def do(self):
         for vector in context.application.cache.nodes:
-            primitive.SetPublishedProperty(vector, "targets", reversed(vector.get_targets()))
+            primitive.SetProperty(vector, "targets", reversed(vector.get_targets()))
 
 
 actions = {

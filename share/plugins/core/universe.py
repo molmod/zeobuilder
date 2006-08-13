@@ -23,7 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
+from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.nodes.elementary import GLContainerBase, GLReferentBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.parent_mixin import ReferentMixin
@@ -91,13 +91,13 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     # Properties
     #
 
-    published_properties = PublishedProperties({
+    properties = [
         # The columns of the cell are the vectors that correspond
         # to the ridges of the parallellepipedum that describe the unit cell. In
         # other words this matrix transforms a unit cube to the unit cell.
-        "cell": Property(numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, set_cell),
-        "cell_active": Property(numpy.array([False, False, False]), lambda self: self.cell_active, set_cell_active),
-    })
+        Property("cell", numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, set_cell),
+        Property("cell_active", numpy.array([False, False, False]), lambda self: self.cell_active, set_cell_active),
+    ]
 
     #
     # Dialog fields (see action EditProperties)
@@ -211,11 +211,11 @@ class Universe(GLPeriodicContainer, FrameAxes):
         self.invalidate_box_list()
         self.update_clip_planes()
 
-    published_properties = PublishedProperties({
-        "repetitions": Property(numpy.array([1, 1, 1], int), lambda self: self.repetitions, set_repetitions),
-        "box_visible": Property(True, lambda self: self.box_visible, set_box_visible),
-        "clipping": Property(False, lambda self: self.clipping, set_clipping),
-    })
+    properties = [
+        Property("repetitions", numpy.array([1, 1, 1], int), lambda self: self.repetitions, set_repetitions),
+        Property("box_visible", True, lambda self: self.box_visible, set_box_visible),
+        Property("clipping", False, lambda self: self.clipping, set_clipping),
+    ]
 
     #
     # Dialog fields (see action EditProperties)
@@ -626,7 +626,7 @@ class UnitCellToCluster(ImmediateWithMemory):
 
             tmp_active = universe.cell_active.copy()
             tmp_active[axis] = False
-            primitive.SetPublishedProperty(universe, "cell_active", tmp_active)
+            primitive.SetProperty(universe, "cell_active", tmp_active)
 
             # add the new nodes
 
@@ -796,8 +796,8 @@ class SuperCell(ImmediateWithMemory):
         # multiply the cell matrix and reset the number of repetitions
 
         new_matrix = universe.cell * repetitions
-        primitive.SetPublishedProperty(universe, "cell", new_matrix)
-        primitive.SetPublishedProperty(universe, "repetitions", numpy.array([1, 1, 1], int))
+        primitive.SetProperty(universe, "cell", new_matrix)
+        primitive.SetProperty(universe, "repetitions", numpy.array([1, 1, 1], int))
 
         # add the new nodes
 
@@ -841,8 +841,8 @@ class AddPeriodicities(Immediate):
                 raise UserError("Failed to add the selected vector as cell vector since it would make the unit cell singular.")
             else:
                 raise UserError("Failed to add the selected vectors as cell vectors since they would make the unit cell singular.")
-        primitive.SetPublishedProperty(universe, "cell", new_unit_cell.cell)
-        primitive.SetPublishedProperty(universe, "cell_active", new_unit_cell.cell_active)
+        primitive.SetProperty(universe, "cell", new_unit_cell.cell)
+        primitive.SetProperty(universe, "cell_active", new_unit_cell.cell_active)
 
 
 

@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate, ImmediateWithMemory
 from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.model_object import ModelObjectInfo
@@ -64,10 +64,10 @@ class Bond(Vector):
         self.bond_type = bond_type
         self.invalidate_draw_list()
 
-    published_properties = PublishedProperties({
-        "quality": Property(15, lambda self: self.quality, set_quality),
-        "bond_type": Property(BOND_SINGLE, lambda self: self.bond_type, set_bond_type)
-    })
+    properties = [
+        Property("quality", 15, lambda self: self.quality, set_quality),
+        Property("bond_type", BOND_SINGLE, lambda self: self.bond_type, set_bond_type)
+    ]
 
     #
     # Dialog fields (see action EditProperties)

@@ -25,44 +25,74 @@ import gobject
 import copy
 
 
-__all__ = ["NodeClass", "Property", "PublishedProperties", "DialogFieldInfo"]
+__all__ = ["NodeClass", "Property", "DialogFieldInfo"]
 
 
 class NodeClass(gobject.GObjectMeta):
     def __init__(cls, name, bases, dict):
-        type.__init__(name, bases, dict)
-        # create an attribute published_properties if it doesn't exist yet
-        if "published_properties" not in dict:
-            cls.published_properties = PublishedProperties()
-        for pname, published_property in cls.published_properties.iteritems():
-            if published_property.signal:
-                # create a signal only when explicitly mentioned in the class
-                # itself (and not when it is inherited).
-                signal_name = ("on-%s-changed" % pname).replace("_", "-")
-                published_property.signal_name = signal_name
+        gobject.GObjectMeta.__init__(cls, name, bases, dict)
+
+        # merge all the properties from the base classes
+        properties = []
+        properties_by_name = {}
+        for base in bases + (cls,):
+            if hasattr(base, "properties"):
+                for p in base.properties:
+                    existing_p = properties_by_name.get(p.name)
+                    if existing_p is None:
+                        tmp = copy.copy(p)
+                        properties.append(tmp)
+                        properties_by_name[p.name] = tmp
+                    else:
+                        if existing_p.default is not None:
+                            p.default = existing_p.default
+                        if existing_p.fset is not None:
+                            p.fset = existing_p.fset
+                        if existing_p.fget is not None:
+                            p.fget = existing_p.fget
+        for p in properties:
+            p.signal = False
+            p.signal_name = None
+        if "properties" in dict:
+            for p in cls.properties:
+                properties_by_name[p.name].signal = p.signal
+        cls.properties = properties
+        cls.properties_by_name = properties_by_name
+
+        # create signals
+        for p in cls.properties:
+            if p.signal:
+                # a signal is only created when explicitly mentioned in the
+                # class itself (and not when it is inherited).
+                p.signal_name = ("on-%s-changed" % p.name).replace("_", "-")
                 # avoid signals to be created twice. This happes when a plugin
-                # is loaded twice. (for example in the unit tests)
-                if gobject.signal_lookup(signal_name, cls) == 0:
-                    gobject.signal_new(signal_name, cls, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
-        # inherit all the properties from the base classes
-        for base in bases:
-            if hasattr(base, "published_properties"):
-                for name, published_property in base.published_properties.iteritems():
-                   cls.published_properties[name] = copy.copy(published_property)
+                # is loaded twice. (for example in the unittests)
+                if gobject.signal_lookup(p.signal_name, cls) == 0:
+                    gobject.signal_new(p.signal_name, cls, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+
         # assign the derived default, get and set functions
-        for published_property in cls.published_properties.itervalues():
-           if callable(published_property.default) and published_property.default.__name__ in dict:
-               published_property.set_default(dict[published_property.default.__name__])
-           if published_property.get.__name__ in dict:
-               published_property.get = dict[published_property.get.__name__]
-           if published_property.set is not None and published_property.set.__name__ in dict:
-               published_property.set = dict[published_property.set.__name__]
+        for p in cls.properties:
+            # default
+            if p.fdefault is not None:
+                derived_fdefault = dict.get(p.fdefault.__name__)
+                if derived_fdefault is not None:
+                    p.fdefault = derived_fdefault
+            # get
+            derived_fget = dict.get(p.fget.__name__)
+            if derived_fget is not None:
+                p.fget = derived_fget
+            # set
+            derived_fset = dict.get(p.fset.__name__)
+            if derived_fset is not None:
+                p.fset = derived_fset
+
         # merge the edit fields with those from the ancestors
         if not hasattr(cls, "dialog_fields"):
             cls.dialog_fields = set([])
         for base in bases:
             if hasattr(base, "dialog_fields"):
                 cls.dialog_fields |= base.dialog_fields
+
         # create a nodeinfo if needed
         if not hasattr(cls, "info"):
             from node import NodeInfo
@@ -77,39 +107,29 @@ class NodeClass(gobject.GObjectMeta):
 
 
 class Property(object):
-    def __init__(self, default, get, set, signal=False):
-        self.set_default(default)
-        self.get = get
-        if signal:
-            self.set_function = set
-            self.set = self.set_wrapper
+    def __init__(self, name, default, fget, fset, signal=False):
+        self.name = name
+        if callable(default):
+            self.fdefault = default
+            self.vdefault = None
         else:
-            self.set = set
+            self.fdefault = None
+            self.vdefault = default
+        self.fget = fget
+        self.fset = fset
         self.signal = signal
-        self.signal_name = None
 
-    def set_wrapper(self, node, value):
-        node.emit(self.signal_name)
-        self.set_function(node, value)
-
-    def set_default(self, default):
-        self.default = default
-        if callable(self.default):
-            self.get_default = self.get_default_callable
+    def default(self, node):
+        if self.fdefault is None:
+            return copy.deepcopy(self.vdefault)
         else:
-            self.get_default = self.get_default_variable
+            return self.fdefault(node)
 
-    def get_default_callable(self, object):
-        return self.default(object)
+    def get(self, node):
+        return self.fget(node)
 
-    def get_default_variable(self, object):
-        return copy.deepcopy(self.default)
+    def set(self, node, value):
+        if self.signal:
+            node.emit(self.signal_name)
+        self.fset(node, value)
 
-
-class PublishedProperties(dict):
-    def get_name_value_dict(self, node):
-        return dict(
-            (name, published_property.get(node))
-            for name, published_property
-            in self.iteritems()
-        )

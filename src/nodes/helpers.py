@@ -20,7 +20,7 @@
 # --
 
 
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
+from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
@@ -81,11 +81,11 @@ class FrameAxes(object):
         self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
 
-    published_properties = PublishedProperties({
-        "axis_thickness": Property(0.08, lambda self: self.axis_thickness, set_axis_thickness),
-        "axis_length": Property(1.0, lambda self: self.axis_length, set_axis_length),
-        "axes_visible": Property(True, lambda self: self.axes_visible, set_axes_visible)
-    })
+    properties = [
+        Property("axis_thickness", 0.08, lambda self: self.axis_thickness, set_axis_thickness),
+        Property("axis_length", 1.0, lambda self: self.axis_length, set_axis_length),
+        Property("axes_visible", True, lambda self: self.axes_visible, set_axes_visible)
+    ]
 
     #
     # Dialog fields (see action EditProperties)

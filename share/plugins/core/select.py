@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, Interactive, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.parent_mixin import ParentMixin
 from zeobuilder.nodes.elementary import ReferentBase
 from zeobuilder.nodes.model_object import ModelObjectInfo

@@ -63,7 +63,7 @@ class TransformationReset(Immediate):
 
     def do(self):
         for node in context.application.cache.transformed_nodes:
-            primitive.SetPublishedProperty(node, "transformation", node.Transformation())
+            primitive.SetProperty(node, "transformation", node.Transformation())
 
 
 class TransformationInvert(Immediate):
@@ -363,7 +363,7 @@ class RoundRotation(Immediate):
         if user_record.quaternion is not None:
             new_transformation = copy.deepcopy(victim.transformation)
             new_transformation.r = factor * quaternion_to_rotation_matrix(user_record.quaternion)
-            primitive.SetPublishedProperty(victim, "transformation", new_transformation)
+            primitive.SetProperty(victim, "transformation", new_transformation)
 
 
 #
@@ -517,7 +517,7 @@ class RotateObjectBase(InteractiveWithMemory):
         if self.changed:
             self.parameters.transformation = copy.deepcopy(self.victim.transformation)
             self.parameters.transformation.apply_inverse_before(self.old_transformation)
-            primitive.SetPublishedProperty(self.victim, "transformation",
+            primitive.SetProperty(self.victim, "transformation",
                                            self.old_transformation, done=True)
         InteractiveWithMemory.finish(self)
 
@@ -690,7 +690,7 @@ class TranslateObjectBase(InteractiveWithMemory):
         if self.changed:
             self.parameters.transformation = copy.deepcopy(self.victim.transformation)
             self.parameters.transformation.apply_inverse_before(self.old_transformation)
-            primitive.SetPublishedProperty(self.victim, "transformation", self.old_transformation, done=True)
+            primitive.SetProperty(self.victim, "transformation", self.old_transformation, done=True)
         InteractiveWithMemory.finish(self)
 
     def immediate_do(self):

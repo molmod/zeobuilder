@@ -23,7 +23,7 @@
 from zeobuilder import context
 
 from zeobuilder.nodes.node import Node, NodeInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import bridge as tree_bridge
 from zeobuilder.gui import load_image

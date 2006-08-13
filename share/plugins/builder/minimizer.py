@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
 from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, CancelException
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.color_mixin import ColorMixin
@@ -65,10 +65,10 @@ class Minimizer(Vector, ColorMixin):
         self.quality = quality
         self.invalidate_draw_list()
 
-    published_properties = PublishedProperties({
-        "radius": Property(0.5, lambda self: self.radius, set_radius),
-        "quality": Property(15, lambda self: self.quality, set_quality),
-    })
+    properties = [
+        Property("radius", 0.5, lambda self: self.radius, set_radius),
+        Property("quality", 15, lambda self: self.quality, set_quality),
+    ]
 
     #
     # Dialog fields (see action EditProperties)
@@ -359,7 +359,7 @@ class MinimizeDistances(ImmediateWithMemory):
             raise CancelException
 
         for frame, transformation in old_transformations:
-            primitive.SetPublishedProperty(
+            primitive.SetProperty(
                 frame, "transformation", transformation, done=True,
             )
 

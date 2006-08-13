@@ -23,7 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.abstract import ConnectBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.nodes.vector import Vector
@@ -68,13 +68,13 @@ class Arrow(Vector, ColorMixin):
         self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
 
-    published_properties = PublishedProperties({
-        "radius": Property(0.15, lambda self: self.radius, set_radius),
-        "quality": Property(15, lambda self: self.quality, set_quality),
-        "arrow_length": Property(0.6, lambda self: self.arrow_length, set_arrow_length),
-        "arrow_radius": Property(0.3, lambda self: self.arrow_radius, set_arrow_radius),
-        "arrow_position": Property(0.5, lambda self: self.arrow_position, set_arrow_position)
-    })
+    properties = [
+        Property("radius", 0.15, lambda self: self.radius, set_radius),
+        Property("quality", 15, lambda self: self.quality, set_quality),
+        Property("arrow_length", 0.6, lambda self: self.arrow_length, set_arrow_length),
+        Property("arrow_radius", 0.3, lambda self: self.arrow_radius, set_arrow_radius),
+        Property("arrow_position", 0.5, lambda self: self.arrow_position, set_arrow_position)
+    ]
 
     #
     # Dialog fields (see action EditProperties)

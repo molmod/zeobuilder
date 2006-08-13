@@ -22,7 +22,7 @@
 
 from zeobuilder import context
 from zeobuilder.nodes.helpers import BoundingBox
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
+from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.nodes.analysis import common_parent
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
@@ -63,9 +63,9 @@ class GLMixin(gobject.GObject):
             self.visible = visible
             self.invalidate_total_list()
 
-    published_properties = PublishedProperties({
-        "visible": Property(True, lambda self: self.visible, set_visible)
-    })
+    properties = [
+        Property("visible", True, lambda self: self.visible, set_visible)
+    ]
 
     #
     # Dialog fields (see action EditProperties)
@@ -301,9 +301,9 @@ class GLTransformationMixin(GLMixin):
         self.transformation = transformation
         self.invalidate_transformation_list()
 
-    published_properties = PublishedProperties({
-        "transformation": Property(default_transformation, lambda self: self.transformation, set_transformation)
-    })
+    properties = [
+        Property("transformation", default_transformation, lambda self: self.transformation, set_transformation)
+    ]
 
     #
     # Dialog fields (see action EditProperties)

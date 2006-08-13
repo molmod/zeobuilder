@@ -20,7 +20,7 @@
 # --
 
 
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
+from zeobuilder.nodes.meta import NodeClass, Property
 import zeobuilder.gui.fields as fields
 
 import gtk.gdk, gobject

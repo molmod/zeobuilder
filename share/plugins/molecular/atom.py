@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.color_mixin import UserColorMixin
 from zeobuilder.nodes.model_object import ModelObjectInfo
@@ -83,11 +83,11 @@ class Atom(GLGeometricBase, UserColorMixin):
         self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
 
-    published_properties = PublishedProperties({
-        "user_radius": Property(Undefined(0.5), lambda self: self.user_radius, set_user_radius, signal=True),
-        "quality": Property(15, lambda self: self.quality, set_quality),
-        "number": Property(6, lambda self: self.number, set_number, signal=True),
-    })
+    properties = [
+        Property("user_radius", Undefined(0.5), lambda self: self.user_radius, set_user_radius, signal=True),
+        Property("quality", 15, lambda self: self.quality, set_quality),
+        Property("number", 6, lambda self: self.number, set_number, signal=True),
+    ]
 
     #
     # Dialog fields (see action EditProperties)

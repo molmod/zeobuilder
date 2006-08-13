@@ -20,7 +20,7 @@
 # --
 
 
-from zeobuilder.nodes.meta import NodeClass, PublishedProperties, Property
+from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.undefined import Undefined
 import zeobuilder.gui.fields as fields
@@ -44,9 +44,9 @@ class ColorMixin(gobject.GObject):
         self.color = color
         self.invalidate_draw_list()
 
-    published_properties = PublishedProperties({
-        "color": Property(numpy.array([0.7, 0.7, 0.7, 1.0]), lambda self: self.color, set_color)
-    })
+    properties = [
+        Property("color", numpy.array([0.7, 0.7, 0.7, 1.0]), lambda self: self.color, set_color)
+    ]
 
     #
     # Dialog fields (see action EditProperties)
@@ -80,9 +80,9 @@ class UserColorMixin(gobject.GObject):
         self.user_color = user_color
         self.invalidate_draw_list()
 
-    published_properties = PublishedProperties({
-        "user_color": Property(Undefined(numpy.array([0.7, 0.7, 0.7, 1.0])), lambda self: self.user_color, set_user_color, signal=True)
-    })
+    properties = [
+        Property("user_color", Undefined(numpy.array([0.7, 0.7, 0.7, 1.0])), lambda self: self.user_color, set_user_color, signal=True)
+    ]
 
     #
     # Dialog fields (see action EditProperties)

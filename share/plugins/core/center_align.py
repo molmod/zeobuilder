@@ -153,7 +153,7 @@ class AlignUnitCell(Immediate):
             temp = new_cell[:,0].copy()
             new_cell[:,0] = new_cell[:,1]
             new_cell[:,1] = temp
-            primitive.SetPublishedProperty(universe, "cell", new_cell)
+            primitive.SetProperty(universe, "cell", new_cell)
 
         # then rotate the unit cell box to the normalized frame:
         #   - a parallel x
@@ -169,11 +169,11 @@ class AlignUnitCell(Immediate):
         rotation.r = numpy.array([new_x, new_y, new_z])
         new_cell = numpy.dot(rotation.r, universe.cell)
         universe.cell_active = numpy.array([False, False, False])
-        primitive.SetPublishedProperty(universe, "cell", new_cell)
+        primitive.SetProperty(universe, "cell", new_cell)
         for child in context.application.cache.transformed_children:
             primitive.Transform(child, rotation)
         universe.cell_active = numpy.array([True, True, True])
-        primitive.SetPublishedProperty(universe, "cell", new_cell)
+        primitive.SetProperty(universe, "cell", new_cell)
 
 
 actions = {

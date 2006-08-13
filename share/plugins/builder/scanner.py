@@ -23,7 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import ImmediateWithMemory, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import GLFrameBase, ReferentBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.glmixin import GLTransformationMixin
@@ -41,7 +41,7 @@ from molmod.units import from_angstrom
 
 import gtk, numpy
 
-from weakref import ref
+import weakref
 
 
 class ConscanResults(ReferentBase):
@@ -61,12 +61,27 @@ class ConscanResults(ReferentBase):
     # Properties
     #
 
-    def set_connections(self, connections):
-        self.connections = connections
+    def get_connections(self):
+        return [
+            (quality, transformation, [
+                (node1().get_index(), node2().get_index())
+                for node1, node2 in pairs
+            ]) for quality, transformation, pairs
+            in self.connections
+        ]
 
-    published_properties = PublishedProperties({
-        "connections": Property([], lambda self: self.connections, set_connections),
-    })
+    def set_connections(self, connections):
+        self.connections = [
+            (quality, transformation, [
+                (weakref.ref(self.children[0].target.children[index1]), weakref.ref(self.children[0].target.children[index1]))
+                for index1, index2 in pairs
+            ]) for quality, transformation, pairs
+            in self.connections
+        ]
+
+    properties = [
+        Property("connections", [], get_connections, set_connections),
+    ]
 
 
 class ConscanReportDialog(ChildProcessDialog):
@@ -435,7 +450,7 @@ class ScanForConnections(ImmediateWithMemory):
                 connections=[(
                     connection.quality,
                     connection.transformation, [
-                        (ref(geometry_nodes[0][first]), ref(geometry_nodes[1][second]))
+                        (geometry_nodes[0][first].get_index(), geometry_nodes[1][second].get_index())
                         for first, second in connection.pairs
                     ],
                 ) for connection in connections],

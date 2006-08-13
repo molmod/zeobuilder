@@ -46,11 +46,4 @@ class EditProperties(FieldsDialogMultiplex):
         self.changed_names = set([])
         FieldsDialogMultiplex.run(self, nodes)
 
-    def write(self):
-        FieldsDialogMultiplex.write(self)
-        for name in self.main_field.changed_names():
-            self.changed_names.add(name)
-            for node in self.nodes:
-                published_property = node.published_properties[name]
-                published_property.set(node, published_property.get(node))
 

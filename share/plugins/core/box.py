@@ -23,7 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.color_mixin import ColorMixin
@@ -51,9 +51,9 @@ class Box(GLGeometricBase, ColorMixin):
         self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
 
-    published_properties = PublishedProperties({
-        "size": Property(numpy.array([1.0, 1.0, 1.0]), lambda self: self.size, set_size),
-    })
+    properties = [
+        Property("size", numpy.array([1.0, 1.0, 1.0]), lambda self: self.size, set_size),
+    ]
 
     #
     # Dialog fields (see action EditProperties)

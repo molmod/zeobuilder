@@ -27,7 +27,7 @@ from zeobuilder.nodes.reference import Reference
 
 
 __all__ = ["PrimitiveError", "Add", "SetAttribute", "Delete", "Move",
-           "SetPublishedProperty", "Transform", "SetTarget"]
+           "SetProperty", "Transform", "SetTarget"]
 
 
 class PrimitiveError(Exception):
@@ -163,18 +163,17 @@ class Move(Primitive):
             context.application.main.toggle_selection(self.victim, on=True)
 
 
-class SetPublishedProperty(Primitive):
+class SetProperty(Primitive):
     def __init__(self, victim, name, value, done=False):
         # When using done=True, only call this primitive after the changes
-        # to the published properties were made and pass a deep copy
-        # of the old value
+        # to the properties were made and pass a deep copy of the old value
         self.name = name
-        self.published_property = victim.published_properties[name]
+        self.property = victim.properties_by_name[name]
         if done:
-            self.new_value = self.published_property.get(victim)
+            self.new_value = self.property.get(victim)
             self.old_value = value
             # a trick to let the victim know a property has changed
-            self.published_property.set(victim, self.new_value)
+            self.property.set(victim, self.new_value)
         else:
             self.new_value = value
             self.old_value = None
@@ -183,12 +182,12 @@ class SetPublishedProperty(Primitive):
     def redo(self):
         Primitive.redo(self)
         if self.old_value is None:
-            self.old_value = self.published_property.get(self.victim)
-        self.published_property.set(self.victim, self.new_value)
+            self.old_value = self.property.get(self.victim)
+        self.property.set(self.victim, self.new_value)
 
     def undo(self):
         Primitive.undo(self)
-        self.published_property.set(self.victim, self.old_value)
+        self.property.set(self.victim, self.old_value)
 
 
 class Transform(Primitive):

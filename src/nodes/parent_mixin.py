@@ -19,7 +19,7 @@
 #
 # --
 
-from meta import NodeClass, PublishedProperties, Property
+from meta import NodeClass, Property
 from reference import Reference
 
 __all__ = ["ParentMixin", "ContainerMixin", "ReferentMixin"]
@@ -63,9 +63,9 @@ class ContainerMixin(ParentMixin):
     def set_children(self, children):
         self.children = children
 
-    published_properties = PublishedProperties({
-        "children": Property([], lambda self: self.children, set_children),
-    })
+    properties = [
+        Property("children", [], lambda self: self.children, set_children),
+    ]
 
     #
     # Tree
@@ -132,9 +132,9 @@ class ReferentMixin(ParentMixin):
         for child, target in zip(self.children, targets):
             child.set_target(target)
 
-    published_properties = PublishedProperties({
-        "targets": Property([], get_targets, set_targets),
-    })
+    properties = [
+        Property("targets", [], get_targets, set_targets),
+    ]
 
     #
     # References

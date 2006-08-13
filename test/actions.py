@@ -810,5 +810,10 @@ class BuilderActions(ApplicationTestCase):
             ScanForConnections = context.application.plugins.get_action("ScanForConnections")
             self.assert_(ScanForConnections.analyze_selection(parameters))
             ScanForConnections(parameters)
+
+            context.application.model.file_save("output/tmp.zml")
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.model.file_open("output/tmp.zml")
         self.run_test_application(fn)
 

@@ -20,7 +20,7 @@
 # --
 
 from zeobuilder.nodes.node import Node, NodeInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
@@ -53,7 +53,7 @@ class ModelObject(Node):
         Node.__init__(self)
         # initialisation of non state variables
         self.initnonstate()
-        # further initialize the state (the published properties)
+        # further initialize the state (the properties)
         self.initstate(**initstate)
 
     def __del__(self):
@@ -63,19 +63,16 @@ class ModelObject(Node):
         #print " MIN  => Deleting     " + str(self.__class__) + " (" + str(Node.count) + ") " + hex(id(self))
 
     def __getstate__(self):
-        return self.published_properties.get_name_value_dict(self)
+        return dict((p.name, p.get(self)) for p in self.properties)
 
     def initstate(self, **initstate):
-        # initialisation of published properties
-        for name, published_property in self.published_properties.iteritems():
-            value = initstate.get(name)
+        for p in self.properties:
+            self.__dict__[p.name] = p.default(self)
+        for p in self.properties:
+            value = initstate.get(p.name)
             if value is None:
-                value = published_property.get_default(self)
-            self.__dict__[name] = value
-        for name, published_property in self.published_properties.iteritems():
-            value = self.__dict__[name]
-            self.__dict__[name] = published_property.get_default(self)
-            published_property.set(self, value)
+                value = p.default(self)
+            p.set(self, value)
 
     def initnonstate(self):
         self.references = []
@@ -98,9 +95,9 @@ class ModelObject(Node):
     def set_name(self, name):
         self.name = name
 
-    published_properties = PublishedProperties({
-        "name": Property(default_name, get_name, set_name)
-    })
+    properties = [
+        Property("name", default_name, get_name, set_name)
+    ]
 
     #
     # Dialog fields (see action EditProperties)

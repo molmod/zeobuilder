@@ -23,7 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
@@ -56,10 +56,10 @@ class Sphere(GLGeometricBase, ColorMixin):
         self.quality = quality
         self.invalidate_draw_list()
 
-    published_properties = PublishedProperties({
-        "radius": Property(0.5, lambda self: self.radius, set_radius),
-        "quality": Property(15, lambda self: self.quality, set_quality),
-    })
+    properties = [
+        Property("radius", 0.5, lambda self: self.radius, set_radius),
+        Property("quality", 15, lambda self: self.quality, set_quality),
+    ]
 
     #
     # Dialog fields (see action EditProperties)

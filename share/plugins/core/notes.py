@@ -22,7 +22,7 @@
 
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObject, ModelObjectInfo
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
@@ -40,9 +40,9 @@ class Notes(ModelObject):
     def set_notes(self, notes):
         self.notes = notes
 
-    published_properties = PublishedProperties({
-        "notes": Property(StringIO.StringIO(), lambda self: self.notes, set_notes)
-    })
+    properties = [
+        Property("notes", StringIO.StringIO(), lambda self: self.notes, set_notes)
+    ]
 
     #
     # Dialog fields (see action EditProperties)

@@ -23,7 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.abstract import AddBase
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import PublishedProperties, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import ContainerBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 
