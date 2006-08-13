@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import ImmediateWithMemory, UserError
+from zeobuilder.actions.composed import ImmediateWithMemory, UserError, Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import GLFrameBase, ReferentBase
@@ -29,6 +29,7 @@ from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.reference import Reference
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
+from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.undefined import Undefined
 from zeobuilder.child_process import ChildProcessDialog
 import zeobuilder.actions.primitive as primitive
@@ -45,7 +46,7 @@ import weakref
 
 
 class ConscanResults(ReferentBase):
-    info = ModelObjectInfo("plugins/builder/conscan_results.svg")
+    info = ModelObjectInfo("plugins/builder/conscan_results.svg", "ShowConscanResultsWindow")
 
     #
     # State
@@ -76,12 +77,88 @@ class ConscanResults(ReferentBase):
                 (weakref.ref(self.children[0].target.children[index1]), weakref.ref(self.children[0].target.children[index1]))
                 for index1, index2 in pairs
             ]) for quality, transformation, pairs
-            in self.connections
+            in connections
         ]
 
     properties = [
         Property("connections", [], get_connections, set_connections),
     ]
+
+
+class ShowConscanResultsWindow(Immediate):
+    description = "Show the selected connection scanner results in a window"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:conscan", "Show scan results", order=(0, 4, 1, 6, 1, 1))
+
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        if not isinstance(context.application.cache.node, ConscanResults): return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def do(self):
+        ConscanResultsWindow(context.application.cache.node)
+
+
+class ConscanResultsWindow(GladeWrapper):
+    def __init__(self, conscan_results):
+        self.conscan_results = conscan_results
+
+        GladeWrapper.__init__(self, "plugins/builder/gui.glade", "wi_conscan_results", "window")
+        self.init_callbacks(ConscanResultsWindow)
+        self.init_proxies(["tv_results", "cb_auto_apply", "bu_apply", "bu_apply_opt", "bu_apply_opt_round"])
+
+        self.list_store = gtk.ListStore(float, int, object)
+        for connection in conscan_results.connections:
+            self.list_store.append([connection[0], len(connection[2]), connection])
+
+        column = gtk.TreeViewColumn("Quality")
+        renderer_text = gtk.CellRendererText()
+        column.pack_start(renderer_text, expand=False)
+        column.add_attribute(renderer_text, "text", 0)
+        self.tv_results.append_column(column)
+
+        column = gtk.TreeViewColumn("# Connections")
+        renderer_text = gtk.CellRendererText()
+        column.pack_start(renderer_text, expand=False)
+        column.add_attribute(renderer_text, "text", 1)
+        self.tv_results.append_column(column)
+
+        self.tv_results.set_model(self.list_store)
+
+        self.tree_selection = self.tv_results.get_selection()
+        self.tree_selection.connect("changed", self.on_selection_changed)
+
+    def update_sensitivities(self):
+        model, iter = self.tree_selection.get_selected()
+        if iter is None:
+            self.bu_apply.set_sensitive(False)
+            self.bu_apply_opt.set_sensitive(False)
+            self.bu_apply_opt_round.set_sensitive(False)
+        else:
+            self.bu_apply.set_sensitive(not self.cb_auto_apply.get_active())
+            self.bu_apply_opt.set_sensitive(True)
+            self.bu_apply_opt_round.set_sensitive(True)
+
+    def on_selection_changed(self, selection):
+        self.update_sensitivities()
+        # TODO: Apply the selected connection of auto_apply is set
+        if self.cb_auto_apply.get_active():
+            print "AUTO_APPLY TODO"
+
+    def on_cb_auto_apply_clicked(self, cb_apply):
+        self.update_sensitivities()
+
+    def on_bu_apply_clicked(self, button):
+        print "APPLY TODO"
+
+    def on_bu_apply_opt_clicked(self, button):
+        print "APPLY_OPT TODO"
+
+    def on_bu_apply_opt_round_clicked(self, button):
+        print "APPLY_OPT_ROUND TODO"
 
 
 class ConscanReportDialog(ChildProcessDialog):
@@ -448,7 +525,7 @@ class ScanForConnections(ImmediateWithMemory):
             conscan_results = ConscanResults(
                 targets=[frame1, frame2],
                 connections=[(
-                    connection.quality,
+                    float(connection.quality),
                     connection.transformation, [
                         (geometry_nodes[0][first].get_index(), geometry_nodes[1][second].get_index())
                         for first, second in connection.pairs
@@ -465,4 +542,5 @@ nodes = {
 
 actions = {
     "ScanForConnections": ScanForConnections,
+    "ShowConscanResultsWindow": ShowConscanResultsWindow,
 }
