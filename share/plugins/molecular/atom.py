@@ -146,7 +146,7 @@ class Atom(GLGeometricBase, UserColorMixin):
     #
     # Tools
     #
-    
+
     def num_bonds(self):
         Bond = context.application.plugins.get_node("Bond")
         return sum(isinstance(reference.parent, Bond) for reference in self.references)

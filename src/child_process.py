@@ -92,8 +92,10 @@ class ChildProcessDialog(object):
             del self.connection
 
 
-    def run(self, executable, input_instance):
+    def run(self, executable, input_instance, auto_close):
         self.response_active = False
+        self.auto_close = auto_close
+
         for button in self.buttons:
             button.set_sensitive(False)
 
@@ -174,7 +176,10 @@ class ChildProcessDialog(object):
             )
         else:
             self.handle_done(instance)
-        
+            if self.auto_close:
+                self.dialog.response(gtk.RESPONSE_OK)
+                self.cleanup(kill=False)
+
 
     def on_protocol_error(self, com_thread):
         self.cleanup(kill=True)
@@ -185,6 +190,6 @@ class ChildProcessDialog(object):
 
     def handle_message(self, message):
         pass
-        
+
     def handle_done(self, message):
         pass

@@ -176,7 +176,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         self.init_proxies(["la_num_iter", "la_average_length", "progress_bar"])
         self.state_indices = None
 
-    def run(self, minimize, involved_frames, update_interval, update_steps):
+    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps):
         self.la_num_iter.set_text("0")
         self.la_average_length.set_text(express_measure(0.0, "Length"))
         self.progress_bar.set_fraction(0.0)
@@ -190,7 +190,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         self.last_step = 0
         self.status = None
 
-        result = ChildProcessDialog.run(self, "/usr/bin/iterative", self.minimize)
+        result = ChildProcessDialog.run(self, "/usr/bin/iterative", self.minimize, auto_close)
 
         # just to avoid confusion
         del self.minimize
@@ -312,6 +312,14 @@ class MinimizeDistances(ImmediateWithMemory):
         self.parameters.update_interval = 0.4
         self.parameters.update_steps = 1
 
+    def ask_parameters(self):
+        if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
+            self.parameters.clear()
+            return
+
+        self.parameters.auto_close_report_dialog = False
+
+
     def do(self):
         cache = context.application.cache
         parent = cache.parent
@@ -344,7 +352,7 @@ class MinimizeDistances(ImmediateWithMemory):
             iterative.stop.NoIncrease()
         )
 
-        if self.report_dialog.run(minimize, involved_frames, self.parameters.update_interval, self.parameters.update_steps) != gtk.RESPONSE_OK:
+        if self.report_dialog.run(minimize, self.parameters.auto_close_report_dialog, involved_frames, self.parameters.update_interval, self.parameters.update_steps) != gtk.RESPONSE_OK:
             for frame, transformation in old_transformations:
                 frame.transformation = transformation
                 frame.invalidate_transformation_list()

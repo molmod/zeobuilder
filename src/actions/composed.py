@@ -59,7 +59,7 @@ class UserError(Exception):
             err_msg = err_msg.replace("<", "&lt;")
             err_msg = err_msg.replace(">", "&gt;")
             self.details += err_msg
-        
+
     def show_message(self):
         ok_error(self.message, self.details)
 

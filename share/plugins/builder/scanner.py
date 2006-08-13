@@ -45,7 +45,7 @@ from weakref import ref
 
 
 class ConscanResults(ReferentBase):
-    info = ModelObjectInfo("plugins/builder/conscan_results.svg")    
+    info = ModelObjectInfo("plugins/builder/conscan_results.svg")
 
     #
     # State
@@ -66,8 +66,8 @@ class ConscanResults(ReferentBase):
 
     published_properties = PublishedProperties({
         "connections": Property([], lambda self: self.connections, set_connections),
-    })   
-    
+    })
+
 
 class ConscanReportDialog(ChildProcessDialog):
     def __init__(self, progress_items):
@@ -96,10 +96,10 @@ class ConscanReportDialog(ChildProcessDialog):
             pb.set_text("- / -")
             pb.set_fraction(0.0)
 
-    def run(self, inp):
+    def run(self, inp, auto_close):
         self.clear_gui()
         self.connections = []
-        if ChildProcessDialog.run(self, "/usr/bin/conscan", inp) == gtk.RESPONSE_OK:
+        if ChildProcessDialog.run(self, "/usr/bin/conscan", inp, auto_close) == gtk.RESPONSE_OK:
             result = self.connections
             del self.connections
             return result
@@ -264,7 +264,7 @@ class ScanForConnections(ImmediateWithMemory):
         ]),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
     )
-    
+
     triangle_report_dialog = ConscanReportDialog([
         ("calc_env", "Calculating environments"),
         ("comp_env", "Comparing environments"),
@@ -330,10 +330,11 @@ class ScanForConnections(ImmediateWithMemory):
             self.parameters.clear()
             return
 
+        self.parameters.auto_close_report_dialog = False
+
     def do(self):
         cache = context.application.cache
 
-        # first constructu the geometry objects
         my_globals = context.application.plugins.nodes.copy()
 
         geometry_nodes = [[], []]
@@ -344,7 +345,7 @@ class ScanForConnections(ImmediateWithMemory):
             try:
                 is_connect = eval(filter_expression, my_globals)
             except Exception, e:
-                raise UserError(template % "filter") 
+                raise UserError(template % "filter")
             if is_connect:
                 try:
                     radius = eval(radius_expression, my_globals)
@@ -353,7 +354,7 @@ class ScanForConnections(ImmediateWithMemory):
                 try:
                     amplitude = eval(quality_expression, my_globals)
                 except Exception, e:
-                    raise UserError(template % "quality") 
+                    raise UserError(template % "quality")
                 geometry_nodes[geometry_index].append(node)
                 return True, radius, amplitude
             else:
@@ -368,7 +369,7 @@ class ScanForConnections(ImmediateWithMemory):
                 if isinstance(child, GLTransformationMixin) and \
                    isinstance(child.transformation, Translation):
                     is_connect, radius, amplitude = get_parameters(
-                        child, "connecting", geometry_index, 
+                        child, "connecting", geometry_index,
                         *connect_description
                     )
                     if is_connect:
@@ -378,7 +379,7 @@ class ScanForConnections(ImmediateWithMemory):
                         amplitudes.append(amplitude)
                     else:
                         is_repulse, radius, amplitude = get_parameters(
-                            child, "repulsive", geometry_index, 
+                            child, "repulsive", geometry_index,
                             *repulse_description
                         )
                         if is_repulse:
@@ -392,7 +393,7 @@ class ScanForConnections(ImmediateWithMemory):
                 numpy.array(radii, float),
                 numpy.array(amplitudes, float)
             )
-                
+
         inp = {}
         inp["geometry1"] = read_geometry(cache.nodes[0], 0, self.parameters.connect_description1, self.parameters.repulse_description1)
         if len(cache.nodes) == 2:
@@ -413,12 +414,12 @@ class ScanForConnections(ImmediateWithMemory):
             inp["rotation2"] = self.parameters.rotation2
             inp["distance_error"] = self.parameters.distance_tolerance
             inp["translation_threshold"] = self.parameters.translation_tolerance_b**2
-        
+
         if inp["allow_rotations"]:
-            connections = self.triangle_report_dialog.run(inp)
+            connections = self.triangle_report_dialog.run(inp, self.parameters.auto_close_report_dialog)
         else:
-            connections = self.pair_report_dialog.run(inp)
-        
+            connections = self.pair_report_dialog.run(inp, self.parameters.auto_close_report_dialog)
+
         if connections is not None and len(connections) > 0:
             if len(cache.nodes) == 1:
                 frame1 = cache.nodes[0]
@@ -428,7 +429,7 @@ class ScanForConnections(ImmediateWithMemory):
                 geometry_nodes[1] = geometry_nodes[0]
             else:
                 frame1, frame2 = cache.nodes
-        
+
             conscan_results = ConscanResults(
                 targets=[frame1, frame2],
                 connections=[(

@@ -776,9 +776,12 @@ class BuilderActions(ApplicationTestCase):
         def fn():
             context.application.model.file_open("input/minimizers.zml")
             context.application.main.select_nodes(context.application.model.universe.children[2:])
+
             parameters = Parameters()
             parameters.update_interval = 0.4
             parameters.update_steps = 1
+            parameters.auto_close_report_dialog = True
+
             MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
             self.assert_(MinimizeDistances.analyze_selection(parameters))
             MinimizeDistances(parameters)
@@ -802,18 +805,10 @@ class BuilderActions(ApplicationTestCase):
             parameters.rotation2 = Undefined()
             parameters.distance_tolerance = Undefined()
             parameters.translation_tolerance_b = Undefined()
+            parameters.auto_close_report_dialog = True
 
             ScanForConnections = context.application.plugins.get_action("ScanForConnections")
             self.assert_(ScanForConnections.analyze_selection(parameters))
             ScanForConnections(parameters)
         self.run_test_application(fn)
-
-    #def test_planar_scan_for_connections(self):
-    #    from zeobuilder.actions.composed.scan import PlanarScanForConnections
-    #    self.load_file("two_precursors.zml")
-    #    self.set_input_nodes([self.application.model.root[0].children[0],
-    #                              self.application.model.root[0].children[1]])
-    #    self.assert_(PlanarScanForConnections.analyse_nodes())
-    #    PlanarScanForConnections()
-
 
