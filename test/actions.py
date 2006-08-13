@@ -24,9 +24,11 @@ from application_test_case import ApplicationTestCase
 
 from zeobuilder import context
 from zeobuilder.actions.composed import Parameters
+from zeobuilder.undefined import Undefined
 
 from molmod.transformations import Rotation, Translation, Complete
 from molmod.data import BOND_SINGLE
+from molmod.units import from_angstrom
 
 import gtk, numpy
 
@@ -782,13 +784,29 @@ class BuilderActions(ApplicationTestCase):
             MinimizeDistances(parameters)
         self.run_test_application(fn)
 
-    #def test_triangular_scan_for_connections(self):
-    #    from zeobuilder.actions.composed.scan import TriangularScanForConnections
-    #    self.load_file("two_precursors.zml")
-    #    self.set_input_nodes([self.application.model.root[0].children[0],
-    #                              self.application.model.root[0].children[1]])
-    #    self.assert_(TriangularScanForConnections.analyse_nodes())
-    #    TriangularScanForConnections()
+    def test_triangle_conscan(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes(context.application.model.universe.children)
+
+            parameters = Parameters()
+            parameters.connect_description1 = ("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1", "node.get_radius()", "1")
+            parameters.repulse_description1 = ("isinstance(node, Atom) and (node.number == 8 or node.number == 14)", "node.get_radius()", "-1")
+            parameters.action_radius = from_angstrom(4)
+            parameters.overlap_tolerance = from_angstrom(0.1)
+            parameters.allow_inversions = True
+            parameters.triangle_side_tolerance = from_angstrom(0.1)
+            parameters.minimum_triangle_size = from_angstrom(0.1)
+            parameters.translation_tolerance_a = from_angstrom(0.1)
+            parameters.rotation_tolerance = 0.05
+            parameters.rotation2 = Undefined()
+            parameters.distance_tolerance = Undefined()
+            parameters.translation_tolerance_b = Undefined()
+
+            ScanForConnections = context.application.plugins.get_action("ScanForConnections")
+            self.assert_(ScanForConnections.analyze_selection(parameters))
+            ScanForConnections(parameters)
+        self.run_test_application(fn)
 
     #def test_planar_scan_for_connections(self):
     #    from zeobuilder.actions.composed.scan import PlanarScanForConnections
