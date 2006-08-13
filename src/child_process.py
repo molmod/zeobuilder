@@ -159,14 +159,32 @@ class ChildProcessDialog(object):
         return response
 
     def on_received(self, com_thread):
-        pass
+        self.handle_message(com_thread.stack.pop(0))
 
     def on_finished(self, com_thread):
+        instance = com_thread.stack.pop(0)
         self.response_active = True
         for button in self.buttons:
             button.set_sensitive(True)
+        if isinstance(instance, comthread.Failure):
+            self.cleanup(kill=False)
+            ok_error(
+                "An exception occured in the child process.",
+                instance.message
+            )
+        else:
+            self.handle_done(instance)
+        
 
     def on_protocol_error(self, com_thread):
         self.cleanup(kill=True)
-        ok_error("<b><big>Invalid data was received from the client process.</big></b>\n\nInform the authors of zeobuilder if you did not expect this to happen.")
+        ok_error(
+            "Invalid data was received from the client process.",
+            "Inform the authors of zeobuilder if you did not expect this to happen."
+        )
 
+    def handle_message(self, message):
+        pass
+        
+    def handle_done(self, message):
+        pass

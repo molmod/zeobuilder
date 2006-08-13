@@ -25,7 +25,7 @@ from zeobuilder.gui.simple import ok_error
 
 import gtk
 
-import copy, time
+import copy, time, sys
 
 
 __all__ = ["init_actions", "UserError", "CancelException", "ActionError",
@@ -47,8 +47,21 @@ def init_actions(actions):
 
 
 class UserError(Exception):
+    def __init__(self, message, details = ""):
+        Exception.__init__(self, message)
+        self.message = message
+        self.details  = details
+        exc_type, exc_value, tb = sys.exc_info()
+        if exc_type is not None:
+            import traceback
+            err_msg = "".join(traceback.format_exception(exc_type, exc_value, tb))
+            err_msg = err_msg.replace("&", "&amp;")
+            err_msg = err_msg.replace("<", "&lt;")
+            err_msg = err_msg.replace(">", "&gt;")
+            self.details += err_msg
+        
     def show_message(self):
-        ok_error(str(self))
+        ok_error(self.message, self.details)
 
 class CancelException(Exception):
     pass

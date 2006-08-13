@@ -203,7 +203,6 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
 
         return result
 
-
     def conditional_update_gui(self):
         if self.last_step > self.update_steps:
             self.last_step = 0
@@ -232,17 +231,14 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
                 frame.invalidate_transformation_list()
             context.application.main.drawing_area.queue_draw()
 
-    def on_received(self, com_thread):
-        ChildProcessDialog.on_received(self, com_thread)
-        instance = com_thread.stack.pop(0)
+    def handle_message(self, instance):
         if isinstance(instance, iterative.alg.Status):
             self.status = instance
             self.conditional_update_gui()
         else:
             self.state_indices = instance
 
-    def on_finished(self, com_thread):
-        ChildProcessDialog.on_finished(self, com_thread)
+    def handle_done(self, instance):
         self.update_gui()
 
 

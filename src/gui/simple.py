@@ -33,34 +33,38 @@ __all__ = [
 ]
 
 
+template="<big><b>%s</b></big>\n\n%s"
+
 def run_dialog(dialog):
     dialog.set_title(context.title)
+    dialog.label.set_property("use-markup", True)
+    dialog.label.set_line_wrap(False)
     result = dialog.run()
     dialog.destroy()
     return result
 
 
-def ok_error(message):
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, message)
-    dialog.label.set_property("use-markup", True)
+def ok_error(message, details=""):
+    full = (template % (message, details)).strip()
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, full)
     return run_dialog(dialog)
 
 
-def ok_information(message):
+def ok_information(message, details=""):
+    full = (template % (message, details)).strip()
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
-    dialog.label.set_property("use-markup", True)
     return run_dialog(dialog)
 
 
-def yes_no_question(message):
+def yes_no_question(message, details=""):
+    full = (template % (message, details)).strip()
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
-    dialog.label.set_property("use-markup", True)
     return run_dialog(dialog)
 
 
-def nosave_cancel_save_question(message):
+def nosave_cancel_save_question(message, details=""):
+    full = (template % (message, details)).strip()
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, message)
-    dialog.label.set_property("use-markup", True)
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     dialog.add_button(gtk.STOCK_SAVE, gtk.RESPONSE_OK)
@@ -95,19 +99,15 @@ def ask_name():
     return result
 
 
-error_message="""<big><b>Some of the fields you entered are invalid.</b></big>
+field_template=template % (
+    "Some of the fields you entered are invalid.",
+    "Only the first problem is reported here. Correct it and try again.\n\n<b>Location:</b> %s\n<b>Problem:</b> %s"
+)
 
-Only the first problem is reported here. Correct it and try again.
-
-<b>Location:</b> %s
-<b>Problem:</b> %s
-"""
 
 def field_error(location, problem):
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE, error_message % (location, problem))
-    dialog.label.set_property("use-markup", True)
+    full = field_template % (location, problem)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE, full)
     button = dialog.add_button(gtk.STOCK_JUMP_TO, gtk.RESPONSE_OK)
-    result = run_dialog(dialog)
-    dialog.destroy()
-    return result
+    return run_dialog(dialog)
 
