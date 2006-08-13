@@ -310,20 +310,25 @@ class TextView(Edit):
     Popup = popups.Default
     high_widget = True
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, line_breaks=False):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, line_breaks=False, width=250, height=300):
         Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
         self.line_breaks = line_breaks
         self.attribute_is_stream = False
+        self.width = width
+        self.height = height
 
     def create_widgets(self):
         Edit.create_widgets(self)
         self.text_view = gtk.TextView()
+        self.text_view.set_wrap_mode(gtk.WRAP_WORD)
+        self.text_view.set_accepts_tab(False)
         self.text_buffer = self.text_view.get_buffer()
         self.text_buffer.connect("changed", self.on_widget_changed)
         scrolled_window = gtk.ScrolledWindow()
         scrolled_window.set_shadow_type(gtk.SHADOW_IN)
         scrolled_window.set_shadow_type(gtk.SHADOW_IN)
-        scrolled_window.set_size_request(250, 100)
+        scrolled_window.set_size_request(self.width, self.height)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
         scrolled_window.add(self.text_view)
         self.data_widget = scrolled_window
 
