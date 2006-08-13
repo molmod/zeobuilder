@@ -83,7 +83,6 @@ def dump_to_file(f, node):
             indenter.write_line("<bool%s>%s</bool>" % (name_key, str(node)))
         elif cls == Undefined:
             pass
-            #indenter.write_line("<undefined%s/>" % name_key)
         elif cls == list:
             indenter.write_line("<list%s>" % name_key, 1)
             for item in node: dump_stage3(indenter, item, use_references)
@@ -225,7 +224,6 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             temp = current_tag.content.lower().strip()
             if temp == 'true': current_tag.value = True
             else: current_tag.value = False
-        elif name == "undefined": current_tag.value = Undefined()
         elif name == "list": current_tag.value = [tag.value for tag in child_tags]
         elif name == "dict": current_tag.value = dict((tag.label, tag.value) for tag in child_tags)
         elif name == "tuple": current_tag.value = tuple(tag.value for tag in child_tags)
