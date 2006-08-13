@@ -116,7 +116,7 @@ class ReferentMixin(ParentMixin):
             for child in self.children:
                 child.set_model(self.model)
 
-    def create_references(self, targets):
+    def create_references(self):
         raise NotImplementedError
 
     #
