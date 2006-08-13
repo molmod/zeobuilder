@@ -41,6 +41,7 @@ class ModelObjectInfo(NodeInfo):
 
 
 class ModelObject(Node):
+    info = ModelObjectInfo(default_action_name="EditProperties")
 
     #
     # State
@@ -67,7 +68,8 @@ class ModelObject(Node):
 
     def initstate(self, **initstate):
         for p in self.properties:
-            self.__dict__[p.name] = p.default(self)
+            if p.name not in self.__dict__:
+                self.__dict__[p.name] = p.default(self)
         for p in self.properties:
             value = initstate.get(p.name)
             if value is None:

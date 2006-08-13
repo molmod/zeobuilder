@@ -38,9 +38,7 @@ class NodeInfo(object):
 
 
 class Node(gobject.GObject):
-
     __metaclass__ = NodeClass
-    info = NodeInfo("EditProperties")
 
     def __init__(self):
         gobject.GObject.__init__(self)

@@ -123,6 +123,9 @@ class ReferentMixin(ParentMixin):
     # Properties
     #
 
+    def default_targets(self):
+        return [None for child in self.children]
+
     def get_targets(self):
         return [child.target for child in self.children]
 
@@ -133,7 +136,7 @@ class ReferentMixin(ParentMixin):
             child.set_target(target)
 
     properties = [
-        Property("targets", [], get_targets, set_targets),
+        Property("targets", default_targets, get_targets, set_targets),
     ]
 
     #

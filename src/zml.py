@@ -181,7 +181,7 @@ class ZMLTag(object):
 class ZMLHandler(xml.sax.handler.ContentHandler):
     def __init__(self):
         self.root = None
-        self.nodes = {}
+        self.model_object_tags = {}
         self.target_ids = {}
 
         self.hierarchy = []
@@ -260,9 +260,9 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             target_ids.append(int(current_tag.attributes["to"]))
         elif name == "model_object":
             Class = context.application.plugins.get_node(str(current_tag.attributes["class"]))
-            state = dict((tag.label, tag.value) for tag in child_tags)
-            current_tag.value = Class(**state)
-            self.nodes[int(current_tag.attributes["id"])] = current_tag.value
+            current_tag.state = dict((tag.label, tag.value) for tag in child_tags)
+            current_tag.value = Class()
+            self.model_object_tags[int(current_tag.attributes["id"])] = current_tag
         else: pass
 
         # close the door
@@ -274,13 +274,15 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
         self.root = self.hierarchy[0][0].value
         self.hierarchy = []
 
-        # fix the referents:
+        # fix the targets:
         for referent_tag, target_ids in self.target_ids.iteritems():
-            referent_tag.value.set_targets([
-                self.nodes[target_id]
-                for target_id
-                in target_ids
-            ])
+            referent_tag.state["targets"] = [
+                self.model_object_tags[target_id].value for target_id in target_ids
+            ]
+
+        # set the states of all the model_objects:
+        for model_object_tag in self.model_object_tags.itervalues():
+            model_object_tag.value.initstate(**model_object_tag.state)
 
 
 def load_from_file(f):
