@@ -120,6 +120,11 @@ class Composed(Multiple, FaultyMixin):
 
     def write_multiplex(self):
         FaultyMixin.write_multiplex(self)
+        
+    def save_history(self, representations):
+        FaultyMixin.save_history(self, representations)
+        for field, representation in zip(self.fields, representations):
+            field.save_history(representation)
 
     def check(self):
         Multiple.check(self)

@@ -193,8 +193,7 @@ class EditMixin(ReadMixin):
         if self.get_active() and self.changed():
             representation = self.read_from_widget()
             if self.get_sensitive():
-                if self.history_name is not None:
-                    context.application.configuration.add_to_history(self.history_name, representation)
+                self.save_history(representation)
                 value = self.convert_to_value(representation)
             else:
                 value = Undefined(self.convert_to_value(representation))
@@ -204,13 +203,16 @@ class EditMixin(ReadMixin):
         if self.get_active() and self.changed():
             representation = self.read_from_widget()
             if self.get_sensitive():
-                if self.history_name is not None:
-                    context.application.configuration.add_to_history(self.history_name, representation)
+                self.save_history(representation)
                 value = self.convert_to_value(representation)
             else:
                 value = Undefined(self.convert_to_value(representation))
             for instance in self.instances:
                 self.write_to_instance(value, instance)
+
+    def save_history(self, representation):
+        if self.history_name is not None:
+            context.application.configuration.add_to_history(self.history_name, representation)
 
     def changed_names(self):
         if self.get_active() and self.changed():
@@ -282,7 +284,7 @@ class FaultyMixin(EditMixin):
         #print self.label_text, self.instances, self.instance, self.get_active()
         if self.get_active() and self.changed():
             try:
-                self.convert_to_value_wrap(self.read_from_widget())
+                self.convert_to_value(self.read_from_widget())
             except ValueError, e:
                 invalid_field = InvalidField(self, str(e))
                 raise invalid_field
