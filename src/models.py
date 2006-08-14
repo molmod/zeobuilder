@@ -97,8 +97,8 @@ class Model(gobject.GObject):
         compression = ""
         if extension in ["gz", "bz2"]:
             compression = extension
-            forelast_dot = filename[:last_dot].rfind(".")
-            extension = filename[forelast_dot+1:last_dot]
+            next_to_last_dot = filename[:last_dot].rfind(".")
+            extension = filename[next_to_last_dot+1:last_dot]
         try:
             load_filter = context.application.plugins.get_load_filter(extension)
         except PluginNotFoundError:
@@ -142,8 +142,8 @@ class Model(gobject.GObject):
         compression = ""
         if extension in ["gz", "bz2"]:
             compression = extension
-            forelast_dot = filename[:last_dot].rfind(".")
-            extension = filename[forelast_dot+1:last_dot]
+            next_to_last_dot = filename[:last_dot].rfind(".")
+            extension = filename[next_to_last_dot+1:last_dot]
         try:
             dump_filter = context.application.plugins.get_dump_filter(extension)
         except PluginNotFoundError:
