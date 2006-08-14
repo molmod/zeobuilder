@@ -817,11 +817,8 @@ class BuilderActions(ApplicationTestCase):
             parameters.allow_inversions = True
             parameters.triangle_side_tolerance = from_angstrom(0.1)
             parameters.minimum_triangle_size = from_angstrom(0.1)
-            parameters.translation_tolerance_a = from_angstrom(0.1)
-            parameters.rotation_tolerance = 0.05
             parameters.rotation2 = Undefined()
             parameters.distance_tolerance = Undefined()
-            parameters.translation_tolerance_b = Undefined()
             parameters.auto_close_report_dialog = True
 
             ScanForConnections = context.application.plugins.get_action("ScanForConnections")

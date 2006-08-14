@@ -420,18 +420,6 @@ class ScanForConnections(ImmediateWithMemory):
                             low=0.0,
                             low_inclusive=False,
                         ),
-                        fields.faulty.Length(
-                            label_text="Translation tolerance",
-                            attribute_name="translation_tolerance_a",
-                            low=0.0,
-                            low_inclusive=False,
-                        ),
-                        fields.faulty.Float(
-                            label_text="Rotation tolerance",
-                            attribute_name="rotation_tolerance",
-                            low=0.0,
-                            low_inclusive=False,
-                        ),
                     ], label_text="Allow free rotations")),
                     fields.optional.RadioOptional(slave=fields.group.Table(fields=[
                         fields.composed.Rotation(
@@ -441,12 +429,6 @@ class ScanForConnections(ImmediateWithMemory):
                         fields.faulty.Length(
                             label_text="Distance tolerance",
                             attribute_name="distance_tolerance",
-                            low=0.0,
-                            low_inclusive=False,
-                        ),
-                        fields.faulty.Length(
-                            label_text="Translation tolerance",
-                            attribute_name="translation_tolerance_b",
                             low=0.0,
                             low_inclusive=False,
                         ),
@@ -462,8 +444,8 @@ class ScanForConnections(ImmediateWithMemory):
         ("comp_env", "Comparing environments"),
         ("calc_trans", "Calculating transformations"),
         ("mirror", "Adding inversions"),
-        ("elim_dup", "Eliminating duplicates"),
         ("eval_con", "Evaluating connections"),
+        ("elim_dup", "Eliminating duplicates"),
         ("send_con", "Receiving solutions"),
     ])
 
@@ -471,8 +453,8 @@ class ScanForConnections(ImmediateWithMemory):
         ("calc_env", "Calculating environments"),
         ("comp_env", "Comparing environments"),
         ("calc_trans", "Calculating transformations"),
-        ("elim_dup", "Eliminating duplicates"),
         ("eval_con", "Evaluating connections"),
+        ("elim_dup", "Eliminating duplicates"),
         ("send_con", "Receiving solutions"),
     ])
 
@@ -501,12 +483,9 @@ class ScanForConnections(ImmediateWithMemory):
         self.parameters.overlap_tolerance = from_angstrom(0.1)
         self.parameters.allow_inversions = True
         self.parameters.triangle_side_tolerance = from_angstrom(0.1)
-        self.parameters.minimum_triangle_size = from_angstrom(0.1)
-        self.parameters.translation_tolerance_a = from_angstrom(0.1)
         self.parameters.rotation_tolerance = 0.05
         self.parameters.rotation2 = Undefined(rotation2)
         self.parameters.distance_tolerance = Undefined(from_angstrom(0.1))
-        self.parameters.translation_tolerance_b = Undefined(from_angstrom(0.1))
 
     def ask_parameters(self):
         if len(context.application.cache.nodes) == 1:
@@ -601,13 +580,10 @@ class ScanForConnections(ImmediateWithMemory):
             inp["allow_inversions"] = self.parameters.allow_inversions
             inp["triangle_side_error"] = self.parameters.triangle_side_tolerance
             inp["minimum_triangle_area"] = self.parameters.minimum_triangle_size**2
-            inp["translation_threshold"] = self.parameters.translation_tolerance_a**2
-            inp["rotation_threshold"] = self.parameters.rotation_tolerance**2
         else:
             inp["allow_rotations"] = False
             inp["rotation2"] = self.parameters.rotation2
             inp["distance_error"] = self.parameters.distance_tolerance
-            inp["translation_threshold"] = self.parameters.translation_tolerance_b**2
 
         if inp["allow_rotations"]:
             connections = self.triangle_report_dialog.run(inp, self.parameters.auto_close_report_dialog)
