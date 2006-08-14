@@ -306,7 +306,6 @@ class RoundRotation(Immediate):
             master = None
             factor, selected_quaternion = quaternion_from_rotation_matrix(victim.transformation.r)
         elif len(cache.nodes) == 2:
-            print 2
             master = context.application.cache.nodes[0]
             factor, selected_quaternion = quaternion_from_rotation_matrix(victim.get_frame_relative_to(master).r)
 
@@ -361,7 +360,7 @@ class RoundRotation(Immediate):
         rounded_quaternions.extend(new_quaternions)
 
         if len(rounded_quaternions) == 0:
-            raise UserError, "No similar rounded rotations found."
+            raise UserError("No similar rounded rotations found.")
 
         rounded_quaternions.sort(key=(lambda x: x.cost_function))
 
@@ -376,7 +375,6 @@ class RoundRotation(Immediate):
                 new_transformation.r = factor * quaternion_to_rotation_matrix(user_record.quaternion)
                 primitive.SetProperty(victim, "transformation", new_transformation)
             elif len(cache.nodes) == 2:
-                print "TWEE - "
                 old_transformation = copy.deepcopy(victim.transformation)
                 victim.transformation.r = numpy.identity(3, float)
                 victim.transformation.r = numpy.dot(

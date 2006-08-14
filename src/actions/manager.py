@@ -115,7 +115,7 @@ class ActionManager(gobject.GObject):
         if self.sub_action_counter > 0:
             self.sub_action_counter -= 1
             #print "CANCEL SubAction %i of %s" % (self.sub_action_counter, self.current_action)
-            raise CancelException
+            raise
         self.emit("action-cancels")
         self.current_action.undo()
         self.current_action = None

@@ -21,12 +21,14 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import ImmediateWithMemory, UserError, Immediate
+from zeobuilder.actions.composed import ImmediateWithMemory, UserError, CancelException, Immediate, CustomAction, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
+from zeobuilder.nodes.analysis import common_parent
 from zeobuilder.nodes.elementary import GLFrameBase, ReferentBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.glmixin import GLTransformationMixin
+from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.reference import Reference
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.gui.glade_wrapper import GladeWrapper
@@ -42,7 +44,7 @@ from molmod.units import from_angstrom
 
 import gtk, numpy
 
-import weakref
+import weakref, copy
 
 
 class ConscanResults(ReferentBase):
@@ -74,7 +76,7 @@ class ConscanResults(ReferentBase):
     def set_connections(self, connections):
         self.connections = [
             (quality, transformation, [
-                (weakref.ref(self.children[0].target.children[index1]), weakref.ref(self.children[0].target.children[index1]))
+                (weakref.ref(self.children[0].target.children[index1]), weakref.ref(self.children[1].target.children[index2]))
                 for index1, index2 in pairs
             ]) for quality, transformation, pairs
             in connections
@@ -105,6 +107,8 @@ class ShowConscanResultsWindow(Immediate):
 class ConscanResultsWindow(GladeWrapper):
     def __init__(self, conscan_results):
         self.conscan_results = conscan_results
+        self.frame1 = conscan_results.children[0].target
+        self.frame2 = conscan_results.children[1].target
 
         GladeWrapper.__init__(self, "plugins/builder/gui.glade", "wi_conscan_results", "window")
         self.init_callbacks(ConscanResultsWindow)
@@ -142,23 +146,100 @@ class ConscanResultsWindow(GladeWrapper):
             self.bu_apply_opt.set_sensitive(True)
             self.bu_apply_opt_round.set_sensitive(True)
 
+    def apply_normal(self):
+        model, iter = self.tree_selection.get_selected()
+        c = copy.deepcopy(self.frame1.transformation)
+        c.apply_after(model.get_value(iter, 2)[1])
+        primitive.SetProperty(self.frame2, "transformation", c)
+
+    def connect_minimizers(self):
+        model, iter = self.tree_selection.get_selected()
+        Minimizer = context.application.plugins.get_node("Minimizer")
+        minimizers = [
+            Minimizer(targets=[node1(), node2()])
+            for node1, node2
+            in model.get_value(iter, 2)[2]
+        ]
+        parent = common_parent([self.frame1, self.frame2])
+        for minimizer in minimizers:
+            primitive.Add(minimizer, parent)
+        return minimizers
+
+    def free_optimize(self, minimizers):
+        context.application.main.select_nodes(minimizers)
+        MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
+        parameters = Parameters()
+        parameters.allow_rotation = True
+        parameters.update_interval = 0.4
+        parameters.update_steps = 1
+        parameters.auto_close_report_dialog = True
+        MinimizeDistances(parameters)
+
+    def translate_optimize(self, minimizers):
+        context.application.main.select_nodes(minimizers)
+        MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
+        parameters = Parameters()
+        parameters.allow_rotation = False
+        parameters.update_interval = 0.4
+        parameters.update_steps = 1
+        parameters.auto_close_report_dialog = True
+        MinimizeDistances(parameters)
+
+    def round_rotation(self):
+        context.application.main.select_nodes([self.frame1, self.frame2])
+        RoundRotation = context.application.plugins.get_action("RoundRotation")
+        RoundRotation()
+
+    def clean_minimizers(self, minimizers):
+        for minimizer in minimizers:
+            primitive.Delete(minimizer)
+
+    def optimize(self):
+        minimizers = self.connect_minimizers()
+        self.free_optimize(minimizers)
+        self.clean_minimizers(minimizers)
+
+    def optimize_and_round(self):
+        minimizers = self.connect_minimizers()
+        self.free_optimize(minimizers)
+        try:
+            self.round_rotation()
+            self.translate_optimize(minimizers)
+        except UserError, CancelException:
+            pass
+        self.clean_minimizers(minimizers)
+
     def on_selection_changed(self, selection):
         self.update_sensitivities()
         # TODO: Apply the selected connection of auto_apply is set
         if self.cb_auto_apply.get_active():
-            print "AUTO_APPLY TODO"
+            action = CustomAction("Auto apply connection")
+            self.apply_normal()
+            action.finish()
 
     def on_cb_auto_apply_clicked(self, cb_apply):
         self.update_sensitivities()
 
     def on_bu_apply_clicked(self, button):
-        print "APPLY TODO"
+        action = CustomAction("Apply connection")
+        self.apply_normal()
+        action.finish()
 
     def on_bu_apply_opt_clicked(self, button):
-        print "APPLY_OPT TODO"
+        action = CustomAction("Apply connection and minimize distances")
+        old_selection = copy.copy(context.application.cache.nodes)
+        self.apply_normal()
+        self.optimize()
+        context.application.main.select_nodes(old_selection)
+        action.finish()
 
     def on_bu_apply_opt_round_clicked(self, button):
-        print "APPLY_OPT_ROUND TODO"
+        action = CustomAction("Apply connection, minimize and round rotation")
+        old_selection = copy.copy(context.application.cache.nodes)
+        self.apply_normal()
+        self.optimize_and_round()
+        context.application.main.select_nodes(old_selection)
+        action.finish()
 
 
 class ConscanReportDialog(ChildProcessDialog):

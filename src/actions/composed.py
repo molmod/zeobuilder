@@ -196,6 +196,15 @@ class RememberParametersMixin(object):
 #
 
 
+class CustomAction(Action):
+    def __init__(self, description):
+        self.description = description
+        Action.__init__(self)
+
+    def finish(self):
+        context.application.action_manager.end_current_action()
+
+
 class Immediate(Action, ImmediateMixin):
     def __init__(self):
         Action.__init__(self)
