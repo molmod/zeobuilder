@@ -391,8 +391,6 @@ class RoundRotation(Immediate):
                 new_transformation.r = factor * quaternion_to_rotation_matrix(user_record.quaternion)
                 primitive.SetProperty(victim, "transformation", new_transformation)
             elif len(cache.nodes) == 2:
-                print "SLAVE", victim.get_name()
-                print "MASTER", master.get_name()
                 old_transformation = copy.deepcopy(victim.transformation)
                 victim.transformation.r = numpy.identity(3, float)
                 victim.transformation.r = numpy.dot(
@@ -677,22 +675,22 @@ class TranslateKeyboardMixin(TranslateMixin):
         pixels = 5
 
         if event.keyval == 65363:
-            print "right"
+            #print "right"
             translation[0] = +pixels
         elif event.keyval == 65361:
-            print "left"
+            #print "left"
             translation[0] = -pixels
         elif event.keyval == 65362:
-            print "up"
+            #print "up"
             translation[1] = +pixels
         elif event.keyval == 65364:
-            print "down"
+            #print "down"
             translation[1] = -pixels
         elif event.keyval == 65365:
-            print "page up, to front"
+            #print "page up, to front"
             translation[2] = +pixels
         elif event.keyval == 65366:
-            print "page down, to back"
+            #print "page down, to back"
             translation[2] = -pixels
 
         return self.convert(translation, drawing_area)
