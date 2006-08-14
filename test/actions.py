@@ -778,6 +778,23 @@ class BuilderActions(ApplicationTestCase):
             context.application.main.select_nodes(context.application.model.universe.children[2:])
 
             parameters = Parameters()
+            parameters.allow_rotation = True
+            parameters.update_interval = 0.4
+            parameters.update_steps = 1
+            parameters.auto_close_report_dialog = True
+
+            MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
+            self.assert_(MinimizeDistances.analyze_selection(parameters))
+            MinimizeDistances(parameters)
+        self.run_test_application(fn)
+
+    def test_minimize_distances_translation(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[2:])
+
+            parameters = Parameters()
+            parameters.allow_rotation = False
             parameters.update_interval = 0.4
             parameters.update_steps = 1
             parameters.auto_close_report_dialog = True

@@ -37,6 +37,7 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 
 from molmod.data import periodic
+from molmod.transformations import Complete, Translation
 
 import iterative
 
@@ -218,16 +219,18 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
 
     def update_gui(self):
         if self.status is not None:
-            self.status.state = numpy.array(self.status.state)
             self.la_num_iter.set_text("%i" % self.status.step)
             self.la_average_length.set_text(express_measure(math.sqrt(self.status.value), "Length"))
             self.progress_bar.set_text("%i%%" % int(self.status.progress*100))
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
-                (
-                    frame.transformation.r,
-                    frame.transformation.t
-                ) = variable.extract_state(state_index, self.status.state)
+                if isinstance(variable, iterative.var.Frame):
+                    (
+                        frame.transformation.r,
+                        frame.transformation.t
+                    ) = variable.extract_state(state_index, self.status.state)
+                else:
+                    frame.transformation.t = variable.extract_state(state_index, self.status.state)
                 frame.invalidate_transformation_list()
             context.application.main.drawing_area.queue_draw()
 
@@ -276,6 +279,10 @@ class MinimizeDistances(ImmediateWithMemory):
     parameters_dialog = FieldsDialogSimple(
         "Minimization parameters",
         fields.group.Table(fields=[
+            fields.edit.CheckButton(
+                label_text="Allow free rotation",
+                attribute_name="allow_rotation",
+            ),
             fields.faulty.Float(
                 label_text="Update interval [s]",
                 attribute_name="update_interval",
@@ -309,6 +316,7 @@ class MinimizeDistances(ImmediateWithMemory):
     analyze_selection = staticmethod(analyze_selection)
 
     def init_parameters(self):
+        self.parameters.allow_rotation = True
         self.parameters.update_interval = 0.4
         self.parameters.update_steps = 1
 
@@ -325,18 +333,34 @@ class MinimizeDistances(ImmediateWithMemory):
         parent = cache.parent
         involved_frames = cache.minimizer_problem.frames
         minimizers = cache.minimizer_problem.minimizers
+        max_step = []
 
-        old_transformations = [(frame, copy.deepcopy(frame.transformation)) for frame in involved_frames]
+        old_transformations = [
+            (frame, copy.deepcopy(frame.transformation))
+            for frame
+            in involved_frames
+        ]
 
         cost_function = iterative.expr.Root(1, 10, True)
         for frame in involved_frames:
-            variable = iterative.var.Frame(
-                frame.transformation.r,
-                frame.transformation.t,
-            )
-            cost_function.register_state_variable(variable)
-            constraint = iterative.expr.Orthonormality(1e-10)
-            constraint.register_input_variable(variable)
+            if self.parameters.allow_rotation and isinstance(frame.transformation, Complete):
+                variable = iterative.var.Frame(
+                    frame.transformation.r,
+                    frame.transformation.t,
+                )
+                cost_function.register_state_variable(variable)
+                constraint = iterative.expr.Orthonormality(1e-10)
+                constraint.register_input_variable(variable)
+                max_step.extend([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1.0, 1.0, 1.0])
+            elif isinstance(frame.transformation, Translation):
+                variable = iterative.var.Translation(
+                    frame.transformation.r,
+                    frame.transformation.t,
+                )
+                cost_function.register_state_variable(variable)
+                max_step.extend([1.0, 1.0, 1.0])
+            else:
+                raise UserError("The involved frames shoud be at least capable of being translated.")
 
         for minimizer, frames in minimizers.iteritems():
             cost_term = iterative.expr.Spring()
@@ -348,7 +372,7 @@ class MinimizeDistances(ImmediateWithMemory):
 
         minimize = iterative.alg.DefaultMinimize(
             cost_function,
-            numpy.array([0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1.0, 1.0, 1.0]*len(involved_frames), float),
+            numpy.array(max_step, float),
             iterative.stop.NoIncrease()
         )
 
