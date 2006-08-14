@@ -61,7 +61,7 @@ class UserError(Exception):
             self.details += err_msg
 
     def show_message(self):
-        ok_error(self.message, self.details)
+        ok_error(self.message, self.details, line_wrap=False)
 
 class CancelException(Exception):
     pass

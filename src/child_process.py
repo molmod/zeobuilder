@@ -172,7 +172,8 @@ class ChildProcessDialog(object):
             self.cleanup(kill=False)
             ok_error(
                 "An exception occured in the child process.",
-                instance.message
+                instance.message,
+                line_wrap=False
             )
         else:
             self.handle_done(instance)

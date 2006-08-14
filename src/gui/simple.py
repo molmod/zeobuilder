@@ -35,34 +35,34 @@ __all__ = [
 
 template="<big><b>%s</b></big>\n\n%s"
 
-def run_dialog(dialog):
+def run_dialog(dialog, line_wrap=True):
     dialog.set_title(context.title)
     dialog.label.set_property("use-markup", True)
-    dialog.label.set_line_wrap(False)
+    dialog.label.set_line_wrap(line_wrap)
     result = dialog.run()
     dialog.destroy()
     return result
 
 
-def ok_error(message, details=""):
+def ok_error(message, details="", line_wrap=True):
     full = (template % (message, details)).strip()
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, full)
     return run_dialog(dialog)
 
 
-def ok_information(message, details=""):
+def ok_information(message, details="", line_wrap=True):
     full = (template % (message, details)).strip()
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
     return run_dialog(dialog)
 
 
-def yes_no_question(message, details=""):
+def yes_no_question(message, details="", line_wrap=True):
     full = (template % (message, details)).strip()
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
     return run_dialog(dialog)
 
 
-def nosave_cancel_save_question(message, details=""):
+def nosave_cancel_save_question(message, details="", line_wrap=True):
     full = (template % (message, details)).strip()
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, message)
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
@@ -105,9 +105,9 @@ field_template=template % (
 )
 
 
-def field_error(location, problem):
+def field_error(location, problem, line_wrap=True):
     full = field_template % (location, problem)
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE, full)
     button = dialog.add_button(gtk.STOCK_JUMP_TO, gtk.RESPONSE_OK)
-    return run_dialog(dialog)
+    return run_dialog(dialog, line_wrap=True)
 
