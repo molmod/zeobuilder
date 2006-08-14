@@ -67,7 +67,7 @@ class ChildProcessDialog(object):
         self.buttons = buttons
         self.response_active = False
 
-    def cleanup(self, kill=False):
+    def cleanup(self, kill=False, response=gtk.RESPONSE_DELETE_EVENT):
         if not self.ended:
             self.ended = True
             if kill:
@@ -77,7 +77,7 @@ class ChildProcessDialog(object):
                 #print "ZEOBUILDER, wait for child process"
                 os.waitpid(self.pid, 0)
             self.response_active = True
-            self.dialog.response(gtk.RESPONSE_DELETE_EVENT)
+            self.dialog.response(response)
             self.dialog.hide()
             if self.connection is not None:
                 self.connection.close()
@@ -177,8 +177,7 @@ class ChildProcessDialog(object):
         else:
             self.handle_done(instance)
             if self.auto_close:
-                self.dialog.response(gtk.RESPONSE_OK)
-                self.cleanup(kill=False)
+                self.cleanup(kill=False, response=gtk.RESPONSE_OK)
 
 
     def on_protocol_error(self, com_thread):

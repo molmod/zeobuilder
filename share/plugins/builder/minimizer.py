@@ -352,7 +352,14 @@ class MinimizeDistances(ImmediateWithMemory):
             iterative.stop.NoIncrease()
         )
 
-        if self.report_dialog.run(minimize, self.parameters.auto_close_report_dialog, involved_frames, self.parameters.update_interval, self.parameters.update_steps) != gtk.RESPONSE_OK:
+        result = self.report_dialog.run(
+            minimize,
+            self.parameters.auto_close_report_dialog,
+            involved_frames,
+            self.parameters.update_interval,
+            self.parameters.update_steps
+        )
+        if result != gtk.RESPONSE_OK:
             for frame, transformation in old_transformations:
                 frame.transformation = transformation
                 frame.invalidate_transformation_list()
