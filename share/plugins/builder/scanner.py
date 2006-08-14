@@ -87,36 +87,17 @@ class ConscanResults(ReferentBase):
     ]
 
 
-class ShowConscanResultsWindow(Immediate):
-    description = "Show the selected connection scanner results in a window"
-    menu_info = MenuInfo("default/_Object:tools/_Builder:conscan", "Show scan results", order=(0, 4, 1, 6, 1, 1))
-
-    def analyze_selection(parameters=None):
-        # A) calling ancestor
-        if not ImmediateWithMemory.analyze_selection(parameters): return False
-        # B) validating
-        if not isinstance(context.application.cache.node, ConscanResults): return False
-        # C) passed all tests:
-        return True
-    analyze_selection = staticmethod(analyze_selection)
-
-    def do(self):
-        ConscanResultsWindow(context.application.cache.node)
-
-
 class ConscanResultsWindow(GladeWrapper):
-    def __init__(self, conscan_results):
-        self.conscan_results = conscan_results
-        self.frame1 = conscan_results.children[0].target
-        self.frame2 = conscan_results.children[1].target
+    def __init__(self):
+        self.frame1 = None
+        self.frame2 = None
 
         GladeWrapper.__init__(self, "plugins/builder/gui.glade", "wi_conscan_results", "window")
         self.init_callbacks(ConscanResultsWindow)
         self.init_proxies(["tv_results", "cb_auto_apply", "bu_apply", "bu_apply_opt", "bu_apply_opt_round"])
+        self.window.hide()
 
         self.list_store = gtk.ListStore(float, int, object)
-        for connection in conscan_results.connections:
-            self.list_store.append([connection[0], len(connection[2]), connection])
 
         column = gtk.TreeViewColumn("Quality")
         renderer_text = gtk.CellRendererText()
@@ -134,6 +115,14 @@ class ConscanResultsWindow(GladeWrapper):
 
         self.tree_selection = self.tv_results.get_selection()
         self.tree_selection.connect("changed", self.on_selection_changed)
+
+    def set_conscan_results(self, conscan_results):
+        self.frame1 = conscan_results.children[0].target
+        self.frame2 = conscan_results.children[1].target
+        self.list_store.clear()
+        for connection in conscan_results.connections:
+            self.list_store.append([connection[0], len(connection[2]), connection])
+        self.window.show_all()
 
     def update_sensitivities(self):
         model, iter = self.tree_selection.get_selected()
@@ -211,8 +200,8 @@ class ConscanResultsWindow(GladeWrapper):
 
     def on_selection_changed(self, selection):
         self.update_sensitivities()
-        # TODO: Apply the selected connection of auto_apply is set
-        if self.cb_auto_apply.get_active():
+        if self.cb_auto_apply.get_active() and \
+           self.tree_selection.get_selected()[1] is not None:
             action = CustomAction("Auto apply connection")
             self.apply_normal()
             action.finish()
@@ -221,25 +210,51 @@ class ConscanResultsWindow(GladeWrapper):
         self.update_sensitivities()
 
     def on_bu_apply_clicked(self, button):
-        action = CustomAction("Apply connection")
-        self.apply_normal()
-        action.finish()
+        if self.tree_selection.get_selected()[1] is not None:
+            action = CustomAction("Apply connection")
+            self.apply_normal()
+            action.finish()
 
     def on_bu_apply_opt_clicked(self, button):
-        action = CustomAction("Apply connection and minimize distances")
-        old_selection = copy.copy(context.application.cache.nodes)
-        self.apply_normal()
-        self.optimize()
-        context.application.main.select_nodes(old_selection)
-        action.finish()
+        if self.tree_selection.get_selected()[1] is not None:
+            action = CustomAction("Apply connection and minimize distances")
+            old_selection = copy.copy(context.application.cache.nodes)
+            self.apply_normal()
+            self.optimize()
+            context.application.main.select_nodes(old_selection)
+            action.finish()
 
     def on_bu_apply_opt_round_clicked(self, button):
-        action = CustomAction("Apply connection, minimize and round rotation")
-        old_selection = copy.copy(context.application.cache.nodes)
-        self.apply_normal()
-        self.optimize_and_round()
-        context.application.main.select_nodes(old_selection)
-        action.finish()
+        if self.tree_selection.get_selected()[1] is not None:
+            action = CustomAction("Apply connection, minimize and round rotation")
+            old_selection = copy.copy(context.application.cache.nodes)
+            self.apply_normal()
+            self.optimize_and_round()
+            context.application.main.select_nodes(old_selection)
+            action.finish()
+
+    def on_window_delete_event(self, window, event):
+        self.window.hide()
+        return True
+
+
+class ShowConscanResultsWindow(Immediate):
+    description = "Show the selected connection scanner results in a window"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:conscan", "Show scan results", order=(0, 4, 1, 6, 1, 1))
+
+    conscan_results_window = ConscanResultsWindow()
+
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        if not isinstance(context.application.cache.node, ConscanResults): return False
+        # C) passed all tests:
+        return True
+    analyze_selection = staticmethod(analyze_selection)
+
+    def do(self):
+        self.conscan_results_window.set_conscan_results(context.application.cache.node)
 
 
 class ConscanReportDialog(ChildProcessDialog):
