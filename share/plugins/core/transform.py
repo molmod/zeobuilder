@@ -280,10 +280,12 @@ class RoundRotation(Immediate):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
-        node = context.application.cache.node
-        if not isinstance(node, GLTransformationMixin): return False
-        if not isinstance(node.transformation, Rotation): return False
-        if node.get_fixed(): return False
+        cache = context.application.cache
+        if len(cache.nodes) == 0 or len(cache.nodes) > 2: return False
+        for node in cache.nodes:
+            if not isinstance(node, GLTransformationMixin): return False
+            if not isinstance(node.transformation, Rotation): return False
+            if node.get_fixed(): return False
         # C) passed all tests:
         return True
     analyze_selection = staticmethod(analyze_selection)
@@ -297,8 +299,16 @@ class RoundRotation(Immediate):
                 self.cost_function = 0.0
 
         rounded_quaternions = []
-        victim = context.application.cache.node
-        factor, selected_quaternion = quaternion_from_rotation_matrix(victim.transformation.r)
+
+        cache = context.application.cache
+        victim = cache.nodes[-1]
+        if len(cache.nodes) == 1:
+            master = None
+            factor, selected_quaternion = quaternion_from_rotation_matrix(victim.transformation.r)
+        elif len(cache.nodes) == 2:
+            print 2
+            master = context.application.cache.nodes[0]
+            factor, selected_quaternion = quaternion_from_rotation_matrix(victim.get_frame_relative_to(master).r)
 
         step = 15
         for axis_name, axis in self.axes.iteritems():
@@ -361,9 +371,19 @@ class RoundRotation(Immediate):
             raise CancelException
 
         if user_record.quaternion is not None:
-            new_transformation = copy.deepcopy(victim.transformation)
-            new_transformation.r = factor * quaternion_to_rotation_matrix(user_record.quaternion)
-            primitive.SetProperty(victim, "transformation", new_transformation)
+            if len(cache.nodes) == 1:
+                new_transformation = copy.deepcopy(victim.transformation)
+                new_transformation.r = factor * quaternion_to_rotation_matrix(user_record.quaternion)
+                primitive.SetProperty(victim, "transformation", new_transformation)
+            elif len(cache.nodes) == 2:
+                print "TWEE - "
+                old_transformation = copy.deepcopy(victim.transformation)
+                victim.transformation.r = numpy.identity(3, float)
+                victim.transformation.r = numpy.dot(
+                    factor * quaternion_to_rotation_matrix(user_record.quaternion),
+                    victim.get_frame_relative_to(master).r
+                )
+                primitive.SetProperty(victim, "transformation", old_transformation, done=True)
 
 
 #
