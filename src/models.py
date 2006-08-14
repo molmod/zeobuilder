@@ -55,7 +55,7 @@ class Model(gobject.GObject):
     # selection stuff
 
     def queue_add_to_selection(self, node):
-        print "QUEUE ADD TO SELECTION", node.get_name()
+        #print "QUEUE ADD TO SELECTION", node.get_name()
         if len(self.to_be_removed) > 0:
             self.update_selection()
         self.to_be_added.add(node)
@@ -64,7 +64,7 @@ class Model(gobject.GObject):
             self.selection_updated = False
 
     def queue_remove_from_selection(self, node):
-        print "QUEUE REMOVE FROM SELECTION", node.get_name()
+        #print "QUEUE REMOVE FROM SELECTION", node.get_name()
         if len(self.to_be_added) > 0:
             self.update_selection()
         self.to_be_removed.add(node)
@@ -80,8 +80,7 @@ class Model(gobject.GObject):
                 self.to_be_removed.clear()
             self.selection.extend(self.to_be_added)
             self.to_be_added.clear()
-            #self.to_be_removed.clear()
-            print "UPDATED SELECTION", [node.get_name() for node in self.selection]
+            #print "UPDATED SELECTION", [node.get_name() for node in self.selection]
             self.selection_updated = True
             context.application.cache.queue_invalidate()
 
