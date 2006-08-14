@@ -483,6 +483,7 @@ class ScanForConnections(ImmediateWithMemory):
         self.parameters.overlap_tolerance = from_angstrom(0.1)
         self.parameters.allow_inversions = True
         self.parameters.triangle_side_tolerance = from_angstrom(0.1)
+        self.parameters.minimum_triangle_size = from_angstrom(0.1)
         self.parameters.rotation_tolerance = 0.05
         self.parameters.rotation2 = Undefined(rotation2)
         self.parameters.distance_tolerance = Undefined(from_angstrom(0.1))
