@@ -264,6 +264,7 @@ class ConscanReportDialog(ChildProcessDialog):
             buttons=(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OK, gtk.RESPONSE_OK),
         )
         ChildProcessDialog.__init__(self, self.dialog, self.dialog.action_area.get_children())
+
         table = gtk.Table(len(progress_items), 2, )
         self.progress_bars = {}
         for index, (label, name) in enumerate(progress_items):
@@ -273,10 +274,13 @@ class ConscanReportDialog(ChildProcessDialog):
             pb = gtk.ProgressBar()
             self.progress_bars[label] = pb
             table.attach(pb, 1, 2, index, index+1)
-        table.show_all()
+
         table.set_border_width(6)
         table.set_row_spacings(6)
         table.set_col_spacings(6)
+        table.show_all()
+
+        self.clear_gui()
         self.dialog.vbox.pack_start(table, expand=True, fill=True)
 
     def clear_gui(self):
@@ -460,6 +464,7 @@ class ScanForConnections(ImmediateWithMemory):
         ("mirror", "Adding inversions"),
         ("elim_dup", "Eliminating duplicates"),
         ("eval_con", "Evaluating connections"),
+        ("send_con", "Receiving solutions"),
     ])
 
     pair_report_dialog = ConscanReportDialog([
@@ -468,6 +473,7 @@ class ScanForConnections(ImmediateWithMemory):
         ("calc_trans", "Calculating transformations"),
         ("elim_dup", "Eliminating duplicates"),
         ("eval_con", "Evaluating connections"),
+        ("send_con", "Receiving solutions"),
     ])
 
     def analyze_selection(parameters=None):
