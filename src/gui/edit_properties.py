@@ -44,6 +44,14 @@ class EditProperties(FieldsDialogMultiplex):
     def run(self, nodes):
         self.nodes = nodes
         self.changed_names = set([])
-        FieldsDialogMultiplex.run(self, nodes)
+        return FieldsDialogMultiplex.run(self, nodes)
 
-
+    def write(self):
+        FieldsDialogMultiplex.write(self)
+        for name in self.main_field.changed_names():
+            self.changed_names.add(name)
+            # this is necessary when the user clicks the apply button:
+            for node in self.nodes:
+                p = node.properties_by_name.get(name)
+                if p is not None:
+                    p.set(node, p.get(node))

@@ -173,7 +173,7 @@ class SetProperty(Primitive):
             self.new_value = self.property.get(victim)
             self.old_value = value
             # a trick to let the victim know a property has changed
-            self.property.set(victim, self.new_value)
+            #self.property.set(victim, self.new_value)
         else:
             self.new_value = value
             self.old_value = None
