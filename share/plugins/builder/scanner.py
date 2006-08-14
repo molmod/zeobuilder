@@ -137,9 +137,12 @@ class ConscanResultsWindow(GladeWrapper):
 
     def apply_normal(self):
         model, iter = self.tree_selection.get_selected()
-        c = copy.deepcopy(self.frame1.transformation)
-        c.apply_after(model.get_value(iter, 2)[1])
-        primitive.SetProperty(self.frame2, "transformation", c)
+        old_transformation = copy.deepcopy(self.frame2.transformation)
+        self.frame2.transformation.clear()
+        transformation =  self.frame1.get_frame_relative_to(self.frame2)
+        transformation.apply_before(model.get_value(iter, 2)[1])
+        self.frame2.set_transformation(transformation)
+        primitive.SetProperty(self.frame2, "transformation", old_transformation, done=True)
 
     def connect_minimizers(self):
         model, iter = self.tree_selection.get_selected()
