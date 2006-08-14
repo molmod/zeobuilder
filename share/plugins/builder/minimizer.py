@@ -259,11 +259,14 @@ def get_minimizer_problem(cache):
         two_frames = {}
         for child in node.children:
             trace = child.target.trace()
-            if parent not in trace: return None
+            if parent not in trace:
+                return None
             parent_pos = trace.index(parent)
-            if parent_pos == len(trace) - 1: return None
+            if parent_pos == len(trace) - 1:
+                return None
             frame = trace[parent_pos + 1]
-            if not isinstance(frame, GLFrameBase): return None
+            if not isinstance(frame, GLFrameBase):
+                return None
             two_frames[child.target] = frame
         result.minimizers[node] = two_frames
         for frame in two_frames.itervalues():

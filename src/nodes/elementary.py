@@ -90,13 +90,6 @@ class GLGeometricBase(ModelObject, GLTransformationMixin):
         ModelObject.initnonstate(self)
         GLTransformationMixin.initnonstate(self, Transformation)
 
-    #
-    # Flags
-    #
-
-    def set_selected(self, selected):
-        GLTransformationMixin.set_selected(self, selected)
-
 
 class GLContainerBase(ModelObject, GLMixin, GLContainerMixin):
 
@@ -154,13 +147,6 @@ class GLContainerBase(ModelObject, GLMixin, GLContainerMixin):
         GLContainerMixin.write_pov(self, indenter)
         GLMixin.write_pov(self, indenter)
 
-    #
-    # Flags
-    #
-
-    def set_selected(self, selected):
-        GLMixin.set_selected(self, selected)
-
 
 class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
 
@@ -217,13 +203,6 @@ class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
         GLContainerMixin.write_pov(self, indenter)
         GLTransformationMixin.write_pov(self, indenter)
 
-    #
-    # Flags
-    #
-
-    def set_selected(self, selected):
-        GLTransformationMixin.set_selected(self, selected)
-
 
 class GLReferentBase(ReferentBase, GLMixin):
 
@@ -235,13 +214,6 @@ class GLReferentBase(ReferentBase, GLMixin):
         ReferentBase.initnonstate(self)
         GLMixin.initnonstate(self)
 
-    #
-    # Flags
-    #
-
-    def set_selected(self, selected):
-        GLMixin.set_selected(self, selected)
-
 
 class GLGeometricReferentBase(ReferentBase, GLTransformationMixin):
 
@@ -252,11 +224,4 @@ class GLGeometricReferentBase(ReferentBase, GLTransformationMixin):
     def initnonstate(self, Transformation):
         ReferentBase.initnonstate(self)
         GLTransformationMixin.initnonstate(self, Transformation)
-
-    #
-    # Flags
-    #
-
-    def set_selected(self, selected):
-        GLTransformationMixin.set_selected(self, selected)
 

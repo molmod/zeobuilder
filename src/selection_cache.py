@@ -69,6 +69,7 @@ class SelectionCache(gobject.GObject):
                 raise AttributeError, "Cached variables %s does not exist." % name
             else:
                 result = function(self)
+            #print "GET %s: %s" % (name, result)
             self.items[name] = result
             return result
         else:
@@ -80,16 +81,23 @@ class SelectionCache(gobject.GObject):
 
     # nodes
     def get_nodes(self):
-        #print "BEGIN print selection"
-        #print "COUNT: %i" % context.application.main.tree_selection.count_selected_rows()
-        #for path in context.application.main.tree_selection.get_selected_rows()[1]:
-        #    print path
-        #print "END print selection"
-        return [
-            context.application.model[path][0]
-            for path
-            in context.application.main.tree_selection.get_selected_rows()[1]
-        ]
+        # the selection must be updated in case get_nodes is called after the
+        # selection has changed, but the idle-added functions could not yet be
+        # called.
+        context.application.model.update_selection()
+        return context.application.model.selection
+
+    def get_last(self):
+        if len(self.nodes) > 0:
+            return self.nodes[-1]
+        else:
+            return None
+
+    def get_next_to_last(self):
+        if len(self.nodes) > 1:
+            return self.nodes[-2]
+        else:
+            return None
 
     def get_some_nodes_fixed(self):
         return analysis.some_fixed(self.nodes)

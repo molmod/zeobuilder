@@ -47,6 +47,44 @@ class Model(gobject.GObject):
         self.folder = None
         self.filename = None
 
+        self.selection = []
+        self.to_be_added = set([])
+        self.to_be_removed = set([])
+        self.selection_updated = True
+
+    # selection stuff
+
+    def queue_add_to_selection(self, node):
+        print "QUEUE ADD TO SELECTION", node.get_name()
+        if len(self.to_be_removed) > 0:
+            self.update_selection()
+        self.to_be_added.add(node)
+        if self.selection_updated:
+            gobject.idle_add(self.update_selection)
+            self.selection_updated = False
+
+    def queue_remove_from_selection(self, node):
+        print "QUEUE REMOVE FROM SELECTION", node.get_name()
+        if len(self.to_be_added) > 0:
+            self.update_selection()
+        self.to_be_removed.add(node)
+        self.selection = [node for node in self.selection if node.selected]
+        if self.selection_updated:
+            gobject.idle_add(self.update_selection)
+            self.selection_updated = False
+
+    def update_selection(self):
+        if not self.selection_updated:
+            if len(self.to_be_removed) > 0:
+                self.selection = [node for node in self.selection if node.selected]
+                self.to_be_removed.clear()
+            self.selection.extend(self.to_be_added)
+            self.to_be_added.clear()
+            #self.to_be_removed.clear()
+            print "UPDATED SELECTION", [node.get_name() for node in self.selection]
+            self.selection_updated = True
+            context.application.cache.queue_invalidate()
+
     # internal functions
 
     def add_to_root(self, model_object):

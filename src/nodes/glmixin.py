@@ -53,6 +53,8 @@ class GLMixin(gobject.GObject):
 
     def initnonstate(self):
         self.gl_active = 0
+        self.connect("on-selected", self.on_select_changed)
+        self.connect("on-deselected", self.on_select_changed)
 
     #
     # Properties
@@ -266,14 +268,11 @@ class GLMixin(gobject.GObject):
         return temp
 
     #
-    # Flags
+    # Signal handlers
     #
 
-    def set_selected(self, selected):
-        if selected != self.selected:
-            assert self.model is not None, "Can only select a node if it is part of a model."
-            self.selected = selected
-            self.invalidate_total_list()
+    def on_select_changed(self, foo):
+        self.invalidate_total_list()
 
 gobject.signal_new("on-draw-list-invalidated", GLMixin, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 gobject.signal_new("on-boundingbox-list-invalidated", GLMixin, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())

@@ -86,11 +86,16 @@ class TransformationInvert(Immediate):
 
     def do(self):
         cache = context.application.cache
+
         # Translate where possible, if necessary
         translated_nodes = cache.translated_nodes
         if len(translated_nodes) > 0:
-            absolute_inversion_center = translated_nodes[-1].get_absolute_frame().t
-            victims_by_parent = list_by_parent(cache.transformed_nodes[:-1])
+            if isinstance(cache.last, GLTransformationMixin) and \
+               isinstance(cache.last.transformation, Translation):
+                absolute_inversion_center = cache.last.get_absolute_frame().t
+            else:
+                absolute_inversion_center = numpy.zeros(3, float)
+            victims_by_parent = list_by_parent(cache.transformed_nodes)
             for parent, victims in victims_by_parent.iteritems():
                 local_inversion_center = parent.get_absolute_frame().vector_apply_inverse(absolute_inversion_center)
                 for victim in victims:
@@ -163,9 +168,16 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         cache = context.application.cache
         if cache.parent is None: return False
-        transformed_nodes = cache.transformed_nodes
-        if len(transformed_nodes) == 0: return False
-        if len(transformed_nodes) == 1 and not isinstance(transformed_nodes[0].transformation, Translation): return False
+        if len(cache.nodes) == 1:
+            if not isinstance(cache.last, GLTransformationMixin) or \
+               not isinstance(cache.last.transformation, Rotation): return False
+        elif len(cache.nodes) == 2:
+            if not isinstance(cache.last, GLTransformationMixin) or \
+               not isinstance(cache.last.transformation, Translation): return False
+            if not isinstance(cache.next_to_last, GLTransformationMixin) or \
+               not isinstance(cache.next_to_last.transformation, Complete): return False
+        else:
+            return False
         if cache.some_nodes_fixed: return False
         # C) passed all tests:
         return True
@@ -177,18 +189,18 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
     def ask_parameters(self):
         cache = context.application.cache
         nodes = cache.nodes
+        last = cache.last
+        next_to_last = cache.next_to_last
         parent = cache.parent
 
-        last = nodes[-1]
         if isinstance(last, Vector):
-            last_but_one = nodes[-2]
-            if (len(nodes) >= 2) and isinstance(last_but_one, Vector):
+            if (len(nodes) >= 2) and isinstance(next_to_last, Vector):
                 b1 = last.children[0].translation_relative_to(parent)
                 e1 = last.children[1].translation_relative_to(parent)
-                b2 = last_but_one.children[0].translation_relative_to(parent)
-                e2 = last_but_one.children[1].translation_relative_to(parent)
+                b2 = next_to_last.children[0].translation_relative_to(parent)
+                e2 = next_to_last.children[1].translation_relative_to(parent)
                 if (b1 is not None) and (e1 is not None) and (b2 is not None) and (e2 is not None):
-                    if last.children[0].target == last_but_one.children[0].target:
+                    if last.children[0].target == next_to_last.children[0].target:
                         self.parameters.complete.t = copy.copy(b1)
                     angle = angle(e1 - b1, e2 - b2)
                     rotation_vector = numpy.cross(e1 - b1, e2 - b2)
@@ -243,7 +255,7 @@ class TranslateDialog(ImmediateWithMemory):
 
     def ask_parameters(self):
         cache = context.application.cache
-        last = cache.nodes[-1]
+        last = cache.last
         if isinstance(last, Vector):
             b = last.children[0].translation_relative_to(cache.parent)
             e = last.children[1].translation_relative_to(cache.parent)
@@ -301,12 +313,13 @@ class RoundRotation(Immediate):
         rounded_quaternions = []
 
         cache = context.application.cache
-        victim = cache.nodes[-1]
         if len(cache.nodes) == 1:
+            victim = cache.last
             master = None
             factor, selected_quaternion = quaternion_from_rotation_matrix(victim.transformation.r)
         elif len(cache.nodes) == 2:
-            master = context.application.cache.nodes[0]
+            master = cache.last
+            victim = cache.next_to_last
             factor, selected_quaternion = quaternion_from_rotation_matrix(victim.get_frame_relative_to(master).r)
 
         step = 15
@@ -332,7 +345,10 @@ class RoundRotation(Immediate):
         def filter_out_high_cost(records):
             for record in records:
                 #print selected_quaternion, record.quaternion
-                cost_function = int(math.acos(numpy.dot(selected_quaternion, record.quaternion))*180.0/math.pi)
+                cosine = numpy.dot(selected_quaternion, record.quaternion)
+                if cosine > 1: cosine = 1
+                elif cosine < -1: cosine = -1
+                cost_function = int(math.acos(cosine)*180.0/math.pi)
                 if cost_function < 10:
                     record.cost_function = cost_function
                 else:
@@ -375,11 +391,13 @@ class RoundRotation(Immediate):
                 new_transformation.r = factor * quaternion_to_rotation_matrix(user_record.quaternion)
                 primitive.SetProperty(victim, "transformation", new_transformation)
             elif len(cache.nodes) == 2:
+                print "SLAVE", victim.get_name()
+                print "MASTER", master.get_name()
                 old_transformation = copy.deepcopy(victim.transformation)
                 victim.transformation.r = numpy.identity(3, float)
                 victim.transformation.r = numpy.dot(
+                    master.get_frame_relative_to(victim).r,
                     factor * quaternion_to_rotation_matrix(user_record.quaternion),
-                    victim.get_frame_relative_to(master).r
                 )
                 primitive.SetProperty(victim, "transformation", old_transformation, done=True)
 
@@ -461,17 +479,22 @@ class RotateKeyboardMixin(object):
 class RotateObjectBase(InteractiveWithMemory):
     def analyze_selection(parameters=None):
         if not InteractiveWithMemory.analyze_selection(parameters): return False
-        application = context.application
-        if application.main is None: return False
-        nodes = application.cache.nodes
-        if len(nodes) == 0: return False
-        if nodes[0].get_fixed(): return False
-        if len(nodes) == 1:
-            if not isinstance(nodes[0], GLTransformationMixin): return False
-            if not isinstance(nodes[0].transformation, Rotation): return False
-        elif len(nodes) == 2:
-            if not isinstance(nodes[0], GLTransformationMixin): return False
-            if not (isinstance(nodes[1], Vector) or (isinstance(nodes[1], GLTransformationMixin) and isinstance(nodes[1].transformation, Translation))): return False
+        cache = context.application.cache
+        if len(cache.nodes) == 1:
+            if cache.last.get_fixed(): return False
+            if not isinstance(cache.last, GLTransformationMixin): return False
+            if not isinstance(cache.last.transformation, Rotation): return False
+        elif len(cache.nodes) == 2:
+            if cache.next_to_last.get_fixed(): return False
+            if not isinstance(cache.next_to_last, GLTransformationMixin): return False
+            if not isinstance(cache.next_to_last.transformation, Complete): return False
+            if not (
+                isinstance(cache.last, Vector) or
+                (
+                    isinstance(cache.last, GLTransformationMixin) and
+                    isinstance(cache.last.transformation, Translation)
+                )
+            ): return False
         else:
             return False
         return True
@@ -479,13 +502,17 @@ class RotateObjectBase(InteractiveWithMemory):
 
     def interactive_init(self):
         InteractiveWithMemory.interactive_init(self)
-        nodes = context.application.cache.nodes
-        self.victim = nodes[0]
+        cache = context.application.cache
+        if len(cache.nodes) == 1:
+            self.victim = cache.node
+            helper = None
+        else:
+            self.victim = cache.next_to_last
+            helper = cache.last
         self.rotation_axis = None
         self.changed = False
         rotation_center_object = None
-        if len(nodes) == 2:
-            helper = nodes[1]
+        if helper is not None:
             # take the information out of the helper nodes
             if isinstance(helper, Vector):
                 b = helper.children[0].translation_relative_to(self.victim.parent)

@@ -48,14 +48,6 @@ class Frame(GLFrameBase, FrameAxes):
     check_add = classmethod(check_add)
 
     #
-    # Flags
-    #
-
-    def set_selected(self, selected):
-        GLFrameBase.set_selected(self, selected)
-        self.invalidate_draw_list()
-
-    #
     # Draw
     #
 
@@ -76,6 +68,14 @@ class Frame(GLFrameBase, FrameAxes):
     def revalidate_bounding_box(self):
         GLFrameBase.revalidate_bounding_box(self)
         FrameAxes.extend_bounding_box(self, self.bounding_box)
+
+    #
+    # Signal handlers
+    #
+
+    def on_select_changed(self, foo):
+        GLFrameBase.on_select_changed(self, foo)
+        self.invalidate_draw_list()
 
 
 class AddFrame(AddBase):
