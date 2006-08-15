@@ -40,6 +40,7 @@ class DefineCenter(CenterAlignBase):
     description = "Define center"
     menu_info = MenuInfo("default/_Object:tools/_Transform:center", "_Define center", order=(0, 4, 1, 2, 2, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not CenterAlignBase.analyze_selection(): return False
@@ -51,7 +52,6 @@ class DefineCenter(CenterAlignBase):
         if cache.some_neighbours_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -64,6 +64,7 @@ class Align(CenterAlignBase):
     description = "Align to parent"
     menu_info = MenuInfo("default/_Object:tools/_Transform:align", "_Align", order=(0, 4, 1, 2, 3, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not CenterAlignBase.analyze_selection(): return False
@@ -75,7 +76,6 @@ class Align(CenterAlignBase):
         if cache.some_neighbours_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -88,6 +88,7 @@ class DefineCenterAndAlign(CenterAlignBase):
     description = "Define as center and align to parent"
     menu_info = MenuInfo("default/_Object:tools/_Transform:centeralign", "De_fine center and align", order=(0, 4, 1, 2, 4, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not CenterAlignBase.analyze_selection(): return False
@@ -99,7 +100,6 @@ class DefineCenterAndAlign(CenterAlignBase):
         if cache.some_neighbours_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -110,6 +110,7 @@ class CenterToChildren(CenterAlignBase):
     description = "Center to children"
     menu_info = MenuInfo("default/_Object:tools/_Transform:center", "Center to c_hildren", order=(0, 4, 1, 2, 2, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not CenterAlignBase.analyze_selection(): return False
@@ -120,7 +121,6 @@ class CenterToChildren(CenterAlignBase):
         if cache.some_children_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -133,6 +133,7 @@ class AlignUnitCell(Immediate):
     description = "Align unit cell"
     menu_info = MenuInfo("default/_Object:tools/_Transform:align", "_Align unit cell", order=(0, 4, 1, 2, 3, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestors
         if not Immediate.analyze_selection(): return False
@@ -143,7 +144,6 @@ class AlignUnitCell(Immediate):
         if sum(node.cell_active) != 3: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         universe = context.application.cache.node

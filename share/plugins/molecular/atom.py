@@ -173,9 +173,9 @@ class AddAtom(AddBase):
     description = "Add atom"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Atom", image_name="plugins/molecular/atom.svg", order=(0, 4, 1, 0, 0, 4))
 
+    @staticmethod
     def analyze_selection():
         return AddBase.analyze_selection(Atom)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         AddBase.do(self, Atom)
@@ -185,6 +185,7 @@ class MergeOverlappingAtoms(Immediate):
     description = "Merge overlapping atoms"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Merge overlapping atoms", order=(0, 4, 1, 5, 0, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -200,7 +201,6 @@ class MergeOverlappingAtoms(Immediate):
         if not some_atoms: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -266,6 +266,7 @@ class RearrangeAtoms(Immediate):
     description = "Rearrange atoms"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Rearrange Atoms", order=(0, 4, 1, 5, 0, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -281,7 +282,6 @@ class RearrangeAtoms(Immediate):
         if not contains_atoms: return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache

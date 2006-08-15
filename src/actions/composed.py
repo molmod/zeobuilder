@@ -92,10 +92,11 @@ class Action(object):
     # a debugging variable that counts the number of action nodes
     #count = 0
 
+    @classmethod
     def clear_cached_analysis_result(Class):
         Class.last_analysis_result = None
-    clear_cached_analysis_result = classmethod(clear_cached_analysis_result)
 
+    @classmethod
     def cached_analyze_selection(Class, *arguments):
         if Class.last_analysis_result is None:
             Class.last_analysis_result = Class.analyze_selection(*arguments)
@@ -103,16 +104,15 @@ class Action(object):
         #else:
         #    print Class, "CACHED", Class.last_analysis_result
         return Class.last_analysis_result
-    cached_analyze_selection = classmethod(cached_analyze_selection)
 
+    @classmethod
     def on_cache_invalidated(Class, cache):
         Class.clear_cached_analysis_result()
-    on_cache_invalidated = classmethod(on_cache_invalidated)
 
+    @staticmethod
     def analyze_selection():
         "Checks wether the 'selected' nodes are appropriate for this action class"
-        return context.application.cache is not None
-    analyze_selection = staticmethod(analyze_selection)
+        return context.application.action_manager.current_action is None
 
     # --- NON STATIC ---
     def __init__(self):
@@ -176,11 +176,6 @@ class Parameters(object):
 
 
 class RememberParametersMixin(object):
-    def analyze_selection(parameters=None):
-        "Checks wether the 'selected' nodes are appropriate for this action class"
-        return context.application.cache is not None
-    analyze_selection = staticmethod(analyze_selection)
-
     # lets the user give extra parameters to an action, e.g. translation vector coordinates etc.
     def __init__(self, parameters=None):
         self.parameters = parameters
@@ -217,7 +212,9 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
     store_last_parameters = True
     parameters_dialog = None
 
-    analyze_selection = staticmethod(RememberParametersMixin.analyze_selection)
+    @staticmethod
+    def analyze_selection(parameters):
+        return Immediate.analyze_selection()
 
     def __init__(self, parameters=None):
         RememberParametersMixin.__init__(self, parameters)
@@ -238,6 +235,7 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
         temp = temp[temp.rfind(".")+1:-2]
         return temp + "_parameters"
 
+    @classmethod
     def register_settings(cls):
         def default_parameters():
             return cls.default_parameters().__dict__
@@ -249,8 +247,8 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
                 None,
                 cls.corrector_parameters,
             )
-    register_settings = classmethod(register_settings)
 
+    @classmethod
     def corrector_parameters(cls, config_parameters):
         default_parameters = cls.default_parameters().__dict__
         for key, value in config_parameters.items():
@@ -260,21 +258,20 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
             if key not in config_parameters:
                 config_parameters[key] = value
         return config_parameters
-    corrector_parameters = classmethod(corrector_parameters)
 
+    @classmethod
     def last_parameters(cls):
         result = Parameters()
         result.__dict__ = getattr(context.application.configuration, cls.config_name())
         return result
-    last_parameters = classmethod(last_parameters)
 
+    @classmethod
     def default_parameters(cls):
         raise NotImplementedError
-    default_parameters = classmethod(default_parameters)
 
+    @classmethod
     def store_parameters(cls, parameters):
         setattr(context.application.configuration, cls.config_name(), parameters.__dict__)
-    store_parameters = classmethod(store_parameters)
 
     def ask_parameters(self):
         if self.parameters_dialog is None:
@@ -308,7 +305,10 @@ class Interactive(Action):
 
 class InteractiveWithMemory(Interactive, RememberParametersMixin):
     repeatable = True
-    analyze_selection = staticmethod(RememberParametersMixin.analyze_selection)
+
+    @staticmethod
+    def analyze_selection(parameters):
+        return Immediate.analyze_selection()
 
     def __init__(self, parameters=None):
         RememberParametersMixin.__init__(self, parameters)

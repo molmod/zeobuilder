@@ -311,6 +311,7 @@ class ShowConscanResultsWindow(Immediate):
 
     conscan_results_window = ConscanResultsWindow()
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -318,7 +319,6 @@ class ShowConscanResultsWindow(Immediate):
         if not isinstance(context.application.cache.node, ConscanResults): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         self.conscan_results_window.set_conscan_results(context.application.cache.node)
@@ -509,6 +509,7 @@ class ScanForConnections(ImmediateWithMemory):
         ("send_con", "Receiving solutions"),
     ])
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -520,8 +521,8 @@ class ScanForConnections(ImmediateWithMemory):
         if len(cache.nodes) == 2 and not isinstance(cache.parent, GLContainerMixin): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         rotation2 = Rotation()
         rotation2.set_rotation_properties(0.0, [1, 0, 0], False)
@@ -540,7 +541,6 @@ class ScanForConnections(ImmediateWithMemory):
         result.rotation2 = Undefined(rotation2)
         result.distance_tolerance = Undefined(from_angstrom(0.1))
         return result
-    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         if len(context.application.cache.nodes) == 1:

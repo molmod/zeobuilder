@@ -57,6 +57,7 @@ class AddBase(Immediate):
 
 
 class CenterAlignBase(Immediate):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -64,7 +65,6 @@ class CenterAlignBase(Immediate):
         if not isinstance(context.application.cache.node, GLMixin): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self, parent, transformed_children, transformation):
         if isinstance(parent, GLTransformationMixin) and not parent.get_fixed():
@@ -76,6 +76,7 @@ class CenterAlignBase(Immediate):
 
 
 class ConnectBase(Immediate):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -86,7 +87,6 @@ class ConnectBase(Immediate):
         if cache.common_parent is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -102,6 +102,7 @@ class ConnectBase(Immediate):
 
 
 class AutoConnectMixin(object):
+    @staticmethod
     def analyze_selection():
         # B) validating
         cache = context.application.cache
@@ -109,7 +110,6 @@ class AutoConnectMixin(object):
         if cache.common_root == None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def allow_node(self, node):
         return isinstance(node, GLTransformationMixin) and \

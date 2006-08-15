@@ -50,6 +50,7 @@ class TransformationReset(Immediate):
     description = "Reset the transformation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:immediate", "_Reset", order=(0, 4, 1, 2, 0, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestors
         if not Immediate.analyze_selection(): return False
@@ -59,7 +60,6 @@ class TransformationReset(Immediate):
         if len(cache.transformed_nodes) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         for node in context.application.cache.transformed_nodes:
@@ -70,6 +70,7 @@ class TransformationInvert(Immediate):
     description = "Apply inversion"
     menu_info = MenuInfo("default/_Object:tools/_Transform:immediate", "_Invert", order=(0, 4, 1, 2, 0, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -82,7 +83,6 @@ class TransformationInvert(Immediate):
         if some_fixed(transformed_nodes): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -127,6 +127,7 @@ class RotateDialog(ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -137,13 +138,12 @@ class RotateDialog(ImmediateWithMemory):
         if node.get_fixed(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         result.rotation = Rotation()
         return result
-    default_parameters = classmethod(default_parameters)
 
     def do(self):
         primitive.Transform(context.application.cache.node, self.parameters.rotation, after=False)
@@ -166,6 +166,7 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -184,13 +185,12 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         if cache.some_nodes_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         result.complete = Complete()
         return result
-    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         cache = context.application.cache
@@ -244,6 +244,7 @@ class TranslateDialog(ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -254,13 +255,12 @@ class TranslateDialog(ImmediateWithMemory):
         # B) validating
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         result.translation = Translation()
         return result
-    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         cache = context.application.cache
@@ -297,6 +297,7 @@ class RoundRotation(Immediate):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -309,7 +310,6 @@ class RoundRotation(Immediate):
             if node.get_fixed(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
 
     def do(self):
@@ -484,6 +484,7 @@ class RotateKeyboardMixin(object):
 
 
 class RotateObjectBase(InteractiveWithMemory):
+    @staticmethod
     def analyze_selection(parameters=None):
         if not InteractiveWithMemory.analyze_selection(parameters): return False
         cache = context.application.cache
@@ -505,7 +506,6 @@ class RotateObjectBase(InteractiveWithMemory):
         else:
             return False
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def interactive_init(self):
         InteractiveWithMemory.interactive_init(self)
@@ -595,6 +595,7 @@ class RotateObjectKeyboard(RotateObjectBase, RotateKeyboardMixin):
 
 
 class RotateWorldBase(Interactive):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Interactive.analyze_selection(): return False
@@ -602,7 +603,6 @@ class RotateWorldBase(Interactive):
         if context.application.main is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def interactive_init(self):
         Interactive.interactive_init(self)
@@ -709,6 +709,7 @@ class TranslateKeyboardMixin(TranslateMixin):
 
 
 class TranslateObjectBase(InteractiveWithMemory):
+    @staticmethod
     def analyze_selection(parameters=None):
         if not InteractiveWithMemory.analyze_selection(parameters): return False
         application = context.application
@@ -719,7 +720,6 @@ class TranslateObjectBase(InteractiveWithMemory):
         if not isinstance(victim, GLTransformationMixin): return False
         if not isinstance(victim.transformation, Translation): return False
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def interactive_init(self):
         InteractiveWithMemory.interactive_init(self)
@@ -767,6 +767,7 @@ class TranslateObjectKeyboard(TranslateObjectBase, TranslateKeyboardMixin):
 
 
 class TranslateWorldBase(Interactive):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Interactive.analyze_selection(): return False
@@ -774,7 +775,6 @@ class TranslateWorldBase(Interactive):
         if context.application.main is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def interactive_init(self):
         Interactive.interactive_init(self)
@@ -806,6 +806,7 @@ class TranslateWorldKeyboard(TranslateWorldBase, TranslateKeyboardMixin):
 
 
 class TranslateViewerBase(Interactive):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Interactive.analyze_selection(): return False
@@ -813,7 +814,6 @@ class TranslateViewerBase(Interactive):
         if context.application.main is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
@@ -848,6 +848,7 @@ class TranslateViewerKeyboard(TranslateViewerBase, TranslateKeyboardMixin):
 
 
 class TranslateRotationCenterBase(Interactive):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Interactive.analyze_selection(): return False
@@ -855,7 +856,6 @@ class TranslateRotationCenterBase(Interactive):
         if context.application.main is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def interactive_init(self):
         Interactive.interactive_init(self)

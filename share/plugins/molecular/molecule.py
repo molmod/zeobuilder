@@ -41,11 +41,11 @@ class ChemicalFormula(Immediate):
     description = "Show chemical formula"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Chemical Formula", order=(0, 4, 1, 5, 2, 0))
 
+    @staticmethod
     def analyze_selection():
         if not Immediate.analyze_selection(): return False
         if len(context.application.cache.nodes) == 0: return False
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         atom_counts = {}
@@ -124,6 +124,7 @@ class CenterOfMass(CenterAlignBase):
     description = "Center of mass"
     menu_info = MenuInfo("default/_Object:tools/_Transform:center", "Center of _mass frame", order=(0, 4, 1, 2, 2, 2))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not CenterAlignBase.analyze_selection(): return False
@@ -134,7 +135,6 @@ class CenterOfMass(CenterAlignBase):
         if cache.some_children_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -151,6 +151,7 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
     description = "Center of mass and principal axes"
     menu_info = MenuInfo("default/_Object:tools/_Transform:centeralign", "Center of mass and _principal axes frame", order=(0, 4, 1, 2, 4, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not CenterOfMass.analyze_selection(): return False
@@ -161,7 +162,6 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
         if cache.some_children_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -191,6 +191,7 @@ class SaturateWithHydrogens(Immediate):
           (4,    3):      math.pi/180*70.528779365509308
     }
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -198,7 +199,6 @@ class SaturateWithHydrogens(Immediate):
         if len(context.application.cache.nodes) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         Atom = context.application.plugins.get_node("Atom")

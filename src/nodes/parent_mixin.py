@@ -90,12 +90,12 @@ class ContainerMixin(ParentMixin):
         for child in self.children:
             child.delete_referents()
 
+    @classmethod
     def check_add(Class, ModelObjectClass):
         if issubclass(ModelObjectClass, Reference):
             return False
         else:
             return True
-    check_add = classmethod(check_add)
 
 
 class ReferentMixinError(Exception):

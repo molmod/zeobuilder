@@ -50,6 +50,7 @@ class Undo(Immediate):
     menu_info = UndoMenuInfo()
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -58,7 +59,6 @@ class Undo(Immediate):
         if len(undo_stack) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         context.application.action_manager.undo()
@@ -81,6 +81,7 @@ class Redo(Immediate):
     menu_info = RedoMenuInfo()
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -89,7 +90,6 @@ class Redo(Immediate):
         if len(redo_stack) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         context.application.action_manager.redo()
@@ -112,6 +112,7 @@ class Repeat(Immediate):
     menu_info = RepeatMenuInfo()
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -121,7 +122,6 @@ class Repeat(Immediate):
         if not last_action.want_repeat(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         context.application.action_manager.repeat()
@@ -153,6 +153,7 @@ class Cut(Immediate):
     menu_info = MenuInfo("default/_Edit:clipboard", "Cu_t", accel_key=ord("x"), image_name=gtk.STOCK_CUT, order=(0, 1, 1, 0))
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -162,7 +163,6 @@ class Cut(Immediate):
         if cache.some_nodes_without_indirect_children_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         source = copy.copy(context.application.cache.nodes_without_indirect_children)
@@ -175,6 +175,7 @@ class Copy(Immediate):
     menu_info = MenuInfo("default/_Edit:clipboard", "_Copy", accel_key=ord("c"), image_name=gtk.STOCK_COPY, order=(0, 1, 1, 1))
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -184,7 +185,6 @@ class Copy(Immediate):
         if cache.some_nodes_without_indirect_children_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         source = copy.copy(context.application.cache.nodes_without_indirect_children)
@@ -196,6 +196,7 @@ class Paste(Immediate):
     menu_info = MenuInfo("default/_Edit:clipboard", "_Paste", accel_key=ord("v"), image_name=gtk.STOCK_PASTE, order=(0, 1, 1, 2))
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -206,7 +207,6 @@ class Paste(Immediate):
         if not clipboard.wait_is_target_available("ZML"): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         parent = context.application.cache.node
@@ -228,6 +228,7 @@ class Delete(Immediate):
     description = "Delete the selected object(s)"
     menu_info = MenuInfo("default/_Edit:deldup", "_Delete", 65535, False, image_name=gtk.STOCK_DELETE, order=(0, 1, 2, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -235,7 +236,6 @@ class Delete(Immediate):
         if context.application.cache.some_nodes_without_indirect_children_fixed: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         dupes = copy.copy(context.application.cache.nodes_without_indirect_children)
@@ -246,6 +246,7 @@ class Duplicate(Immediate):
     description = "Duplicate nodes"
     menu_info = MenuInfo("default/_Edit:deldup", "_Duplicate", ord("d"), order=(0, 1, 2, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -255,7 +256,6 @@ class Duplicate(Immediate):
         if not isinstance(cache.parent, ContainerMixin): return False
         # D) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache

@@ -194,6 +194,7 @@ class Bond(Vector):
 class ConnectBond(ConnectBase):
     bond_type = None
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not ConnectBase.analyze_selection(): return False
@@ -203,7 +204,6 @@ class ConnectBond(ConnectBase):
                 return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def new_connector(self, begin, end):
         return Bond(targets=[begin, end], bond_type=self.bond_type)
@@ -231,13 +231,13 @@ class AutoConnectPhysical(AutoConnectMixin, Immediate):
     description = "Add bonds (database)"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (database)", order=(0, 4, 1, 5, 1, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not AutoConnectMixin.analyze_selection(): return False
         if not Immediate.analyze_selection(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def allow_node(self, node):
         return isinstance(node, context.application.plugins.get_node("Atom"))
@@ -295,13 +295,13 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
-        if not ImmediateWithMemory.analyze_selection(): return False
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
         if not AutoConnectMixin.analyze_selection(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def allow_node(self, node):
         return (
@@ -322,6 +322,7 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
                 return Bond(bond_type=self.parameters.bond_type, targets=[atom1, atom2])
         return None
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         result.number1 = 6
@@ -329,7 +330,6 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
         result.distance = 0.5
         result.bond_type = BOND_SINGLE
         return result
-    default_parameters = classmethod(default_parameters)
 
     def do(self):
         AutoConnectMixin.do(self, max([1, self.parameters.distance]))

@@ -36,9 +36,9 @@ class AddFolder(AddBase):
     description = "Add folder"
     menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Folder", image_name="plugins/core/folder.svg", order=(0, 4, 1, 0, 1, 0))
 
+    @staticmethod
     def analyze_selection():
         return AddBase.analyze_selection(Folder)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         AddBase.do(self, Folder)

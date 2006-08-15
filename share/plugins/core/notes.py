@@ -61,9 +61,9 @@ class AddNotes(AddBase):
     description = "Add notes"
     menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Notes", image_name="plugins/core/notes.svg", order=(0, 4, 1, 0, 1, 1))
 
+    @staticmethod
     def analyze_selection():
         return AddBase.analyze_selection(Notes)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         AddBase.do(self, Notes)

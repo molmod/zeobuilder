@@ -83,10 +83,10 @@ class ModelObject(Node):
     # Properties
     #
 
+    @classmethod
     def class_name(cls):
         temp = str(cls)
         return temp[temp.rfind(".")+1:-2]
-    class_name = classmethod(class_name)
 
     def default_name(self):
         return self.class_name()

@@ -34,6 +34,7 @@ import copy
 
 
 class GroupBase(Immediate):
+    @staticmethod
     def analyze_selection(NewParentClass):
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -48,7 +49,6 @@ class GroupBase(Immediate):
             if not NewParentClass.check_add(Class): return False
         # C) Passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self, NewParentClass):
         cache = context.application.cache
@@ -64,10 +64,10 @@ class GroupInFolder(GroupBase):
     description = "Frame"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Group in folder", order=(0, 4, 1, 1, 0, 0))
 
+    @staticmethod
     def analyze_selection():
         Folder = context.application.plugins.get_node("Folder")
         return GroupBase.analyze_selection(Folder)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         Folder = context.application.plugins.get_node("Folder")
@@ -78,10 +78,10 @@ class Frame(GroupBase):
     description = "Frame"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Frame", order=(0, 4, 1, 1, 0, 2))
 
+    @staticmethod
     def analyze_selection():
         Frame = context.application.plugins.get_node("Frame")
         return GroupBase.analyze_selection(Frame)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         Frame = context.application.plugins.get_node("Frame")
@@ -89,6 +89,7 @@ class Frame(GroupBase):
 
 
 class UngroupBase(Immediate):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -103,7 +104,6 @@ class UngroupBase(Immediate):
             if not new_parent.check_add(Class): return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -120,6 +120,7 @@ class Ungroup(UngroupBase):
     description = "Ungroup"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Ungroup", order=(0, 4, 1, 1, 0, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not UngroupBase.analyze_selection(): return False
@@ -131,13 +132,13 @@ class Ungroup(UngroupBase):
         if not isinstance(cache.parent, Folder): return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
 
 class UnframeRelative(UngroupBase):
     description = "Unframe (relative)"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Unframe relative", order=(0, 4, 1, 1, 0, 3))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not UngroupBase.analyze_selection(): return False
@@ -149,7 +150,6 @@ class UnframeRelative(UngroupBase):
         if not isinstance(cache.parent, GLContainerMixin): return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
 
 class UnframeAbsolute(UnframeRelative):
@@ -166,6 +166,7 @@ class UnframeAbsolute(UnframeRelative):
 
 
 class OneLevelHigher(Immediate):
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -180,7 +181,6 @@ class OneLevelHigher(Immediate):
             if not new_parent.check_add(Class): return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -194,6 +194,7 @@ class OneLevelHigherRelative(OneLevelHigher):
     description = "One level higher (relative)"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:level", "_One level higher (relative)", order=(0, 4, 1, 1, 1, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not OneLevelHigher.analyze_selection(): return False
@@ -201,13 +202,13 @@ class OneLevelHigherRelative(OneLevelHigher):
         if not isinstance(context.application.cache.parent, GLFrameBase): return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
 
 class OneLevelHigherAbsolute(OneLevelHigherRelative):
     description = "One level higher (relative)"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:level", "_One level higher (absolute)", order=(0, 4, 1, 1, 1, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not OneLevelHigherRelative.analyze_selection(): return False
@@ -215,7 +216,6 @@ class OneLevelHigherAbsolute(OneLevelHigherRelative):
         if not isinstance(context.application.cache.parent.parent, GLContainerMixin): return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
@@ -229,6 +229,7 @@ class SeparateFrame(Immediate):
     description = "Separate the selected frame"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:single", "_Separate frame", order=(0, 4, 1, 1, 2, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -241,7 +242,6 @@ class SeparateFrame(Immediate):
         if not node.parent.check_add(Frame): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         victim = context.application.cache.node
@@ -257,6 +257,7 @@ class SwapVector(Immediate):
     description = "Swap vector"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:single", "_Swap vector", order=(0, 4, 1, 1, 2, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -267,7 +268,6 @@ class SwapVector(Immediate):
             if not issubclass(Class, Vector): return False
         # C) passed all tests
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         for vector in context.application.cache.nodes:

@@ -82,6 +82,7 @@ class TetraCoordination(Immediate):
     description = "T-site coordination"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_T-site coordination", order=(0, 4, 1, 5, 2, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -89,7 +90,6 @@ class TetraCoordination(Immediate):
         if len(context.application.cache.nodes) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         Atom = context.application.plugins.get_node("Atom")

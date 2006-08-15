@@ -51,11 +51,11 @@ class GLContainerMixin(ContainerMixin):
         model_object.drop_gl()
         self.invalidate_all_lists()
 
+    @classmethod
     def check_add(Class, ModelObjectClass):
         if not ContainerMixin.check_add(ModelObjectClass): return False
         if not issubclass(ModelObjectClass, GLMixin): return False
         return True
-    check_add = classmethod(check_add)
 
     #
     # Draw

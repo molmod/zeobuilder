@@ -240,11 +240,11 @@ class Universe(GLPeriodicContainer, FrameAxes):
     # Tree
     #
 
+    @classmethod
     def check_add(Class, ModelObjectClass):
         if not GLPeriodicContainer.check_add(ModelObjectClass): return False
         if issubclass(ModelObjectClass, Universe): return False
         return True
-    check_add = classmethod(check_add)
 
     #
     # OpenGL
@@ -495,6 +495,7 @@ class UnitCellToCluster(ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -506,8 +507,8 @@ class UnitCellToCluster(ImmediateWithMemory):
         if hasattr(parameters, "interval_c") and not universe.cell_active[2]: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         universe = context.application.model.universe
@@ -518,7 +519,6 @@ class UnitCellToCluster(ImmediateWithMemory):
         if universe.cell_active[2]:
             result.interval_c = numpy.array([0.0, universe.repetitions[2]], float)
         return result
-    default_parameters = classmethod(default_parameters)
 
     def do(self):
         universe = context.application.model.universe
@@ -659,6 +659,7 @@ class SuperCell(ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -670,8 +671,8 @@ class SuperCell(ImmediateWithMemory):
         if hasattr(parameters, "repetitions_c") and not universe.cell_active[2]: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         universe = context.application.model.universe
@@ -682,7 +683,6 @@ class SuperCell(ImmediateWithMemory):
         if universe.cell_active[2]:
             result.repetitions_c = universe.repetitions[2]
         return result
-    default_parameters = classmethod(default_parameters)
 
     def do(self):
         # create the repetitions vector
@@ -809,6 +809,7 @@ class AddPeriodicities(Immediate):
     menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Add periodicities", order=(0, 4, 1, 4, 0, 2))
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -820,7 +821,6 @@ class AddPeriodicities(Immediate):
             if not issubclass(Class, Vector): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         vectors = context.application.cache.nodes

@@ -40,12 +40,12 @@ class Frame(GLFrameBase, FrameAxes):
     # Tree
     #
 
+    @classmethod
     def check_add(Class, ModelObjectClass):
         if not GLFrameBase.check_add(ModelObjectClass): return False
         Universe = context.application.plugins.get_node("Universe")
         if issubclass(ModelObjectClass, Universe): return False
         return True
-    check_add = classmethod(check_add)
 
     #
     # Draw
@@ -82,9 +82,9 @@ class AddFrame(AddBase):
     description = "Add frame"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Frame", image_name="plugins/core/frame.svg", order=(0, 4, 1, 0, 0, 3))
 
+    @staticmethod
     def analyze_selection():
         return AddBase.analyze_selection(Frame)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         AddBase.do(self, Frame)

@@ -32,6 +32,7 @@ import zeobuilder.actions.primitive as primitive
 class MoveObjects(ImmediateWithMemory):
     store_last_parameters = False
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -43,13 +44,13 @@ class MoveObjects(ImmediateWithMemory):
         if context.application.cache.recursive_drag: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
 
 class Move3DObjects(MoveObjects):
     description = "Drag 'n' drop transformations"
     drag_info = DragInfo(order=0)
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not MoveObjects.analyze_selection(parameters): return False
@@ -60,7 +61,6 @@ class Move3DObjects(MoveObjects):
             if not issubclass(Class, GLMixin): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         node = context.application.cache.node
@@ -87,6 +87,7 @@ class DropTarget(ImmediateWithMemory):
     drag_info = DragInfo(order=2)
     store_last_parameters = False
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -97,7 +98,6 @@ class DropTarget(ImmediateWithMemory):
         if not destination.check_target(context.application.cache.node): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         destination = context.application.cache.drag_destination

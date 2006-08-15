@@ -104,11 +104,11 @@ class FileExport(Immediate):
     menu_info = MenuInfo("default/_File:impexp", "_Export", ord("e"), order=(0, 0, 1, 1))
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         if not Immediate.analyze_selection(): return False
         if len(context.application.cache.nodes) == 0: return False
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         run_file_dialog(
@@ -116,6 +116,7 @@ class FileExport(Immediate):
             context.application.model.file_save,
             context.application.cache.nodes
         )
+
 
 class FileQuit(Immediate):
     description = "Quit zeobuilder"

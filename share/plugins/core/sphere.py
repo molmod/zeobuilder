@@ -108,9 +108,9 @@ class AddSphere(AddBase):
     description = "Add sphere"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Sphere", image_name="plugins/core/sphere.svg", order=(0, 4, 1, 0, 0, 1))
 
+    @staticmethod
     def analyze_selection():
         return AddBase.analyze_selection(Sphere)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         AddBase.do(self, Sphere)

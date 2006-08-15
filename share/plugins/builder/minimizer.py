@@ -141,13 +141,13 @@ class AutoConnectMinimizers(AutoConnectMixin, Immediate):
     description = "Connect overlapping atoms with minimizers"
     menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Connect overlapping atoms with minimizers", order=(0, 4, 1, 6, 0, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not AutoConnectMixin.analyze_selection(): return False
         if not Immediate.analyze_selection(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def allow_node(self, node):
         return isinstance(node, context.application.plugins.get_node("Atom"))
@@ -303,6 +303,7 @@ class MinimizeDistances(ImmediateWithMemory):
 
     report_dialog = MinimizeReportDialog()
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -316,15 +317,14 @@ class MinimizeDistances(ImmediateWithMemory):
         if len(minimizer_problem.frames) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         result.allow_rotation = True
         result.update_interval = 0.4
         result.update_steps = 1
         return result
-    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:

@@ -35,6 +35,7 @@ class EditProperties(Immediate):
     menu_info = MenuInfo("default/_Object:basic", "_Properties", ord("e"), image_name=gtk.STOCK_PROPERTIES, order=(0, 4, 0, 2))
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -45,7 +46,6 @@ class EditProperties(Immediate):
             if issubclass(cls, Reference): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         victims = context.application.cache.nodes

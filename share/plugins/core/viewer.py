@@ -36,6 +36,7 @@ class ViewReset(Immediate):
     menu_info = MenuInfo("default/_View:viewer", "_Reset viewer", order=(0, 2, 0, 0))
     repeatable = False
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -43,7 +44,6 @@ class ViewReset(Immediate):
         if context.application.main is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         drawing_area = context.application.main.drawing_area
@@ -101,6 +101,7 @@ class ViewerConfiguration(Immediate):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -108,7 +109,6 @@ class ViewerConfiguration(Immediate):
         if context.application.main is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         drawing_area = context.application.main.drawing_area

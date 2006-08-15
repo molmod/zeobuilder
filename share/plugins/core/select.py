@@ -44,12 +44,12 @@ class SelectNone(Immediate):
     description = "Select none"
     menu_info = MenuInfo("default/_Select:default", "_None", order=(0, 3, 0, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         context.application.main.tree_selection.unselect_all()
@@ -59,6 +59,7 @@ class SelectTargets(Immediate):
     description = "Select targets"
     menu_info = MenuInfo("default/_Select:default", "_Targets", order=(0, 3, 0, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -69,7 +70,6 @@ class SelectTargets(Immediate):
             if not issubclass(Class, Reference): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         references = copy.copy(context.application.cache.nodes)
@@ -84,6 +84,7 @@ class SelectParents(Immediate):
     description = "Select parents"
     menu_info = MenuInfo("default/_Select:default", "_Parents", 65365, False, order=(0, 3, 0, 2))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -93,7 +94,6 @@ class SelectParents(Immediate):
         if len(parents) == 1 and parents[0] is None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         parents = context.application.cache.parents
@@ -107,6 +107,7 @@ class SelectChildren(Immediate):
     description = "Select children"
     menu_info = MenuInfo("default/_Select:default", "_Children", 65366, False, order=(0, 3, 0, 3))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -114,7 +115,6 @@ class SelectChildren(Immediate):
         if len(context.application.cache.children) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         children = context.application.cache.children
@@ -158,6 +158,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -166,14 +167,13 @@ class SelectChildrenByExpression(ImmediateWithMemory):
         if len(cache.containers_with_children) + len(cache.referents_with_children) == 0: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
+    @classmethod
     def default_parameters(cls):
         result = Parameters()
         result.expression = "True"
         result.recursive = cls.SELECT_PLAIN
         return result
-    default_parameters = classmethod(default_parameters)
 
     def do(self):
         cache = context.application.cache
@@ -243,6 +243,7 @@ class SaveSelection(Immediate):
     description = "Save selection"
     menu_info = MenuInfo("default/_Select:saved", "_Save selection", image_name="plugins/core/saved_selection.svg", order=(0, 3, 1, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -253,7 +254,6 @@ class SaveSelection(Immediate):
             if issubclass(Class, Reference): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         primitive.Add(SavedSelection(targets=context.application.cache.nodes), context.application.model.folder)
@@ -263,6 +263,7 @@ class RestoreSavedSelection(Immediate):
     description = "Restore saved selection"
     menu_info = MenuInfo("default/_Select:saved", "_Restore saved selection", order=(0, 3, 1, 1))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -271,7 +272,6 @@ class RestoreSavedSelection(Immediate):
             if not issubclass(Class, SavedSelection): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         referents = copy.copy(context.application.cache.nodes)
@@ -310,12 +310,12 @@ class EditSelectionFilter(Immediate):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         self.selection_filter.run(context.application.main)

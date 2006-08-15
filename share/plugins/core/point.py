@@ -162,9 +162,9 @@ class AddPoint(AddBase):
     description = "Add point"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Point", image_name="plugins/core/point.svg", order=(0, 4, 1, 0, 0, 2))
 
+    @staticmethod
     def analyze_selection():
         return AddBase.analyze_selection(Point)
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         AddBase.do(self, Point)
@@ -174,6 +174,7 @@ class CalculateAverage(Immediate):
     description = "Add point at average"
     menu_info = MenuInfo("default/_Object:tools/_Add:special", "_Point at average", order=(0, 4, 1, 0, 2, 0))
 
+    @staticmethod
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
@@ -188,7 +189,6 @@ class CalculateAverage(Immediate):
             if parent == None: return False
         # C) passed all tests:
         return True
-    analyze_selection = staticmethod(analyze_selection)
 
     def do(self):
         cache = context.application.cache
