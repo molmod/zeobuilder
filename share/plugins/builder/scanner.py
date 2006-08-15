@@ -76,7 +76,10 @@ class ConscanResults(ReferentBase):
             (quality, transformation, [
                 (get_index(node1), get_index(node2))
                 for node1, node2 in pairs
-            ]) for quality, transformation, pairs
+            ], [
+                (get_index(node1), get_index(node2))
+                for node1, node2 in inverse_pairs
+            ]) for quality, transformation, pairs, inverse_pairs
             in self.connections
         ]
 
@@ -91,7 +94,10 @@ class ConscanResults(ReferentBase):
             (quality, transformation, [
                 (get_ref(0, index1), get_ref(1, index2))
                 for index1, index2 in pairs
-            ]) for quality, transformation, pairs
+            ], [
+                (get_ref(0, index1), get_ref(1, index2))
+                for index1, index2 in inverse_pairs
+            ]) for quality, transformation, pairs, inverse_pairs
             in connections
         ]
 
@@ -107,10 +113,13 @@ class ConscanResultsWindow(GladeWrapper):
 
         GladeWrapper.__init__(self, "plugins/builder/gui.glade", "wi_conscan_results", "window")
         self.init_callbacks(ConscanResultsWindow)
-        self.init_proxies(["tv_results", "cb_auto_apply", "bu_apply", "bu_apply_opt", "bu_apply_opt_round"])
+        self.init_proxies([
+            "tv_results", "cb_auto_apply", "bu_apply", "bu_apply_opt",
+            "bu_apply_opt_round", "cb_inverse",
+        ])
         self.window.hide()
 
-        self.list_store = gtk.ListStore(float, int, object)
+        self.list_store = gtk.ListStore(float, int, str, object)
 
         column = gtk.TreeViewColumn("Quality")
         renderer_text = gtk.CellRendererText()
@@ -118,10 +127,16 @@ class ConscanResultsWindow(GladeWrapper):
         column.add_attribute(renderer_text, "text", 0)
         self.tv_results.append_column(column)
 
-        column = gtk.TreeViewColumn("# Connections")
+        column = gtk.TreeViewColumn("#con")
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=False)
         column.add_attribute(renderer_text, "text", 1)
+        self.tv_results.append_column(column)
+
+        column = gtk.TreeViewColumn("Invertible")
+        renderer_text = gtk.CellRendererText()
+        column.pack_start(renderer_text, expand=False)
+        column.add_attribute(renderer_text, "text", 2)
         self.tv_results.append_column(column)
 
         self.tv_results.set_model(self.list_store)
@@ -135,7 +150,10 @@ class ConscanResultsWindow(GladeWrapper):
         self.frame2 = conscan_results.children[1].target
         self.list_store.clear()
         for connection in conscan_results.connections:
-            self.list_store.append([connection[0], len(connection[2]), connection])
+            self.list_store.append([
+                connection[0], len(connection[2]),
+                {True: "X", False: ""}[len(connection[3])>0], connection
+            ])
         self.window.show_all()
 
     def update_sensitivities(self):
@@ -147,7 +165,7 @@ class ConscanResultsWindow(GladeWrapper):
         else:
             self.bu_apply.set_sensitive(not self.cb_auto_apply.get_active())
             incomplete = False
-            for node1, node2 in model.get_value(iter, 2)[2]:
+            for node1, node2 in model.get_value(iter, 3)[2] + model.get_value(iter, 3)[3]:
                 node1 = node1()
                 node2 = node2()
                 if node1 is None or node1.model != context.application.model or \
@@ -161,19 +179,29 @@ class ConscanResultsWindow(GladeWrapper):
         model, iter = self.tree_selection.get_selected()
         old_transformation = copy.deepcopy(self.frame2.transformation)
         self.frame2.transformation.clear()
-        transformation =  self.frame1.get_frame_relative_to(self.frame2)
-        transformation.apply_before(model.get_value(iter, 2)[1])
+        transformation = self.frame1.get_frame_relative_to(self.frame2)
+        if self.cb_inverse.get_active() and len(model.get_value(iter, 3)[3]) > 0:
+            transformation.apply_inverse_before(model.get_value(iter, 3)[1])
+        else:
+            transformation.apply_before(model.get_value(iter, 3)[1])
         self.frame2.set_transformation(transformation)
         primitive.SetProperty(self.frame2, "transformation", old_transformation, done=True)
 
     def connect_minimizers(self):
         model, iter = self.tree_selection.get_selected()
         Minimizer = context.application.plugins.get_node("Minimizer")
-        minimizers = [
-            Minimizer(targets=[node1(), node2()])
-            for node1, node2
-            in model.get_value(iter, 2)[2]
-        ]
+        if self.cb_inverse.get_active() and len(model.get_value(iter, 3)[3]) > 0:
+            minimizers = [
+                Minimizer(targets=[node1(), node2()])
+                for node1, node2
+                in model.get_value(iter, 3)[3]
+            ]
+        else:
+            minimizers = [
+                Minimizer(targets=[node1(), node2()])
+                for node1, node2
+                in model.get_value(iter, 3)[2]
+            ]
         parent = common_parent([self.frame1, self.frame2])
         for minimizer in minimizers:
             primitive.Add(minimizer, parent)
@@ -223,19 +251,25 @@ class ConscanResultsWindow(GladeWrapper):
             pass
         self.clean_minimizers(minimizers)
 
-    def on_selection_changed(self, selection):
-        self.update_sensitivities()
+    def auto_apply(self):
         if self.cb_auto_apply.get_active() and \
            self.tree_selection.get_selected()[1] is not None:
             action = CustomAction("Auto apply connection")
             self.apply_normal()
             action.finish()
 
+    def on_selection_changed(self, selection):
+        self.update_sensitivities()
+        self.auto_apply()
+
     def on_cache_invalidated(self, cache):
         self.update_sensitivities()
 
     def on_cb_auto_apply_clicked(self, cb_apply):
         self.update_sensitivities()
+
+    def on_cb_inverse_clicked(self, cb_inverse):
+        self.auto_apply()
 
     def on_bu_apply_clicked(self, button):
         action = CustomAction("Apply connection")
@@ -630,9 +664,14 @@ class ScanForConnections(ImmediateWithMemory):
                 targets=[frame1, frame2],
                 connections=[(
                     float(connection.quality),
-                    connection.transformation, [
+                    connection.transformation,
+                    [
                         (geometry_nodes[0][first].get_index(), geometry_nodes[1][second].get_index())
                         for first, second in connection.pairs
+                    ],
+                    [
+                        (geometry_nodes[0][second].get_index(), geometry_nodes[1][first].get_index())
+                        for first, second in connection.pairs if connection.invertible
                     ],
                 ) for connection in connections],
             )
