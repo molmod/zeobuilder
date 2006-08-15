@@ -813,12 +813,9 @@ class BuilderActions(ApplicationTestCase):
             parameters.connect_description1 = ("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1", "node.get_radius()*0.3", "1")
             parameters.repulse_description1 = ("isinstance(node, Atom) and (node.number == 8 or node.number == 14)", "node.get_radius()", "-1")
             parameters.action_radius = from_angstrom(4)
-            parameters.overlap_tolerance = from_angstrom(0.1)
             parameters.allow_inversions = True
-            parameters.triangle_side_tolerance = from_angstrom(0.1)
             parameters.minimum_triangle_size = from_angstrom(0.1)
             parameters.rotation2 = Undefined()
-            parameters.distance_tolerance = Undefined()
             parameters.auto_close_report_dialog = True
 
             ScanForConnections = context.application.plugins.get_action("ScanForConnections")
@@ -830,4 +827,3 @@ class BuilderActions(ApplicationTestCase):
             FileNew()
             context.application.model.file_open("output/tmp.zml")
         self.run_test_application(fn)
-
