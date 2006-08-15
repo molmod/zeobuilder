@@ -65,18 +65,31 @@ class ConscanResults(ReferentBase):
     #
 
     def get_connections(self):
+        def get_index(node):
+            if node is None: return -1
+            node = node()
+            if node is None: return -1
+            if node.model != context.application.model: return -1
+            return node.get_index()
+
         return [
             (quality, transformation, [
-                (node1().get_index(), node2().get_index())
+                (get_index(node1), get_index(node2))
                 for node1, node2 in pairs
             ]) for quality, transformation, pairs
             in self.connections
         ]
 
     def set_connections(self, connections):
+        def get_ref(frame_index, index):
+            if index is -1:
+                return None
+            else:
+                return weakref.ref(self.children[frame_index].target.children[index])
+
         self.connections = [
             (quality, transformation, [
-                (weakref.ref(self.children[0].target.children[index1]), weakref.ref(self.children[1].target.children[index2]))
+                (get_ref(0, index1), get_ref(1, index2))
                 for index1, index2 in pairs
             ]) for quality, transformation, pairs
             in connections
@@ -115,6 +128,7 @@ class ConscanResultsWindow(GladeWrapper):
 
         self.tree_selection = self.tv_results.get_selection()
         self.tree_selection.connect("changed", self.on_selection_changed)
+        context.application.cache.connect("cache-invalidated", self.on_cache_invalidated)
 
     def set_conscan_results(self, conscan_results):
         self.frame1 = conscan_results.children[0].target
@@ -132,8 +146,16 @@ class ConscanResultsWindow(GladeWrapper):
             self.bu_apply_opt_round.set_sensitive(False)
         else:
             self.bu_apply.set_sensitive(not self.cb_auto_apply.get_active())
-            self.bu_apply_opt.set_sensitive(True)
-            self.bu_apply_opt_round.set_sensitive(True)
+            incomplete = False
+            for node1, node2 in model.get_value(iter, 2)[2]:
+                node1 = node1()
+                node2 = node2()
+                if node1 is None or node1.model != context.application.model or \
+                   node2 is None or node2.model != context.application.model:
+                    incomplete = True
+                    break
+            self.bu_apply_opt.set_sensitive(not incomplete)
+            self.bu_apply_opt_round.set_sensitive(not incomplete)
 
     def apply_normal(self):
         model, iter = self.tree_selection.get_selected()
@@ -209,32 +231,32 @@ class ConscanResultsWindow(GladeWrapper):
             self.apply_normal()
             action.finish()
 
+    def on_cache_invalidated(self, cache):
+        self.update_sensitivities()
+
     def on_cb_auto_apply_clicked(self, cb_apply):
         self.update_sensitivities()
 
     def on_bu_apply_clicked(self, button):
-        if self.tree_selection.get_selected()[1] is not None:
-            action = CustomAction("Apply connection")
-            self.apply_normal()
-            action.finish()
+        action = CustomAction("Apply connection")
+        self.apply_normal()
+        action.finish()
 
     def on_bu_apply_opt_clicked(self, button):
-        if self.tree_selection.get_selected()[1] is not None:
-            action = CustomAction("Apply connection and minimize distances")
-            old_selection = copy.copy(context.application.cache.nodes)
-            self.apply_normal()
-            self.optimize()
-            context.application.main.select_nodes(old_selection)
-            action.finish()
+        action = CustomAction("Apply connection and minimize distances")
+        old_selection = copy.copy(context.application.cache.nodes)
+        self.apply_normal()
+        self.optimize()
+        context.application.main.select_nodes(old_selection)
+        action.finish()
 
     def on_bu_apply_opt_round_clicked(self, button):
-        if self.tree_selection.get_selected()[1] is not None:
-            action = CustomAction("Apply connection, minimize and round rotation")
-            old_selection = copy.copy(context.application.cache.nodes)
-            self.apply_normal()
-            self.optimize_and_round()
-            context.application.main.select_nodes(old_selection)
-            action.finish()
+        action = CustomAction("Apply connection, minimize and round rotation")
+        old_selection = copy.copy(context.application.cache.nodes)
+        self.apply_normal()
+        self.optimize_and_round()
+        context.application.main.select_nodes(old_selection)
+        action.finish()
 
     def on_window_delete_event(self, window, event):
         self.window.hide()
