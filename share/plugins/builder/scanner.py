@@ -121,13 +121,21 @@ class ConscanResultsWindow(GladeWrapper):
 
         self.list_store = gtk.ListStore(float, int, str, object)
 
+        column = gtk.TreeViewColumn("i")
+        renderer_text = gtk.CellRendererText()
+        column.pack_start(renderer_text, expand=False)
+        def cell_data_func(column, cell, model, iter):
+            cell.set_property("text", model.get_path(iter)[0])
+        column.set_cell_data_func(renderer_text, cell_data_func)
+        self.tv_results.append_column(column)
+
         column = gtk.TreeViewColumn("Quality")
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=False)
         column.add_attribute(renderer_text, "text", 0)
         self.tv_results.append_column(column)
 
-        column = gtk.TreeViewColumn("#con")
+        column = gtk.TreeViewColumn("#")
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=False)
         column.add_attribute(renderer_text, "text", 1)
