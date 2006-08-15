@@ -186,10 +186,10 @@ class Default(Base):
             counter += 1
 
     def on_store_activate(self, widget, field):
-        name = ask_name()
+        name = ask_name(field.saved_name)
         if name is None:
             return
-        name = name.upper()
+        name = name.upper().strip()
         if len(name) == 0:
             name = self.unused_name()
         self.saved_representations[name] = field.read_from_widget()

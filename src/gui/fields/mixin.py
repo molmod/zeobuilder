@@ -223,6 +223,13 @@ class EditMixin(ReadMixin):
     def write_to_widget(self, representation, original=False):
         if original:
             self.original_representation = representation
+        if self.history_name is not None:
+            saved_representations =  context.application.configuration.get_saved_representations(self.history_name)
+            self.saved_name = None
+            for name, saved_representation in saved_representations.iteritems():
+                if saved_representation == representation:
+                    self.saved_name = name
+                    break
         self.update_label()
 
     def read_from_widget(self):

@@ -71,7 +71,7 @@ def nosave_cancel_save_question(message, details="", line_wrap=True):
     return run_dialog(dialog)
 
 
-def ask_name():
+def ask_name(initial_name=None):
     dialog = gtk.Dialog(
         context.title,
         context.parent_window,
@@ -85,6 +85,8 @@ def ask_name():
     hbox.pack_start(gtk.Label("Name:"))
     entry = gtk.Entry()
     entry.set_activates_default(True)
+    if initial_name is not None:
+        entry.set_text(initial_name)
     hbox.pack_start(entry)
     hbox.set_spacing(6)
     hbox.set_border_width(6)
