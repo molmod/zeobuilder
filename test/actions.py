@@ -32,6 +32,8 @@ from molmod.units import from_angstrom
 
 import gtk, numpy
 
+import math
+
 
 __all__ = ["CoreActions", "MolecularActions", "BuilderActions"]
 
@@ -816,6 +818,33 @@ class BuilderActions(ApplicationTestCase):
             parameters.allow_inversions = True
             parameters.minimum_triangle_size = from_angstrom(0.1)
             parameters.rotation2 = Undefined()
+            parameters.auto_close_report_dialog = True
+
+            ScanForConnections = context.application.plugins.get_action("ScanForConnections")
+            self.assert_(ScanForConnections.analyze_selection(parameters))
+            ScanForConnections(parameters)
+
+            context.application.model.file_save("output/tmp.zml")
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.model.file_open("output/tmp.zml")
+        self.run_test_application(fn)
+
+    def test_pair_conscan(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes(context.application.model.universe.children)
+
+            rotation2 = Rotation()
+            rotation2.set_rotation_properties(0.5*math.pi, [1, 0, 0], True)
+
+            parameters = Parameters()
+            parameters.connect_description1 = ("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1", "node.get_radius()*0.3", "1")
+            parameters.repulse_description1 = ("isinstance(node, Atom) and (node.number == 8 or node.number == 14)", "node.get_radius()", "-1")
+            parameters.action_radius = from_angstrom(4)
+            parameters.allow_inversions = Undefined()
+            parameters.minimum_triangle_size = Undefined()
+            parameters.rotation2 = rotation2
             parameters.auto_close_report_dialog = True
 
             ScanForConnections = context.application.plugins.get_action("ScanForConnections")
