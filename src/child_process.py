@@ -82,7 +82,8 @@ class ChildProcessDialog(object):
             if self.connection is not None:
                 self.connection.close()
             self.socket.close()
-            os.remove(self.socket_name)
+            if os.path.exists(self.socket_name):
+                os.remove(self.socket_name)
             for handler in self.handlers:
                 self.com_thread.disconnect(handler)
             #print "ZEOBUILDER, end of cleanup"
