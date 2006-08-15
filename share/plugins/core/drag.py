@@ -30,6 +30,8 @@ import zeobuilder.actions.primitive as primitive
 
 
 class MoveObjects(ImmediateWithMemory):
+    store_last_parameters = False
+
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
@@ -83,6 +85,7 @@ class MoveNon3DObjects(MoveObjects):
 class DropTarget(ImmediateWithMemory):
     description = "Drop target"
     drag_info = DragInfo(order=2)
+    store_last_parameters = False
 
     def analyze_selection(parameters=None):
         # A) calling ancestor

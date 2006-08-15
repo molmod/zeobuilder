@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError
+from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.nodes.elementary import GLContainerBase, GLReferentBase
@@ -508,14 +508,17 @@ class UnitCellToCluster(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
+    def default_parameters(cls):
+        result = Parameters()
         universe = context.application.model.universe
         if universe.cell_active[0]:
-            self.parameters.interval_a = numpy.array([0.0, universe.repetitions[0]], float)
+            result.interval_a = numpy.array([0.0, universe.repetitions[0]], float)
         if universe.cell_active[1]:
-            self.parameters.interval_b = numpy.array([0.0, universe.repetitions[1]], float)
+            result.interval_b = numpy.array([0.0, universe.repetitions[1]], float)
         if universe.cell_active[2]:
-            self.parameters.interval_c = numpy.array([0.0, universe.repetitions[2]], float)
+            result.interval_c = numpy.array([0.0, universe.repetitions[2]], float)
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def do(self):
         universe = context.application.model.universe
@@ -669,14 +672,17 @@ class SuperCell(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
+    def default_parameters(cls):
+        result = Parameters()
         universe = context.application.model.universe
         if universe.cell_active[0]:
-            self.parameters.repetitions_a = universe.repetitions[0]
+            result.repetitions_a = universe.repetitions[0]
         if universe.cell_active[1]:
-            self.parameters.repetitions_b = universe.repetitions[1]
+            result.repetitions_b = universe.repetitions[1]
         if universe.cell_active[2]:
-            self.parameters.repetitions_c = universe.repetitions[2]
+            result.repetitions_c = universe.repetitions[2]
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def do(self):
         # create the repetitions vector

@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Immediate, ImmediateWithMemory
+from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, Parameters
 from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
@@ -322,11 +322,14 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
                 return Bond(bond_type=self.parameters.bond_type, targets=[atom1, atom2])
         return None
 
-    def init_parameters(self):
-        self.parameters.number1 = 6
-        self.parameters.number2 = 6
-        self.parameters.distance = 0.5
-        self.parameters.bond_type = BOND_SINGLE
+    def default_parameters(cls):
+        result = Parameters()
+        result.number1 = 6
+        result.number2 = 6
+        result.distance = 0.5
+        result.bond_type = BOND_SINGLE
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def do(self):
         AutoConnectMixin.do(self, max([1, self.parameters.distance]))

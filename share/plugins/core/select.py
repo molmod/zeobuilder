@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, Interactive, UserError
+from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, Interactive, UserError, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
 from zeobuilder.nodes.meta import Property
@@ -131,6 +131,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
     SELECT_PLAIN = 0
     SELECT_RECURSIVE = 1
     SELECT_RECURSIVE_IF_MATCH = 2
+
     parameters_dialog = FieldsDialogSimple(
         "Selection rules",
         fields.group.Table(
@@ -167,9 +168,12 @@ class SelectChildrenByExpression(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
-        self.parameters.expression = "True"
-        self.parameters.recursive = self.SELECT_PLAIN
+    def default_parameters(cls):
+        result = Parameters()
+        result.expression = "True"
+        result.recursive = cls.SELECT_PLAIN
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def do(self):
         cache = context.application.cache

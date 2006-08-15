@@ -36,9 +36,11 @@ __all__ = ["init_actions", "UserError", "CancelException", "ActionError",
 
 def init_actions(actions):
     for action in actions.itervalues():
-        action.last_parameters = Parameters()
         action.clear_cached_analysis_result()
         context.application.cache.connect("cache-invalidated", action.on_cache_invalidated)
+        if issubclass(action, ImmediateWithMemory):
+            action.register_settings()
+
 
 
 #
@@ -212,7 +214,6 @@ class Immediate(Action, ImmediateMixin):
 
 
 class ImmediateWithMemory(Immediate, RememberParametersMixin):
-    last_parameters = None
     store_last_parameters = True
     parameters_dialog = None
 
@@ -222,23 +223,58 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
         RememberParametersMixin.__init__(self, parameters)
         if self.parameters is None:
             if self.store_last_parameters:
-                self.use_last_parameters()
+                self.parameters = self.last_parameters()
             else:
-                self.parameters = Parameters()
-                self.init_parameters()
+                self.parameters = self.default_parameters()
             self.ask_parameters()
         if not self.parameters.empty():
             if self.store_last_parameters:
-                self.__class__.last_parameters = self.parameters
+                self.store_parameters(self.parameters)
             Immediate.__init__(self)
 
-    def use_last_parameters(self):
-        self.parameters = copy.deepcopy(self.last_parameters)
-        if self.parameters.empty():
-            self.init_parameters()
+    @classmethod
+    def config_name(cls):
+        temp = str(cls)
+        temp = temp[temp.rfind(".")+1:-2]
+        return temp + "_parameters"
 
-    def init_parameters(self):
+    def register_settings(cls):
+        def default_parameters():
+            return cls.default_parameters().__dict__
+
+        if cls.store_last_parameters:
+            context.application.configuration.register_setting(
+                cls.config_name(),
+                default_parameters(),
+                None,
+                cls.corrector_parameters,
+            )
+    register_settings = classmethod(register_settings)
+
+    def corrector_parameters(cls, config_parameters):
+        default_parameters = cls.default_parameters().__dict__
+        for key, value in config_parameters.items():
+            if key not in default_parameters:
+                del config_parameters[key]
+        for key, value in default_parameters.iteritems():
+            if key not in config_parameters:
+                config_parameters[key] = value
+        return config_parameters
+    corrector_parameters = classmethod(corrector_parameters)
+
+    def last_parameters(cls):
+        result = Parameters()
+        result.__dict__ = getattr(context.application.configuration, cls.config_name())
+        return result
+    last_parameters = classmethod(last_parameters)
+
+    def default_parameters(cls):
         raise NotImplementedError
+    default_parameters = classmethod(default_parameters)
+
+    def store_parameters(cls, parameters):
+        setattr(context.application.configuration, cls.config_name(), parameters.__dict__)
+    store_parameters = classmethod(store_parameters)
 
     def ask_parameters(self):
         if self.parameters_dialog is None:

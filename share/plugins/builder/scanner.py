@@ -522,22 +522,25 @@ class ScanForConnections(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
+    def default_parameters(cls):
         rotation2 = Rotation()
         rotation2.set_rotation_properties(0.0, [1, 0, 0], False)
 
-        self.parameters.connect_description1 = ("True", "node.get_radius()", "1")
-        self.parameters.repulse_description1 = ("True", "node.get_radius()", "-1")
-        self.parameters.connect_description2 = ("True", "node.get_radius()", "1")
-        self.parameters.repulse_description2 = ("True", "node.get_radius()", "-1")
-        self.parameters.action_radius = from_angstrom(7)
-        self.parameters.overlap_tolerance = from_angstrom(0.1)
-        self.parameters.allow_inversions = True
-        self.parameters.triangle_side_tolerance = from_angstrom(0.1)
-        self.parameters.minimum_triangle_size = from_angstrom(0.1)
-        self.parameters.rotation_tolerance = 0.05
-        self.parameters.rotation2 = Undefined(rotation2)
-        self.parameters.distance_tolerance = Undefined(from_angstrom(0.1))
+        result = Parameters()
+        result.connect_description1 = ("True", "node.get_radius()", "1")
+        result.repulse_description1 = ("True", "node.get_radius()", "-1")
+        result.connect_description2 = ("True", "node.get_radius()", "1")
+        result.repulse_description2 = ("True", "node.get_radius()", "-1")
+        result.action_radius = from_angstrom(7)
+        result.overlap_tolerance = from_angstrom(0.1)
+        result.allow_inversions = True
+        result.triangle_side_tolerance = from_angstrom(0.1)
+        result.minimum_triangle_size = from_angstrom(0.1)
+        result.rotation_tolerance = 0.05
+        result.rotation2 = Undefined(rotation2)
+        result.distance_tolerance = Undefined(from_angstrom(0.1))
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         if len(context.application.cache.nodes) == 1:

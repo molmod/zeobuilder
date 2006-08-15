@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Interactive, InteractiveWithMemory, ImmediateWithMemory, Immediate, CancelException, UserError
+from zeobuilder.actions.composed import Interactive, InteractiveWithMemory, ImmediateWithMemory, Immediate, CancelException, UserError, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
 from zeobuilder.nodes.glmixin import GLTransformationMixin
@@ -139,8 +139,11 @@ class RotateDialog(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
-        self.parameters.rotation = Rotation()
+    def default_parameters(cls):
+        result = Parameters()
+        result.rotation = Rotation()
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def do(self):
         primitive.Transform(context.application.cache.node, self.parameters.rotation, after=False)
@@ -183,8 +186,11 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
-        self.parameters.complete = Complete()
+    def default_parameters(cls):
+        result = Parameters()
+        result.complete = Complete()
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         cache = context.application.cache
@@ -250,8 +256,11 @@ class TranslateDialog(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
-        self.parameters.translation = Translation()
+    def default_parameters(cls):
+        result = Parameters()
+        result.translation = Translation()
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         cache = context.application.cache

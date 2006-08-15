@@ -22,7 +22,7 @@
 
 from zeobuilder import context
 from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
-from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, CancelException
+from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, CancelException, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObjectInfo
@@ -318,10 +318,13 @@ class MinimizeDistances(ImmediateWithMemory):
         return True
     analyze_selection = staticmethod(analyze_selection)
 
-    def init_parameters(self):
-        self.parameters.allow_rotation = True
-        self.parameters.update_interval = 0.4
-        self.parameters.update_steps = 1
+    def default_parameters(cls):
+        result = Parameters()
+        result.allow_rotation = True
+        result.update_interval = 0.4
+        result.update_steps = 1
+        return result
+    default_parameters = classmethod(default_parameters)
 
     def ask_parameters(self):
         if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
