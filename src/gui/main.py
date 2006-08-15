@@ -66,6 +66,14 @@ class Main(GladeWrapper):
         self.tree_selection.set_mode(gtk.SELECTION_MULTIPLE)
         self.tree_selection.set_select_function(self.select_path)
 
+        column = gtk.TreeViewColumn("")
+        renderer_text = gtk.CellRendererText()
+        column.pack_start(renderer_text, expand=False)
+        def cell_data_func(column, cell, model, iter):
+            cell.set_property("text", model.get_path(iter)[-1])
+        column.set_cell_data_func(renderer_text, cell_data_func)
+        self.tree_view.append_column(column)
+
         renderer_pixbuf = gtk.CellRendererPixbuf()
         self.column = gtk.TreeViewColumn()
         self.column.pack_start(renderer_pixbuf, expand=False)
@@ -79,6 +87,7 @@ class Main(GladeWrapper):
             cell.set_property('text', model.get_value(iter, 0).get_name())
         self.column.set_cell_data_func(renderer_text, render_name)
         self.tree_view.append_column(self.column)
+        self.tree_view.set_expander_column(self.column)
 
     def init_drawing_area(self):
         self.drawing_area = DrawingArea()

@@ -121,7 +121,7 @@ class ConscanResultsWindow(GladeWrapper):
 
         self.list_store = gtk.ListStore(float, int, str, object)
 
-        column = gtk.TreeViewColumn("i")
+        column = gtk.TreeViewColumn("")
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=False)
         def cell_data_func(column, cell, model, iter):
