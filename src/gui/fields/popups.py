@@ -150,7 +150,7 @@ class Default(Base):
                 representation = self.saved_representations[key]
                 self.add_item(
                     "%s: %s" % (key, representation),
-                    None,
+                    gtk.STOCK_APPLY,
                     self.write_to_widget,
                     representation,
                 )
@@ -160,7 +160,7 @@ class Default(Base):
                 representation = self.saved_representations[key]
                 self.add_item(
                     "Delete '%s'" % key,
-                    gtk.STOCK_DELETE,
+                    None,
                     self.on_delete_activated,
                     key,
                 )
