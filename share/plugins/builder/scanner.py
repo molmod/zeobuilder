@@ -456,43 +456,27 @@ class ScanForConnections(ImmediateWithMemory):
                         low=0.0,
                         low_inclusive=False,
                     ),
-                    fields.faulty.Length(
-                        label_text="Overlap tolerance",
-                        attribute_name="overlap_tolerance",
-                        low=0.0,
-                        low_inclusive=False,
-                    ),
-                    fields.optional.RadioOptional(slave=fields.group.Table(fields=[
-                        fields.edit.CheckButton(
-                            label_text="Allow inversion rotations",
-                            attribute_name="allow_inversions",
-                        ),
-                        fields.faulty.Length(
-                            label_text="Triangle side tolerance",
-                            attribute_name="triangle_side_tolerance",
-                            low=0.0,
-                            low_inclusive=False,
-                        ),
-                        fields.faulty.Length(
-                            label_text="Minimum triangle size",
-                            attribute_name="minimum_triangle_size",
-                            low=0.0,
-                            low_inclusive=False,
-                        ),
-                    ], label_text="Allow free rotations")),
-                    fields.optional.RadioOptional(slave=fields.group.Table(fields=[
-                        fields.composed.Rotation(
-                            label_text="Relative rotation of the two structures",
-                            attribute_name="rotation2",
-                        ),
-                        fields.faulty.Length(
-                            label_text="Distance tolerance",
-                            attribute_name="distance_tolerance",
-                            low=0.0,
-                            low_inclusive=False,
-                        ),
-                    ], label_text="Use a fixed rotation")),
-                ], cols=2),
+                    fields.group.Table(fields=[
+                        fields.optional.RadioOptional(slave=fields.group.Table(fields=[
+                            fields.edit.CheckButton(
+                                label_text="Allow inversion rotations",
+                                attribute_name="allow_inversions",
+                            ),
+                            fields.faulty.Length(
+                                label_text="Minimum triangle size",
+                                attribute_name="minimum_triangle_size",
+                                low=0.0,
+                                low_inclusive=False,
+                            ),
+                        ], label_text="Allow free rotations")),
+                        fields.optional.RadioOptional(slave=fields.group.Table(fields=[
+                            fields.composed.Rotation(
+                                label_text="Relative rotation of the two structures",
+                                attribute_name="rotation2",
+                            ),
+                        ], label_text="Use a fixed rotation")),
+                    ], cols=2),
+                ]),
             )
         ]),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
@@ -634,16 +618,13 @@ class ScanForConnections(ImmediateWithMemory):
         else:
             inp["geometry2"] = None
         inp["action_radius"] = self.parameters.action_radius
-        inp["overlap_threshold"] = self.parameters.overlap_tolerance**2
         if not isinstance(self.parameters.allow_inversions, Undefined):
             inp["allow_rotations"] = True
             inp["allow_inversions"] = self.parameters.allow_inversions
-            inp["triangle_side_error"] = self.parameters.triangle_side_tolerance
             inp["minimum_triangle_area"] = self.parameters.minimum_triangle_size**2
         else:
             inp["allow_rotations"] = False
             inp["rotation2"] = self.parameters.rotation2
-            inp["distance_error"] = self.parameters.distance_tolerance
 
         if inp["allow_rotations"]:
             connections = self.triangle_report_dialog.run(inp, self.parameters.auto_close_report_dialog)
