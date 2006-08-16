@@ -35,6 +35,13 @@ __all__ = [
 
 template="<big><b>%s</b></big>\n\n%s"
 
+
+def escape_pango(s):
+    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+def apply_template(template, items):
+    return (template % tuple(escape_pango(item) for item in items)).strip()
+
 def run_dialog(dialog, line_wrap=True):
     dialog.set_title(context.title)
     dialog.label.set_property("use-markup", True)
@@ -45,25 +52,25 @@ def run_dialog(dialog, line_wrap=True):
 
 
 def ok_error(message, details="", line_wrap=True):
-    full = (template % (message, details)).strip()
+    full = apply_template(template, (message, details))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, full)
     return run_dialog(dialog)
 
 
 def ok_information(message, details="", line_wrap=True):
-    full = (template % (message, details)).strip()
+    full = apply_template(template, (message, details))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
     return run_dialog(dialog)
 
 
 def yes_no_question(message, details="", line_wrap=True):
-    full = (template % (message, details)).strip()
+    full = apply_template(template, (message, details))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
     return run_dialog(dialog)
 
 
 def nosave_cancel_save_question(message, details="", line_wrap=True):
-    full = (template % (message, details)).strip()
+    full = apply_template(template, (message, details))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, message)
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
@@ -108,7 +115,7 @@ field_template=template % (
 
 
 def field_error(location, problem, line_wrap=True):
-    full = field_template % (location, problem)
+    full = apply_template(field_template, (location, problem))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE, full)
     button = dialog.add_button(gtk.STOCK_JUMP_TO, gtk.RESPONSE_OK)
     return run_dialog(dialog, line_wrap=True)

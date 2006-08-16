@@ -193,8 +193,8 @@ class Expression(Faulty, TextViewMixin):
         from zeobuilder.expressions import Expression as E
         try:
             return E(TextViewMixin.convert_to_value(self, representation))
-        except SyntaxError, e:
-            raise ValueError("There is a syntax error in the expression:\n%s" % str(e))
+        except SyntaxError:
+            raise ValueError("There is a syntax error in the expression.")
 
     def read_from_widget(self):
         return TextViewMixin.read_from_widget(self)

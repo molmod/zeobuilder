@@ -57,9 +57,6 @@ class UserError(Exception):
         if exc_type is not None:
             import traceback
             err_msg = "".join(traceback.format_exception(exc_type, exc_value, tb))
-            err_msg = err_msg.replace("&", "&amp;")
-            err_msg = err_msg.replace("<", "&lt;")
-            err_msg = err_msg.replace(">", "&gt;")
             self.details += err_msg
 
     def show_message(self):
