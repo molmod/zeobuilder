@@ -25,10 +25,13 @@ from zeobuilder.undefined import Undefined
 
 import gtk
 
+import StringIO
+
 
 __all__ = [
+    "SpecialState", "ambiguous",
     "ReadMixin", "EditMixin", "InvalidField", "FaultyMixin",
-    "SpecialState", "ambiguous"
+    "TableMixin", "TextViewMixin",
 ]
 
 
@@ -366,3 +369,55 @@ class TableMixin(object):
                 table.set_col_spacing(col, 6)
         self.data_widget = table
 
+
+class TextViewMixin(object):
+    def __init__(self, line_breaks=False, width=250, height=300):
+        self.line_breaks = line_breaks
+        self.attribute_is_stream = False
+        self.width = width
+        self.height = height
+
+    def create_widgets(self):
+        self.text_view = gtk.TextView()
+        self.text_view.set_wrap_mode(gtk.WRAP_WORD)
+        self.text_view.set_accepts_tab(False)
+        self.text_buffer = self.text_view.get_buffer()
+        self.text_buffer.connect("changed", self.on_widget_changed)
+        scrolled_window = gtk.ScrolledWindow()
+        scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        scrolled_window.set_size_request(self.width, self.height)
+        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
+        scrolled_window.add(self.text_view)
+        self.data_widget = scrolled_window
+
+    def destroy_widgets(self):
+        self.textview = None
+
+    def convert_to_representation(self, value):
+        if isinstance(value, StringIO.StringIO):
+            self.attribute_is_stream = True
+            return value.getvalue()
+        else:
+            self.attribute_is_stream = False
+            return value
+
+    def write_to_widget(self, representation):
+        if representation == ambiguous: representation = ""
+        self.text_buffer.set_text(representation)
+
+    def convert_to_value(self, representation):
+        if self.attribute_is_stream:
+            return StringIO.StringIO(representation)
+        else:
+            return representation
+
+    def read_from_widget(self):
+        start, end = self.text_buffer.get_bounds()
+        representation = self.text_buffer.get_slice(start, end)
+        if not self.line_breaks:
+            representation = representation.replace("\n", " ")
+        if representation == "":
+            return ambiguous
+        else:
+            return representation

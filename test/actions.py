@@ -25,6 +25,7 @@ from application_test_case import ApplicationTestCase
 from zeobuilder import context
 from zeobuilder.actions.composed import Parameters
 from zeobuilder.undefined import Undefined
+from zeobuilder.expressions import Expression
 
 from molmod.transformations import Rotation, Translation, Complete
 from molmod.data import BOND_SINGLE
@@ -170,7 +171,7 @@ class CoreActions(ApplicationTestCase):
             SelectChildrenByExpression = context.application.plugins.get_action("SelectChildrenByExpression")
             parameters = Parameters()
             parameters.recursive = SelectChildrenByExpression.SELECT_PLAIN
-            parameters.expression = "isinstance(node, Folder)"
+            parameters.expression = Expression("isinstance(node, Folder)")
             self.assert_(SelectChildrenByExpression.analyze_selection(parameters))
             SelectChildrenByExpression(parameters)
             self.assert_(context.application.model.folder.children[0].selected, "First node should be selected.")
@@ -812,8 +813,16 @@ class BuilderActions(ApplicationTestCase):
             context.application.main.select_nodes(context.application.model.universe.children)
 
             parameters = Parameters()
-            parameters.connect_description1 = ("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1", "node.get_radius()*0.3", "1")
-            parameters.repulse_description1 = ("isinstance(node, Atom) and (node.number == 8 or node.number == 14)", "node.get_radius()", "-1")
+            parameters.connect_description1 = (
+                Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
+                Expression("node.get_radius()*0.3"),
+                Expression("1"),
+            )
+            parameters.repulse_description1 = (
+                Expression("isinstance(node, Atom) and (node.number == 8 or node.number == 14)"),
+                Expression("node.get_radius()"),
+                Expression("-1"),
+            )
             parameters.action_radius = from_angstrom(4)
             parameters.allow_inversions = True
             parameters.minimum_triangle_size = from_angstrom(0.1)
@@ -839,8 +848,16 @@ class BuilderActions(ApplicationTestCase):
             rotation2.set_rotation_properties(0.5*math.pi, [1, 0, 0], True)
 
             parameters = Parameters()
-            parameters.connect_description1 = ("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1", "node.get_radius()*0.3", "1")
-            parameters.repulse_description1 = ("isinstance(node, Atom) and (node.number == 8 or node.number == 14)", "node.get_radius()", "-1")
+            parameters.connect_description1 = (
+                Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
+                Expression("node.get_radius()*0.3"),
+                Expression("1"),
+            )
+            parameters.repulse_description1 = (
+                Expression("isinstance(node, Atom) and (node.number == 8 or node.number == 14)"),
+                Expression("node.get_radius()"),
+                Expression("-1"),
+            )
             parameters.action_radius = from_angstrom(4)
             parameters.allow_inversions = Undefined()
             parameters.minimum_triangle_size = Undefined()

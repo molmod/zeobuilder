@@ -21,14 +21,13 @@
 
 
 from elementary import Edit
-from mixin import ambiguous
+from mixin import ambiguous, TextViewMixin
 from molmod.data import periodic
 from zeobuilder.conversion import express_measure
 import popups
 
 import gtk, gobject, numpy
 
-import StringIO
 
 
 __all__ = ["CheckButton", "ComboBox", "Element", "TextView", "Color"]
@@ -306,64 +305,34 @@ class Element(Edit):
         return self.number
 
 
-class TextView(Edit):
+class TextView(Edit, TextViewMixin):
     Popup = popups.Default
     high_widget = True
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, line_breaks=False, width=250, height=300):
         Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
-        self.line_breaks = line_breaks
-        self.attribute_is_stream = False
-        self.width = width
-        self.height = height
+        TextViewMixin.__init__(self, line_breaks, width, height)
 
     def create_widgets(self):
         Edit.create_widgets(self)
-        self.text_view = gtk.TextView()
-        self.text_view.set_wrap_mode(gtk.WRAP_WORD)
-        self.text_view.set_accepts_tab(False)
-        self.text_buffer = self.text_view.get_buffer()
-        self.text_buffer.connect("changed", self.on_widget_changed)
-        scrolled_window = gtk.ScrolledWindow()
-        scrolled_window.set_shadow_type(gtk.SHADOW_IN)
-        scrolled_window.set_shadow_type(gtk.SHADOW_IN)
-        scrolled_window.set_size_request(self.width, self.height)
-        scrolled_window.set_policy(gtk.POLICY_NEVER, gtk.POLICY_NEVER)
-        scrolled_window.add(self.text_view)
-        self.data_widget = scrolled_window
+        TextViewMixin.create_widgets(self)
 
     def destroy_widgets(self):
-        self.textview = None
+        TextViewMixin.destroy_widgets(self)
         Edit.destroy_widgets(self)
 
     def convert_to_representation(self, value):
-        if isinstance(value, StringIO.StringIO):
-            self.attribute_is_stream = True
-            return value.getvalue()
-        else:
-            self.attribute_is_stream = False
-            return value
+        return TextViewMixin.convert_to_representation(self, value)
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous: representation = ""
-        self.text_buffer.set_text(representation)
+        TextViewMixin.write_to_widget(self, representation)
         Edit.write_to_widget(self, representation, original)
 
     def convert_to_value(self, representation):
-        if self.attribute_is_stream:
-            return StringIO.StringIO(representation)
-        else:
-            return representation
+        return TextViewMixin.convert_to_value(self, representation)
 
     def read_from_widget(self):
-        start, end = self.text_buffer.get_bounds()
-        representation = self.text_buffer.get_slice(start, end)
-        if not self.line_breaks:
-            representation = representation.replace("\n", " ")
-        if representation == "":
-            return ambiguous
-        else:
-            return representation
+        return TextViewMixin.read_from_widget(self)
 
 
 class Color(Edit):

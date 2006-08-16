@@ -26,6 +26,7 @@ from zeobuilder.gui.simple import nosave_cancel_save_question
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.drawing_area import DrawingArea
 from zeobuilder.filters import run_file_dialog
+from zeobuilder.expressions import Expression
 
 import gtk, os
 
@@ -53,7 +54,7 @@ class Main(GladeWrapper):
 
     def init_tree_view(self):
         self.filter_active = False
-        self.filter_expression = "True"
+        self.filter_expression = Expression("True")
 
         # tree related widgets:
         self.tree_view = gtk.TreeView(context.application.model)
@@ -187,12 +188,14 @@ class Main(GladeWrapper):
         is_selected = self.tree_selection.path_is_selected(path)
         try:
             if not (
-                is_selected or
-                (not self.filter_active) or
-                eval(self.filter_expression)
+                is_selected or (not self.filter_active) or
+                self.filter_expression(node)
             ): return False
         except Exception, e:
-            ok_error("An error occured while evaluating the filter expression. This is probably due to a mistake in the expression you entered. The selection filter will be deactivated.\n\n" + str(e.__class__) + ": " + str(e))
+            ok_error(
+                "An error occured while evaluating the filter expression.",
+                "This is probably due to a mistake in the expression you entered. The selection filter will be deactivated.\n\n%s\n%s" % (e.__class__, e)
+            )
             self.filter_active = False
         node.set_selected(not is_selected)
         return True
@@ -212,7 +215,15 @@ class Main(GladeWrapper):
     def toggle_selection(self, node, on=None):
         if on is None: on = not node.selected
         if on:
-            if not self.filter_active or eval(self.filter_expression):
+            try:
+                match = not self.filter_active or self.filter_expression(node)
+            except Exception, e:
+                ok_error(
+                    "An error occured while evaluating the filter expression.",
+                    "This is probably due to a mistake in the expression you entered. The selection filter will be deactivated.\n\n%s\n%s" % (e.__class__, e)
+                )
+                self.filter_active = False
+            if match:
                 if node.parent is not None:
                     self.tree_view.expand_to_path(
                         context.application.model.get_path(node.parent.iter)

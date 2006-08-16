@@ -29,6 +29,7 @@ from zeobuilder.nodes.parent_mixin import ParentMixin
 from zeobuilder.nodes.elementary import ReferentBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.reference import Reference
+from zeobuilder.expressions import Expression
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
@@ -146,8 +147,8 @@ class SelectChildrenByExpression(ImmediateWithMemory):
                     attribute_name="recursive",
                     show_popup=False
                 ),
-                fields.edit.TextView(
-                    label_text="Filter expression",
+                fields.faulty.Expression(
+                    label_text="Filter expression:",
                     attribute_name="expression",
                     show_popup=True,
                     history_name="filter",
@@ -171,7 +172,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
     @classmethod
     def default_parameters(cls):
         result = Parameters()
-        result.expression = "True"
+        result.expression = Expression()
         result.recursive = cls.SELECT_PLAIN
         return result
 
@@ -183,15 +184,11 @@ class SelectChildrenByExpression(ImmediateWithMemory):
 
         main = context.application.main
 
-        my_globals = context.application.plugins.nodes.copy()
-
         def toggle_children(parent):
             for node in parent.children:
-                match = False
-                my_globals["node"] = node
-                if eval(self.parameters.expression, my_globals):
+                match = self.parameters.expression(node)
+                if match:
                     main.toggle_selection(node, on=True)
-                    match = True
                 if ((self.parameters.recursive == self.SELECT_RECURSIVE_IF_MATCH) and match) or (self.parameters.recursive == self.SELECT_RECURSIVE):
                     if isinstance(node, ParentMixin):
                         toggle_children(node)
@@ -204,11 +201,11 @@ class SelectChildrenByExpression(ImmediateWithMemory):
                 toggle_children(container)
             for referent in referents:
                 toggle_references(referent)
-        except Exception, e:
+        except Exception:
             main.tree_selection.unselect_all()
             for parent in parents:
                 main.toggle_selection(parent, on=True)
-            raise UserError, "An exception occured during the evaluation of the expression on one of the targetted nodes. This is probably due to a mistake in the expression you entered.\n\n" + str(e.__class__) + ": " + str(e)
+            raise UserError("An exception occured while evaluating the filter expression.")
 
 
 #
@@ -300,7 +297,7 @@ class EditSelectionFilter(Immediate):
                 attribute_name="filter_active",
                 show_popup=False,
             ),
-            fields.edit.TextView(
+            fields.faulty.Expression(
                 label_text="Filter expression",
                 attribute_name="filter_expression",
                 show_popup=True,

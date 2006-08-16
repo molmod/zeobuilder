@@ -21,7 +21,7 @@
 
 
 from elementary import Faulty
-from mixin import ambiguous
+from mixin import ambiguous, TextViewMixin
 import popups
 
 from zeobuilder.conversion import express_measure, eval_measure
@@ -29,7 +29,10 @@ from zeobuilder.conversion import express_measure, eval_measure
 import gtk
 
 
-__all__ = ["Entry", "Float", "Int", "MeasureEntry", "Length", "Name", "Password"]
+__all__ = [
+    "Entry", "Float", "Int", "MeasureEntry", "Length", "Name", "Password",
+    "Filter"
+]
 
 
 class Entry(Faulty):
@@ -157,3 +160,41 @@ class Password(Entry):
         Entry.create_widgets(self)
         self.entry.set_property("visibility", False)
 
+
+class Expression(Faulty, TextViewMixin):
+    Popup = popups.Default
+    high_widget = True
+    reset_representation = "True"
+
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, width=250, height=300):
+        Faulty.__init__(self, label_text, attribute_name, show_popup, history_name)
+        TextViewMixin.__init__(self, False, width, height)
+
+    def create_widgets(self):
+        Faulty.create_widgets(self)
+        TextViewMixin.create_widgets(self)
+
+    def destroy_widgets(self):
+        TextViewMixin.destroy_widgets(self)
+        Faulty.destroy_widgets(self)
+
+    def applicable_attribute(self):
+        from zeobuilder.expressions import Expression as E
+        return isinstance(self.attribute, E)
+
+    def convert_to_representation(self, value):
+        return TextViewMixin.convert_to_representation(self, value.code)
+
+    def write_to_widget(self, representation, original=False):
+        TextViewMixin.write_to_widget(self, representation)
+        Faulty.write_to_widget(self, representation, original)
+
+    def convert_to_value(self, representation):
+        from zeobuilder.expressions import Expression as E
+        try:
+            return E(TextViewMixin.convert_to_value(self, representation))
+        except SyntaxError, e:
+            raise ValueError("There is a syntax error in the expression:\n%s" % str(e))
+
+    def read_from_widget(self):
+        return TextViewMixin.read_from_widget(self)

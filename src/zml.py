@@ -25,6 +25,7 @@ from zeobuilder.undefined import Undefined
 from zeobuilder.filters import Indenter, FilterError
 from zeobuilder.nodes.parent_mixin import ParentMixin, ContainerMixin, ReferentMixin
 from zeobuilder.nodes.model_object import ModelObject
+from zeobuilder.expressions import Expression
 
 from molmod.transformations import Translation, Rotation, Complete
 
@@ -128,6 +129,8 @@ def dump_to_file(f, node):
             dump_stage3(indenter, node.t, use_references, name="translation_vector")
             dump_stage3(indenter, node.r, use_references, name="rotation_matrix")
             indenter.write_line("</transformation>", -1)
+        elif cls == Expression:
+            indenter.write_line("<expression%s>%s</expression>" % (name_key, xml.sax.saxutils.escape(node.code)))
         elif issubclass(cls, ModelObject):
             if node in identifiers:
                 if use_references:
@@ -250,6 +253,8 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             child_dict = dict((tag.label, tag.value) for tag in child_tags)
             current_tag.value.r = child_dict["rotation_matrix"]
             current_tag.value.t = child_dict["translation_vector"]
+        elif name == "expression":
+            current_tag.value = Expression(current_tag.content)
         elif name == "reference":
             current_tag.value = None
             referent_tag = self.hierarchy[-3][-1]

@@ -30,6 +30,7 @@ from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.reference import Reference
+from zeobuilder.expressions import Expression
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.undefined import Undefined
@@ -386,17 +387,17 @@ class ConnectionPointDescription(fields.composed.ComposedInTable):
         fields.composed.ComposedInTable.__init__(
             self,
             fields=[
-                fields.edit.TextView(
+                fields.faulty.Expression(
                     label_text="Filter expression",
                     history_name="filter",
                     width=250,
                     height=60,
-                ), fields.edit.TextView(
+                ), fields.faulty.Expression(
                     label_text="Radius expression",
                     history_name="radius",
                     width=250,
                     height=60,
-                ), fields.edit.TextView(
+                ), fields.faulty.Expression(
                     label_text="Quality expression",
                     history_name="quality",
                     width=250,
@@ -414,9 +415,9 @@ class ConnectionPointDescription(fields.composed.ComposedInTable):
         return (
             isinstance(self.attribute, tuple) and
             len(self.attribute) == 3 and
-            isinstance(self.attribute[0], str) and
-            isinstance(self.attribute[1], str) and
-            isinstance(self.attribute[2], str)
+            isinstance(self.attribute[0], Expression) and
+            isinstance(self.attribute[1], Expression) and
+            isinstance(self.attribute[2], Expression)
         )
 
 
@@ -528,10 +529,10 @@ class ScanForConnections(ImmediateWithMemory):
         rotation2.set_rotation_properties(0.0, [1, 0, 0], False)
 
         result = Parameters()
-        result.connect_description1 = ("True", "node.get_radius()", "1")
-        result.repulse_description1 = ("True", "node.get_radius()", "-1")
-        result.connect_description2 = ("True", "node.get_radius()", "1")
-        result.repulse_description2 = ("True", "node.get_radius()", "-1")
+        result.connect_description1 = (Expression("True"), Expression("node.get_radius()"), Expression("0.5"))
+        result.repulse_description1 = (Expression("True"), Expression("node.get_radius()"), Expression("-1"))
+        result.connect_description2 = (Expression("True"), Expression("node.get_radius()"), Expression("0.5"))
+        result.repulse_description2 = (Expression("True"), Expression("node.get_radius()"), Expression("-1"))
         result.action_radius = from_angstrom(7)
         result.overlap_tolerance = from_angstrom(0.1)
         result.allow_inversions = True
@@ -563,25 +564,22 @@ class ScanForConnections(ImmediateWithMemory):
     def do(self):
         cache = context.application.cache
 
-        my_globals = context.application.plugins.nodes.copy()
-
         geometry_nodes = [[], []]
 
         def get_parameters(node, point_type, geometry_index, filter_expression, radius_expression, quality_expression):
             template = "An exception occured in the %%s expression\nfor the %s points of geometry %i." % (point_type, geometry_index+1)
-            my_globals["node"] = node
             try:
-                is_connect = eval(filter_expression, my_globals)
-            except Exception, e:
+                is_connect = filter_expression(node)
+            except Exception:
                 raise UserError(template % "filter")
             if is_connect:
                 try:
-                    radius = eval(radius_expression, my_globals)
-                except Exception, e:
+                    radius = radius_expression(node)
+                except Exception:
                     raise UserError(template % "radius")
                 try:
-                    amplitude = eval(quality_expression, my_globals)
-                except Exception, e:
+                    amplitude = quality_expression(node)
+                except Exception:
                     raise UserError(template % "quality")
                 geometry_nodes[geometry_index].append(node)
                 return True, radius, amplitude

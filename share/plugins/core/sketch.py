@@ -28,6 +28,7 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.analysis import common_parent
+from zeobuilder.expressions import Expression
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
@@ -46,8 +47,8 @@ ERASE_LINE = 2
 class SketchOptions(GladeWrapper):
     edit_erase_filter = FieldsDialogSimple(
         "Edit the Erase filter",
-        fields.edit.TextView(
-            label_text="Filter expression",
+        fields.faulty.Expression(
+            label_text="Erase filter expression",
             attribute_name="erase_filter",
             show_popup=True,
             history_name="filter",
@@ -63,7 +64,7 @@ class SketchOptions(GladeWrapper):
             "cb_object", "cb_vector", "cb_erase_filter", "bu_edit_erase_filter",
         ])
 
-        self.erase_filter = "True"
+        self.erase_filter = Expression("True")
 
         # Initialize the GUI
         #  1) common parts of the comboboxes
@@ -143,13 +144,19 @@ class SketchOptions(GladeWrapper):
         )
 
     def erase_at(self, x, y, parent):
-        glbls = context.application.plugins.nodes
         for node in context.application.main.drawing_area.yield_hits((x-2, y-2, x+2, y+2)):
-            if node is not None and node != parent and \
-               node.is_indirect_child_of(parent) and \
-               node.model == context.application.model and \
-               (not self.cb_erase_filter.get_active() or
-                eval(self.erase_filter, glbls, {"node": node})):
+            try:
+                match = (
+                    node is not None and node != parent and
+                    node.is_indirect_child_of(parent) and
+                    node.model == context.application.model and (
+                        not self.cb_erase_filter.get_active() or
+                        self.erase_filter(node)
+                    )
+                )
+            except Exception:
+                raise UserError("An exception occured while evaluating the erase filter expression.")
+            if match:
                 primitive.Delete(node)
 
     def tool_draw(self, x1, y1, x2, y2):
