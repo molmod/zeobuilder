@@ -746,6 +746,21 @@ class MolecularActions(ApplicationTestCase):
             SaturateWithHydrogens()
         self.run_test_application(fn)
 
+    def test_distribution_bond_lengths_tpa(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+
+            parameters = Parameters()
+            parameters.filter_atom1 = Expression()
+            parameters.filter_bond12 = Expression()
+            parameters.filter_atom2 = Expression()
+
+            DistributionBondLengths = context.application.plugins.get_action("DistributionBondLengths")
+            self.assert_(DistributionBondLengths.analyze_selection(parameters))
+            DistributionBondLengths(parameters)
+        self.run_test_application(fn)
+
 
 class BuilderActions(ApplicationTestCase):
     def test_connect_double_bond(self):

@@ -26,6 +26,8 @@ from zeobuilder import context
 
 import gobject, gtk
 
+import os
+
 
 __all__ = [
     "ok_error", "yes_no_question", "nosave_cancel_save_question",
@@ -120,3 +122,23 @@ def field_error(location, problem, line_wrap=True):
     button = dialog.add_button(gtk.STOCK_JUMP_TO, gtk.RESPONSE_OK)
     return run_dialog(dialog, line_wrap=True)
 
+
+def ask_save_filename(title, filename):
+    filename = os.path.join(
+        context.application.main.get_current_directory(),
+        filename
+    )
+    file_save_dialog = gtk.FileChooserDialog(
+        title,
+        context.parent_window,
+        gtk.FILE_CHOOSER_ACTION_SAVE,
+        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_SAVE, gtk.RESPONSE_OK)
+    )
+    file_save_dialog.set_default_response(gtk.RESPONSE_OK)
+    file_save_dialog.set_filename(filename)
+    file_save_dialog.set_current_name(os.path.basename(filename))
+    response = file_save_dialog.run()
+    if response == gtk.RESPONSE_OK:
+        return file_save_dialog.get_filename()
+    else:
+        return None

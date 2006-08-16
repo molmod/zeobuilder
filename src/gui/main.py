@@ -124,7 +124,7 @@ class Main(GladeWrapper):
     def get_current_directory(self):
         name = context.application.model.filename
         if name is not None:
-            return os.path.dirname(name)
+            return os.path.dirname(os.path.expanduser(name))
 
     # high level gui functions
     def file_new(self, universe, folder):
