@@ -95,6 +95,9 @@ class PluginsCollection(object):
         from zeobuilder.selection_cache import init_cache_plugins
         init_cache_plugins(self.cache_plugins)
 
+        from zeobuilder.expressions import init_locals
+        init_locals(self.nodes)
+
     def get_plugin(self, name, plugins):
         plugin = plugins.get(name)
         if plugin is None:

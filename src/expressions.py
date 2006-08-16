@@ -24,15 +24,24 @@ from zeobuilder import context
 
 
 class Expression(object):
+    l = {}
+
     def __init__(self, code="True"):
         self.compiled = compile(code, "<string>", 'eval')
         self.code = code
 
     def __call__(self, node):
         g = {"__builtins__": __builtins__}
-        l = context.application.plugins.nodes.copy()
-        l["node"] = node
-        return eval(self.compiled, g, l)
+        self.l["node"] = node
+        return eval(self.compiled, g, self.l)
 
 
+def init_locals(nodes):
+    l = {}
+    l.update(nodes)
 
+    import molmod.units
+    for key, val in molmod.units.__dict__.iteritems():
+        if isinstance(val, float):
+            l[key] = val
+    Expression.l = l
