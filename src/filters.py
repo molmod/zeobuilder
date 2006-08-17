@@ -85,8 +85,7 @@ class Indenter(object):
         self.new_line = line_break
 
 
-def init_filters(load_filters, dump_filters):
-    # construct lists of gtk file filters
+def init_load_filters(load_filters):
     all_load_ff = gtk.FileFilter()
     all_load_ff.set_name("All known formats")
     load_ffs = [all_load_ff]
@@ -102,6 +101,32 @@ def init_filters(load_filters, dump_filters):
         ff.add_pattern("*.%s.bz2" % extension)
         load_ffs.append(ff)
 
+    # create file open dialog:
+    file_open_dialog = gtk.FileChooserDialog(
+        "Open file",
+        context.parent_window,
+        gtk.FILE_CHOOSER_ACTION_OPEN,
+        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK)
+    )
+    file_open_dialog.set_default_response(gtk.RESPONSE_OK)
+    for ff in load_ffs:
+        file_open_dialog.add_filter(ff)
+    context.application.file_open_dialog = file_open_dialog
+
+    # create file import dialog:
+    file_import_dialog = gtk.FileChooserDialog(
+        "Import file",
+        context.parent_window,
+        gtk.FILE_CHOOSER_ACTION_OPEN,
+        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK)
+    )
+    file_import_dialog.set_default_response(gtk.RESPONSE_OK)
+    for ff in load_ffs:
+        file_import_dialog.add_filter(ff)
+    context.application.file_import_dialog = file_import_dialog
+
+
+def init_dump_filters(dump_filters):
     all_dump_ff = gtk.FileFilter()
     all_dump_ff.set_name("All known formats")
     dump_ffs = [all_dump_ff]
@@ -117,18 +142,6 @@ def init_filters(load_filters, dump_filters):
         ff.add_pattern("*.%s.bz2" % extension)
         dump_ffs.append(ff)
 
-    # create file open dialog:
-    file_open_dialog = gtk.FileChooserDialog(
-        "Open file",
-        context.parent_window,
-        gtk.FILE_CHOOSER_ACTION_OPEN,
-        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK)
-    )
-    file_open_dialog.set_default_response(gtk.RESPONSE_OK)
-    for ff in load_ffs:
-        file_open_dialog.add_filter(ff)
-    context.application.file_open_dialog = file_open_dialog
-
     # create file save dialog:
     file_save_dialog = gtk.FileChooserDialog(
         "Save file as",
@@ -140,18 +153,6 @@ def init_filters(load_filters, dump_filters):
     for ff in dump_ffs:
         file_save_dialog.add_filter(ff)
     context.application.file_save_dialog = file_save_dialog
-
-    # create file import dialog:
-    file_import_dialog = gtk.FileChooserDialog(
-        "Import file",
-        context.parent_window,
-        gtk.FILE_CHOOSER_ACTION_OPEN,
-        (gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK)
-    )
-    file_import_dialog.set_default_response(gtk.RESPONSE_OK)
-    for ff in load_ffs:
-        file_import_dialog.add_filter(ff)
-    context.application.file_import_dialog = file_import_dialog
 
     # create file export dialog:
     file_export_dialog = gtk.FileChooserDialog(

@@ -23,6 +23,47 @@ from zeobuilder import context
 import os, imp
 
 
+class PluginCategory(object):
+    def __init__(self, singular, plural, init):
+        self.singular = singular
+        self.plural = plural
+        self.init = init
+
+
+def init_nodes(nodes):
+    from zeobuilder.nodes import init_nodes
+    init_nodes(nodes)
+    from zeobuilder.expressions import init_locals
+    init_locals(nodes)
+
+def init_actions(actions):
+    from zeobuilder.actions.composed import init_actions
+    init_actions(actions)
+
+def init_load_filters(load_filters):
+    from zeobuilder.filters import init_load_filters
+    init_load_filters(load_filters)
+
+def init_dump_filters(dump_filters):
+    from zeobuilder.filters import init_dump_filters
+    init_dump_filters(dump_filters)
+
+def init_cache_plugins(cache_plugins):
+    from zeobuilder.selection_cache import init_cache_plugins
+    init_cache_plugins(cache_plugins)
+
+builtin_categories = [
+    PluginCategory("plugin_category", "plugin_categories", None),
+    PluginCategory("node", "nodes", init_nodes),
+    PluginCategory("action", "actions", init_actions),
+    PluginCategory("load_filter", "load_filters", init_load_filters),
+    PluginCategory("dump_filter", "dump_filters", init_dump_filters),
+    PluginCategory("interactive_group", "interactive_groups", None),
+    PluginCategory("cache_plugin", "cache_plugins", init_cache_plugins),
+]
+
+
+
 class PluginNotFoundError(Exception):
     def __init__(self, name):
         self.name = name
@@ -31,19 +72,12 @@ class PluginNotFoundError(Exception):
 
 class PluginsCollection(object):
     def __init__(self):
-        self.actions = {}
-        self.nodes = {}
-        self.load_filters = {}
-        self.dump_filters = {}
-        self.interactive_groups = {}
-        self.cache_plugins = {}
-
-        self.modules = set([])
+        self.module_descriptions = set([])
         for directory in context.share_dirs:
             self.find_modules(os.path.join(directory, "plugins"))
-        self.modules = list(sorted(self.modules))
+        #self.module_descriptions = list(sorted(self.module_descriptions))
         self.load_modules()
-        self.init_plugins()
+        self.load_plugins()
 
     def find_modules(self, directory):
         if not os.path.isdir(directory):
@@ -53,69 +87,50 @@ class PluginsCollection(object):
             if os.path.isdir(fullname) and not fullname.endswith(".skip"):
                 self.find_modules(fullname)
             elif filename.endswith(".py"):
-                self.modules.add((directory, filename[:-3]))
+                self.module_descriptions.add((directory, filename[:-3]))
 
     def load_modules(self):
-        for directory, name in self.modules:
+        self.modules = []
+        for directory, name in self.module_descriptions:
             #print name, directory
             (f, pathname, description) = imp.find_module(name, [directory])
             try:
-                module = imp.load_module(name, f, pathname, description)
-                self.load_plugins(module)
+                self.modules.append(imp.load_module(name, f, pathname, description))
             finally:
                 f.close()
 
-    def load_plugins(self, module):
-        def load(name, d):
-            #print " ", name
-            plugins = module.__dict__.get(name)
+    def load_plugins(self):
+        for category in builtin_categories:
+            self.load_category(category)
+
+        for category in self.plugin_categories.itervalues():
+            self.load_category(category)
+
+        for category in builtin_categories:
+            self.plugin_categories[category.plural] = category
+
+    def load_category(self, category):
+        d = {}
+
+        #print category.plural
+        for module in self.modules:
+            #print "  %s.py" % module.__name__
+            plugins = module.__dict__.get(category.plural)
             if plugins is not None:
                 for id, plugin in plugins.iteritems():
-                    #print "   ", id
+                    #print "    %s" % id
                     assert id not in d, "A plugin with id '%s' is already loaded (%s)" % (id, name)
                     d[id] = plugin
 
-        load("actions", self.actions)
-        load("nodes", self.nodes)
-        load("load_filters", self.load_filters)
-        load("dump_filters", self.dump_filters)
-        load("interactive_groups", self.interactive_groups)
-        load("cache_plugins", self.cache_plugins)
+        if category.init is not None:
+            category.init(d)
 
-    def init_plugins(self):
-        from zeobuilder.actions.composed import init_actions
-        init_actions(self.actions)
+        self.__dict__[category.plural] = d
 
-        from zeobuilder.nodes import init_nodes
-        init_nodes(self.nodes)
-
-        from zeobuilder.filters import init_filters
-        init_filters(self.load_filters, self.dump_filters)
-
-        from zeobuilder.selection_cache import init_cache_plugins
-        init_cache_plugins(self.cache_plugins)
-
-        from zeobuilder.expressions import init_locals
-        init_locals(self.nodes)
-
-    def get_plugin(self, name, plugins):
-        plugin = plugins.get(name)
-        if plugin is None:
-            raise PluginNotFoundError(name)
-        else:
-            return plugin
-
-    def get_action(self, name):
-        return self.get_plugin(name, self.actions)
-
-    def get_node(self, name):
-        return self.get_plugin(name, self.nodes)
-
-    def get_load_filter(self, name):
-        return self.get_plugin(name, self.load_filters)
-
-    def get_dump_filter(self, name):
-        return self.get_plugin(name, self.dump_filters)
-
-    def get_interactive_group(self, name):
-        return self.get_plugin(name, self.interactive_groups)
+        def get_plugin(name):
+            plugin = d.get(name)
+            if plugin is None:
+                raise PluginNotFoundError(name)
+            else:
+                return plugin
+        self.__dict__["get_%s" % category.singular] = get_plugin
