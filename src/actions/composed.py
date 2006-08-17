@@ -94,9 +94,9 @@ class Action(object):
         Class.last_analysis_result = None
 
     @classmethod
-    def cached_analyze_selection(Class, *arguments):
+    def cached_analyze_selection(Class, **arguments):
         if Class.last_analysis_result is None:
-            Class.last_analysis_result = Class.analyze_selection(*arguments)
+            Class.last_analysis_result = Class.analyze_selection(**arguments)
         #    print Class, "NEW", Class.last_analysis_result
         #else:
         #    print Class, "CACHED", Class.last_analysis_result
@@ -210,7 +210,7 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
     parameters_dialog = None
 
     @staticmethod
-    def analyze_selection(parameters):
+    def analyze_selection(parameters=None):
         return Immediate.analyze_selection()
 
     def __init__(self, parameters=None):
