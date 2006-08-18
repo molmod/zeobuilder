@@ -304,7 +304,10 @@ class DistributionBondLengths(ImmediateWithMemory):
             "atom 2 filter expression: %s" % self.parameters.filter_atom2.code,
         ]
 
-        distribution_dialog.run(numpy.array(lengths), "Length", "Bond length", comments)
+        if len(lengths) > 0:
+            distribution_dialog.run(numpy.array(lengths), "Length", "Bond length", comments)
+        else:
+            raise UserError("No bonds match the given criteria.")
 
 
 class DistributionBendingAngles(ImmediateWithMemory):
@@ -424,7 +427,10 @@ class DistributionBendingAngles(ImmediateWithMemory):
             "atom 3 filter expression: %s" % self.parameters.filter_atom3.code,
         ]
 
-        distribution_dialog.run(numpy.array(angles), "Angle", "Bending angle", comments)
+        if len(angles) > 0:
+            distribution_dialog.run(numpy.array(angles), "Angle", "Bending angle", comments)
+        else:
+            raise UserError("No bending angles match the given criteria.")
 
 
 class DistributionDihedralAngles(ImmediateWithMemory):
@@ -567,7 +573,10 @@ class DistributionDihedralAngles(ImmediateWithMemory):
             "atom 4 filter expression: %s" % self.parameters.filter_atom4.code,
         ]
 
-        distribution_dialog.run(numpy.array(angles), "Angle", "Bending angle", comments)
+        if len(angles) > 0:
+            distribution_dialog.run(numpy.array(angles), "Angle", "Dihedral angle", comments)
+        else:
+            raise UserError("No dihedral angles match the given criteria.")
 
 actions = {
     "DistributionBondLengths": DistributionBondLengths,
