@@ -404,7 +404,11 @@ class DistributionBendingAngles(ImmediateWithMemory):
                     point1 = transformed_match.forward[1].get_absolute_frame().t
                     point2 = transformed_match.forward[2].get_absolute_frame().t
                     point3 = transformed_match.forward[3].get_absolute_frame().t
-                    angles.append(angle(point2-point1, point2-point3))
+                    delta1 = point2-point1
+                    delta2 = point2-point3
+                    if numpy.linalg.norm(delta1) > 1e-8 and \
+                       numpy.linalg.norm(delta2) > 1e-8:
+                        angles.append(angle(delta1, delta2))
         except:
             raise UserError(
                 "An error occured while sampling the bending angles.",
@@ -542,7 +546,9 @@ class DistributionDihedralAngles(ImmediateWithMemory):
 
                     normal1 = numpy.cross(point2-point1, point2-point3)
                     normal2 = numpy.cross(point3-point4, point3-point2)
-                    angles.append(angle(normal1, normal2))
+                    if numpy.linalg.norm(normal1) > 1e-8 and \
+                       numpy.linalg.norm(normal2) > 1e-8:
+                        angles.append(angle(normal1, normal2))
         except:
             raise UserError(
                 "An error occured while sampling the dihedral angles.",
