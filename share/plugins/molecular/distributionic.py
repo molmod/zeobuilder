@@ -95,6 +95,7 @@ class DistributionDialog(GladeWrapper):
         self.average = self.data.mean()
         self.median = numpy.median(self.data)
         self.stdev = math.sqrt(sum((self.data - self.data.mean())**2) / (len(self.data) - 1))
+        self.num_bins = int(math.sqrt(len(self.data)))
         decimals = max([
             0,
             -int(math.floor(math.log10(
@@ -106,6 +107,10 @@ class DistributionDialog(GladeWrapper):
         self.property_store.append([
             "Samples",
             str(len(self.data))
+        ])
+        self.property_store.append([
+            "Bins",
+            str(self.num_bins)
         ])
         self.property_store.append([
             "Average",
@@ -146,7 +151,7 @@ class DistributionDialog(GladeWrapper):
 
         probs, bins = numpy.histogram(
             to_unit[self.unit](self.data),
-            bins=int(math.sqrt(len(self.data))),
+            bins=self.num_bins,
             normed=False,
         )
         delta = bins[1] - bins[0]
