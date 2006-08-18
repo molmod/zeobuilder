@@ -56,19 +56,19 @@ def run_dialog(dialog, line_wrap=True):
 def ok_error(message, details="", line_wrap=True):
     full = apply_template(template, (message, details))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, full)
-    return run_dialog(dialog)
+    return run_dialog(dialog, line_wrap)
 
 
 def ok_information(message, details="", line_wrap=True):
     full = apply_template(template, (message, details))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
-    return run_dialog(dialog)
+    return run_dialog(dialog, line_wrap)
 
 
 def yes_no_question(message, details="", line_wrap=True):
     full = apply_template(template, (message, details))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
-    return run_dialog(dialog)
+    return run_dialog(dialog, line_wrap)
 
 
 def nosave_cancel_save_question(message, details="", line_wrap=True):
@@ -77,7 +77,7 @@ def nosave_cancel_save_question(message, details="", line_wrap=True):
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     dialog.add_button(gtk.STOCK_SAVE, gtk.RESPONSE_OK)
-    return run_dialog(dialog)
+    return run_dialog(dialog, line_wrap)
 
 
 def ask_name(initial_name=None):
@@ -120,7 +120,7 @@ def field_error(location, problem, line_wrap=True):
     full = apply_template(field_template, (location, problem))
     dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE, full)
     button = dialog.add_button(gtk.STOCK_JUMP_TO, gtk.RESPONSE_OK)
-    return run_dialog(dialog, line_wrap=True)
+    return run_dialog(dialog, line_wrap)
 
 
 def ask_save_filename(title, filename):

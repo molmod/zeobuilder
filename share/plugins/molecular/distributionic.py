@@ -299,7 +299,7 @@ class DistributionBondLengths(ImmediateWithMemory):
         except:
             raise UserError(
                 "An error occured while sampling the bond lengths.",
-                "If this is an error in one of the filter expressions,.\n" +
+                "If this is an error in one of the filter expressions,\n" +
                 "one should see the expression mentioned below as <filter_...>.\n\n"
             )
 
@@ -413,7 +413,7 @@ class DistributionBendingAngles(ImmediateWithMemory):
         except:
             raise UserError(
                 "An error occured while sampling the bending angles.",
-                "If this is an error in one of the filter expressions,.\n" +
+                "If this is an error in one of the filter expressions,\n" +
                 "one should see the expression mentioned below as <filter_...>.\n\n"
             )
 
@@ -551,7 +551,7 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         except:
             raise UserError(
                 "An error occured while sampling the dihedral angles.",
-                "If this is an error in one of the filter expressions,.\n" +
+                "If this is an error in one of the filter expressions,\n" +
                 "one should see the expression mentioned below as <filter_...>.\n\n"
             )
 
