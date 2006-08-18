@@ -23,6 +23,7 @@
 from zeobuilder import context
 
 
+
 class Expression(object):
     l = {}
 
@@ -41,7 +42,15 @@ class Expression(object):
 
 
 def init_locals(nodes):
-    l = {}
+    from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+    l = {
+        "periodic": periodic,
+        "bonds": bonds,
+        "BOND_SINGLE": BOND_SINGLE,
+        "BOND_DOUBLE": BOND_DOUBLE,
+        "BOND_TRIPLE": BOND_TRIPLE,
+    }
+
     l.update(nodes)
 
     import molmod.units
