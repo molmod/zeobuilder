@@ -95,7 +95,21 @@ class DistributionDialog(GladeWrapper):
         self.average = self.data.mean()
         self.median = numpy.median(self.data)
         self.stdev = math.sqrt(sum((self.data - self.data.mean())**2) / (len(self.data) - 1))
-        self.num_bins = int(math.sqrt(len(self.data)))
+        request_bins = int(math.sqrt(len(self.data)))
+        num_bins = request_bins
+        while True:
+            probs, bins = numpy.histogram(
+                to_unit[self.unit](self.data),
+                bins=num_bins,
+                normed=False,
+            )
+            used_bins = sum(probs > 0)
+            num_bins = max([(request_bins*num_bins)/used_bins, num_bins+1])
+            if used_bins >= request_bins:
+                break
+        self.probs = probs*(100.0/len(self.data))
+        self.bins = bins
+
         decimals = max([
             0,
             -int(math.floor(math.log10(
@@ -110,7 +124,7 @@ class DistributionDialog(GladeWrapper):
         ])
         self.property_store.append([
             "Bins",
-            str(self.num_bins)
+            "%i (%i)" % (num_bins, used_bins)
         ])
         self.property_store.append([
             "Average",
@@ -149,18 +163,12 @@ class DistributionDialog(GladeWrapper):
         patches.append(patch_line)
         labels.append("Cumulative")
 
-        probs, bins = numpy.histogram(
-            to_unit[self.unit](self.data),
-            bins=self.num_bins,
-            normed=False,
-        )
-        delta = bins[1] - bins[0]
-        probs = probs*(100.0/len(self.data))
-        args = zip(bins, numpy.zeros(len(bins)), numpy.ones(len(bins))*delta, probs)
+        delta = self.bins[1] - self.bins[0]
+        args = zip(self.bins, numpy.zeros(len(self.bins)), numpy.ones(len(self.bins))*delta, self.probs)
         for l, b, w, h in args:
             patch_hist = matplotlib.patches.Rectangle((l, b), w, h, facecolor="w", edgecolor="#AAAAAA")
             pylab.gca().add_patch(patch_hist)
-        pylab.xlim([bins[0]-delta, bins[-1]+delta])
+        pylab.xlim([self.bins[0]-delta, self.bins[-1]+delta])
         pylab.ylim([0, 100])
         pylab.xlabel("%s [%s]" % (self.label, self.unit))
         pylab.ylabel("Probability [%]")
