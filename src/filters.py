@@ -24,6 +24,8 @@ from zeobuilder import context
 
 import gtk
 
+import os
+
 
 __all__= [
     "FilterError", "LoadFilter", "DumpFilter"
@@ -174,6 +176,9 @@ def run_file_dialog(file_dialog, file_function, *args):
     current_dir = context.application.main.get_current_directory()
     if current_dir is not None:
         file_dialog.set_current_folder(current_dir)
+    current_filename = context.application.model.filename
+    if current_filename is not None:
+        file_dialog.set_current_name(os.path.basename(current_filename))
     while file_dialog.run() == gtk.RESPONSE_OK:
         filename = file_dialog.get_filename()
         try:
