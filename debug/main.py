@@ -19,11 +19,12 @@
 #
 # --
 
+import zeobuilder_script
+
 from init_files import init_files
 init_files()
 
 from zeobuilder import context
 context.share_dirs = ["../share"]
 
-import zeobuilder_script
 zeobuilder_script.run()

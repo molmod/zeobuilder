@@ -19,6 +19,20 @@
 #
 # --
 
+import pylab, matplotlib
+# UGLY HACK: TODO report this as a bug to the matplotlib project
+#gtk.window_set_default_icon(load_image("zeobuilder.svg"))
+# END UGLY HACK
+
+matplotlib.rcParams["backend"] = "GTKAgg"
+matplotlib.rcParams["numerix"] = "numpy"
+matplotlib.rcParams["font.size"] = 9
+matplotlib.rcParams["legend.fontsize"] = 8
+matplotlib.rcParams["axes.titlesize"] = 9
+matplotlib.rcParams["axes.labelsize"] = 9
+matplotlib.rcParams["xtick.labelsize"] = 9
+matplotlib.rcParams["ytick.labelsize"] = 9
+matplotlib.rcParams["figure.facecolor"] = "w"
 
 import os, sys
 
