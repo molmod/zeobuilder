@@ -274,25 +274,26 @@ class DistributionBondLengths(ImmediateWithMemory):
 
         bonds = search_bonds(context.application.cache.nodes)
         lengths = []
-        for (atom1, atom2), bond in bonds.iteritems():
-            try:
-                match_b12 = self.parameters.filter_bond12(bond)
-            except Exception:
-                raise UserError("An exception occured while evaluating the filter expression for 'bond 1-2'.")
-            try:
-                match_a1_1 = self.parameters.filter_atom1(atom1)
-                match_a1_2 = self.parameters.filter_atom1(atom2)
-            except Exception:
-                raise UserError("An exception occured while evaluating the filter expression for 'atom 1'.")
-            try:
-                match_a2_1 = self.parameters.filter_atom2(atom1)
-                match_a2_2 = self.parameters.filter_atom2(atom2)
-            except Exception:
-                raise UserError("An exception occured while evaluating the filter expression for 'atom 2'.")
-            if match_b12 and ((match_a1_1 and match_a2_2) or (match_a1_2 and match_a2_1)):
-                if not hasattr(bond, "length"):
-                    bond.calc_vector_dimensions()
-                lengths.append(bond.length)
+
+        bond_graph = SymmetricGraph([(1, 2)], 1)
+        match_filter = MatchFilterParameterized(
+            subgraph=bond_graph,
+            calculation_tags={1: 1, 2: 1},
+            thing_criteria={
+                1: self.parameters.filter_atom1,
+                2: self.parameters.filter_atom2,
+            },
+            relation_criteria={
+                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+            },
+            filter_tags=False,
+        )
+        graph = Graph(bonds.keys())
+        for match in bond_graph.yield_matching_subgraphs(graph):
+            for transformed_match in match_filter.parse(match):
+                point1 = transformed_match.forward[1].get_absolute_frame().t
+                point2 = transformed_match.forward[2].get_absolute_frame().t
+                lengths.append(numpy.linalg.norm(point1 - point2))
 
         comments = [
             "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
