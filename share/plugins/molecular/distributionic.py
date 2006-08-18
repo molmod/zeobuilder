@@ -227,21 +227,21 @@ class DistributionBondLengths(ImmediateWithMemory):
             fields.faulty.Expression(
                 label_text="Filter expression: atom 1",
                 attribute_name="filter_atom1",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: bond 1-2",
                 attribute_name="filter_bond12",
-                history_name="filter",
+                history_name="filter_bond",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: atom 2",
                 attribute_name="filter_atom2",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
@@ -268,6 +268,10 @@ class DistributionBondLengths(ImmediateWithMemory):
         return result
 
     def do(self):
+        self.parameters.filter_atom1.variable = "atom"
+        self.parameters.filter_bond12.variable = "bond"
+        self.parameters.filter_atom2.variable = "atom"
+
         bonds = search_bonds(context.application.cache.nodes)
         lengths = []
         for (atom1, atom2), bond in bonds.iteritems():
@@ -309,35 +313,35 @@ class DistributionBendingAngles(ImmediateWithMemory):
             fields.faulty.Expression(
                 label_text="Filter expression: atom 1",
                 attribute_name="filter_atom1",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: bond 1-2",
                 attribute_name="filter_bond12",
-                history_name="filter",
+                history_name="filter_bond",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: atom 2",
                 attribute_name="filter_atom2",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: bond 2-3",
                 attribute_name="filter_bond23",
-                history_name="filter",
+                history_name="filter_bond",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: atom 3",
                 attribute_name="filter_atom3",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
@@ -366,6 +370,12 @@ class DistributionBendingAngles(ImmediateWithMemory):
         return result
 
     def do(self):
+        self.parameters.filter_atom1.variable = "atom"
+        self.parameters.filter_bond12.variable = "bond"
+        self.parameters.filter_atom2.variable = "atom"
+        self.parameters.filter_bond23.variable = "bond"
+        self.parameters.filter_atom3.variable = "atom"
+
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
 
@@ -414,49 +424,49 @@ class DistributionDihedralAngles(ImmediateWithMemory):
             fields.faulty.Expression(
                 label_text="Filter expression: atom 1",
                 attribute_name="filter_atom1",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: bond 1-2",
                 attribute_name="filter_bond12",
-                history_name="filter",
+                history_name="filter_bond",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: atom 2",
                 attribute_name="filter_atom2",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: bond 2-3",
                 attribute_name="filter_bond23",
-                history_name="filter",
+                history_name="filter_bond",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: atom 3",
                 attribute_name="filter_atom3",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: bond 3-4",
                 attribute_name="filter_bond34",
-                history_name="filter",
+                history_name="filter_bond",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: atom 4",
                 attribute_name="filter_atom4",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
@@ -487,6 +497,14 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         return result
 
     def do(self):
+        self.parameters.filter_atom1.variable = "atom"
+        self.parameters.filter_bond12.variable = "bond"
+        self.parameters.filter_atom2.variable = "atom"
+        self.parameters.filter_bond23.variable = "bond"
+        self.parameters.filter_atom3.variable = "atom"
+        self.parameters.filter_bond34.variable = "bond"
+        self.parameters.filter_atom4.variable = "atom"
+
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
 

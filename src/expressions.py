@@ -29,10 +29,11 @@ class Expression(object):
     def __init__(self, code="True"):
         self.compiled = compile(code, "<string>", 'eval')
         self.code = code
+        self.variable = "node"
 
-    def __call__(self, node):
+    def __call__(self, variable):
         g = {"__builtins__": __builtins__}
-        self.l["node"] = node
+        self.l[self.variable] = variable
         return eval(self.compiled, g, self.l)
 
 

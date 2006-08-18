@@ -811,7 +811,7 @@ class MolecularActions(ApplicationTestCase):
             parameters = Parameters()
             parameters.filter_atom1 = Expression()
             parameters.filter_bond12 = Expression()
-            parameters.filter_atom2 = Expression("node.number==8")
+            parameters.filter_atom2 = Expression("atom.number==8")
             parameters.filter_bond23 = Expression()
             parameters.filter_atom3 = Expression()
 
