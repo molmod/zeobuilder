@@ -49,9 +49,9 @@ class DistributionDialog(GladeWrapper):
         self.init_proxies(["hb_images", "tv_properties"])
 
         figure = pylab.figure(0, figsize=(4, 4), dpi=100)
-        mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(figure)
-        mpl_widget.set_size_request(400, 400)
-        self.hb_images.pack_start(mpl_widget, expand=False, fill=True)
+        self.mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(figure)
+        self.mpl_widget.set_size_request(400, 400)
+        self.hb_images.pack_start(self.mpl_widget, expand=False, fill=True)
 
         self.property_store = gtk.ListStore(str, str)
         self.tv_properties.set_model(self.property_store)
@@ -168,6 +168,7 @@ class DistributionDialog(GladeWrapper):
         labels.append("Histogram")
 
         pylab.legend(patches, labels, 0)
+        self.mpl_widget.draw()
 
     def save_figure(self, filename):
         old_backend = matplotlib.rcParams["backend"]
