@@ -138,6 +138,7 @@ def ask_save_filename(title, filename):
     file_save_dialog.set_filename(filename)
     file_save_dialog.set_current_name(os.path.basename(filename))
     response = file_save_dialog.run()
+    file_save_dialog.hide()
     if response == gtk.RESPONSE_OK:
         return file_save_dialog.get_filename()
     else:
