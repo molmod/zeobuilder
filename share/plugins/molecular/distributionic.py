@@ -268,9 +268,10 @@ class DistributionBondLengths(ImmediateWithMemory):
         return result
 
     def do(self):
-        self.parameters.filter_atom1.variable = "atom"
-        self.parameters.filter_bond12.variable = "bond"
-        self.parameters.filter_atom2.variable = "atom"
+        for key, val in self.parameters.__dict__.iteritems():
+            if isinstance(val, Expression):
+                val.compile_as("<%s>" % key)
+                val.variable = key[:4]
 
         bonds = search_bonds(context.application.cache.nodes)
         lengths = []
@@ -289,11 +290,18 @@ class DistributionBondLengths(ImmediateWithMemory):
             filter_tags=False,
         )
         graph = Graph(bonds.keys())
-        for match in bond_graph.yield_matching_subgraphs(graph):
-            for transformed_match in match_filter.parse(match):
-                point1 = transformed_match.forward[1].get_absolute_frame().t
-                point2 = transformed_match.forward[2].get_absolute_frame().t
-                lengths.append(numpy.linalg.norm(point1 - point2))
+        try:
+            for match in bond_graph.yield_matching_subgraphs(graph):
+                for transformed_match in match_filter.parse(match):
+                    point1 = transformed_match.forward[1].get_absolute_frame().t
+                    point2 = transformed_match.forward[2].get_absolute_frame().t
+                    lengths.append(numpy.linalg.norm(point1 - point2))
+        except:
+            raise UserError(
+                "An error occured while sampling the bond lengths.",
+                "If this is an error in one of the filter expressions,.\n" +
+                "one should see the expression mentioned below as <filter_...>.\n\n"
+            )
 
         comments = [
             "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
@@ -371,11 +379,10 @@ class DistributionBendingAngles(ImmediateWithMemory):
         return result
 
     def do(self):
-        self.parameters.filter_atom1.variable = "atom"
-        self.parameters.filter_bond12.variable = "bond"
-        self.parameters.filter_atom2.variable = "atom"
-        self.parameters.filter_bond23.variable = "bond"
-        self.parameters.filter_atom3.variable = "atom"
+        for key, val in self.parameters.__dict__.iteritems():
+            if isinstance(val, Expression):
+                val.compile_as("<%s>" % key)
+                val.variable = key[:4]
 
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
@@ -396,13 +403,19 @@ class DistributionBendingAngles(ImmediateWithMemory):
             filter_tags=False,
         )
         graph = Graph(bonds.keys())
-        for match in angle_graph.yield_matching_subgraphs(graph):
-            for transformed_match in match_filter.parse(match):
-                point1 = transformed_match.forward[1].get_absolute_frame().t
-                point2 = transformed_match.forward[2].get_absolute_frame().t
-                point3 = transformed_match.forward[3].get_absolute_frame().t
-                angles.append(angle(point2-point1, point2-point3))
-
+        try:
+            for match in angle_graph.yield_matching_subgraphs(graph):
+                for transformed_match in match_filter.parse(match):
+                    point1 = transformed_match.forward[1].get_absolute_frame().t
+                    point2 = transformed_match.forward[2].get_absolute_frame().t
+                    point3 = transformed_match.forward[3].get_absolute_frame().t
+                    angles.append(angle(point2-point1, point2-point3))
+        except:
+            raise UserError(
+                "An error occured while sampling the bending angles.",
+                "If this is an error in one of the filter expressions,.\n" +
+                "one should see the expression mentioned below as <filter_...>.\n\n"
+            )
 
         comments = [
             "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
@@ -498,13 +511,10 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         return result
 
     def do(self):
-        self.parameters.filter_atom1.variable = "atom"
-        self.parameters.filter_bond12.variable = "bond"
-        self.parameters.filter_atom2.variable = "atom"
-        self.parameters.filter_bond23.variable = "bond"
-        self.parameters.filter_atom3.variable = "atom"
-        self.parameters.filter_bond34.variable = "bond"
-        self.parameters.filter_atom4.variable = "atom"
+        for key, val in self.parameters.__dict__.iteritems():
+            if isinstance(val, Expression):
+                val.compile_as("<%s>" % key)
+                val.variable = key[:4]
 
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
@@ -527,16 +537,23 @@ class DistributionDihedralAngles(ImmediateWithMemory):
             filter_tags=False,
         )
         graph = Graph(bonds.keys())
-        for match in angle_graph.yield_matching_subgraphs(graph):
-            for transformed_match in match_filter.parse(match):
-                point1 = transformed_match.forward[1].get_absolute_frame().t
-                point2 = transformed_match.forward[2].get_absolute_frame().t
-                point3 = transformed_match.forward[3].get_absolute_frame().t
-                point4 = transformed_match.forward[4].get_absolute_frame().t
+        try:
+            for match in angle_graph.yield_matching_subgraphs(graph):
+                for transformed_match in match_filter.parse(match):
+                    point1 = transformed_match.forward[1].get_absolute_frame().t
+                    point2 = transformed_match.forward[2].get_absolute_frame().t
+                    point3 = transformed_match.forward[3].get_absolute_frame().t
+                    point4 = transformed_match.forward[4].get_absolute_frame().t
 
-                normal1 = numpy.cross(point2-point1, point2-point3)
-                normal2 = numpy.cross(point3-point4, point3-point2)
-                angles.append(angle(normal1, normal2))
+                    normal1 = numpy.cross(point2-point1, point2-point3)
+                    normal2 = numpy.cross(point3-point4, point3-point2)
+                    angles.append(angle(normal1, normal2))
+        except:
+            raise UserError(
+                "An error occured while sampling the dihedral angles.",
+                "If this is an error in one of the filter expressions,.\n" +
+                "one should see the expression mentioned below as <filter_...>.\n\n"
+            )
 
 
         comments = [

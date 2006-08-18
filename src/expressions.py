@@ -31,6 +31,9 @@ class Expression(object):
         self.code = code
         self.variable = "node"
 
+    def compile_as(self, name):
+        self.compiled = compile(self.code, name, 'eval')
+
     def __call__(self, variable):
         g = {"__builtins__": __builtins__}
         self.l[self.variable] = variable
