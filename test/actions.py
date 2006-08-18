@@ -788,7 +788,7 @@ class MolecularActions(ApplicationTestCase):
             SaturateWithHydrogens()
         self.run_test_application(fn)
 
-    def test_distribution_bond_lengths_tpa(self):
+    def test_distribution_bond_lengths_precursor(self):
         def fn():
             context.application.model.file_open("input/precursor.zml")
             context.application.main.select_nodes([context.application.model.universe])
