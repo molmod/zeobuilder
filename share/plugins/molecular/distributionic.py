@@ -190,7 +190,7 @@ class DistributionDialog(GladeWrapper):
         for line in self.comments:
             print >> f, "#", line
         for value in self.data:
-            print >> f, value
+            print >> f, to_unit[self.unit](value)
         f.close()
 
     def on_bu_save_clicked(self, button):
