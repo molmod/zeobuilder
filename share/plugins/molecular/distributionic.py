@@ -46,28 +46,12 @@ class DistributionDialog(GladeWrapper):
         GladeWrapper.__init__(self, "plugins/molecular/gui.glade", "di_distribution", "dialog")
         self.dialog.hide()
         self.init_callbacks(DistributionDialog)
-        self.init_proxies(["hb_images", "tv_properties"])
+        self.init_proxies(["fa_image"])
 
-        figure = pylab.figure(0, figsize=(4, 4), dpi=100)
+        figure = pylab.figure(0, figsize=(8, 4), dpi=100)
         self.mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(figure)
-        self.mpl_widget.set_size_request(400, 400)
-        self.hb_images.pack_start(self.mpl_widget, expand=False, fill=True)
-
-        self.property_store = gtk.ListStore(str, str)
-        self.tv_properties.set_model(self.property_store)
-
-        column = gtk.TreeViewColumn("Property")
-        renderer_text = gtk.CellRendererText()
-        column.pack_start(renderer_text, expand=False)
-        column.add_attribute(renderer_text, "text", 0)
-        self.tv_properties.append_column(column)
-
-        column = gtk.TreeViewColumn("Value")
-        renderer_text = gtk.CellRendererText()
-        column.pack_start(renderer_text, expand=True)
-        column.add_attribute(renderer_text, "text", 1)
-        self.tv_properties.append_column(column)
-
+        self.mpl_widget.set_size_request(800, 400)
+        self.fa_image.add(self.mpl_widget)
 
     def run(self, data, measure, label, comments):
         self.data = data
@@ -79,12 +63,11 @@ class DistributionDialog(GladeWrapper):
 
         self.dialog.set_title("%s distribution" % label)
         self.calculate_properties()
-        self.create_images()
 
-        for name, value in self.property_store:
-            self.comments.append("%s: %s" % (name, value))
         self.comments.append("%s data in unit [%s]" % (self.label, self.unit))
-        self.comments.append("model filename: %s" % context.application.model.filename)
+        self.comments.append("model filename: %s" % os.path.basename(context.application.model.filename))
+
+        self.create_images()
 
         self.dialog.show_all()
         result = self.dialog.run()
@@ -104,45 +87,29 @@ class DistributionDialog(GladeWrapper):
                 normed=False,
             )
             used_bins = sum(probs > 0)
-            num_bins = max([(request_bins*num_bins)/used_bins, num_bins+1])
             if used_bins >= request_bins:
                 break
+            num_bins = max([(request_bins*num_bins)/used_bins, num_bins+1])
         self.probs = probs*(100.0/len(self.data))
         self.bins = bins
 
-        decimals = max([
+        self.decimals = max([
             0,
             -int(math.floor(math.log10(
                 abs(to_unit[self.unit](self.stdev))
             )))
         ])+2
 
-        self.property_store.clear()
-        self.property_store.append([
-            "Samples",
-            str(len(self.data))
-        ])
-        self.property_store.append([
-            "Bins",
-            "%i (%i)" % (num_bins, used_bins)
-        ])
-        self.property_store.append([
-            "Average",
-            express_measure(self.average, self.measure, decimals)
-        ])
-        self.property_store.append([
-            "Median",
-            express_measure(self.median, self.measure, decimals)
-        ])
-        self.property_store.append([
-            "Stdev (N-1)",
-            express_measure(self.stdev, self.measure, decimals)
-        ])
+        self.comments.append("Samples: %s" % len(self.data))
+        self.comments.append("Bins: %i (%i)" % (num_bins, used_bins))
+        self.comments.append("Average: %s" % express_measure(self.average, self.measure, self.decimals))
+        self.comments.append("Median: %s" % express_measure(self.median, self.measure, self.decimals))
+        self.comments.append("Stdev (N-1): %s" % express_measure(self.stdev, self.measure, self.decimals))
 
     def create_images(self):
         figure = pylab.figure(0)
         pylab.clf()
-        pylab.axes([0.15, 0.1, 0.8, 0.85])
+        pylab.axes([0.08, 0.1, 0.4, 0.85])
         patches = []
         labels = []
 
@@ -168,37 +135,51 @@ class DistributionDialog(GladeWrapper):
         for l, b, w, h in args:
             patch_hist = matplotlib.patches.Rectangle((l, b), w, h, facecolor="w", edgecolor="#AAAAAA")
             pylab.gca().add_patch(patch_hist)
-        pylab.xlim([self.bins[0]-delta, self.bins[-1]+delta])
-        pylab.ylim([0, 100])
-        pylab.xlabel("%s [%s]" % (self.label, self.unit))
-        pylab.ylabel("Probability [%]")
         patches.append([patch_hist])
         labels.append("Histogram")
+
+        pylab.xlim([self.bins[0], self.bins[-1]+delta])
+        pylab.ylim([0, 100])
+        #pylab.title(
+        #    ("n = %s   " % len(self.data)) +
+        #    ("av = %s   " % express_measure(self.average, self.measure, self.decimals)) +
+        #    ("stdev = %s   " % express_measure(self.stdev, self.measure, self.decimals))
+        #)
+        pylab.xlabel("%s [%s]" % (self.label, self.unit))
+        pylab.ylabel("Probability [%]")
+        for index, line in enumerate(self.comments):
+            pylab.text(
+                1.05, 0.95 - index*0.06, line,
+                horizontalalignment='left',
+                verticalalignment='center',
+                transform = pylab.gca().transAxes,
+            )
 
         pylab.legend(patches, labels, 0)
         self.mpl_widget.draw()
 
-    def save_figure(self, filename):
+    def save_svg(self, filename):
         old_backend = matplotlib.rcParams["backend"]
         matplotlib.rcParams["backend"] = "SVG"
         pylab.figure(0)
         pylab.savefig(filename, dpi=100)
         matplotlib.rcParams["backend"] = old_backend
 
-    def save_data(self, filename):
-        f = file(filename, "w")
-        for line in self.comments:
-            print >> f, "#", line
-        for value in self.data:
-            print >> f, to_unit[self.unit](value)
-        f.close()
-
     def on_bu_save_clicked(self, button):
-        filename = self.label.lower().replace(" ", "_")
+        filename = context.application.model.filename
+        if filename is not None:
+            filename = filename[:filename.rfind(".")] + "_"
+        else:
+            filename = ""
+        filename += self.label.lower().replace(" ", "_")
+
         filename = ask_save_filename("Save distribution data", filename)
         if filename is not None:
             self.save_data("%s.txt" % filename)
-            self.save_figure("%s.svg" % filename)
+            pylab.figure(0)
+            self.mpl_widget.print_figure("%s.svg" % filename)
+            self.mpl_widget.print_figure("%s.eps" % filename, orientation='landscape')
+            self.mpl_widget.print_figure("%s.png" % filename, dpi=400)
 
 
 distribution_dialog = DistributionDialog()
