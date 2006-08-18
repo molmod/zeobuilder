@@ -19,10 +19,10 @@
 #
 # --
 
-import zeobuilder_script
-
 from init_files import init_files
 init_files()
+
+import zeobuilder_script
 
 from zeobuilder import context
 context.share_dirs = ["../share"]
