@@ -158,12 +158,13 @@ class DistributionDialog(GladeWrapper):
         pylab.legend(patches, labels, 0)
         self.mpl_widget.draw()
 
-    def save_svg(self, filename):
-        old_backend = matplotlib.rcParams["backend"]
-        matplotlib.rcParams["backend"] = "SVG"
-        pylab.figure(0)
-        pylab.savefig(filename, dpi=100)
-        matplotlib.rcParams["backend"] = old_backend
+    def save_data(self, filename):
+        f = file(filename, "w")
+        for line in self.comments:
+            print >> f, "#", line
+        for value in self.data:
+            print >> f, to_unit[self.unit](value)
+        f.close()
 
     def on_bu_save_clicked(self, button):
         filename = context.application.model.filename
