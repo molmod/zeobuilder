@@ -56,13 +56,13 @@ class DistributionDialog(GladeWrapper):
         self.property_store = gtk.ListStore(str, str)
         self.tv_properties.set_model(self.property_store)
 
-        column = gtk.TreeViewColumn()
+        column = gtk.TreeViewColumn("Property")
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=False)
         column.add_attribute(renderer_text, "text", 0)
         self.tv_properties.append_column(column)
 
-        column = gtk.TreeViewColumn()
+        column = gtk.TreeViewColumn("Value")
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=True)
         column.add_attribute(renderer_text, "text", 1)
@@ -95,7 +95,12 @@ class DistributionDialog(GladeWrapper):
         self.average = self.data.mean()
         self.median = numpy.median(self.data)
         self.stdev = math.sqrt(sum((self.data - self.data.mean())**2) / (len(self.data) - 1))
-        decimals = max([0, 1-int(math.log10(abs(self.median - self.average)))]) + 2
+        decimals = max([
+            0,
+            -int(math.floor(math.log10(
+                abs(to_unit[self.unit](self.stdev))
+            )))
+        ])+2
 
         self.property_store.clear()
         self.property_store.append([
