@@ -803,6 +803,42 @@ class MolecularActions(ApplicationTestCase):
             DistributionBondLengths(parameters)
         self.run_test_application(fn)
 
+    def test_distribution_bending_angles_precursor(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+
+            parameters = Parameters()
+            parameters.filter_atom1 = Expression()
+            parameters.filter_bond12 = Expression()
+            parameters.filter_atom2 = Expression("node.number==8")
+            parameters.filter_bond23 = Expression()
+            parameters.filter_atom3 = Expression()
+
+            DistributionBendingAngles = context.application.plugins.get_action("DistributionBendingAngles")
+            self.assert_(DistributionBendingAngles.analyze_selection(parameters))
+            DistributionBendingAngles(parameters)
+        self.run_test_application(fn)
+
+    def test_distribution_dihedral_angles_precursor(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+
+            parameters = Parameters()
+            parameters.filter_atom1 = Expression()
+            parameters.filter_bond12 = Expression()
+            parameters.filter_atom2 = Expression()
+            parameters.filter_bond23 = Expression()
+            parameters.filter_atom3 = Expression()
+            parameters.filter_bond34 = Expression()
+            parameters.filter_atom4 = Expression()
+
+            DistributionDihedralAngles = context.application.plugins.get_action("DistributionDihedralAngles")
+            self.assert_(DistributionDihedralAngles.analyze_selection(parameters))
+            DistributionDihedralAngles(parameters)
+        self.run_test_application(fn)
+
 
 class BuilderActions(ApplicationTestCase):
     def test_connect_double_bond(self):

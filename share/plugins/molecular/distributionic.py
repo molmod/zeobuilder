@@ -33,6 +33,8 @@ from zeobuilder.conversion import express_measure
 import zeobuilder.gui.fields as fields
 
 from molmod.units import to_unit
+from molmod.graphs import Graph, SymmetricGraph, MatchFilterParameterized
+from molmod.vectors import angle
 
 import gtk, numpy, pylab, matplotlib
 
@@ -198,9 +200,26 @@ class DistributionDialog(GladeWrapper):
 distribution_dialog = DistributionDialog()
 
 
+def search_bonds(selected_nodes):
+    Bond = context.application.plugins.get_node("Bond")
+    def yield_bonds(nodes):
+        for node in nodes:
+            if isinstance(node, Bond):
+                yield node
+            elif isinstance(node, ContainerMixin):
+                for result in yield_bonds(node.children):
+                    yield result
+
+    bonds = {}
+    for bond in yield_bonds(selected_nodes):
+        key = frozenset([bond.children[0].target, bond.children[1].target])
+        bonds[key] = bond
+    return bonds
+
+
 class DistributionBondLengths(ImmediateWithMemory):
     description = "Distribution of bond lengths"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "Distribution of bond _lengths", order=(0, 4, 1, 5, 2, 2))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bond _lengths", order=(0, 4, 1, 5, 3, 0))
 
     parameters_dialog = FieldsDialogSimple(
         "Bond length distribution parameters",
@@ -226,7 +245,7 @@ class DistributionBondLengths(ImmediateWithMemory):
                 width=250,
                 height=60,
             ),
-        ]),
+        ], cols=2),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
     )
 
@@ -249,20 +268,7 @@ class DistributionBondLengths(ImmediateWithMemory):
         return result
 
     def do(self):
-        Bond = context.application.plugins.get_node("Bond")
-        def yield_bonds(nodes):
-            for node in nodes:
-                if isinstance(node, Bond):
-                    yield node
-                elif isinstance(node, ContainerMixin):
-                    for result in yield_bonds(node.children):
-                        yield result
-
-        bonds = {}
-        for bond in yield_bonds(context.application.cache.nodes):
-            key = frozenset([bond.children[0].target, bond.children[1].target])
-            bonds[key] = bond
-
+        bonds = search_bonds(context.application.cache.nodes)
         lengths = []
         for (atom1, atom2), bond in bonds.iteritems():
             try:
@@ -278,7 +284,7 @@ class DistributionBondLengths(ImmediateWithMemory):
                 match_a2_1 = self.parameters.filter_atom2(atom1)
                 match_a2_2 = self.parameters.filter_atom2(atom2)
             except Exception:
-                raise UserError("An exception occured while evaluating the filter expression for 'atom 1'.")
+                raise UserError("An exception occured while evaluating the filter expression for 'atom 2'.")
             if match_b12 and ((match_a1_1 and match_a2_2) or (match_a1_2 and match_a2_1)):
                 if not hasattr(bond, "length"):
                     bond.calc_vector_dimensions()
@@ -293,8 +299,241 @@ class DistributionBondLengths(ImmediateWithMemory):
         distribution_dialog.run(numpy.array(lengths), "Length", "Bond length", comments)
 
 
+class DistributionBendingAngles(ImmediateWithMemory):
+    description = "Distribution of bending angles"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bending _angles", order=(0, 4, 1, 5, 3, 1))
+
+    parameters_dialog = FieldsDialogSimple(
+        "Bending angle distribution parameters",
+        fields.group.Table(fields=[
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 1",
+                attribute_name="filter_atom1",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 1-2",
+                attribute_name="filter_bond12",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 2",
+                attribute_name="filter_atom2",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 2-3",
+                attribute_name="filter_bond23",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 3",
+                attribute_name="filter_atom3",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+        ], cols=2),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
+    )
+
+    @staticmethod
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+
+    @classmethod
+    def default_parameters(cls):
+        result = Parameters()
+        result.filter_atom1 = Expression()
+        result.filter_bond12 = Expression()
+        result.filter_atom2 = Expression()
+        result.filter_bond23 = Expression()
+        result.filter_atom3 = Expression()
+        return result
+
+    def do(self):
+        bonds = search_bonds(context.application.cache.nodes)
+        angles = []
+
+        angle_graph = SymmetricGraph([(1, 2), (2, 3)], 2)
+        match_filter = MatchFilterParameterized(
+            subgraph=angle_graph,
+            calculation_tags={1: 1, 2: 0, 3: 1},
+            thing_criteria={
+                1: self.parameters.filter_atom1,
+                2: self.parameters.filter_atom2,
+                3: self.parameters.filter_atom3,
+            },
+            relation_criteria={
+                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
+            },
+            filter_tags=False,
+        )
+        graph = Graph(bonds.keys())
+        for match in angle_graph.yield_matching_subgraphs(graph):
+            for transformed_match in match_filter.parse(match):
+                point1 = transformed_match.forward[1].get_absolute_frame().t
+                point2 = transformed_match.forward[2].get_absolute_frame().t
+                point3 = transformed_match.forward[3].get_absolute_frame().t
+                angles.append(angle(point2-point1, point2-point3))
+
+
+        comments = [
+            "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
+            "bond 1-2 filter expression: %s" % self.parameters.filter_bond12.code,
+            "atom 2 filter expression: %s" % self.parameters.filter_atom2.code,
+            "bond 2-3 filter expression: %s" % self.parameters.filter_bond23.code,
+            "atom 3 filter expression: %s" % self.parameters.filter_atom3.code,
+        ]
+
+        distribution_dialog.run(numpy.array(angles), "Angle", "Bending angle", comments)
+
+
+class DistributionDihedralAngles(ImmediateWithMemory):
+    description = "Distribution of dihedral angles"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of _dihedral angles", order=(0, 4, 1, 5, 3, 2))
+
+    parameters_dialog = FieldsDialogSimple(
+        "Dihedral angle distribution parameters",
+        fields.group.Table(fields=[
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 1",
+                attribute_name="filter_atom1",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 1-2",
+                attribute_name="filter_bond12",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 2",
+                attribute_name="filter_atom2",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 2-3",
+                attribute_name="filter_bond23",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 3",
+                attribute_name="filter_atom3",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 3-4",
+                attribute_name="filter_bond34",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 4",
+                attribute_name="filter_atom4",
+                history_name="filter",
+                width=250,
+                height=60,
+            ),
+        ], cols=2),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
+    )
+
+    @staticmethod
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+
+    @classmethod
+    def default_parameters(cls):
+        result = Parameters()
+        result.filter_atom1 = Expression()
+        result.filter_bond12 = Expression()
+        result.filter_atom2 = Expression()
+        result.filter_bond23 = Expression()
+        result.filter_atom3 = Expression()
+        result.filter_bond34 = Expression()
+        result.filter_atom4 = Expression()
+        return result
+
+    def do(self):
+        bonds = search_bonds(context.application.cache.nodes)
+        angles = []
+
+        angle_graph = SymmetricGraph([(1, 2), (2, 3), (3, 4)], 2)
+        match_filter = MatchFilterParameterized(
+            subgraph=angle_graph,
+            calculation_tags={1: 1, 2: 0, 3: 0, 4: 1},
+            thing_criteria={
+                1: self.parameters.filter_atom1,
+                2: self.parameters.filter_atom2,
+                3: self.parameters.filter_atom3,
+                4: self.parameters.filter_atom4,
+            },
+            relation_criteria={
+                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
+                frozenset([3,4]): lambda things: self.parameters.filter_bond34(bonds[things]),
+            },
+            filter_tags=False,
+        )
+        graph = Graph(bonds.keys())
+        for match in angle_graph.yield_matching_subgraphs(graph):
+            for transformed_match in match_filter.parse(match):
+                point1 = transformed_match.forward[1].get_absolute_frame().t
+                point2 = transformed_match.forward[2].get_absolute_frame().t
+                point3 = transformed_match.forward[3].get_absolute_frame().t
+                point4 = transformed_match.forward[4].get_absolute_frame().t
+
+                normal1 = numpy.cross(point2-point1, point2-point3)
+                normal2 = numpy.cross(point3-point4, point3-point2)
+                angles.append(angle(normal1, normal2))
+
+
+        comments = [
+            "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
+            "bond 1-2 filter expression: %s" % self.parameters.filter_bond12.code,
+            "atom 2 filter expression: %s" % self.parameters.filter_atom2.code,
+            "bond 2-3 filter expression: %s" % self.parameters.filter_bond23.code,
+            "atom 3 filter expression: %s" % self.parameters.filter_atom3.code,
+            "bond 3-4 filter expression: %s" % self.parameters.filter_bond34.code,
+            "atom 4 filter expression: %s" % self.parameters.filter_atom4.code,
+        ]
+
+        distribution_dialog.run(numpy.array(angles), "Angle", "Bending angle", comments)
+
 actions = {
     "DistributionBondLengths": DistributionBondLengths,
-#    "DistributionBendingAngles": DistributionBendingAngles,
-#    "DistributionDihedralAngles": DistributionDihedralAngles,
+    "DistributionBendingAngles": DistributionBendingAngles,
+    "DistributionDihedralAngles": DistributionDihedralAngles,
 }
