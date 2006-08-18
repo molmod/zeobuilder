@@ -111,6 +111,7 @@ class DistributionDialog(GladeWrapper):
         self.average = self.data.mean()
         self.median = numpy.median(self.data)
         self.stdev = math.sqrt(sum((self.data - self.data.mean())**2) / (len(self.data) - 1))
+        decimals = max([0, 1-int(math.log10(abs(self.median - self.average)))]) + 2
 
         self.property_store.clear()
         self.property_store.append([
@@ -119,15 +120,15 @@ class DistributionDialog(GladeWrapper):
         ])
         self.property_store.append([
             "Average",
-            express_measure(self.average, self.measure)
+            express_measure(self.average, self.measure, decimals)
         ])
         self.property_store.append([
             "Median",
-            express_measure(self.median, self.measure)
+            express_measure(self.median, self.measure, decimals)
         ])
         self.property_store.append([
             "Stdev (N-1)",
-            express_measure(self.stdev, self.measure)
+            express_measure(self.stdev, self.measure, decimals)
         ])
 
     def create_images(self):
@@ -271,7 +272,7 @@ class DistributionBondLengths(ImmediateWithMemory):
         for key, val in self.parameters.__dict__.iteritems():
             if isinstance(val, Expression):
                 val.compile_as("<%s>" % key)
-                val.variable = key[:4]
+                val.variable = key[7:11]
 
         bonds = search_bonds(context.application.cache.nodes)
         lengths = []
@@ -382,7 +383,7 @@ class DistributionBendingAngles(ImmediateWithMemory):
         for key, val in self.parameters.__dict__.iteritems():
             if isinstance(val, Expression):
                 val.compile_as("<%s>" % key)
-                val.variable = key[:4]
+                val.variable = key[7:11]
 
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
@@ -514,7 +515,7 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         for key, val in self.parameters.__dict__.iteritems():
             if isinstance(val, Expression):
                 val.compile_as("<%s>" % key)
-                val.variable = key[:4]
+                val.variable = key[7:11]
 
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
