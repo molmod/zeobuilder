@@ -180,6 +180,7 @@ def database_widgets(connection, query, column_headers, drop_query_expr):
 
     bu_drop = gtk.Button(stock=gtk.STOCK_REMOVE)
     bu_drop.connect("clicked", on_drop_clicked)
+    bu_drop.set_sensitive(False)
 
     def on_selection_changed(foo):
         model, iter = list_selection.get_selected()

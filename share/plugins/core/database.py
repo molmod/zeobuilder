@@ -259,6 +259,7 @@ class StatusDatabasePage(DatabasePage):
 
     def unset_database(self):
         self.list_store.clear()
+        self.bu_drop.set_sensitive(False)
         DatabasePage.unset_database(self)
 
 
@@ -390,14 +391,15 @@ class ShowDatabaseWindow(Immediate):
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
         # B) validating
-        connection = context.application.cache.node
-        if not isinstance(connection, Database): return False
-        if not connection.get_connected(): return False
+        if not isinstance(context.application.cache.node, Database): return False
         # C) passed all tests:
         return True
 
     def do(self):
         database_window.unset_database(hide=False)
+        database = context.application.cache.node
+        if not database.get_connected():
+            ConnectToDatabase()
         database_window.set_database(context.application.cache.node)
 
 
