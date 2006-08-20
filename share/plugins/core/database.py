@@ -27,7 +27,7 @@ from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObject, ModelObjectInfo
 from zeobuilder.plugins import PluginCategory
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo, FieldsDialogSimple
-from zeobuilder.gui.database_liststore import DatabaseListStore
+from zeobuilder.gui.database_liststore import database_widgets
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 
@@ -225,33 +225,40 @@ class StatusDatabasePage(DatabasePage):
         DatabasePage.__init__(self, "Status")
         self.name_label = gtk.Label()
         self.name_label.set_alignment(0.0, 0.5)
-        self.tv_tables = gtk.TreeView()
-        #self.tv_tables.set_headers_visible(False)
-        self.sw_tables = gtk.ScrolledWindow()
-        self.sw_tables.add(self.tv_tables)
-        self.sw_tables.set_policy(gtk.POLICY_NEVER, gtk.POLICY_ALWAYS)
+
+        (
+            self.list_store,
+            self.list_view,
+            self.bu_refresh,
+            self.bu_drop,
+            self.scrolled_window
+        ) = database_widgets(
+            connection=None,
+            query="SHOW TABLES",
+            column_headers=["Table"],
+            drop_query_expr=(lambda row: "DROP TABLE %s" % row[0]),
+        )
+
+        self.button_box = gtk.HBox()
+        self.button_box.pack_end(self.bu_refresh, expand=False, fill=True)
+        self.button_box.pack_end(self.bu_drop, expand=False, fill=True)
+        self.button_box.set_spacing(6)
+
         self.container = gtk.VBox()
         self.container.pack_start(self.name_label, expand=False, fill=False)
-        self.container.pack_start(self.sw_tables, expand=True, fill=True)
+        self.container.pack_start(self.scrolled_window, expand=True, fill=True)
+        self.container.pack_start(self.button_box, expand=False, fill=False)
         self.container.set_border_width(6)
         self.container.set_spacing(6)
 
-        column = gtk.TreeViewColumn("Table name")
-        renderer_text = gtk.CellRendererText()
-        column.pack_start(renderer_text, expand=True)
-        column.add_attribute(renderer_text, "text", 0)
-        self.tv_tables.append_column(column)
-
     def set_database(self, notebook, database):
         self.name_label.set_markup("<b>Database name:</b> %s" % database.name)
-        self.list_store = DatabaseListStore(database.connection, "SHOW TABLES", [str])
-        self.tv_tables.set_model(self.list_store)
+        self.list_store.refresh(connection=database.connection)
         DatabasePage.set_database(self, notebook, database)
         return True
 
     def unset_database(self):
-        self.tv_tables.set_model(None)
-        del self.list_store
+        self.list_store.clear()
         DatabasePage.unset_database(self)
 
 
