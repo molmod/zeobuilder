@@ -221,7 +221,9 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
             else:
                 self.parameters = self.default_parameters()
             self.ask_parameters()
-        if not self.parameters.empty():
+        if self.parameters.empty():
+            raise CancelException
+        else:
             if self.store_last_parameters:
                 self.store_parameters(self.parameters)
             Immediate.__init__(self)
