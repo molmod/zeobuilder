@@ -61,19 +61,19 @@ def ok_error(message, details="", line_wrap=True):
 
 def ok_information(message, details="", line_wrap=True):
     full = apply_template(template, (message, details))
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, message)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, full)
     return run_dialog(dialog, line_wrap)
 
 
 def yes_no_question(message, details="", line_wrap=True):
     full = apply_template(template, (message, details))
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, message)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, full)
     return run_dialog(dialog, line_wrap)
 
 
 def nosave_cancel_save_question(message, details="", line_wrap=True):
     full = apply_template(template, (message, details))
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, message)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, full)
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     dialog.add_button(gtk.STOCK_SAVE, gtk.RESPONSE_OK)
