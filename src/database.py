@@ -26,8 +26,6 @@ import gtk
 class DatabaseListStore(gtk.GenericTreeModel):
     def __init__(self, connection, query, column_types):
         gtk.GenericTreeModel.__init__(self)
-        self.last_rowref = None
-        self.last_rowvalues = None
         self.column_types = column_types
 
         self.connection = None
@@ -41,6 +39,10 @@ class DatabaseListStore(gtk.GenericTreeModel):
             self.cursor.close()
 
     def refresh(self, connection=None, query=None):
+        self.last_rowref = None
+        self.last_rowvalues = None
+
+        # TODO: make this work instead of UGLY HACKS
         #for index in xrange(self.num_rows-1, -1, -1):
         #    self.row_deleted((index,))
 
@@ -52,11 +54,13 @@ class DatabaseListStore(gtk.GenericTreeModel):
             self.connection = connection
 
         if self.connection is not None:
+            #print self.query
             self.cursor = self.connection.cursor()
             self.numrows = self.cursor.execute(self.query)
         else:
             self.numrows = 0
 
+        # TODO: make this work instead of UGLY HACKS
         #for index in xrange(self.num_rows):
         #    path = (index, )
         #    iter = self.get_iter(path)
@@ -168,25 +172,28 @@ def database_widgets(connection, query, column_headers, drop_query_expr):
     bu_refresh = gtk.Button(stock=gtk.STOCK_REFRESH)
     bu_refresh.connect("clicked", on_refresh_clicked)
 
-    def on_drop_clicked(button):
-        model, iter = list_selection.get_selected()
-        if iter is not None:
-            list_view.set_model(None) # TODO: UGLY HACK
-            cursor = model.connection.cursor()
-            cursor.execute(drop_query_expr(model[iter]))
-            cursor.close()
-            list_store.refresh()
-            list_view.set_model(list_store) # TODO: UGLY HACK
+    if drop_query_expr is not None:
+        def on_drop_clicked(button):
+            model, iter = list_selection.get_selected()
+            if iter is not None:
+                list_view.set_model(None) # TODO: UGLY HACK
+                cursor = model.connection.cursor()
+                cursor.execute(drop_query_expr(model[iter]))
+                cursor.close()
+                list_store.refresh()
+                list_view.set_model(list_store) # TODO: UGLY HACK
 
-    bu_drop = gtk.Button(stock=gtk.STOCK_REMOVE)
-    bu_drop.connect("clicked", on_drop_clicked)
-    bu_drop.set_sensitive(False)
+        bu_drop = gtk.Button(stock=gtk.STOCK_REMOVE)
+        bu_drop.connect("clicked", on_drop_clicked)
+        bu_drop.set_sensitive(False)
 
-    def on_selection_changed(foo):
-        model, iter = list_selection.get_selected()
-        bu_drop.set_sensitive(iter is not None)
+        def on_selection_changed(foo):
+            model, iter = list_selection.get_selected()
+            bu_drop.set_sensitive(iter is not None)
 
-    list_selection.connect("changed", on_selection_changed)
+        list_selection.connect("changed", on_selection_changed)
+    else:
+        bu_drop = None
 
     scrolled_window = gtk.ScrolledWindow()
     scrolled_window.set_shadow_type(gtk.SHADOW_IN)
@@ -199,22 +206,35 @@ def database_widgets(connection, query, column_headers, drop_query_expr):
 
 class DatabasePage(object):
     order = None
+    name = None
 
-    def __init__(self, label_text):
-        self.label = gtk.Label(label_text)
+    def __init__(self):
+        self.label = gtk.Label(self.name)
         self.container = None
         self.active = False
 
-    def set_database(self, notebook, database):
+    def set_database(self, window, database):
+        new_page_num = 0
+        for page in window.pages:
+            if page.active and page.order < self.order:
+                page_num = window.notebook.page_num(page.container)
+                if  new_page_num <= page_num:
+                    new_page_num = page_num + 1
+        window.notebook.insert_page(self.container, self.label, new_page_num)
+        self.container.show_all()
+        self.label.show_all()
         self.database = database
-        self.page_num = notebook.append_page(self.container, self.label)
-        self.notebook = notebook
+        self.notebook = window.notebook
         self.active = True
 
     def unset_database(self):
-        self.notebook.remove_page(self.page_num)
+        self.notebook.remove_page(self.notebook.page_num(self.container))
         del self.database
-        del self.page_num
         del self.notebook
         self.active = False
+
+    can_initialize = None
+
+    def initialize_tables(self):
+        raise NotImplementedError
 

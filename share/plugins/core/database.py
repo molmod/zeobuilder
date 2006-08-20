@@ -27,6 +27,7 @@ from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObject, ModelObjectInfo
 from zeobuilder.plugins import PluginCategory
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo, FieldsDialogSimple
+from zeobuilder.gui.simple import yes_no_question
 from zeobuilder.database import database_widgets, DatabasePage
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
@@ -162,25 +163,37 @@ class DatabaseWindow(object):
         self.window.connect("delete-event", self.on_window_delete_event)
         self.window.set_size_request(400, 300)
 
+        menu_bar = gtk.MenuBar()
+        mi_database = gtk.MenuItem("_Database")
+        menu_bar.append(mi_database)
+        self.menu_database = gtk.Menu()
+        mi_database.set_submenu(self.menu_database)
+
         self.notebook = gtk.Notebook()
         self.notebook.set_border_width(6)
-        self.window.add(self.notebook)
 
-        #self.database = None
+        vbox = gtk.VBox()
+        vbox.pack_start(menu_bar, expand=False, fill=False)
+        vbox.pack_start(self.notebook, expand=True, fill=True)
+        self.window.add(vbox)
+
+        self.database = None
         self.pages = []
 
     def set_database(self, database):
         active_pages = 0
         for page in self.pages:
-            if page.set_database(self.notebook, database):
+            if page.set_database(self, database):
                 active_pages += 1
         if active_pages > 0:
+            self.database = database
             self.window.show_all()
 
     def unset_database(self, hide=True):
         for page in self.pages:
             if page.active:
                 page.unset_database()
+        self.database = None
         if hide:
             self.window.hide()
 
@@ -191,6 +204,30 @@ class DatabaseWindow(object):
     def init_pages(self, pages):
         self.pages = pages.values()
         self.pages.sort(key=lambda p: p.order)
+        for page in self.pages:
+            if page.can_initialize is not None:
+                mi_initialize = gtk.MenuItem("Initialize '%s' tables" % page.name)
+                self.menu_database.append(mi_initialize)
+                mi_initialize.connect("activate", self.on_mi_initialize_activate, page)
+                mi_initialize.connect("expose-event", self.on_mi_initialize_expose, page)
+
+    def on_mi_initialize_activate(self, mi, page):
+        if self.database is not None:
+            if page.active:
+                if yes_no_question(
+                    "Remove existing tables",
+                    "The page '%s' is already active and re-initializing it will clear all data from the related tables." % page.name
+                ) != gtk.RESPONSE_YES:
+                    return
+            page.initialize_tables(self.database)
+            if not page.active:
+                if not page.set_database(self, self.database):
+                    raise DatabaseError("Can not create the database page after initializing the tables.")
+
+    def on_mi_initialize_expose(self, mi, event, page):
+        if event.count == 0:
+            mi.set_sensitive(page.can_initialize())
+
 
 
 database_window = DatabaseWindow()
@@ -198,9 +235,10 @@ database_window = DatabaseWindow()
 
 class StatusDatabasePage(DatabasePage):
     order = 0
+    name = "Status"
 
     def __init__(self):
-        DatabasePage.__init__(self, "Status")
+        DatabasePage.__init__(self)
         self.name_label = gtk.Label()
         self.name_label.set_alignment(0.0, 0.5)
 
@@ -214,12 +252,11 @@ class StatusDatabasePage(DatabasePage):
             connection=None,
             query="SHOW TABLES",
             column_headers=["Table"],
-            drop_query_expr=(lambda row: "DROP TABLE %s" % row[0]),
+            drop_query_expr=None#(lambda row: "DROP TABLE %s" % row[0]),
         )
 
         self.button_box = gtk.HBox()
         self.button_box.pack_end(self.bu_refresh, expand=False, fill=True)
-        self.button_box.pack_end(self.bu_drop, expand=False, fill=True)
         self.button_box.set_spacing(6)
 
         self.container = gtk.VBox()
@@ -229,15 +266,16 @@ class StatusDatabasePage(DatabasePage):
         self.container.set_border_width(6)
         self.container.set_spacing(6)
 
-    def set_database(self, notebook, database):
+    def set_database(self, window, database):
         self.name_label.set_markup("<b>Database name:</b> %s" % database.name)
+        self.list_view.set_model(None) # TODO: UGLY HACK
         self.list_store.refresh(connection=database.connection)
-        DatabasePage.set_database(self, notebook, database)
+        self.list_view.set_model(self.list_store) # TODO: UGLY HACK
+        DatabasePage.set_database(self, window, database)
         return True
 
     def unset_database(self):
         self.list_store.clear()
-        self.bu_drop.set_sensitive(False)
         DatabasePage.unset_database(self)
 
 
@@ -308,8 +346,9 @@ class ConnectToDatabase(ImmediateWithMemory):
     parameters_dialog = FieldsDialogSimple(
         "Connect to database",
         fields.faulty.Password(
-                label_text="Immediatly login with password",
+                label_text="Login with password",
                 attribute_name="password",
+                show_popup=False,
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
