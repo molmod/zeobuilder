@@ -27,7 +27,7 @@ from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObject, ModelObjectInfo
 from zeobuilder.plugins import PluginCategory
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo, FieldsDialogSimple
-from zeobuilder.gui.database_liststore import database_widgets
+from zeobuilder.database import database_widgets, DatabasePage
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 
@@ -194,28 +194,6 @@ class DatabaseWindow(object):
 
 
 database_window = DatabaseWindow()
-
-
-class DatabasePage(object):
-    order = None
-
-    def __init__(self, label_text):
-        self.label = gtk.Label(label_text)
-        self.container = None
-        self.active = False
-
-    def set_database(self, notebook, database):
-        self.database = database
-        self.page_num = notebook.append_page(self.container, self.label)
-        self.notebook = notebook
-        self.active = True
-
-    def unset_database(self):
-        self.notebook.remove_page(self.page_num)
-        del self.database
-        del self.page_num
-        del self.notebook
-        self.active = False
 
 
 class StatusDatabasePage(DatabasePage):

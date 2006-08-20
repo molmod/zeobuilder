@@ -195,3 +195,26 @@ def database_widgets(connection, query, column_headers, drop_query_expr):
     scrolled_window.add(list_view)
 
     return list_store, list_view, bu_refresh, bu_drop, scrolled_window
+
+
+class DatabasePage(object):
+    order = None
+
+    def __init__(self, label_text):
+        self.label = gtk.Label(label_text)
+        self.container = None
+        self.active = False
+
+    def set_database(self, notebook, database):
+        self.database = database
+        self.page_num = notebook.append_page(self.container, self.label)
+        self.notebook = notebook
+        self.active = True
+
+    def unset_database(self):
+        self.notebook.remove_page(self.page_num)
+        del self.database
+        del self.page_num
+        del self.notebook
+        self.active = False
+
