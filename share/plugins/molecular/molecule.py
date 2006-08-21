@@ -384,30 +384,31 @@ class NeighborShellsDialog(FieldsDialogSimple):
     def run(self, max_shell_size, rows, graph):
         self.graph = graph
 
-        self.list_store = gtk.ListStore(*([str]*(max_shell_size+2)))
-        for row in rows:
-            row += [""]*(max_shell_size-len(row)+1)
-            row.insert(1, "")
+        self.list_store = gtk.ListStore(int, int, *([str]*(max_shell_size+2)))
+        for index, row in enumerate(rows):
+            row += [""]*(max_shell_size-(len(row)-4))
             self.list_store.append(row)
         self.list_view = gtk.TreeView(self.list_store)
 
-        column = gtk.TreeViewColumn("Atom")
-        renderer_text = gtk.CellRendererText()
-        column.pack_start(renderer_text, expand=True)
-        column.add_attribute(renderer_text, "text", 0)
+        column = gtk.TreeViewColumn("Index", gtk.CellRendererText(), text=0)
+        column.set_sort_column_id(0)
         self.list_view.append_column(column)
 
-        column = gtk.TreeViewColumn("Value")
-        renderer_text = gtk.CellRendererText()
-        column.pack_start(renderer_text, expand=True)
-        column.add_attribute(renderer_text, "text", 1)
+        column = gtk.TreeViewColumn("Number", gtk.CellRendererText(), text=1)
+        column.set_sort_column_id(1)
+        self.list_view.append_column(column)
+
+        column = gtk.TreeViewColumn("Atom", gtk.CellRendererText(), text=2)
+        column.set_sort_column_id(2)
+        self.list_view.append_column(column)
+
+        column = gtk.TreeViewColumn("Value", gtk.CellRendererText(), text=3)
+        column.set_sort_column_id(3)
         self.list_view.append_column(column)
 
         for index in xrange(1, max_shell_size+1):
-            column = gtk.TreeViewColumn("Shell %i" % index)
-            renderer_text = gtk.CellRendererText()
-            column.pack_start(renderer_text, expand=True)
-            column.add_attribute(renderer_text, "markup", index+1)
+            column = gtk.TreeViewColumn("Shell %i" % index, gtk.CellRendererText(), markup=index+3)
+            column.set_sort_column_id(index+3)
             self.list_view.append_column(column)
 
         response = FieldsDialogSimple.run(self, self)
@@ -460,7 +461,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
         atom_values = self.do_expressions()
         if atom_values is not None:
             for index, value in enumerate(atom_values):
-                self.list_store[index][1] = value
+                self.list_store[index][3] = value
 
     def select(self):
         atom_values = self.do_expressions()
@@ -512,8 +513,8 @@ class AnalyzeNieghborShells(Immediate):
         max_shell_size = graph.distances.ravel().max()
 
         def yield_rows():
-            for node in nodes:
-                yield [node.name] + [
+            for index, node in enumerate(nodes):
+                yield [index, node.number, node.name, ""] + [
                     "%i: %s" % chemical_formula(atoms) for atoms in
                     graph.shells[node][1:]
                 ]
