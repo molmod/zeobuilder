@@ -46,6 +46,8 @@ class FieldsDialogBase(object):
                 button.set_property("can-default", True)
                 button.set_property("has-default", True)
 
+    def add_main_widget(self, widget):
+        self.dialog.vbox.pack_start(widget, False, False)
 
     def destroy_dialog(self):
         self.dialog.destroy()
@@ -55,26 +57,27 @@ class FieldsDialogBase(object):
         # build up the dialog
         self.init_widgets(data)
         self.create_dialog()
-        self.dialog.vbox.pack_start(self.main_field.get_widgets_short_container(), False, False)
+        self.add_main_widget(self.main_field.get_widgets_short_container())
         self.main_field.container.show_all()
         self.valid = True
         # fill in the fields
 
         self.read()
-
         response_id = self.dialog.run()
-        while ((not self.valid) or response_id == gtk.RESPONSE_APPLY) and \
-              not ((response_id == gtk.RESPONSE_NONE) or (response_id == gtk.RESPONSE_DELETE_EVENT) or (response_id == gtk.RESPONSE_CANCEL)):
+        while not (self.hide or (response_id == gtk.RESPONSE_NONE) or \
+                   (response_id == gtk.RESPONSE_DELETE_EVENT) or \
+                   (response_id == gtk.RESPONSE_CANCEL)):
             response_id = self.dialog.run()
         # hide myself
         self.main_field.destroy_widgets()
         self.destroy_dialog()
         return response_id
 
-
-    def on_dialog_response(self, widget, response_id):
+    def on_dialog_response(self, dialog, response_id):
+        self.hide = True
         if (response_id == gtk.RESPONSE_OK) or \
-           (response_id == gtk.RESPONSE_APPLY):
+           (response_id == gtk.RESPONSE_APPLY) or \
+           (response_id > 0):
             try:
                 self.main_field.check()
                 self.valid = True
@@ -83,6 +86,7 @@ class FieldsDialogBase(object):
                 # if the user pressed apply: reread
                 if (response_id == gtk.RESPONSE_APPLY):
                     self.read()
+                    self.hide = False
             except fields.mixin.InvalidField, e:
                 trace = e.field.get_trace()
                 if trace is None:
