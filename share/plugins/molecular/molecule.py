@@ -369,25 +369,6 @@ class NeighborShellsDialog(FieldsDialogSimple):
     def create_dialog(self):
         FieldsDialogSimple.create_dialog(self)
 
-        self.scrolled_window = gtk.ScrolledWindow()
-        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
-        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
-        self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
-        self.scrolled_window.set_border_width(6)
-        self.scrolled_window.add(self.list_view)
-        self.scrolled_window.set_size_request(400, 300)
-        self.scrolled_window.show_all()
-
-        #self.dialog = gtk.Dialog("Neighbor shells", buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
-        self.dialog.vbox.pack_start(self.scrolled_window)
-
-    def run(self, max_shell_size, rows, graph):
-        self.graph = graph
-
-        self.list_store = gtk.ListStore(int, int, *([str]*(max_shell_size+2)))
-        for index, row in enumerate(rows):
-            row += [""]*(max_shell_size-(len(row)-4))
-            self.list_store.append(row)
         self.list_view = gtk.TreeView(self.list_store)
 
         column = gtk.TreeViewColumn("Index", gtk.CellRendererText(), text=0)
@@ -406,10 +387,35 @@ class NeighborShellsDialog(FieldsDialogSimple):
         column.set_sort_column_id(3)
         self.list_view.append_column(column)
 
-        for index in xrange(1, max_shell_size+1):
+        for index in xrange(1, self.max_shell_size+1):
             column = gtk.TreeViewColumn("Shell %i" % index, gtk.CellRendererText(), markup=index+3)
             column.set_sort_column_id(index+3)
             self.list_view.append_column(column)
+
+        selection = self.list_view.get_selection()
+        selection.set_mode(gtk.SELECTION_MULTIPLE)
+        selection.connect("changed", self.on_selection_changed)
+
+        self.scrolled_window = gtk.ScrolledWindow()
+        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolled_window.set_border_width(6)
+        self.scrolled_window.add(self.list_view)
+        self.scrolled_window.set_size_request(400, 300)
+        self.scrolled_window.show_all()
+
+        #self.dialog = gtk.Dialog("Neighbor shells", buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
+        self.dialog.vbox.pack_start(self.scrolled_window)
+
+    def run(self, max_shell_size, rows, graph):
+        self.graph = graph
+        self.max_shell_size = max_shell_size
+
+        self.list_store = gtk.ListStore(int, int, *([str]*(max_shell_size+2)))
+        for index, row in enumerate(rows):
+            row += [""]*(max_shell_size-(len(row)-4))
+            self.list_store.append(row)
 
         response = FieldsDialogSimple.run(self, self)
 
@@ -417,8 +423,17 @@ class NeighborShellsDialog(FieldsDialogSimple):
         for column in self.list_view.get_columns():
             self.list_view.remove_column(column)
         del self.graph
+        del self.max_shell_size
 
         return response
+
+    def on_selection_changed(self, selection):
+        model, paths = selection.get_selected_rows()
+        to_select = []
+        for path in paths:
+            iter = model.get_iter(path)
+            to_select.append(self.graph.nodes[model.get_value(iter, 0)-1])
+        context.application.main.select_nodes(to_select)
 
     def on_dialog_response(self, dialog, response_id):
         FieldsDialogSimple.on_dialog_response(self, dialog, response_id)
