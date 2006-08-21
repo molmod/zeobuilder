@@ -273,7 +273,6 @@ class RearrangeAtoms(Immediate):
         # B) validating
         cache = context.application.cache
         if cache.node is None: return False
-        Atom = context.application.plugins.get_node("Atom")
         contains_atoms = False
         for cls in cache.child_classes:
             if issubclass(cls, Atom):
@@ -308,6 +307,34 @@ class RearrangeAtoms(Immediate):
                 counter += 1
 
 
+class MoldenLabels(Immediate):
+    description = "Label the atoms in molden style."
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Molden labels", order=(0, 4, 1, 5, 0, 2))
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        cache = context.application.cache
+        if cache.node is None: return False
+        contains_atoms = False
+        for cls in cache.child_classes:
+            if issubclass(cls, Atom):
+                contains_atoms = True
+                break
+        if not contains_atoms: return False
+        # C) passed all tests
+        return True
+
+    def do(self):
+        counter = 1
+        for node in context.application.cache.children:
+            if isinstance(node, Atom):
+                primitive.SetProperty(node, "name", periodic[node.number].symbol + str(counter))
+                counter += 1
+
+
 nodes = {
     "Atom": Atom
 }
@@ -316,4 +343,5 @@ actions = {
     "AddAtom": AddAtom,
     "MergeOverlappingAtoms": MergeOverlappingAtoms,
     "RearrangeAtoms": RearrangeAtoms,
+    "MoldenLabels": MoldenLabels,
 }

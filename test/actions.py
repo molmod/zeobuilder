@@ -849,6 +849,16 @@ class MolecularActions(ApplicationTestCase):
             AnalyzeNieghborShells()
         self.run_test_application(fn)
 
+    def test_molden_labels(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes(context.application.model.universe.children)
+
+            MoldenLabels = context.application.plugins.get_action("MoldenLabels")
+            self.assert_(MoldenLabels.analyze_selection())
+            MoldenLabels()
+        self.run_test_application(fn)
+
 
 class BuilderActions(ApplicationTestCase):
     def test_connect_double_bond(self):
