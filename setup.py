@@ -25,7 +25,6 @@ from distutils.core import setup
 from distutils.extension import Extension
 from Pyrex.Distutils import build_ext
 
-version = '0.1.0'
 
 #setup(
 #    name = "Marching cube module",
@@ -37,19 +36,21 @@ version = '0.1.0'
 
 setup(
     name='zeobuilder',
-    version=version,
+    version='0.1.0',
     description='Zeobuilder is a extensible GUI application for molecular model building.',
     author='Toon Verstraelen',
     author_email='Toon.Verstraelen@UGent.be',
     url='http://molmod.ugent.be/zeobuilder/',
     package_dir = {'zeobuilder': 'src'},
     data_files=[
-        ('share/zeobuilder/%s/' % version, [
+        ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),
+        ('share/applications/', ["share/desktop/zeobuilder.desktop"]),
+        ('share/zeobuilder/', [
             "share/zeobuilder.glade", "share/zeobuilder.svg",
             "share/no_action.svg", "share/reference.svg"
         ]),
     ] + [
-        ('share/zeobuilder/%s/plugins/%s' % (version, plugin),
+        ('share/zeobuilder/plugins/%s' % plugin,
             glob.glob('share/plugins/%s/*.py' % plugin) +
             glob.glob('share/plugins/%s/*.svg' % plugin) +
             glob.glob('share/plugins/%s/*.glade' % plugin)

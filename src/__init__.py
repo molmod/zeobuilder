@@ -44,7 +44,7 @@ class Context(object):
         if not os.path.isdir(self.user_dir):
             os.mkdir(self.user_dir)
         self.share_dirs = [
-            os.path.join(sys.prefix, "share/zeobuilder", self.version),
+            os.path.join(sys.prefix, "share/zeobuilder"),
             self.user_dir
         ]
         self.config_filename = os.path.join(self.user_dir, "settings")
