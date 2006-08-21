@@ -514,7 +514,7 @@ class AnalyzeNieghborShells(Immediate):
 
         def yield_rows():
             for index, node in enumerate(nodes):
-                yield [index, node.number, node.name, ""] + [
+                yield [index+1, node.number, node.name, ""] + [
                     "%i: %s" % chemical_formula(atoms) for atoms in
                     graph.shells[node][1:]
                 ]
