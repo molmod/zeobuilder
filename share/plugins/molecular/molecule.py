@@ -31,10 +31,49 @@ import zeobuilder.actions.primitive as primitive
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
+from molmod.graphs2 import Graph
 
-import numpy
+import numpy, gtk
 
 import math
+
+
+def yield_atoms(nodes):
+    Atom = context.application.plugins.get_node("Atom")
+    for node in nodes:
+        if isinstance(node, Atom):
+            yield node
+        elif isinstance(node, ContainerMixin):
+            for atom in yield_atoms(node.children):
+                yield atom
+
+
+def yield_bonds(nodes):
+    Bond = context.application.plugins.get_node("Bond")
+    for node in nodes:
+        if isinstance(node, Bond):
+            yield node
+        elif isinstance(node, ContainerMixin):
+            for bond in yield_bonds(node.children):
+                yield bond
+
+
+def chemical_formula(atoms):
+    atom_counts = {}
+    for atom in atoms:
+        if atom.number in atom_counts:
+            atom_counts[atom.number] += 1
+        else:
+            atom_counts[atom.number] = 1
+    total = 0
+    formula = ""
+    items = atom_counts.items()
+    items.sort()
+    items.reverse()
+    for atom_number, count in items:
+        formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
+        total += count
+    return total, formula
 
 
 class ChemicalFormula(Immediate):
@@ -48,32 +87,10 @@ class ChemicalFormula(Immediate):
         return True
 
     def do(self):
-        atom_counts = {}
-        Atom = context.application.plugins.get_node("Atom")
-
-        def recursive_chem_counter(node):
-            if isinstance(node, Atom):
-                if node.number not in atom_counts:
-                    atom_counts[node.number] = 1
-                else:
-                    atom_counts[node.number] += 1
-            if isinstance(node, ContainerMixin):
-                for child in node.children:
-                    recursive_chem_counter(child)
-
-        for node in context.application.cache.nodes:
-            recursive_chem_counter(node)
-
-        total = 0
-        if len(atom_counts) > 0:
-            answer = "Chemical formula: "
-            items = atom_counts.items()
-            items.sort()
-            items.reverse()
-            for atom_number, count in items:
-                answer += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
-                total += count
-            answer += "\n\nNumber of atoms: %i" % total
+        total, formula = chemical_formula(yield_atoms(context.application.cache.nodes))
+        if total > 0:
+            answer = "Chemical formula: %s" % formula
+            answer += "\nNumber of atoms: %i" % total
         else:
             answer = "No atoms found."
         ok_information(answer, markup=True)
@@ -312,10 +329,88 @@ class SaturateWithHydrogens(Immediate):
         hydrogenate_unsaturated_atoms(context.application.cache.nodes)
 
 
+class NeighborShellsDialog(object):
+    def __init__(self):
+        self.list_view = gtk.TreeView()
+
+        self.scrolled_window = gtk.ScrolledWindow()
+        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolled_window.set_border_width(6)
+        self.scrolled_window.add(self.list_view)
+        self.scrolled_window.set_size_request(400, 300)
+        self.scrolled_window.show_all()
+
+        self.dialog = gtk.Dialog("Neighbor shells", buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
+        self.dialog.vbox.pack_start(self.scrolled_window)
+
+    def run(self, max_shell_size, rows):
+        list_store = gtk.ListStore(*([str]*(max_shell_size+1)))
+        for row in rows:
+            row += [""]*(max_shell_size-len(row)+1)
+            list_store.append(row)
+        self.list_view.set_model(list_store)
+
+        column = gtk.TreeViewColumn("Atom")
+        renderer_text = gtk.CellRendererText()
+        column.pack_start(renderer_text, expand=True)
+        column.add_attribute(renderer_text, "text", 0)
+        self.list_view.append_column(column)
+        for index in xrange(1, max_shell_size+1):
+            column = gtk.TreeViewColumn("Shell %i" % index)
+            renderer_text = gtk.CellRendererText()
+            column.pack_start(renderer_text, expand=True)
+            column.add_attribute(renderer_text, "markup", index)
+            self.list_view.append_column(column)
+
+        self.dialog.run()
+        self.dialog.hide()
+
+        self.list_view.set_model(None)
+        for column in self.list_view.get_columns():
+            self.list_view.remove_column(column)
+
+
+neighbor_shells_dialog = NeighborShellsDialog()
+
+
+class AnalyzeNieghborShells(Immediate):
+    description = "Analyze the neighbor shells"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Neighbor shells", order=(0, 4, 1, 5, 2, 2))
+
+    @staticmethod
+    def analyze_selection():
+        if not Immediate.analyze_selection(): return False
+        if len(context.application.cache.nodes) == 0: return False
+        return True
+
+    def do(self):
+        nodes = list(yield_atoms(context.application.cache.nodes))
+        pairs = list(
+            frozenset([bond.children[0].target, bond.children[1].target])
+            for bond in yield_bonds(context.application.cache.nodes)
+            if bond.children[0].target in nodes and
+               bond.children[1].target in nodes
+        )
+
+        graph = Graph(pairs, nodes)
+        max_shell_size = graph.distances.ravel().max()
+
+        def yield_rows():
+            for node in nodes:
+                yield [node.name] + [
+                    chemical_formula(atoms)[1] for atoms in
+                    graph.shells[node][1:]
+                ]
+
+        neighbor_shells_dialog.run(max_shell_size, yield_rows())
+
 
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
     "CenterOfMassAndPrincipalAxes": CenterOfMassAndPrincipalAxes,
     "SaturateWithHydrogens": SaturateWithHydrogens,
+    "AnalyzeNieghborShells": AnalyzeNieghborShells,
 }
