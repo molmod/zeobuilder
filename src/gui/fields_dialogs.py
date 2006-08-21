@@ -67,6 +67,8 @@ class FieldsDialogBase(object):
         while not (self.hide or (response_id == gtk.RESPONSE_NONE) or \
                    (response_id == gtk.RESPONSE_DELETE_EVENT) or \
                    (response_id == gtk.RESPONSE_CANCEL)):
+            if not self.hide:
+                self.read()
             response_id = self.dialog.run()
         # hide myself
         self.main_field.destroy_widgets()
@@ -83,10 +85,6 @@ class FieldsDialogBase(object):
                 self.valid = True
                 # first read out the widgets and update the instance
                 self.write()
-                # if the user pressed apply: reread
-                if (response_id == gtk.RESPONSE_APPLY):
-                    self.read()
-                    self.hide = False
             except fields.mixin.InvalidField, e:
                 trace = e.field.get_trace()
                 if trace is None:
