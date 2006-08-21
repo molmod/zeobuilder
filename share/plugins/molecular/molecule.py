@@ -67,13 +67,16 @@ class ChemicalFormula(Immediate):
         total = 0
         if len(atom_counts) > 0:
             answer = "Chemical formula: "
-            for atom_number, count in atom_counts.iteritems():
+            items = atom_counts.items()
+            items.sort()
+            items.reverse()
+            for atom_number, count in items:
                 answer += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
                 total += count
             answer += "\n\nNumber of atoms: %i" % total
         else:
             answer = "No atoms found."
-        ok_information(answer)
+        ok_information(answer, markup=True)
 
 
 def yield_particles(node, parent=None):

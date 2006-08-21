@@ -111,7 +111,10 @@ class Main(GladeWrapper):
 
     def file_close_check(self):
         if context.application.action_manager.model_changed():
-            result = nosave_cancel_save_question("The current file has not been saved. If you don't save the file, all changes will be lost. Do you want to save the file?")
+            result = nosave_cancel_save_question(
+                "Do you want to save the model?",
+                "The current file has not been saved. If you don't save the file, all changes will be lost."
+            )
             if (result == gtk.RESPONSE_CANCEL) or (result == gtk.RESPONSE_DELETE_EVENT):
                 # No close
                 return False
