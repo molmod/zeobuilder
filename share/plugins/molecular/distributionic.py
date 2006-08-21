@@ -257,7 +257,7 @@ class DistributionBondLengths(ImmediateWithMemory):
         for key, val in self.parameters.__dict__.iteritems():
             if isinstance(val, Expression):
                 val.compile_as("<%s>" % key)
-                val.variable = key[7:11]
+                val.variables = (key[7:11],)
 
         bonds = search_bonds(context.application.cache.nodes)
         lengths = []
@@ -371,7 +371,7 @@ class DistributionBendingAngles(ImmediateWithMemory):
         for key, val in self.parameters.__dict__.iteritems():
             if isinstance(val, Expression):
                 val.compile_as("<%s>" % key)
-                val.variable = key[7:11]
+                val.variables = (key[7:11],)
 
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
@@ -510,7 +510,7 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         for key, val in self.parameters.__dict__.iteritems():
             if isinstance(val, Expression):
                 val.compile_as("<%s>" % key)
-                val.variable = key[7:11]
+                val.variables = (key[7:11],)
 
         bonds = search_bonds(context.application.cache.nodes)
         angles = []

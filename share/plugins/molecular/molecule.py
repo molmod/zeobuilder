@@ -351,7 +351,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
                     width=250,
                     height=60,
                 ), fields.faulty.Expression(
-                    label_text="Atom expression (shells)",
+                    label_text="Atom expression (atom, shells)",
                     attribute_name="atom_expression",
                     history_name="atom_expression",
                     width=250,
@@ -438,9 +438,9 @@ class NeighborShellsDialog(FieldsDialogSimple):
     def on_dialog_response(self, dialog, response_id):
         FieldsDialogSimple.on_dialog_response(self, dialog, response_id)
         if self.valid:
-            self.shell_expression.variable = "atoms"
+            self.shell_expression.variables = ("atoms",)
             self.shell_expression.compile_as("<shell_expression>")
-            self.atom_expression.variable = "shells"
+            self.atom_expression.variables = ("atom", "shells")
             self.atom_expression.compile_as("<atom_expression>")
             if response_id == RESPONSE_EVALUATE:
                 self.evaluate()
@@ -460,7 +460,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
                 shell_values = []
                 for atoms in shells:
                     shell_values.append(self.shell_expression(atoms))
-                atom_values.append(self.atom_expression(shell_values))
+                atom_values.append(self.atom_expression(atom, shell_values))
         except:
             exc_type, exc_value, tb = sys.exc_info()
             err_msg = "".join(traceback.format_exception(exc_type, exc_value, tb))

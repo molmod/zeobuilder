@@ -30,15 +30,16 @@ class Expression(object):
     def __init__(self, code="True"):
         self.compiled = compile(code, "<string>", 'eval')
         self.code = code
-        self.variable = "node"
+        self.variables = ("node",)
 
     def compile_as(self, name):
         self.compiled = compile(self.code, name, 'eval')
 
-    def __call__(self, variable):
+    def __call__(self, *variables):
         g = {"__builtins__": __builtins__}
         g.update(self.l)
-        g[self.variable] = variable
+        for name, variable in zip(self.variables, variables):
+            g[name] = variable
         return eval(self.compiled, g)
 
 
