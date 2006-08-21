@@ -349,13 +349,13 @@ class NeighborShellsDialog(FieldsDialogSimple):
                     attribute_name="shell_expression",
                     history_name="shell_expression",
                     width=250,
-                    height=60,
+                    height=100,
                 ), fields.faulty.Expression(
                     label_text="Atom expression (atom, shells)",
                     attribute_name="atom_expression",
                     history_name="atom_expression",
                     width=250,
-                    height=60,
+                    height=100,
                 ),
             ], cols=2),
             (
