@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Zeobuilder
+Comment=Zeobuilder Molecular Editor
+Icon=/usr/share/zeobuilder/zeobuilder.svg
+Exec=/usr/bin/zeobuilder
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=GNOME;Application;Other;
+MimeType=application/x-zml

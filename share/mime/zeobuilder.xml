@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+
+  <mime-type type="application/zml+xml">
+    <sub-class-of type="application/xml"/>
+    <comment>Zeobuilder Model</comment>
+    <acronym>ZML</acronym>
+    <expanded-acronym>Zeobuilder Model</expanded-acronym>
+    <glob pattern="*.zml"/>
+    <glob pattern="*.zml.gz"/>
+    <glob pattern="*.zml.bz2"/>
+  </mime-type>
+</mime-info>

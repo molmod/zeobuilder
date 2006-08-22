@@ -582,6 +582,48 @@ class CoreActions(ApplicationTestCase):
         self.run_test_application(fn)
 
 
+    # The database tests assume that there is a user zbtester that has
+    # full priviliges on the database zbunittest without password on the
+    # localhost, and that the server can be accessed through sockets.
+    def test_database_core(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+
+            parameters = Parameters()
+            parameters.host = ""
+            parameters.port = 0
+            parameters.user = "zbtester"
+            parameters.name = "zbunittest"
+            parameters.password = ""
+
+            NewDatabase = context.application.plugins.get_action("NewDatabase")
+            self.assert_(NewDatabase.analyze_selection(parameters))
+            NewDatabase(parameters)
+
+            ShowDatabaseWindow = context.application.plugins.get_action("ShowDatabaseWindow")
+            self.assert_(ShowDatabaseWindow.analyze_selection())
+            ShowDatabaseWindow()
+
+            DisconnectFromDatabase = context.application.plugins.get_action("DisconnectFromDatabase")
+            self.assert_(DisconnectFromDatabase.analyze_selection())
+            DisconnectFromDatabase()
+
+            ConnectToDatabase = context.application.plugins.get_action("ConnectToDatabase")
+            self.assert_(ConnectToDatabase.analyze_selection(parameters))
+            ConnectToDatabase(parameters)
+
+            database = context.application.model.folder.children[0]
+            c = database.connection.cursor()
+
+            c.execute("DROP DATABASE zbunittest")
+
+            DisconnectFromDatabase = context.application.plugins.get_action("DisconnectFromDatabase")
+            self.assert_(DisconnectFromDatabase.analyze_selection())
+            DisconnectFromDatabase()
+        self.run_test_application(fn)
+
+
 class MolecularActions(ApplicationTestCase):
     def test_add_atom(self):
         def fn():
@@ -746,7 +788,7 @@ class MolecularActions(ApplicationTestCase):
             SaturateWithHydrogens()
         self.run_test_application(fn)
 
-    def test_distribution_bond_lengths_tpa(self):
+    def test_distribution_bond_lengths_precursor(self):
         def fn():
             context.application.model.file_open("input/precursor.zml")
             context.application.main.select_nodes([context.application.model.universe])
@@ -759,6 +801,62 @@ class MolecularActions(ApplicationTestCase):
             DistributionBondLengths = context.application.plugins.get_action("DistributionBondLengths")
             self.assert_(DistributionBondLengths.analyze_selection(parameters))
             DistributionBondLengths(parameters)
+        self.run_test_application(fn)
+
+    def test_distribution_bending_angles_precursor(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+
+            parameters = Parameters()
+            parameters.filter_atom1 = Expression()
+            parameters.filter_bond12 = Expression()
+            parameters.filter_atom2 = Expression("atom.number==8")
+            parameters.filter_bond23 = Expression()
+            parameters.filter_atom3 = Expression()
+
+            DistributionBendingAngles = context.application.plugins.get_action("DistributionBendingAngles")
+            self.assert_(DistributionBendingAngles.analyze_selection(parameters))
+            DistributionBendingAngles(parameters)
+        self.run_test_application(fn)
+
+    def test_distribution_dihedral_angles_precursor(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+
+            parameters = Parameters()
+            parameters.filter_atom1 = Expression()
+            parameters.filter_bond12 = Expression()
+            parameters.filter_atom2 = Expression()
+            parameters.filter_bond23 = Expression()
+            parameters.filter_atom3 = Expression()
+            parameters.filter_bond34 = Expression()
+            parameters.filter_atom4 = Expression()
+
+            DistributionDihedralAngles = context.application.plugins.get_action("DistributionDihedralAngles")
+            self.assert_(DistributionDihedralAngles.analyze_selection(parameters))
+            DistributionDihedralAngles(parameters)
+        self.run_test_application(fn)
+
+    def test_analyze_neighbor_shells(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+
+            AnalyzeNieghborShells = context.application.plugins.get_action("AnalyzeNieghborShells")
+            self.assert_(AnalyzeNieghborShells.analyze_selection())
+            AnalyzeNieghborShells()
+        self.run_test_application(fn)
+
+    def test_molden_labels(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes(context.application.model.universe.children)
+
+            MoldenLabels = context.application.plugins.get_action("MoldenLabels")
+            self.assert_(MoldenLabels.analyze_selection())
+            MoldenLabels()
         self.run_test_application(fn)
 
 

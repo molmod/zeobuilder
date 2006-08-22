@@ -71,7 +71,7 @@ class Main(GladeWrapper):
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=False)
         def cell_data_func(column, cell, model, iter):
-            cell.set_property("text", model.get_path(iter)[-1])
+            cell.set_property("text", model.get_path(iter)[-1]+1)
         column.set_cell_data_func(renderer_text, cell_data_func)
         self.tree_view.append_column(column)
 
@@ -111,7 +111,10 @@ class Main(GladeWrapper):
 
     def file_close_check(self):
         if context.application.action_manager.model_changed():
-            result = nosave_cancel_save_question("The current file has not been saved. If you don't save the file, all changes will be lost. Do you want to save the file?")
+            result = nosave_cancel_save_question(
+                "Do you want to save the model?",
+                "The current file has not been saved. If you don't save the file, all changes will be lost."
+            )
             if (result == gtk.RESPONSE_CANCEL) or (result == gtk.RESPONSE_DELETE_EVENT):
                 # No close
                 return False

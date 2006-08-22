@@ -29,46 +29,29 @@ from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.simple import ask_save_filename
 from zeobuilder.gui import load_image
 from zeobuilder.expressions import Expression
+from zeobuilder.conversion import express_measure
 import zeobuilder.gui.fields as fields
 
 from molmod.units import to_unit
+from molmod.graphs import Graph, SymmetricGraph, MatchFilterParameterized
+from molmod.vectors import angle
 
 import gtk, numpy, pylab, matplotlib
 
 import math, os
 
 
-# UGLY HACK: TODO report this as a bug to the matplotlib project
-gtk.window_set_default_icon(load_image("zeobuilder.svg"))
-# END UGLY HACK
-
-# UGLY HACK TODO: this should be in zeobuilder.__init__
-matplotlib.rcParams["backend"] = "GTKAgg"
-matplotlib.rcParams["numerix"] = "numpy"
-matplotlib.rcParams["font.size"] = 9
-matplotlib.rcParams["axes.titlesize"] = 9
-matplotlib.rcParams["axes.labelsize"] = 9
-matplotlib.rcParams["xtick.labelsize"] = 9
-matplotlib.rcParams["ytick.labelsize"] = 9
-matplotlib.rcParams["figure.facecolor"] = "w"
-# END UGLY HACK
-
 class DistributionDialog(GladeWrapper):
     def __init__(self):
         GladeWrapper.__init__(self, "plugins/molecular/gui.glade", "di_distribution", "dialog")
         self.dialog.hide()
         self.init_callbacks(DistributionDialog)
-        self.init_proxies(["hb_images"])
+        self.init_proxies(["fa_image"])
 
-        figure = pylab.figure(0, figsize=(4, 4), dpi=100)
-        mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(figure)
-        mpl_widget.set_size_request(400, 400)
-        self.hb_images.pack_start(mpl_widget, expand=False, fill=True)
-
-        figure = pylab.figure(1, figsize=(4, 4), dpi=100)
-        mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(figure)
-        mpl_widget.set_size_request(400, 400)
-        self.hb_images.pack_start(mpl_widget, expand=False, fill=True)
+        figure = pylab.figure(0, figsize=(8, 4), dpi=100)
+        self.mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(figure)
+        self.mpl_widget.set_size_request(800, 400)
+        self.fa_image.add(self.mpl_widget)
 
     def run(self, data, measure, label, comments):
         self.data = data
@@ -78,10 +61,12 @@ class DistributionDialog(GladeWrapper):
         self.label = label
         self.comments = comments
 
-        self.comments.insert(0, "%s values in unit [%s]" % (self.label, self.unit))
-        self.comments.insert(0, "model filename: %s" % context.application.model.filename)
-
         self.dialog.set_title("%s distribution" % label)
+        self.calculate_properties()
+
+        self.comments.append("%s data in unit [%s]" % (self.label, self.unit))
+        self.comments.append("model filename: %s" % os.path.basename(context.application.model.filename))
+
         self.create_images()
 
         self.dialog.show_all()
@@ -89,66 +74,138 @@ class DistributionDialog(GladeWrapper):
         self.dialog.hide()
         return result
 
+    def calculate_properties(self):
+        self.average = self.data.mean()
+        self.median = numpy.median(self.data)
+        self.stdev = math.sqrt(sum((self.data - self.data.mean())**2) / (len(self.data) - 1))
+        request_bins = int(math.sqrt(len(self.data)))
+        num_bins = request_bins
+        while True:
+            probs, bins = numpy.histogram(
+                to_unit[self.unit](self.data),
+                bins=num_bins,
+                normed=False,
+            )
+            used_bins = sum(probs > 0)
+            if used_bins >= request_bins:
+                break
+            num_bins = max([(request_bins*num_bins)/used_bins, num_bins+1])
+        self.probs = probs*(100.0/len(self.data))
+        self.bins = bins
+
+        self.decimals = max([
+            0,
+            -int(math.floor(math.log10(
+                abs(to_unit[self.unit](self.stdev))
+            )))
+        ])+2
+
+        self.comments.append("Samples: %s" % len(self.data))
+        self.comments.append("Bins: %i (%i)" % (num_bins, used_bins))
+        self.comments.append("Average: %s" % express_measure(self.average, self.measure, self.decimals))
+        self.comments.append("Median: %s" % express_measure(self.median, self.measure, self.decimals))
+        self.comments.append("Stdev (N-1): %s" % express_measure(self.stdev, self.measure, self.decimals))
+
     def create_images(self):
         figure = pylab.figure(0)
         pylab.clf()
-        pylab.axes([0.15, 0.1, 0.8, 0.85])
-        pylab.plot(
-            to_unit[self.unit](self.data),
-            100*numpy.arange(len(self.data), dtype=float)/(len(self.data)-1)
-        )
-        pylab.xlabel("%s [%s]" % (self.label, self.unit))
-        pylab.ylabel("Cumulative probability [%]")
+        pylab.axes([0.08, 0.1, 0.4, 0.85])
+        patches = []
+        labels = []
 
-        figure = pylab.figure(1)
-        pylab.clf()
-        pylab.axes([0.15, 0.1, 0.8, 0.85])
-        probs, bins = numpy.histogram(
+        patch_average = pylab.plot([to_unit[self.unit](self.average)]*2, [48, 52], "g-")
+        patches.append(patch_average)
+        labels.append("Average")
+
+        xtmp = to_unit[self.unit](numpy.array([self.average - self.stdev, self.average + self.stdev]))
+        patch_stdev = pylab.plot(xtmp, [50, 50], "m-")
+        patches.append(patch_stdev)
+        labels.append("+- Stdev")
+
+        patch_line = pylab.plot(
             to_unit[self.unit](self.data),
-            bins=int(math.sqrt(len(self.data))),
-            normed=False,
+            100*numpy.arange(len(self.data), dtype=float)/(len(self.data)-1),
+            color="r",
         )
-        delta = bins[1] - bins[0]
-        probs = probs*(100.0/len(self.data))
-        args = zip(bins, numpy.zeros(len(bins)), numpy.ones(len(bins))*delta, probs)
+        patches.append(patch_line)
+        labels.append("Cumulative")
+
+        delta = self.bins[1] - self.bins[0]
+        args = zip(self.bins, numpy.zeros(len(self.bins)), numpy.ones(len(self.bins))*delta, self.probs)
         for l, b, w, h in args:
-            r = matplotlib.patches.Rectangle((l, b), w, h)
-            pylab.gca().add_patch(r)
-        pylab.xlim([bins[0]-delta, bins[-1]+delta])
+            patch_hist = matplotlib.patches.Rectangle((l, b), w, h, facecolor="w", edgecolor="#AAAAAA")
+            pylab.gca().add_patch(patch_hist)
+        patches.append([patch_hist])
+        labels.append("Histogram")
+
+        pylab.xlim([self.bins[0], self.bins[-1]+delta])
         pylab.ylim([0, 100])
+        #pylab.title(
+        #    ("n = %s   " % len(self.data)) +
+        #    ("av = %s   " % express_measure(self.average, self.measure, self.decimals)) +
+        #    ("stdev = %s   " % express_measure(self.stdev, self.measure, self.decimals))
+        #)
         pylab.xlabel("%s [%s]" % (self.label, self.unit))
         pylab.ylabel("Probability [%]")
+        for index, line in enumerate(self.comments):
+            pylab.text(
+                1.05, 0.95 - index*0.06, line,
+                horizontalalignment='left',
+                verticalalignment='center',
+                transform = pylab.gca().transAxes,
+            )
 
-    def save_figure(self, fignum, filename):
-        old_backend = matplotlib.rcParams["backend"]
-        matplotlib.rcParams["backend"] = "SVG"
-        pylab.figure(fignum)
-        pylab.savefig(filename, dpi=100)
-        matplotlib.rcParams["backend"] = old_backend
+        pylab.legend(patches, labels, 0)
+        self.mpl_widget.draw()
 
     def save_data(self, filename):
         f = file(filename, "w")
         for line in self.comments:
             print >> f, "#", line
         for value in self.data:
-            print >> f, value
+            print >> f, to_unit[self.unit](value)
         f.close()
 
     def on_bu_save_clicked(self, button):
-        filename = self.label.lower().replace(" ", "_")
+        filename = context.application.model.filename
+        if filename is not None:
+            filename = filename[:filename.rfind(".")] + "_"
+        else:
+            filename = ""
+        filename += self.label.lower().replace(" ", "_")
+
         filename = ask_save_filename("Save distribution data", filename)
         if filename is not None:
             self.save_data("%s.txt" % filename)
-            self.save_figure(0, "%s.cumul.svg" % filename)
-            self.save_figure(1, "%s.dist.svg" % filename)
+            pylab.figure(0)
+            self.mpl_widget.print_figure("%s.svg" % filename)
+            self.mpl_widget.print_figure("%s.eps" % filename, orientation='landscape')
+            self.mpl_widget.print_figure("%s.png" % filename, dpi=400)
 
 
 distribution_dialog = DistributionDialog()
 
 
+def search_bonds(selected_nodes):
+    Bond = context.application.plugins.get_node("Bond")
+    def yield_bonds(nodes):
+        for node in nodes:
+            if isinstance(node, Bond):
+                yield node
+            elif isinstance(node, ContainerMixin):
+                for result in yield_bonds(node.children):
+                    yield result
+
+    bonds = {}
+    for bond in yield_bonds(selected_nodes):
+        key = frozenset([bond.children[0].target, bond.children[1].target])
+        bonds[key] = bond
+    return bonds
+
+
 class DistributionBondLengths(ImmediateWithMemory):
     description = "Distribution of bond lengths"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "Distribution of bond _lengths", order=(0, 4, 1, 5, 2, 2))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bond _lengths", order=(0, 4, 1, 5, 3, 0))
 
     parameters_dialog = FieldsDialogSimple(
         "Bond length distribution parameters",
@@ -156,25 +213,25 @@ class DistributionBondLengths(ImmediateWithMemory):
             fields.faulty.Expression(
                 label_text="Filter expression: atom 1",
                 attribute_name="filter_atom1",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: bond 1-2",
                 attribute_name="filter_bond12",
-                history_name="filter",
+                history_name="filter_bond",
                 width=250,
                 height=60,
             ),
             fields.faulty.Expression(
                 label_text="Filter expression: atom 2",
                 attribute_name="filter_atom2",
-                history_name="filter",
+                history_name="filter_atom",
                 width=250,
                 height=60,
             ),
-        ]),
+        ], cols=2),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
     )
 
@@ -197,40 +254,40 @@ class DistributionBondLengths(ImmediateWithMemory):
         return result
 
     def do(self):
-        Bond = context.application.plugins.get_node("Bond")
-        def yield_bonds(nodes):
-            for node in nodes:
-                if isinstance(node, Bond):
-                    yield node
-                elif isinstance(node, ContainerMixin):
-                    for result in yield_bonds(node.children):
-                        yield result
+        for key, val in self.parameters.__dict__.iteritems():
+            if isinstance(val, Expression):
+                val.compile_as("<%s>" % key)
+                val.variables = (key[7:11],)
 
-        bonds = {}
-        for bond in yield_bonds(context.application.cache.nodes):
-            key = frozenset([bond.children[0].target, bond.children[1].target])
-            bonds[key] = bond
-
+        bonds = search_bonds(context.application.cache.nodes)
         lengths = []
-        for (atom1, atom2), bond in bonds.iteritems():
-            try:
-                match_b12 = self.parameters.filter_bond12(bond)
-            except Exception:
-                raise UserError("An exception occured while evaluating the filter expression for 'bond 1-2'.")
-            try:
-                match_a1_1 = self.parameters.filter_atom1(atom1)
-                match_a1_2 = self.parameters.filter_atom1(atom2)
-            except Exception:
-                raise UserError("An exception occured while evaluating the filter expression for 'atom 1'.")
-            try:
-                match_a2_1 = self.parameters.filter_atom2(atom1)
-                match_a2_2 = self.parameters.filter_atom2(atom2)
-            except Exception:
-                raise UserError("An exception occured while evaluating the filter expression for 'atom 1'.")
-            if match_b12 and ((match_a1_1 and match_a2_2) or (match_a1_2 and match_a2_1)):
-                if not hasattr(bond, "length"):
-                    bond.calc_vector_dimensions()
-                lengths.append(bond.length)
+
+        bond_graph = SymmetricGraph([(1, 2)], 1)
+        match_filter = MatchFilterParameterized(
+            subgraph=bond_graph,
+            calculation_tags={1: 1, 2: 1},
+            thing_criteria={
+                1: self.parameters.filter_atom1,
+                2: self.parameters.filter_atom2,
+            },
+            relation_criteria={
+                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+            },
+            filter_tags=False,
+        )
+        graph = Graph(bonds.keys())
+        try:
+            for match in bond_graph.yield_matching_subgraphs(graph):
+                for transformed_match in match_filter.parse(match):
+                    point1 = transformed_match.forward[1].get_absolute_frame().t
+                    point2 = transformed_match.forward[2].get_absolute_frame().t
+                    lengths.append(numpy.linalg.norm(point1 - point2))
+        except:
+            raise UserError(
+                "An error occured while sampling the bond lengths.",
+                "If this is an error in one of the filter expressions,\n" +
+                "one should see the expression mentioned below as <filter_...>.\n\n"
+            )
 
         comments = [
             "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
@@ -238,11 +295,282 @@ class DistributionBondLengths(ImmediateWithMemory):
             "atom 2 filter expression: %s" % self.parameters.filter_atom2.code,
         ]
 
-        distribution_dialog.run(numpy.array(lengths), "Length", "Bond length", comments)
+        if len(lengths) > 0:
+            distribution_dialog.run(numpy.array(lengths), "Length", "Bond length", comments)
+        else:
+            raise UserError("No bonds match the given criteria.")
 
+
+class DistributionBendingAngles(ImmediateWithMemory):
+    description = "Distribution of bending angles"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bending _angles", order=(0, 4, 1, 5, 3, 1))
+
+    parameters_dialog = FieldsDialogSimple(
+        "Bending angle distribution parameters",
+        fields.group.Table(fields=[
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 1",
+                attribute_name="filter_atom1",
+                history_name="filter_atom",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 1-2",
+                attribute_name="filter_bond12",
+                history_name="filter_bond",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 2",
+                attribute_name="filter_atom2",
+                history_name="filter_atom",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 2-3",
+                attribute_name="filter_bond23",
+                history_name="filter_bond",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 3",
+                attribute_name="filter_atom3",
+                history_name="filter_atom",
+                width=250,
+                height=60,
+            ),
+        ], cols=2),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
+    )
+
+    @staticmethod
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+
+    @classmethod
+    def default_parameters(cls):
+        result = Parameters()
+        result.filter_atom1 = Expression()
+        result.filter_bond12 = Expression()
+        result.filter_atom2 = Expression()
+        result.filter_bond23 = Expression()
+        result.filter_atom3 = Expression()
+        return result
+
+    def do(self):
+        for key, val in self.parameters.__dict__.iteritems():
+            if isinstance(val, Expression):
+                val.compile_as("<%s>" % key)
+                val.variables = (key[7:11],)
+
+        bonds = search_bonds(context.application.cache.nodes)
+        angles = []
+
+        angle_graph = SymmetricGraph([(1, 2), (2, 3)], 2)
+        match_filter = MatchFilterParameterized(
+            subgraph=angle_graph,
+            calculation_tags={1: 1, 2: 0, 3: 1},
+            thing_criteria={
+                1: self.parameters.filter_atom1,
+                2: self.parameters.filter_atom2,
+                3: self.parameters.filter_atom3,
+            },
+            relation_criteria={
+                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
+            },
+            filter_tags=False,
+        )
+        graph = Graph(bonds.keys())
+        try:
+            for match in angle_graph.yield_matching_subgraphs(graph):
+                for transformed_match in match_filter.parse(match):
+                    point1 = transformed_match.forward[1].get_absolute_frame().t
+                    point2 = transformed_match.forward[2].get_absolute_frame().t
+                    point3 = transformed_match.forward[3].get_absolute_frame().t
+                    delta1 = point2-point1
+                    delta2 = point2-point3
+                    if numpy.linalg.norm(delta1) > 1e-8 and \
+                       numpy.linalg.norm(delta2) > 1e-8:
+                        angles.append(angle(delta1, delta2))
+        except:
+            raise UserError(
+                "An error occured while sampling the bending angles.",
+                "If this is an error in one of the filter expressions,\n" +
+                "one should see the expression mentioned below as <filter_...>.\n\n"
+            )
+
+        comments = [
+            "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
+            "bond 1-2 filter expression: %s" % self.parameters.filter_bond12.code,
+            "atom 2 filter expression: %s" % self.parameters.filter_atom2.code,
+            "bond 2-3 filter expression: %s" % self.parameters.filter_bond23.code,
+            "atom 3 filter expression: %s" % self.parameters.filter_atom3.code,
+        ]
+
+        if len(angles) > 0:
+            distribution_dialog.run(numpy.array(angles), "Angle", "Bending angle", comments)
+        else:
+            raise UserError("No bending angles match the given criteria.")
+
+
+class DistributionDihedralAngles(ImmediateWithMemory):
+    description = "Distribution of dihedral angles"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of _dihedral angles", order=(0, 4, 1, 5, 3, 2))
+
+    parameters_dialog = FieldsDialogSimple(
+        "Dihedral angle distribution parameters",
+        fields.group.Table(fields=[
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 1",
+                attribute_name="filter_atom1",
+                history_name="filter_atom",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 1-2",
+                attribute_name="filter_bond12",
+                history_name="filter_bond",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 2",
+                attribute_name="filter_atom2",
+                history_name="filter_atom",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 2-3",
+                attribute_name="filter_bond23",
+                history_name="filter_bond",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 3",
+                attribute_name="filter_atom3",
+                history_name="filter_atom",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: bond 3-4",
+                attribute_name="filter_bond34",
+                history_name="filter_bond",
+                width=250,
+                height=60,
+            ),
+            fields.faulty.Expression(
+                label_text="Filter expression: atom 4",
+                attribute_name="filter_atom4",
+                history_name="filter_atom",
+                width=250,
+                height=60,
+            ),
+        ], cols=2),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
+    )
+
+    @staticmethod
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        cache = context.application.cache
+        if len(cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+
+    @classmethod
+    def default_parameters(cls):
+        result = Parameters()
+        result.filter_atom1 = Expression()
+        result.filter_bond12 = Expression()
+        result.filter_atom2 = Expression()
+        result.filter_bond23 = Expression()
+        result.filter_atom3 = Expression()
+        result.filter_bond34 = Expression()
+        result.filter_atom4 = Expression()
+        return result
+
+    def do(self):
+        for key, val in self.parameters.__dict__.iteritems():
+            if isinstance(val, Expression):
+                val.compile_as("<%s>" % key)
+                val.variables = (key[7:11],)
+
+        bonds = search_bonds(context.application.cache.nodes)
+        angles = []
+
+        angle_graph = SymmetricGraph([(1, 2), (2, 3), (3, 4)], 2)
+        match_filter = MatchFilterParameterized(
+            subgraph=angle_graph,
+            calculation_tags={1: 1, 2: 0, 3: 0, 4: 1},
+            thing_criteria={
+                1: self.parameters.filter_atom1,
+                2: self.parameters.filter_atom2,
+                3: self.parameters.filter_atom3,
+                4: self.parameters.filter_atom4,
+            },
+            relation_criteria={
+                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
+                frozenset([3,4]): lambda things: self.parameters.filter_bond34(bonds[things]),
+            },
+            filter_tags=False,
+        )
+        graph = Graph(bonds.keys())
+        try:
+            for match in angle_graph.yield_matching_subgraphs(graph):
+                for transformed_match in match_filter.parse(match):
+                    point1 = transformed_match.forward[1].get_absolute_frame().t
+                    point2 = transformed_match.forward[2].get_absolute_frame().t
+                    point3 = transformed_match.forward[3].get_absolute_frame().t
+                    point4 = transformed_match.forward[4].get_absolute_frame().t
+
+                    normal1 = numpy.cross(point2-point1, point2-point3)
+                    normal2 = numpy.cross(point3-point4, point3-point2)
+                    if numpy.linalg.norm(normal1) > 1e-8 and \
+                       numpy.linalg.norm(normal2) > 1e-8:
+                        angles.append(angle(normal1, normal2))
+        except:
+            raise UserError(
+                "An error occured while sampling the dihedral angles.",
+                "If this is an error in one of the filter expressions,\n" +
+                "one should see the expression mentioned below as <filter_...>.\n\n"
+            )
+
+
+        comments = [
+            "atom 1 filter expression: %s" % self.parameters.filter_atom1.code,
+            "bond 1-2 filter expression: %s" % self.parameters.filter_bond12.code,
+            "atom 2 filter expression: %s" % self.parameters.filter_atom2.code,
+            "bond 2-3 filter expression: %s" % self.parameters.filter_bond23.code,
+            "atom 3 filter expression: %s" % self.parameters.filter_atom3.code,
+            "bond 3-4 filter expression: %s" % self.parameters.filter_bond34.code,
+            "atom 4 filter expression: %s" % self.parameters.filter_atom4.code,
+        ]
+
+        if len(angles) > 0:
+            distribution_dialog.run(numpy.array(angles), "Angle", "Dihedral angle", comments)
+        else:
+            raise UserError("No dihedral angles match the given criteria.")
 
 actions = {
     "DistributionBondLengths": DistributionBondLengths,
-#    "DistributionBendingAngles": DistributionBendingAngles,
-#    "DistributionDihedralAngles": DistributionDihedralAngles,
+    "DistributionBendingAngles": DistributionBendingAngles,
+    "DistributionDihedralAngles": DistributionDihedralAngles,
 }

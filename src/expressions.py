@@ -23,21 +23,36 @@
 from zeobuilder import context
 
 
+
 class Expression(object):
     l = {}
 
     def __init__(self, code="True"):
         self.compiled = compile(code, "<string>", 'eval')
         self.code = code
+        self.variables = ("node",)
 
-    def __call__(self, node):
+    def compile_as(self, name):
+        self.compiled = compile(self.code, name, 'eval')
+
+    def __call__(self, *variables):
         g = {"__builtins__": __builtins__}
-        self.l["node"] = node
-        return eval(self.compiled, g, self.l)
+        g.update(self.l)
+        for name, variable in zip(self.variables, variables):
+            g[name] = variable
+        return eval(self.compiled, g)
 
 
 def init_locals(nodes):
-    l = {}
+    from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+    l = {
+        "periodic": periodic,
+        "bonds": bonds,
+        "BOND_SINGLE": BOND_SINGLE,
+        "BOND_DOUBLE": BOND_DOUBLE,
+        "BOND_TRIPLE": BOND_TRIPLE,
+    }
+
     l.update(nodes)
 
     import molmod.units

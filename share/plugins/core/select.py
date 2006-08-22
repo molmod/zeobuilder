@@ -333,9 +333,9 @@ class PickSelection(Interactive):
         self.endx = event.x
         self.endy = event.y
         if event.button == 1 and event.type == gtk.gdk._2BUTTON_PRESS:
-            context.application.action_manager.default_action(
-                context.application.main.drawing_area.get_nearest(event.x, event.y)
-            )
+            nearest = context.application.main.drawing_area.get_nearest(event.x, event.y)
+            if nearest is not None:
+                context.application.action_manager.default_action(nearest)
 
     def button_motion(self, drawing_area, event, startbutton):
         self.endx = event.x

@@ -26,15 +26,57 @@ from zeobuilder.actions.abstract import CenterAlignBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
-from zeobuilder.gui.simple import ok_information
+from zeobuilder.gui.simple import ok_information, ok_error, ask_save_filename
+from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
+from zeobuilder.expressions import Expression
+import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
+from molmod.graphs2 import Graph
 
-import numpy
+import numpy, gtk
 
-import math
+import math, sys, traceback
+
+
+def yield_atoms(nodes):
+    Atom = context.application.plugins.get_node("Atom")
+    for node in nodes:
+        if isinstance(node, Atom):
+            yield node
+        elif isinstance(node, ContainerMixin):
+            for atom in yield_atoms(node.children):
+                yield atom
+
+
+def yield_bonds(nodes):
+    Bond = context.application.plugins.get_node("Bond")
+    for node in nodes:
+        if isinstance(node, Bond):
+            yield node
+        elif isinstance(node, ContainerMixin):
+            for bond in yield_bonds(node.children):
+                yield bond
+
+
+def chemical_formula(atoms):
+    atom_counts = {}
+    for atom in atoms:
+        if atom.number in atom_counts:
+            atom_counts[atom.number] += 1
+        else:
+            atom_counts[atom.number] = 1
+    total = 0
+    formula = ""
+    items = atom_counts.items()
+    items.sort()
+    items.reverse()
+    for atom_number, count in items:
+        formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
+        total += count
+    return total, formula
 
 
 class ChemicalFormula(Immediate):
@@ -48,32 +90,13 @@ class ChemicalFormula(Immediate):
         return True
 
     def do(self):
-        atom_counts = {}
-        Atom = context.application.plugins.get_node("Atom")
-
-        def recursive_chem_counter(node):
-            if isinstance(node, Atom):
-                if node.number not in atom_counts:
-                    atom_counts[node.number] = 1
-                else:
-                    atom_counts[node.number] += 1
-            if isinstance(node, ContainerMixin):
-                for child in node.children:
-                    recursive_chem_counter(child)
-
-        for node in context.application.cache.nodes:
-            recursive_chem_counter(node)
-
-        total = 0
-        if len(atom_counts) > 0:
-            answer = "Chemical formula: "
-            for atom_number, count in atom_counts.iteritems():
-                answer += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
-                total += count
-            answer += "\n\nNumber of atoms: %i" % total
+        total, formula = chemical_formula(yield_atoms(context.application.cache.nodes))
+        if total > 0:
+            answer = "Chemical formula: %s" % formula
+            answer += "\nNumber of atoms: %i" % total
         else:
             answer = "No atoms found."
-        ok_information(answer)
+        ok_information(answer, markup=True)
 
 
 def yield_particles(node, parent=None):
@@ -309,10 +332,215 @@ class SaturateWithHydrogens(Immediate):
         hydrogenate_unsaturated_atoms(context.application.cache.nodes)
 
 
+RESPONSE_EVALUATE = 1
+RESPONSE_SELECT = 2
+RESPONSE_SAVE = 3
+
+class NeighborShellsDialog(FieldsDialogSimple):
+    def __init__(self):
+        self.shell_expression = Expression()
+        self.atom_expression = Expression()
+        FieldsDialogSimple.__init__(
+            self,
+            "Neighbor shells",
+            fields.group.Table(fields=[
+                fields.faulty.Expression(
+                    label_text="Shell expression (atoms)",
+                    attribute_name="shell_expression",
+                    history_name="shell_expression",
+                    width=250,
+                    height=100,
+                ), fields.faulty.Expression(
+                    label_text="Atom expression (atom, shells)",
+                    attribute_name="atom_expression",
+                    history_name="atom_expression",
+                    width=250,
+                    height=100,
+                ),
+            ], cols=2),
+            (
+                ("Evaluate", RESPONSE_EVALUATE),
+                ("Select", RESPONSE_SELECT),
+                (gtk.STOCK_SAVE, RESPONSE_SAVE),
+                (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
+            )
+        )
+
+    def create_dialog(self):
+        FieldsDialogSimple.create_dialog(self)
+
+        self.list_view = gtk.TreeView(self.list_store)
+
+        column = gtk.TreeViewColumn("Index", gtk.CellRendererText(), text=0)
+        column.set_sort_column_id(0)
+        self.list_view.append_column(column)
+
+        column = gtk.TreeViewColumn("Number", gtk.CellRendererText(), text=1)
+        column.set_sort_column_id(1)
+        self.list_view.append_column(column)
+
+        column = gtk.TreeViewColumn("Atom", gtk.CellRendererText(), text=2)
+        column.set_sort_column_id(2)
+        self.list_view.append_column(column)
+
+        column = gtk.TreeViewColumn("Value", gtk.CellRendererText(), text=3)
+        column.set_sort_column_id(3)
+        self.list_view.append_column(column)
+
+        for index in xrange(1, self.max_shell_size+1):
+            column = gtk.TreeViewColumn("Shell %i" % index, gtk.CellRendererText(), markup=index+3)
+            column.set_sort_column_id(index+3)
+            self.list_view.append_column(column)
+
+        selection = self.list_view.get_selection()
+        selection.set_mode(gtk.SELECTION_MULTIPLE)
+        selection.connect("changed", self.on_selection_changed)
+
+        self.scrolled_window = gtk.ScrolledWindow()
+        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
+        self.scrolled_window.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.scrolled_window.set_border_width(6)
+        self.scrolled_window.add(self.list_view)
+        self.scrolled_window.set_size_request(400, 300)
+        self.scrolled_window.show_all()
+
+        #self.dialog = gtk.Dialog("Neighbor shells", buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
+        self.dialog.vbox.pack_start(self.scrolled_window)
+
+    def run(self, max_shell_size, rows, graph):
+        self.graph = graph
+        self.max_shell_size = max_shell_size
+
+        self.list_store = gtk.ListStore(int, int, *([str]*(max_shell_size+2)))
+        for index, row in enumerate(rows):
+            row += [""]*(max_shell_size-(len(row)-4))
+            self.list_store.append(row)
+
+        response = FieldsDialogSimple.run(self, self)
+
+        self.list_view.set_model(None)
+        for column in self.list_view.get_columns():
+            self.list_view.remove_column(column)
+        del self.graph
+        del self.max_shell_size
+
+        return response
+
+    def on_selection_changed(self, selection):
+        model, paths = selection.get_selected_rows()
+        to_select = []
+        for path in paths:
+            iter = model.get_iter(path)
+            to_select.append(self.graph.nodes[model.get_value(iter, 0)-1])
+        context.application.main.select_nodes(to_select)
+
+    def on_dialog_response(self, dialog, response_id):
+        FieldsDialogSimple.on_dialog_response(self, dialog, response_id)
+        if self.valid:
+            self.shell_expression.variables = ("atoms",)
+            self.shell_expression.compile_as("<shell_expression>")
+            self.atom_expression.variables = ("atom", "shells")
+            self.atom_expression.compile_as("<atom_expression>")
+            if response_id == RESPONSE_EVALUATE:
+                self.evaluate()
+                self.hide = False
+            if response_id == RESPONSE_SELECT:
+                self.select()
+                self.hide = True
+            elif response_id == RESPONSE_SAVE:
+                self.save()
+                self.hide = False
+
+    def do_expressions(self):
+        atom_values = []
+        try:
+            for atom in self.graph.nodes:
+                shells = self.graph.shells[atom]
+                shell_values = []
+                for atoms in shells:
+                    shell_values.append(self.shell_expression(atoms))
+                atom_values.append(self.atom_expression(atom, shell_values))
+        except:
+            exc_type, exc_value, tb = sys.exc_info()
+            err_msg = "".join(traceback.format_exception(exc_type, exc_value, tb))
+            ok_error(
+                "An error occured while evaluating the shell and atom expressions.",
+                err_msg, line_wrap=False
+            )
+            self.hide = False
+            return None
+        return atom_values
+
+    def evaluate(self):
+        atom_values = self.do_expressions()
+        if atom_values is not None:
+            for index, value in enumerate(atom_values):
+                self.list_store[index][3] = value
+
+    def select(self):
+        atom_values = self.do_expressions()
+        if atom_values is not None:
+            to_select = [atom for atom, value in zip(self.graph.nodes, atom_values) if value]
+            context.application.main.select_nodes(to_select)
+
+    def save(self):
+        atom_values = self.do_expressions()
+        if atom_values is not None:
+            filename = context.application.model.filename
+            if filename is None:
+                filename = ""
+            else:
+                filename = filename[:filename.rfind(".")]
+            filename = ask_save_filename("Save shell data", filename)
+            if filename is not None:
+                if not filename.endswith(".txt"):
+                    filename += ".txt"
+                f = file(filename, "w")
+                for atom, value in zip(self.graph.nodes, atom_values):
+                    print >> f, atom.get_name(), value
+                f.close()
+
+
+neighbor_shells_dialog = NeighborShellsDialog()
+
+
+class AnalyzeNieghborShells(Immediate):
+    description = "Analyze the neighbor shells"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Neighbor shells", order=(0, 4, 1, 5, 2, 2))
+
+    @staticmethod
+    def analyze_selection():
+        if not Immediate.analyze_selection(): return False
+        if len(context.application.cache.nodes) == 0: return False
+        return True
+
+    def do(self):
+        nodes = list(yield_atoms(context.application.cache.nodes))
+        pairs = list(
+            frozenset([bond.children[0].target, bond.children[1].target])
+            for bond in yield_bonds(context.application.cache.nodes)
+            if bond.children[0].target in nodes and
+               bond.children[1].target in nodes
+        )
+
+        graph = Graph(pairs, nodes)
+        max_shell_size = graph.distances.ravel().max()
+
+        def yield_rows():
+            for index, node in enumerate(nodes):
+                yield [index+1, node.number, node.name, ""] + [
+                    "%i: %s" % chemical_formula(atoms) for atoms in
+                    graph.shells[node][1:]
+                ]
+
+        neighbor_shells_dialog.run(max_shell_size, yield_rows(), graph)
+
 
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
     "CenterOfMassAndPrincipalAxes": CenterOfMassAndPrincipalAxes,
     "SaturateWithHydrogens": SaturateWithHydrogens,
+    "AnalyzeNieghborShells": AnalyzeNieghborShells,
 }
