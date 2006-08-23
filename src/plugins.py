@@ -33,8 +33,8 @@ class PluginCategory(object):
 def init_nodes(nodes):
     from zeobuilder.nodes import init_nodes
     init_nodes(nodes)
-    from zeobuilder.expressions import init_locals
-    init_locals(nodes)
+    from zeobuilder.expressions import add_locals
+    add_locals(nodes)
 
 def init_actions(actions):
     from zeobuilder.actions.composed import init_actions
@@ -52,6 +52,11 @@ def init_cache_plugins(cache_plugins):
     from zeobuilder.selection_cache import init_cache_plugins
     init_cache_plugins(cache_plugins)
 
+def init_utility_functions(utility_functions):
+    from zeobuilder.expressions import add_locals
+    add_locals(utility_functions)
+
+
 builtin_categories = [
     PluginCategory("plugin_category", "plugin_categories", None),
     PluginCategory("node", "nodes", init_nodes),
@@ -60,6 +65,7 @@ builtin_categories = [
     PluginCategory("dump_filter", "dump_filters", init_dump_filters),
     PluginCategory("interactive_group", "interactive_groups", None),
     PluginCategory("cache_plugin", "cache_plugins", init_cache_plugins),
+    PluginCategory("utility_function", "utility_functions", init_utility_functions)
 ]
 
 
