@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Immediate
+from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.actions.abstract import CenterAlignBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
@@ -34,7 +34,7 @@ import zeobuilder.actions.primitive as primitive
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs2 import Graph
+from molmod.graphs2 import Graph, MatchFilterError, ExactMatchFilter, MatchGenerator
 
 import numpy, gtk
 
@@ -537,10 +537,73 @@ class AnalyzeNieghborShells(Immediate):
         neighbor_shells_dialog.run(max_shell_size, yield_rows(), graph)
 
 
+class ExactNumberMatchFilter(ExactMatchFilter):
+    def compare(self, atom0, atom1):
+        if atom0.number != atom1.number: return False
+        else: return ExactMatchFilter.compare(self, atom0, atom1)
+
+
+class CloneOrder(Immediate):
+    description = "Apply the order of the first selection to the second."
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Clone order", order=(0, 4, 1, 5, 0, 3))
+
+    @staticmethod
+    def analyze_selection():
+        if not Immediate.analyze_selection(): return False
+        cache = context.application.cache
+        if len(cache.nodes) != 2: return False
+        Frame = context.application.plugins.get_node("Frame")
+        for cls in cache.classes:
+            if not issubclass(cls, Frame): return False
+        return True
+
+    def create_graph(self, frame):
+        nodes = list(yield_atoms([frame]))
+        pairs = list(
+            frozenset([bond.children[0].target, bond.children[1].target])
+            for bond in yield_bonds([frame])
+            if bond.children[0].target in nodes and
+               bond.children[1].target in nodes
+        )
+        return Graph(pairs, nodes)
+
+    def do(self):
+        frame1, frame2 = context.application.cache.nodes
+
+        graph1 = self.create_graph(frame1)
+        graph2 = self.create_graph(frame2)
+        #for row in graph1.distances:
+        #    print " ".join("%3i" % item for item in row)
+        #print
+        #for row in graph2.distances:
+        #    print " ".join("%3i" % item for item in row)
+
+        try:
+            match_generator = MatchGenerator(ExactNumberMatchFilter(), graph1, graph2)
+        except MatchFilterError, e:
+            raise UserError("Can not apply the order of the first selection to the second.")
+
+        try:
+            match = match_generator().next()
+        except StopIteration:
+            raise UserError("The connectivity of the two selections differs.")
+
+        moves = [
+            (graph1.index[atom1], atom2)
+            for atom1, atom2
+            in match.forward.iteritems()
+        ]
+        moves.sort()
+
+        for new_index, atom2 in moves:
+            primitive.Move(atom2, frame2, new_index)
+
+
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
     "CenterOfMassAndPrincipalAxes": CenterOfMassAndPrincipalAxes,
     "SaturateWithHydrogens": SaturateWithHydrogens,
     "AnalyzeNieghborShells": AnalyzeNieghborShells,
+    "CloneOrder": CloneOrder,
 }
