@@ -38,7 +38,7 @@ from molmod.graphs2 import Graph, MatchFilterError, ExactMatchFilter, MatchGener
 
 import numpy, gtk
 
-import math, sys, traceback
+import math, sys, traceback, copy
 
 
 def yield_atoms(nodes):
@@ -338,27 +338,17 @@ RESPONSE_SAVE = 3
 
 class NeighborShellsDialog(FieldsDialogSimple):
     def __init__(self):
-        self.shell_expression = Expression()
         self.atom_expression = Expression()
         FieldsDialogSimple.__init__(
             self,
             "Neighbor shells",
-            fields.group.Table(fields=[
-                fields.faulty.Expression(
-                    label_text="Shell expression (atoms)",
-                    attribute_name="shell_expression",
-                    history_name="shell_expression",
-                    width=250,
-                    height=100,
-                ), fields.faulty.Expression(
-                    label_text="Atom expression (atom, shells)",
-                    attribute_name="atom_expression",
-                    history_name="atom_expression",
-                    width=250,
-                    height=100,
-                ),
-            ], cols=2),
-            (
+            fields.faulty.Expression(
+                label_text="Atom expression (atom, graph)",
+                attribute_name="atom_expression",
+                history_name="atom_expression",
+                width=250,
+                height=150,
+            ), (
                 ("Evaluate", RESPONSE_EVALUATE),
                 ("Select", RESPONSE_SELECT),
                 (gtk.STOCK_SAVE, RESPONSE_SAVE),
@@ -383,7 +373,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
         column.set_sort_column_id(2)
         self.list_view.append_column(column)
 
-        column = gtk.TreeViewColumn("Value", gtk.CellRendererText(), text=3)
+        column = gtk.TreeViewColumn("Value", gtk.CellRendererText(), markup=3)
         column.set_sort_column_id(3)
         self.list_view.append_column(column)
 
@@ -438,9 +428,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
     def on_dialog_response(self, dialog, response_id):
         FieldsDialogSimple.on_dialog_response(self, dialog, response_id)
         if self.valid:
-            self.shell_expression.variables = ("atoms",)
-            self.shell_expression.compile_as("<shell_expression>")
-            self.atom_expression.variables = ("atom", "shells")
+            self.atom_expression.variables = ("atom", "graph")
             self.atom_expression.compile_as("<atom_expression>")
             if response_id == RESPONSE_EVALUATE:
                 self.evaluate()
@@ -456,11 +444,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
         atom_values = []
         try:
             for atom in self.graph.nodes:
-                shells = self.graph.shells[atom]
-                shell_values = []
-                for atoms in shells:
-                    shell_values.append(self.shell_expression(atoms))
-                atom_values.append(self.atom_expression(atom, shell_values))
+                atom_values.append(self.atom_expression(atom, self.graph))
         except:
             exc_type, exc_value, tb = sys.exc_info()
             err_msg = "".join(traceback.format_exception(exc_type, exc_value, tb))
@@ -523,6 +507,10 @@ class AnalyzeNieghborShells(Immediate):
             if bond.children[0].target in nodes and
                bond.children[1].target in nodes
         )
+        tmp = set([])
+        for a, b in pairs:
+            tmp.add(a), tmp.add(b)
+        nodes = [node for node in nodes if node in tmp]
 
         graph = Graph(pairs, nodes)
         max_shell_size = graph.distances.ravel().max()
@@ -535,6 +523,29 @@ class AnalyzeNieghborShells(Immediate):
                 ]
 
         neighbor_shells_dialog.run(max_shell_size, yield_rows(), graph)
+
+
+def combinations(items, n):
+    if len(items) < n: return
+    if n == 0: yield set([])
+    for index in xrange(len(items)):
+        selected = items[index]
+        for combination in combinations(items[index+1:], n-1):
+            combination_copy = copy.copy(combination)
+            combination_copy.add(selected)
+            yield combination_copy
+
+
+def first(l):
+    if hasattr(l, "next"):
+        try:
+            return l.next()
+        except StopIteration:
+            return None
+    elif len(l) > 0:
+        return l[0]
+    else:
+        return None
 
 
 class ExactNumberMatchFilter(ExactMatchFilter):
@@ -606,4 +617,10 @@ actions = {
     "SaturateWithHydrogens": SaturateWithHydrogens,
     "AnalyzeNieghborShells": AnalyzeNieghborShells,
     "CloneOrder": CloneOrder,
+}
+
+
+utility_functions = {
+    "combinations": combinations,
+    "first": first,
 }
