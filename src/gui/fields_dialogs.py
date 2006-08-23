@@ -67,7 +67,7 @@ class FieldsDialogBase(object):
         while not (self.hide or (response_id == gtk.RESPONSE_NONE) or \
                    (response_id == gtk.RESPONSE_DELETE_EVENT) or \
                    (response_id == gtk.RESPONSE_CANCEL)):
-            if not self.hide:
+            if not self.hide and self.valid:
                 self.read()
             response_id = self.dialog.run()
         # hide myself
@@ -93,6 +93,7 @@ class FieldsDialogBase(object):
                 e.field.show()
                 e.field.grab_focus()
                 self.valid = False
+                self.hide = False
 
     def init_widgets(self, data):
         raise NotImplementedError
