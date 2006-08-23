@@ -817,7 +817,7 @@ class TranslateViewerBase(Interactive):
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return scene.viewer.t[2] + scene.znear()
+        return scene.viewer.t[2] + scene.znear
 
     def do_translation(self, vector, drawing_area):
         scene = drawing_area.scene
@@ -825,9 +825,10 @@ class TranslateViewerBase(Interactive):
         if (scene.opening_angle > 0):
             scene.viewer.t[2] -= vector[2]
         else:
-            scene.window_size *= (1 + 0.01*vector[2])
-            if scene.window_size < 0.001: scene.window_size = 0.001
-            elif scene.window_size > 1000: scene.window_size = 1000
+            window_size = scene.window_size*(1 + 0.01*vector[2])
+            if window_size < 0.001: window_size = 0.001
+            elif window_size > 1000: window_size = 1000
+            drawing_area.set_window_size(window_size)
         drawing_area.queue_draw()
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
@@ -863,7 +864,7 @@ class TranslateRotationCenterBase(Interactive):
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return scene.viewer.t[2] + scene.znear()
+        return scene.viewer.t[2] + scene.znear
 
     def do_translation(self, vector, drawing_area):
         scene = drawing_area.scene
@@ -876,9 +877,10 @@ class TranslateRotationCenterBase(Interactive):
             scene.viewer.t[2] -= vector[2]
             scene.rotation_center.t[2] += transformed_vector[2]
         else:
-            scene.window_size *= (1 + 0.01*vector[-1])
-            if scene.window_size < 0.001: scene.window_size = 0.001
-            elif scene.window_size > 1000: scene.window_size = 1000
+            window_size = scene.window_size*(1 + 0.01*vector[-1])
+            if window_size < 0.001: window_size = 0.001
+            elif window_size > 1000: window_size = 1000
+            drawing_area.set_window_size(window_size)
         drawing_area.queue_draw()
 
 

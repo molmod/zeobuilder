@@ -92,6 +92,8 @@ class ReadMixin(object):
             return False
         else:
             self.current_instance = instance
+            #if not self.applicable_attribute():
+            #    print "The attribute_name '%s' is not of the correct format." % self.attribute_name
             return self.applicable_attribute()
             del self.current_instance
 

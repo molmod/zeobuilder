@@ -26,6 +26,7 @@
 
 
 from zeobuilder import context
+from zeobuilder.undefined import Undefined
 
 from molmod.transformations import Rotation, Translation, Complete
 from molmod.units import angstrom
@@ -96,6 +97,23 @@ class Scene(object):
             )),
         )
 
+        config.register_setting(
+            "background_color",
+            numpy.array([0, 0, 0, 0], float),
+            DialogFieldInfo("Default Viewer", (1, 3), fields.faulty.Length(
+                label_text="Window depth",
+                attribute_name="window_depth",
+                low=0.0,
+                low_inclusive=False,
+            )),
+            None,
+        )
+        config.register_setting(
+            "fog_start",
+            Undefined(50.0*angstrom),
+            None,
+        )
+
         self.reset_view()
         self.gl_names = {}
         self.revalidations = []
@@ -113,10 +131,10 @@ class Scene(object):
         # Some default gl settings
         glDepthFunc(GL_LESS)
         glEnable(GL_DEPTH_TEST)
-        glClearColor(0.0, 0.0, 0.0, 1.0)
 
         self.initialize_interactive_tool()
         self.initialize_rotation_center()
+        self.apply_renderer_settings()
 
     def initialize_interactive_tool(self): # gl_context sensitive method
         self.tool_draw_list = glGenLists(1)
@@ -173,14 +191,31 @@ class Scene(object):
         glEnd()
         glEndList()
 
+    def apply_renderer_settings(self): # gl_context sensitive method
+        configuration = context.application.configuration
+        glClearColor(*configuration.background_color)
+        glFogfv(GL_FOG_COLOR, configuration.background_color)
+        if isinstance(configuration.fog_start, Undefined):
+            glDisable(GL_FOG)
+        else:
+            glEnable(GL_FOG)
+            glFogfv(GL_FOG_MODE, GL_LINEAR)
+            glFogfv(GL_FOG_START, self.znear + configuration.fog_start)
+            glFogfv(GL_FOG_END, self.znear + self.window_depth)
+
     def add_revalidation(self, revalidation):
         self.revalidations.append(revalidation)
 
-    def znear(self):
+    def set_window_size(self, window_size):
+        self.window_size = window_size
+        self.update_znear()
+        self.apply_renderer_settings()
+
+    def update_znear(self):
         if self.opening_angle > 0.0:
-            return 0.5*self.window_size/math.tan(0.5*self.opening_angle)
+            self.znear = 0.5*self.window_size/math.tan(0.5*self.opening_angle)
         else:
-            return 0.0
+            self.znear = 0.0
 
     def draw(self, selection_box=None): # gl_context sensitive method
         # This function is called when the color and depth buffers have to be
@@ -209,7 +244,7 @@ class Scene(object):
                           viewport)
 
         # Apply the frustum matrix
-        znear = self.znear()
+        znear = self.znear
         zfar = znear + self.window_depth
         if width > height:
             w = 0.5*float(width) / float(height)
@@ -280,6 +315,8 @@ class Scene(object):
         self.opening_angle = config.opening_angle
         self.window_size = config.window_size
         self.window_depth = config.window_depth
+        self.update_znear()
+        self.apply_renderer_settings()
 
     def yield_hits(self, selection_box): # gl_context sensitive method
         for selection in self.draw(selection_box):
@@ -336,7 +373,7 @@ class Scene(object):
             w = 1.0
             h = float(height) / float(width)
         viewing_direction = -self.modelview_matrix[2,:3]
-        distance_eye_viewer =  self.znear()
+        distance_eye_viewer =  self.znear
         eye_position = numpy.dot(
             self.modelview_matrix[:3,:3].transpose(),
             -self.modelview_matrix[:3,3]

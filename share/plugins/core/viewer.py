@@ -113,10 +113,46 @@ class ViewerConfiguration(Immediate):
     def do(self):
         drawing_area = context.application.main.drawing_area
         if self.viewer_configuration.run(drawing_area.scene) == gtk.RESPONSE_OK:
-            drawing_area.queue_draw()
+            drawing_area.scene.update_znear()
+            drawing_area.scene.apply_renderer_settings()
+
+
+class RendererConfiguration(Immediate):
+    description = "Edit renderer configuration"
+    menu_info = MenuInfo("default/_View:viewer", "_Configure renderer", order=(0, 2, 0, 2))
+    repeatable = False
+
+    renderer_configuration = FieldsDialogSimple(
+        "Renderer configuration",
+        fields.group.Table([
+            fields.edit.Color(
+                label_text="Background color",
+                attribute_name="background_color",
+            ),
+            fields.optional.CheckOptional(fields.faulty.Length(
+                label_text="Fog start",
+                attribute_name="fog_start",
+                low=0.0,
+                low_inclusive=False,
+            )),
+        ]),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+    )
+
+    def do(self):
+        scene = context.application.main.drawing_area.scene
+        class Settings(object):
+            pass
+        settings = Settings()
+        settings.__dict__ = context.application.configuration.settings
+        if self.renderer_configuration.run(settings) == gtk.RESPONSE_OK:
+            context.application.configuration.settings = settings.__dict__
+            print context.application.configuration.settings["fog_start"]
+            scene.apply_renderer_settings()
 
 
 actions = {
     "ViewReset": ViewReset,
     "ViewerConfiguration": ViewerConfiguration,
+    "RendererConfiguration": RendererConfiguration,
 }
