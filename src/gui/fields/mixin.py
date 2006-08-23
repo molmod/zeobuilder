@@ -371,8 +371,7 @@ class TableMixin(object):
 
 
 class TextViewMixin(object):
-    def __init__(self, line_breaks=False, width=250, height=300):
-        self.line_breaks = line_breaks
+    def __init__(self, width=250, height=300):
         self.attribute_is_stream = False
         self.width = width
         self.height = height
@@ -415,8 +414,6 @@ class TextViewMixin(object):
     def read_from_widget(self):
         start, end = self.text_buffer.get_bounds()
         representation = self.text_buffer.get_slice(start, end)
-        if not self.line_breaks:
-            representation = representation.replace("\n", " ")
         if representation == "":
             return ambiguous
         else:

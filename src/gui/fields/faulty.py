@@ -168,7 +168,7 @@ class Expression(Faulty, TextViewMixin):
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, width=250, height=300):
         Faulty.__init__(self, label_text, attribute_name, show_popup, history_name)
-        TextViewMixin.__init__(self, False, width, height)
+        TextViewMixin.__init__(self, width, height)
 
     def create_widgets(self):
         Faulty.create_widgets(self)
