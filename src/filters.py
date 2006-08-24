@@ -176,9 +176,10 @@ def run_file_dialog(file_dialog, file_function, *args):
     current_dir = context.application.main.get_current_directory()
     if current_dir is not None:
         file_dialog.set_current_folder(current_dir)
-    current_filename = context.application.model.filename
-    if current_filename is not None:
-        file_dialog.set_current_name(os.path.basename(current_filename))
+    if file_dialog.get_property("action") == gtk.FILE_CHOOSER_ACTION_SAVE:
+        current_filename = context.application.model.filename
+        if current_filename is not None:
+            file_dialog.set_current_name(os.path.basename(current_filename))
     while file_dialog.run() == gtk.RESPONSE_OK:
         filename = file_dialog.get_filename()
         try:
