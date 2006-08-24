@@ -232,6 +232,14 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
             primitive.Transform(victim, self.parameters.complete)
 
 
+def parent_of_translated_nodes(cache):
+    parent = cache.translated_nodes[0].parent
+    if parent is None: return None
+    for node in cache.translated_nodes[1:]:
+        if node.parent != parent: return None
+    return parent
+
+
 class TranslateDialog(ImmediateWithMemory):
     description = "Apply translation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate objects", order=(0, 4, 1, 2, 1, 2))
@@ -248,11 +256,11 @@ class TranslateDialog(ImmediateWithMemory):
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
-        cache = context.application.cache
-        if cache.parent is None: return False
-        if len(cache.translated_nodes) == 0: return False
-        if cache.some_nodes_fixed: return False
         # B) validating
+        cache = context.application.cache
+        if len(cache.translated_nodes) == 0: return False
+        if cache.parent_of_translated_nodes is None: return False
+        if cache.some_nodes_fixed: return False
         # C) passed all tests:
         return True
 
@@ -265,9 +273,10 @@ class TranslateDialog(ImmediateWithMemory):
     def ask_parameters(self):
         cache = context.application.cache
         last = cache.last
+        parent = cache.parent_of_translated_nodes
         if isinstance(last, Vector):
-            b = last.children[0].translation_relative_to(cache.parent)
-            e = last.children[1].translation_relative_to(cache.parent)
+            b = last.children[0].translation_relative_to(parent)
+            e = last.children[1].translation_relative_to(parent)
             if (b is not None) and (e is not None):
                 self.parameters.translation.t = e - b
         else:
@@ -899,6 +908,11 @@ class TranslateRotationCenterKeyboard(TranslateRotationCenterBase, TranslateKeyb
 
     def key_press(self, drawing_area, event):
         self.do_translation(TranslateKeyboardMixin.key_press(self, drawing_area, event), drawing_area)
+
+
+cache_plugins = {
+    "parent_of_translated_nodes": parent_of_translated_nodes,
+}
 
 
 actions = {
