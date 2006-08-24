@@ -123,6 +123,7 @@ class RotateDialog(ImmediateWithMemory):
         "Rotation",
         fields.composed.Rotation(
             label_text="Rotate around axis n",
+            attribute_name="rotation",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
