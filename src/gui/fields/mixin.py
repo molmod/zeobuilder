@@ -102,8 +102,10 @@ class ReadMixin(object):
 
     def read(self):
         if self.get_active():
+            sensitive = not self.undefined_from_instance(self.instance)
+            self.set_sensitive(sensitive)
+            self.original_sensitive = sensitive
             self.write_to_widget(self.convert_to_representation(self.read_from_instance(self.instance)), True)
-            self.set_sensitive(not self.undefined_from_instance(self.instance))
 
     def read_multiplex(self):
         if self.get_active():
@@ -117,6 +119,7 @@ class ReadMixin(object):
                     self.write_to_widget(ambiguous, True)
                     return
             self.set_sensitive(not first_undefined)
+            self.original_sensitive = not first_undefined
             self.set_ambiguous_capability(False)
             self.write_to_widget(first, True)
 
@@ -167,6 +170,7 @@ class EditMixin(ReadMixin):
 
         # stores the representation read from the instance attribute
         self.original_representation = None
+        self.original_sensitive = None
 
         self.bu_popup = None
         self.popup = None
@@ -256,6 +260,7 @@ class EditMixin(ReadMixin):
         self.attribute = value
 
     def changed(self):
+        if self.get_sensitive() != self.original_sensitive: return True
         representation = self.read_from_widget()
         return not (
             representation == self.original_representation or
