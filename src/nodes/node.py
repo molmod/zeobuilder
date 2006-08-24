@@ -96,11 +96,11 @@ class Node(gobject.GObject):
     def set_selected(self, selected):
         assert self.model is not None, "Can only select an node if it is part of a model."
         if not self.selected and selected:
-            self.model.queue_add_to_selection(self)
+            self.model.add_to_selection(self)
             self.selected = True
             self.emit("on-selected")
         elif self.selected and not selected:
-            self.model.queue_remove_from_selection(self)
+            self.model.remove_from_selection(self)
             self.selected = False
             self.emit("on-deselected")
 

@@ -42,11 +42,6 @@ class SelectionCache(gobject.GObject):
         gobject.GObject.__init__(self)
         self.waiting_to_emit = False
         self.clear()
-        context.application.main.tree_selection.connect("changed", self.on_model_selection_changed)
-
-    def on_model_selection_changed(self, tree_selection):
-        #print "SELECTION CHANGED"
-        self.queue_invalidate()
 
     def queue_invalidate(self):
         self.clear()
@@ -81,10 +76,6 @@ class SelectionCache(gobject.GObject):
 
     # nodes
     def get_nodes(self):
-        # the selection must be updated in case get_nodes is called after the
-        # selection has changed, but the idle-added functions could not yet be
-        # called.
-        context.application.model.update_selection()
         return context.application.model.selection
 
     def get_last(self):
