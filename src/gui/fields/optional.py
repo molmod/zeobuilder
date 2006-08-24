@@ -22,7 +22,7 @@
 
 
 from base import Single
-from mixin import ambiguous
+from mixin import ambiguous, EditMixin
 
 import gtk
 
@@ -59,8 +59,12 @@ class Optional(Single):
         self.data_widget = self.toggle_button
         self.high_widget = self.slave.high_widget
         self.toggle_button.connect("toggled", self.toggle_button_toggled)
+        if isinstance(self.slave, EditMixin):
+            self.toggle_button.connect("toggled", self.slave.on_widget_changed)
         if self.slave.label_text is not None:
-            self.toggle_button.add(gtk.Label(self.slave.label_text))
+            label, data_widget, bu_popup = self.slave.get_widgets_separate()
+            if label is not None:
+                self.toggle_button.add(label)
 
     def destroy_widgets(self):
         self.slave.destroy_widgets()
