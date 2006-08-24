@@ -130,8 +130,8 @@ class RendererConfiguration(Immediate):
                 attribute_name="background_color",
             ),
             fields.optional.CheckOptional(fields.faulty.Length(
-                label_text="Fog start",
-                attribute_name="fog_start",
+                label_text="Fog depth",
+                attribute_name="fog_depth",
                 low=0.0,
                 low_inclusive=False,
             )),
@@ -147,7 +147,6 @@ class RendererConfiguration(Immediate):
         settings.__dict__ = context.application.configuration.settings
         if self.renderer_configuration.run(settings) == gtk.RESPONSE_OK:
             context.application.configuration.settings = settings.__dict__
-            print context.application.configuration.settings["fog_start"]
             scene.apply_renderer_settings()
 
 

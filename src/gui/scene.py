@@ -109,8 +109,8 @@ class Scene(object):
             None,
         )
         config.register_setting(
-            "fog_start",
-            Undefined(50.0*angstrom),
+            "fog_depth",
+            10.0*angstrom,
             None,
         )
 
@@ -195,12 +195,12 @@ class Scene(object):
         configuration = context.application.configuration
         glClearColor(*configuration.background_color)
         glFogfv(GL_FOG_COLOR, configuration.background_color)
-        if isinstance(configuration.fog_start, Undefined):
+        if isinstance(configuration.fog_depth, Undefined):
             glDisable(GL_FOG)
         else:
             glEnable(GL_FOG)
             glFogfv(GL_FOG_MODE, GL_LINEAR)
-            glFogfv(GL_FOG_START, self.znear + configuration.fog_start)
+            glFogfv(GL_FOG_START, self.znear + self.window_depth - configuration.fog_depth)
             glFogfv(GL_FOG_END, self.znear + self.window_depth)
 
     def add_revalidation(self, revalidation):
