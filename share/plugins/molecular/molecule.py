@@ -35,6 +35,7 @@ import zeobuilder.actions.primitive as primitive
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
 from molmod.graphs2 import Graph, MatchFilterError, ExactMatchFilter, MatchGenerator
+from molmod.vectors import random_orthonormal
 
 import numpy, gtk
 
