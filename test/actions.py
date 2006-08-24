@@ -859,6 +859,15 @@ class MolecularActions(ApplicationTestCase):
             MoldenLabels()
         self.run_test_application(fn)
 
+    def test_clone_order(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[:2])
+            CloneOrder = context.application.plugins.get_action("CloneOrder")
+            self.assert_(CloneOrder.analyze_selection())
+            CloneOrder()
+        self.run_test_application(fn)
+
 
 class BuilderActions(ApplicationTestCase):
     def test_connect_double_bond(self):

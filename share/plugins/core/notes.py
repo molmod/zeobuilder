@@ -52,7 +52,6 @@ class Notes(ModelObject):
         DialogFieldInfo("Basic", (0, 1), fields.edit.TextView(
             label_text="Notes",
             attribute_name="notes",
-            line_breaks=True,
         ))
     ])
 

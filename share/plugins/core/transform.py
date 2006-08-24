@@ -123,6 +123,7 @@ class RotateDialog(ImmediateWithMemory):
         "Rotation",
         fields.composed.Rotation(
             label_text="Rotate around axis n",
+            attribute_name="rotation",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
@@ -232,6 +233,14 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
             primitive.Transform(victim, self.parameters.complete)
 
 
+def parent_of_translated_nodes(cache):
+    parent = cache.translated_nodes[0].parent
+    if parent is None: return None
+    for node in cache.translated_nodes[1:]:
+        if node.parent != parent: return None
+    return parent
+
+
 class TranslateDialog(ImmediateWithMemory):
     description = "Apply translation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate objects", order=(0, 4, 1, 2, 1, 2))
@@ -248,11 +257,11 @@ class TranslateDialog(ImmediateWithMemory):
     def analyze_selection(parameters=None):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
-        cache = context.application.cache
-        if cache.parent is None: return False
-        if len(cache.translated_nodes) == 0: return False
-        if cache.some_nodes_fixed: return False
         # B) validating
+        cache = context.application.cache
+        if len(cache.translated_nodes) == 0: return False
+        if cache.parent_of_translated_nodes is None: return False
+        if cache.some_nodes_fixed: return False
         # C) passed all tests:
         return True
 
@@ -265,9 +274,10 @@ class TranslateDialog(ImmediateWithMemory):
     def ask_parameters(self):
         cache = context.application.cache
         last = cache.last
+        parent = cache.parent_of_translated_nodes
         if isinstance(last, Vector):
-            b = last.children[0].translation_relative_to(cache.parent)
-            e = last.children[1].translation_relative_to(cache.parent)
+            b = last.children[0].translation_relative_to(parent)
+            e = last.children[1].translation_relative_to(parent)
             if (b is not None) and (e is not None):
                 self.parameters.translation.t = e - b
         else:
@@ -817,7 +827,7 @@ class TranslateViewerBase(Interactive):
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return scene.viewer.t[2] + scene.znear()
+        return scene.viewer.t[2] + scene.znear
 
     def do_translation(self, vector, drawing_area):
         scene = drawing_area.scene
@@ -825,9 +835,10 @@ class TranslateViewerBase(Interactive):
         if (scene.opening_angle > 0):
             scene.viewer.t[2] -= vector[2]
         else:
-            scene.window_size *= (1 + 0.01*vector[2])
-            if scene.window_size < 0.001: scene.window_size = 0.001
-            elif scene.window_size > 1000: scene.window_size = 1000
+            window_size = scene.window_size*(1 + 0.01*vector[2])
+            if window_size < 0.001: window_size = 0.001
+            elif window_size > 1000: window_size = 1000
+            drawing_area.set_window_size(window_size)
         drawing_area.queue_draw()
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
@@ -863,7 +874,7 @@ class TranslateRotationCenterBase(Interactive):
 
     def get_victim_depth(self, drawing_area):
         scene = drawing_area.scene
-        return scene.viewer.t[2] + scene.znear()
+        return scene.viewer.t[2] + scene.znear
 
     def do_translation(self, vector, drawing_area):
         scene = drawing_area.scene
@@ -876,9 +887,10 @@ class TranslateRotationCenterBase(Interactive):
             scene.viewer.t[2] -= vector[2]
             scene.rotation_center.t[2] += transformed_vector[2]
         else:
-            scene.window_size *= (1 + 0.01*vector[-1])
-            if scene.window_size < 0.001: scene.window_size = 0.001
-            elif scene.window_size > 1000: scene.window_size = 1000
+            window_size = scene.window_size*(1 + 0.01*vector[-1])
+            if window_size < 0.001: window_size = 0.001
+            elif window_size > 1000: window_size = 1000
+            drawing_area.set_window_size(window_size)
         drawing_area.queue_draw()
 
 
@@ -897,6 +909,11 @@ class TranslateRotationCenterKeyboard(TranslateRotationCenterBase, TranslateKeyb
 
     def key_press(self, drawing_area, event):
         self.do_translation(TranslateKeyboardMixin.key_press(self, drawing_area, event), drawing_area)
+
+
+cache_plugins = {
+    "parent_of_translated_nodes": parent_of_translated_nodes,
+}
 
 
 actions = {

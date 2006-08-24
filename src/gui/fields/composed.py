@@ -125,7 +125,7 @@ class ComposedArray(ComposedInTable):
 class Translation(ComposedArray):
     reset_representation = ('0.0', '0.0', '0.0')
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=2, vector_name="t.%s"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=3, vector_name="t.%s"):
         ComposedArray.__init__(
             self,
             FieldClass=Length,
@@ -154,7 +154,7 @@ class Rotation(ComposedInTable):
     Popup = popups.Default
     reset_representation = ('0.0', ('1.0', '0.0', '0.0'), False)
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, decimals=2, scientific=False, axis_name="n.%s"):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, decimals=3, scientific=False, axis_name="n.%s"):
         fields = [
             MeasureEntry(
                 measure="Angle",
@@ -230,7 +230,7 @@ class CellMatrix(ComposedArray):
     Popup = CellMatrixPopup
     reset_representation = (('10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A'))
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=2):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=3):
         ComposedArray.__init__(
             self,
             FieldClass=Length,
@@ -263,7 +263,7 @@ class CellParameters(ComposedInTable):
                     low=0.0,
                     low_inclusive=False,
                     scientific=False,
-                    decimals=2,
+                    decimals=3,
                 ),
                 ComposedArray(
                     FieldClass=MeasureEntry,

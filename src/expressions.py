@@ -23,17 +23,29 @@
 from zeobuilder import context
 
 
+from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+import molmod.units
+
 
 class Expression(object):
-    l = {}
+    l = {
+        "periodic": periodic,
+        "bonds": bonds,
+        "BOND_SINGLE": BOND_SINGLE,
+        "BOND_DOUBLE": BOND_DOUBLE,
+        "BOND_TRIPLE": BOND_TRIPLE,
+    }
+    for key, val in molmod.units.__dict__.iteritems():
+        if isinstance(val, float):
+            l[key] = val
 
     def __init__(self, code="True"):
-        self.compiled = compile(code, "<string>", 'eval')
+        self.compiled = compile("(%s)" % code, "<string>", 'eval')
         self.code = code
         self.variables = ("node",)
 
     def compile_as(self, name):
-        self.compiled = compile(self.code, name, 'eval')
+        self.compiled = compile("(%s)" % self.code, name, 'eval')
 
     def __call__(self, *variables):
         g = {"__builtins__": __builtins__}
@@ -43,20 +55,5 @@ class Expression(object):
         return eval(self.compiled, g)
 
 
-def init_locals(nodes):
-    from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
-    l = {
-        "periodic": periodic,
-        "bonds": bonds,
-        "BOND_SINGLE": BOND_SINGLE,
-        "BOND_DOUBLE": BOND_DOUBLE,
-        "BOND_TRIPLE": BOND_TRIPLE,
-    }
-
-    l.update(nodes)
-
-    import molmod.units
-    for key, val in molmod.units.__dict__.iteritems():
-        if isinstance(val, float):
-            l[key] = val
-    Expression.l = l
+def add_locals(l):
+    Expression.l.update(l)

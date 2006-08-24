@@ -309,9 +309,9 @@ class TextView(Edit, TextViewMixin):
     Popup = popups.Default
     high_widget = True
 
-    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, line_breaks=False, width=250, height=300):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, width=250, height=300):
         Edit.__init__(self, label_text, attribute_name, show_popup, history_name)
-        TextViewMixin.__init__(self, line_breaks, width, height)
+        TextViewMixin.__init__(self, width, height)
 
     def create_widgets(self):
         Edit.create_widgets(self)

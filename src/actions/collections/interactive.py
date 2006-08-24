@@ -210,12 +210,6 @@ class InteractiveBar(gtk.Table):
                 current_action.finish()
             else:
                 return
-        # if the user points an object, treat it as if it is the first selected
-        # object.
-        hit = drawing_area.get_nearest(event.x, event.y)
-        nodes = context.application.cache.nodes
-        if (hit is not None) and len(nodes) == 0:
-            nodes.insert(0, hit)
         # create the action
         interactive_group = self.buttons[event.state & (gtk.gdk.SHIFT_MASK | gtk.gdk.CONTROL_MASK)].interactive_group
         if interactive_group is None: return

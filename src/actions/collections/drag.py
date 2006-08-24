@@ -102,7 +102,7 @@ class Drag(object):
         context.application.cache.drag_destination = destination
         parameters.child_index = child_index
         for drag_action in self.drag_actions:
-            if drag_action.cached_analyze_selection(parameters):
+            if drag_action.cached_analyze_selection(parameters=parameters):
                 drag_action(parameters=parameters)
                 return True
         return False

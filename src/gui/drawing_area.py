@@ -67,6 +67,18 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
             glFlush()
         self.get_gl_drawable().gl_end()
 
+    def apply_renderer_settings(self):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        self.scene.apply_renderer_settings()
+        self.queue_draw()
+        self.get_gl_drawable().gl_end()
+
+    def set_window_size(self, window_size):
+        if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
+        self.scene.set_window_size(window_size)
+        self.queue_draw()
+        self.get_gl_drawable().gl_end()
+
     def position_of_vector(self, vector):
         temp = numpy.ones(4, float)
         temp[0:len(vector)] = vector

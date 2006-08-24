@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Immediate
+from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.actions.abstract import CenterAlignBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
@@ -34,11 +34,12 @@ import zeobuilder.actions.primitive as primitive
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs2 import Graph
+from molmod.graphs2 import Graph, MatchFilterError, ExactMatchFilter, MatchGenerator
+from molmod.vectors import random_orthonormal
 
 import numpy, gtk
 
-import math, sys, traceback
+import math, sys, traceback, copy
 
 
 def yield_atoms(nodes):
@@ -338,27 +339,17 @@ RESPONSE_SAVE = 3
 
 class NeighborShellsDialog(FieldsDialogSimple):
     def __init__(self):
-        self.shell_expression = Expression()
         self.atom_expression = Expression()
         FieldsDialogSimple.__init__(
             self,
             "Neighbor shells",
-            fields.group.Table(fields=[
-                fields.faulty.Expression(
-                    label_text="Shell expression (atoms)",
-                    attribute_name="shell_expression",
-                    history_name="shell_expression",
-                    width=250,
-                    height=100,
-                ), fields.faulty.Expression(
-                    label_text="Atom expression (atom, shells)",
-                    attribute_name="atom_expression",
-                    history_name="atom_expression",
-                    width=250,
-                    height=100,
-                ),
-            ], cols=2),
-            (
+            fields.faulty.Expression(
+                label_text="Atom expression (atom, graph)",
+                attribute_name="atom_expression",
+                history_name="atom_expression",
+                width=250,
+                height=150,
+            ), (
                 ("Evaluate", RESPONSE_EVALUATE),
                 ("Select", RESPONSE_SELECT),
                 (gtk.STOCK_SAVE, RESPONSE_SAVE),
@@ -383,7 +374,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
         column.set_sort_column_id(2)
         self.list_view.append_column(column)
 
-        column = gtk.TreeViewColumn("Value", gtk.CellRendererText(), text=3)
+        column = gtk.TreeViewColumn("Value", gtk.CellRendererText(), markup=3)
         column.set_sort_column_id(3)
         self.list_view.append_column(column)
 
@@ -438,9 +429,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
     def on_dialog_response(self, dialog, response_id):
         FieldsDialogSimple.on_dialog_response(self, dialog, response_id)
         if self.valid:
-            self.shell_expression.variables = ("atoms",)
-            self.shell_expression.compile_as("<shell_expression>")
-            self.atom_expression.variables = ("atom", "shells")
+            self.atom_expression.variables = ("atom", "graph")
             self.atom_expression.compile_as("<atom_expression>")
             if response_id == RESPONSE_EVALUATE:
                 self.evaluate()
@@ -456,11 +445,7 @@ class NeighborShellsDialog(FieldsDialogSimple):
         atom_values = []
         try:
             for atom in self.graph.nodes:
-                shells = self.graph.shells[atom]
-                shell_values = []
-                for atoms in shells:
-                    shell_values.append(self.shell_expression(atoms))
-                atom_values.append(self.atom_expression(atom, shell_values))
+                atom_values.append(self.atom_expression(atom, self.graph))
         except:
             exc_type, exc_value, tb = sys.exc_info()
             err_msg = "".join(traceback.format_exception(exc_type, exc_value, tb))
@@ -523,6 +508,10 @@ class AnalyzeNieghborShells(Immediate):
             if bond.children[0].target in nodes and
                bond.children[1].target in nodes
         )
+        tmp = set([])
+        for a, b in pairs:
+            tmp.add(a), tmp.add(b)
+        nodes = [node for node in nodes if node in tmp]
 
         graph = Graph(pairs, nodes)
         max_shell_size = graph.distances.ravel().max()
@@ -537,10 +526,102 @@ class AnalyzeNieghborShells(Immediate):
         neighbor_shells_dialog.run(max_shell_size, yield_rows(), graph)
 
 
+def combinations(items, n):
+    if len(items) < n: return
+    if n == 0: yield set([])
+    for index in xrange(len(items)):
+        selected = items[index]
+        for combination in combinations(items[index+1:], n-1):
+            combination_copy = copy.copy(combination)
+            combination_copy.add(selected)
+            yield combination_copy
+
+
+def first(l):
+    if hasattr(l, "next"):
+        try:
+            return l.next()
+        except StopIteration:
+            return None
+    elif len(l) > 0:
+        return l[0]
+    else:
+        return None
+
+
+class ExactNumberMatchFilter(ExactMatchFilter):
+    def compare(self, atom0, atom1):
+        if atom0.number != atom1.number: return False
+        else: return ExactMatchFilter.compare(self, atom0, atom1)
+
+
+class CloneOrder(Immediate):
+    description = "Apply the order of the first selection to the second."
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Clone order", order=(0, 4, 1, 5, 0, 3))
+
+    @staticmethod
+    def analyze_selection():
+        if not Immediate.analyze_selection(): return False
+        cache = context.application.cache
+        if len(cache.nodes) != 2: return False
+        Frame = context.application.plugins.get_node("Frame")
+        for cls in cache.classes:
+            if not issubclass(cls, Frame): return False
+        return True
+
+    def create_graph(self, frame):
+        nodes = list(yield_atoms([frame]))
+        pairs = list(
+            frozenset([bond.children[0].target, bond.children[1].target])
+            for bond in yield_bonds([frame])
+            if bond.children[0].target in nodes and
+               bond.children[1].target in nodes
+        )
+        return Graph(pairs, nodes)
+
+    def do(self):
+        frame1, frame2 = context.application.cache.nodes
+
+        graph1 = self.create_graph(frame1)
+        graph2 = self.create_graph(frame2)
+        #for row in graph1.distances:
+        #    print " ".join("%3i" % item for item in row)
+        #print
+        #for row in graph2.distances:
+        #    print " ".join("%3i" % item for item in row)
+
+        try:
+            match_generator = MatchGenerator(ExactNumberMatchFilter(), graph1, graph2)
+        except MatchFilterError, e:
+            raise UserError("Can not apply the order of the first selection to the second.")
+
+        try:
+            match = match_generator().next()
+        except StopIteration:
+            raise UserError("The connectivity of the two selections differs.")
+
+        moves = [
+            (graph1.index[atom1], atom2)
+            for atom1, atom2
+            in match.forward.iteritems()
+        ]
+        moves.sort()
+
+        for new_index, atom2 in moves:
+            primitive.Move(atom2, frame2, new_index)
+
+
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
     "CenterOfMassAndPrincipalAxes": CenterOfMassAndPrincipalAxes,
     "SaturateWithHydrogens": SaturateWithHydrogens,
     "AnalyzeNieghborShells": AnalyzeNieghborShells,
+    "CloneOrder": CloneOrder,
+}
+
+
+utility_functions = {
+    "combinations": combinations,
+    "first": first,
 }
