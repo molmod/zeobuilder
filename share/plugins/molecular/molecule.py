@@ -34,7 +34,7 @@ import zeobuilder.actions.primitive as primitive
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs2 import Graph, MatchFilterError, ExactMatchFilter, MatchGenerator
+from molmod.graphs2 import Graph, MatchDefinitionError, ExactMatchDefinition, MatchGenerator
 from molmod.vectors import random_orthonormal
 
 import numpy, gtk
@@ -549,10 +549,10 @@ def first(l):
         return None
 
 
-class ExactNumberMatchFilter(ExactMatchFilter):
+class ExactNumberMatchDefinition(ExactMatchDefinition):
     def compare(self, atom0, atom1):
         if atom0.number != atom1.number: return False
-        else: return ExactMatchFilter.compare(self, atom0, atom1)
+        else: return ExactMatchDefinition.compare(self, atom0, atom1)
 
 
 class CloneOrder(Immediate):
@@ -591,8 +591,8 @@ class CloneOrder(Immediate):
         #    print " ".join("%3i" % item for item in row)
 
         try:
-            match_generator = MatchGenerator(ExactNumberMatchFilter(), graph1, graph2)
-        except MatchFilterError, e:
+            match_generator = MatchGenerator(ExactNumberMatchDefinition(graph1), graph2)
+        except MatchDefinitionError, e:
             raise UserError("Can not apply the order of the first selection to the second.")
 
         try:
