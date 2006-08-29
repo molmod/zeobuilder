@@ -24,6 +24,9 @@ from parent_mixin import ContainerMixin
 from glmixin import GLMixin
 
 
+from OpenGL.GL import *
+
+
 __all__ = ["GLContainerMixin"]
 
 
@@ -60,6 +63,10 @@ class GLContainerMixin(ContainerMixin):
     #
     # Draw
     #
+
+    def draw_selection(self):
+        if self.selected:
+            glCallList(self.boundingbox_list)
 
     def draw(self):
         for child in self.children:
