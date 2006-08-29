@@ -868,6 +868,17 @@ class MolecularActions(ApplicationTestCase):
             CloneOrder()
         self.run_test_application(fn)
 
+    def test_ring_distribution(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes([context.application.model.universe.children[1]])
+
+            RingDistribution = context.application.plugins.get_action("RingDistribution")
+            self.assert_(RingDistribution.analyze_selection())
+            RingDistribution()
+        self.run_test_application(fn)
+
+
 
 class BuilderActions(ApplicationTestCase):
     def test_connect_double_bond(self):
