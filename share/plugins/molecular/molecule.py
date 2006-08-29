@@ -81,6 +81,23 @@ def chemical_formula(atoms):
     return total, formula
 
 
+def create_graph_bonds(selected_nodes):
+    nodes = list(yield_atoms(selected_nodes))
+    bonds_by_pair = dict(
+        (frozenset([bond.children[0].target, bond.children[1].target]), bond)
+        for bond in yield_bonds(selected_nodes)
+        if bond.children[0].target in nodes and
+            bond.children[1].target in nodes
+    )
+    tmp = set([])
+    for a, b in bonds_by_pair.iterkeys():
+        tmp.add(a), tmp.add(b)
+    nodes = [node for node in nodes if node in tmp]
+
+    graph = Graph(bonds_by_pair.keys(), nodes)
+    return graph, bonds_by_pair
+
+
 class ChemicalFormula(Immediate):
     description = "Show chemical formula"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Chemical Formula", order=(0, 4, 1, 5, 2, 0))
@@ -502,23 +519,11 @@ class AnalyzeNieghborShells(Immediate):
         return True
 
     def do(self):
-        nodes = list(yield_atoms(context.application.cache.nodes))
-        pairs = list(
-            frozenset([bond.children[0].target, bond.children[1].target])
-            for bond in yield_bonds(context.application.cache.nodes)
-            if bond.children[0].target in nodes and
-               bond.children[1].target in nodes
-        )
-        tmp = set([])
-        for a, b in pairs:
-            tmp.add(a), tmp.add(b)
-        nodes = [node for node in nodes if node in tmp]
-
-        graph = Graph(pairs, nodes)
+        graph, foo = create_graph_bonds(context.application.cache.nodes)
         max_shell_size = graph.distances.ravel().max()
 
         def yield_rows():
-            for index, node in enumerate(nodes):
+            for index, node in enumerate(graph.nodes):
                 yield [index+1, node.number, node.name, ""] + [
                     "%i: %s" % chemical_formula(atoms) for atoms in
                     graph.shells[node][1:]
@@ -570,26 +575,12 @@ class CloneOrder(Immediate):
             if not issubclass(cls, Frame): return False
         return True
 
-    def create_graph(self, frame):
-        nodes = list(yield_atoms([frame]))
-        pairs = list(
-            frozenset([bond.children[0].target, bond.children[1].target])
-            for bond in yield_bonds([frame])
-            if bond.children[0].target in nodes and
-               bond.children[1].target in nodes
-        )
-        return Graph(pairs, nodes)
-
     def do(self):
         frame1, frame2 = context.application.cache.nodes
 
-        graph1 = self.create_graph(frame1)
-        graph2 = self.create_graph(frame2)
-        #for row in graph1.distances:
-        #    print " ".join("%3i" % item for item in row)
-        #print
-        #for row in graph2.distances:
-        #    print " ".join("%3i" % item for item in row)
+        graph1, foo = create_graph_bonds([frame1])
+        graph2, foo = create_graph_bonds([frame2])
+        del foo
 
         try:
             match_generator = MatchGenerator(ExactNumberMatchDefinition(graph1), graph2)
@@ -641,9 +632,14 @@ class RingDistributionWindow(GladeWrapper):
 
         context.application.action_manager.connect("model-changed", self.on_model_changed)
 
-    def show(self, rings, graph):
+    def show(self, rings, graph, bonds_by_pair):
         self.rings = rings
         self.graph = graph
+        for ring in rings:
+            ring.bonds = [
+                bonds_by_pair[frozenset([ring.forward[index], ring.forward[(index+1)%(ring.length+1)]])]
+                for index in xrange(ring.length+1)
+            ]
 
         self.fill_stores()
         self.calculate_properties()
@@ -668,7 +664,7 @@ class RingDistributionWindow(GladeWrapper):
                     len(ring),
                     "TODO",
                     str([node.get_name() for index, node in sorted(ring.forward.iteritems())]),
-                    ring
+                    ring,
                 ])
 
     def calculate_properties(self):
@@ -708,9 +704,9 @@ class RingDistributionWindow(GladeWrapper):
 
     def cleanup(self):
         self.window.hide()
-        del self.rings
-        del self.graph
-        del self.ring_distribution
+        self.rings = None
+        self.graph = None
+        self.ring_distribution = None
         self.filter_store.clear()
         self.ring_store.clear()
         pylab.figure(self.figure.number)
@@ -732,7 +728,9 @@ class RingDistributionWindow(GladeWrapper):
             context.application.main.select_nodes([])
         else:
             ring = model.get_value(iter, 3)
-            context.application.main.select_nodes(ring.forward.values())
+            context.application.main.select_nodes(
+                ring.forward.values() + ring.bonds
+            )
 
 
 ring_distribution_window = RingDistributionWindow()
@@ -749,26 +747,14 @@ class RingDistribution(Immediate):
         return True
 
     def do(self):
-        nodes = list(yield_atoms(context.application.cache.nodes))
-        pairs = list(
-            frozenset([bond.children[0].target, bond.children[1].target])
-            for bond in yield_bonds(context.application.cache.nodes)
-            if bond.children[0].target in nodes and
-               bond.children[1].target in nodes
-        )
-        tmp = set([])
-        for a, b in pairs:
-            tmp.add(a), tmp.add(b)
-        nodes = [node for node in nodes if node in tmp]
-
-        graph = Graph(pairs, nodes)
+        graph, bonds_by_pair = create_graph_bonds(context.application.cache.nodes)
         match_generator = MatchGenerator(
             RingMatchDefinition(10),
             graph,
         )
         rings = list(match_generator())
 
-        ring_distribution_window.show(rings, graph)
+        ring_distribution_window.show(rings, graph, bonds_by_pair)
 
 
 actions = {
