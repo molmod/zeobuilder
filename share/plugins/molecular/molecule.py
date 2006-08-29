@@ -666,6 +666,7 @@ class RingDistributionWindow(GladeWrapper):
                     str([node.get_name() for index, node in sorted(ring.forward.iteritems())]),
                     ring,
                 ])
+        self.ring_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
     def calculate_properties(self):
         ring_sizes = {}
