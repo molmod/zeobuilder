@@ -520,6 +520,8 @@ class AnalyzeNieghborShells(Immediate):
 
     def do(self):
         graph, foo = create_graph_bonds(context.application.cache.nodes)
+        graph.init_distances()
+        graph.init_trees_and_shells
         max_shell_size = graph.distances.ravel().max()
 
         def yield_rows():
@@ -555,12 +557,6 @@ def first(l):
         return None
 
 
-class ExactNumberMatchDefinition(ExactMatchDefinition):
-    def compare(self, atom0, atom1):
-        if atom0.number != atom1.number: return False
-        else: return ExactMatchDefinition.compare(self, atom0, atom1)
-
-
 class CloneOrder(Immediate):
     description = "Apply the order of the first selection to the second."
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Clone order", order=(0, 4, 1, 5, 0, 3))
@@ -583,12 +579,12 @@ class CloneOrder(Immediate):
         del foo
 
         try:
-            match_generator = MatchGenerator(ExactNumberMatchDefinition(graph1), graph2)
+            match_generator = MatchGenerator(ExactMatchDefinition(graph1))
         except MatchDefinitionError, e:
             raise UserError("Can not apply the order of the first selection to the second.")
 
         try:
-            match = match_generator().next()
+            match = match_generator(graph2).next()
         except StopIteration:
             raise UserError("The connectivity of the two selections differs.")
 
@@ -751,9 +747,8 @@ class RingDistribution(Immediate):
         graph, bonds_by_pair = create_graph_bonds(context.application.cache.nodes)
         match_generator = MatchGenerator(
             RingMatchDefinition(10),
-            graph,
         )
-        rings = list(match_generator())
+        rings = list(match_generator(graph))
 
         ring_distribution_window.show(rings, graph, bonds_by_pair)
 

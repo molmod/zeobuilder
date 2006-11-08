@@ -33,7 +33,7 @@ from zeobuilder.conversion import express_measure
 import zeobuilder.gui.fields as fields
 
 from molmod.units import to_unit
-from molmod.graphs import Graph, SymmetricGraph, MatchFilterParameterized
+from molmod.graphs2 import Graph, SubgraphMatchDefinition, MatchGenerator, CriteriaSet
 from molmod.vectors import angle
 
 import gtk, numpy, pylab, matplotlib
@@ -262,26 +262,27 @@ class DistributionBondLengths(ImmediateWithMemory):
         bonds = search_bonds(context.application.cache.nodes)
         lengths = []
 
-        bond_graph = SymmetricGraph([(1, 2)], 1)
-        match_filter = MatchFilterParameterized(
+        bond_graph = Graph([frozenset([1, 2])])
+        match_definition = SubgraphMatchDefinition(
             subgraph=bond_graph,
-            calculation_tags={1: 1, 2: 1},
-            thing_criteria={
-                1: self.parameters.filter_atom1,
-                2: self.parameters.filter_atom2,
-            },
-            relation_criteria={
-                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
-            },
-            filter_tags=False,
+            criteria_sets=[CriteriaSet(
+                tag=None,
+                thing_criteria={
+                    1: self.parameters.filter_atom1,
+                    2: self.parameters.filter_atom2,
+                },
+                relation_criteria={
+                    frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                },
+            )],
         )
         graph = Graph(bonds.keys())
         try:
-            for match in bond_graph.yield_matching_subgraphs(graph):
-                for transformed_match in match_filter.parse(match):
-                    point1 = transformed_match.forward[1].get_absolute_frame().t
-                    point2 = transformed_match.forward[2].get_absolute_frame().t
-                    lengths.append(numpy.linalg.norm(point1 - point2))
+            match_generator = MatchGenerator(match_definition)
+            for match in match_generator(graph):
+                point1 = match.forward[1].get_absolute_frame().t
+                point2 = match.forward[2].get_absolute_frame().t
+                lengths.append(numpy.linalg.norm(point1 - point2))
         except:
             raise UserError(
                 "An error occured while sampling the bond lengths.",
@@ -376,33 +377,37 @@ class DistributionBendingAngles(ImmediateWithMemory):
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
 
-        angle_graph = SymmetricGraph([(1, 2), (2, 3)], 2)
-        match_filter = MatchFilterParameterized(
+        angle_graph = Graph([
+            frozenset([1, 2]),
+            frozenset([2, 3])
+        ])
+        match_definition = SubgraphMatchDefinition(
             subgraph=angle_graph,
-            calculation_tags={1: 1, 2: 0, 3: 1},
-            thing_criteria={
-                1: self.parameters.filter_atom1,
-                2: self.parameters.filter_atom2,
-                3: self.parameters.filter_atom3,
-            },
-            relation_criteria={
-                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
-                frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
-            },
-            filter_tags=False,
+            criteria_sets=[CriteriaSet(
+                tag=None,
+                thing_criteria={
+                    1: self.parameters.filter_atom1,
+                    2: self.parameters.filter_atom2,
+                    3: self.parameters.filter_atom3,
+                },
+                relation_criteria={
+                    frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                    frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
+                },
+            )],
         )
         graph = Graph(bonds.keys())
         try:
-            for match in angle_graph.yield_matching_subgraphs(graph):
-                for transformed_match in match_filter.parse(match):
-                    point1 = transformed_match.forward[1].get_absolute_frame().t
-                    point2 = transformed_match.forward[2].get_absolute_frame().t
-                    point3 = transformed_match.forward[3].get_absolute_frame().t
-                    delta1 = point2-point1
-                    delta2 = point2-point3
-                    if numpy.linalg.norm(delta1) > 1e-8 and \
-                       numpy.linalg.norm(delta2) > 1e-8:
-                        angles.append(angle(delta1, delta2))
+            match_generator = MatchGenerator(match_definition)
+            for match in match_generator(graph):
+                point1 = match.forward[1].get_absolute_frame().t
+                point2 = match.forward[2].get_absolute_frame().t
+                point3 = match.forward[3].get_absolute_frame().t
+                delta1 = point2 - point1
+                delta2 = point2 - point3
+                if numpy.linalg.norm(delta1) > 1e-8 and \
+                    numpy.linalg.norm(delta2) > 1e-8:
+                    angles.append(angle(delta1, delta2))
         except:
             raise UserError(
                 "An error occured while sampling the bending angles.",
@@ -515,37 +520,43 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         bonds = search_bonds(context.application.cache.nodes)
         angles = []
 
-        angle_graph = SymmetricGraph([(1, 2), (2, 3), (3, 4)], 2)
-        match_filter = MatchFilterParameterized(
+        angle_graph = Graph([
+            frozenset([1, 2]),
+            frozenset([2, 3]),
+            frozenset([3, 4]),
+        ])
+        angle_graph.init_neighbors()
+        match_definition = SubgraphMatchDefinition(
             subgraph=angle_graph,
-            calculation_tags={1: 1, 2: 0, 3: 0, 4: 1},
-            thing_criteria={
-                1: self.parameters.filter_atom1,
-                2: self.parameters.filter_atom2,
-                3: self.parameters.filter_atom3,
-                4: self.parameters.filter_atom4,
-            },
-            relation_criteria={
-                frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
-                frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
-                frozenset([3,4]): lambda things: self.parameters.filter_bond34(bonds[things]),
-            },
-            filter_tags=False,
+            criteria_sets=[CriteriaSet(
+                tag=None,
+                thing_criteria={
+                    1: self.parameters.filter_atom1,
+                    2: self.parameters.filter_atom2,
+                    3: self.parameters.filter_atom3,
+                    4: self.parameters.filter_atom4,
+                },
+                relation_criteria={
+                    frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                    frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
+                    frozenset([3,4]): lambda things: self.parameters.filter_bond34(bonds[things]),
+                },
+            )],
         )
         graph = Graph(bonds.keys())
         try:
-            for match in angle_graph.yield_matching_subgraphs(graph):
-                for transformed_match in match_filter.parse(match):
-                    point1 = transformed_match.forward[1].get_absolute_frame().t
-                    point2 = transformed_match.forward[2].get_absolute_frame().t
-                    point3 = transformed_match.forward[3].get_absolute_frame().t
-                    point4 = transformed_match.forward[4].get_absolute_frame().t
+            match_generator = MatchGenerator(match_definition)
+            for match in match_generator(graph):
+                point1 = match.forward[1].get_absolute_frame().t
+                point2 = match.forward[2].get_absolute_frame().t
+                point3 = match.forward[3].get_absolute_frame().t
+                point4 = match.forward[4].get_absolute_frame().t
 
-                    normal1 = numpy.cross(point2-point1, point2-point3)
-                    normal2 = numpy.cross(point3-point4, point3-point2)
-                    if numpy.linalg.norm(normal1) > 1e-8 and \
-                       numpy.linalg.norm(normal2) > 1e-8:
-                        angles.append(angle(normal1, normal2))
+                normal1 = numpy.cross(point2-point1, point2-point3)
+                normal2 = numpy.cross(point3-point4, point3-point2)
+                if numpy.linalg.norm(normal1) > 1e-8 and \
+                    numpy.linalg.norm(normal2) > 1e-8:
+                    angles.append(angle(normal1, normal2))
         except:
             raise UserError(
                 "An error occured while sampling the dihedral angles.",
