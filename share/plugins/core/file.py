@@ -26,7 +26,7 @@ from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.models import Model
 from zeobuilder.filters import run_file_dialog
 
-import gtk, os
+import gtk, os, copy
 
 
 class FileNew(Immediate):
@@ -82,17 +82,23 @@ class FileImport(Immediate):
             if len(tmp_model.universe.children) > 0:
                 Frame = context.application.plugins.get_node("Frame")
                 root_frame = Frame(name=os.path.basename(filename))
-                for node in tmp_model.universe.children:
-                    tmp_model.universe.remove(node)
+                tmp = copy.copy(tmp_model.universe.children)
+                while len(tmp_model.universe.children) > 0:
+                    tmp_model.universe.remove(tmp_model.universe.children[0])
+                for node in tmp:
                     root_frame.add(node)
+                del tmp
                 context.application.model.universe.add(root_frame)
 
             if len(tmp_model.folder.children) > 0:
                 Folder = context.application.plugins.get_node("Folder")
                 root_folder = Folder(name=os.path.basename(filename))
-                for node in tmp_model.folder.children:
-                    tmp_model.folder.remove(node)
+                tmp = copy.copy(tmp_model.folder.children)
+                while len(tmp_model.folder.children) > 0:
+                    tmp_model.universe.remove(tmp_model.folder.children[0])
+                for node in tmp:
                     root_folder.add(node)
+                del tmp
                 context.application.model.folder.add(root_folder)
                 tmp_model.file_close()
 

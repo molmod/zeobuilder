@@ -70,10 +70,10 @@ class Model(gobject.GObject):
         model_object.unset_model()
         self.root.remove(model_object)
 
-    def add_node(self):
+    def add_node(self, node):
         pass
 
-    def remove_node(self):
+    def remove_node(self, node):
         pass
 
     def clear(self):

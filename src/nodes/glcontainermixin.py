@@ -45,13 +45,15 @@ class GLContainerMixin(ContainerMixin):
             child.drop_gl()
 
     def add(self, model_object, index=-1):
-        model_object.request_gl()
+        if self.gl_active > 0:
+            model_object.request_gl()
         ContainerMixin.add(self, model_object, index)
         self.invalidate_all_lists()
 
     def remove(self, model_object):
         ContainerMixin.remove(self, model_object)
-        model_object.drop_gl()
+        if self.gl_active > 0:
+            model_object.drop_gl()
         self.invalidate_all_lists()
 
     @classmethod
