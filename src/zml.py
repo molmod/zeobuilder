@@ -99,7 +99,7 @@ def dump_to_file(f, node):
             indenter.write_line("<tuple%s>" % name_key, 1)
             for item in node: dump_stage3(indenter, item, use_references)
             indenter.write_line("</tuple>", -1)
-        elif cls == numpy.ArrayType:
+        elif cls == numpy.ndarray:
             shape = node.shape
             indenter.write_line("<array%s>" % name_key, 1)
             indenter.write("<shape>")

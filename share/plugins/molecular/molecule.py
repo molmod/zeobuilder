@@ -28,16 +28,17 @@ from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.gui.simple import ok_information, ok_error, ask_save_filename
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
+from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.expressions import Expression
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs2 import Graph, MatchFilterError, ExactMatchFilter, MatchGenerator
+from molmod.graphs2 import Graph, MatchDefinitionError, ExactMatchDefinition, RingMatchDefinition, MatchGenerator
 from molmod.vectors import random_orthonormal
 
-import numpy, gtk
+import numpy, gtk, pylab, matplotlib
 
 import math, sys, traceback, copy
 
@@ -78,6 +79,23 @@ def chemical_formula(atoms):
         formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
         total += count
     return total, formula
+
+
+def create_graph_bonds(selected_nodes):
+    nodes = list(yield_atoms(selected_nodes))
+    bonds_by_pair = dict(
+        (frozenset([bond.children[0].target, bond.children[1].target]), bond)
+        for bond in yield_bonds(selected_nodes)
+        if bond.children[0].target in nodes and
+            bond.children[1].target in nodes
+    )
+    tmp = set([])
+    for a, b in bonds_by_pair.iterkeys():
+        tmp.add(a), tmp.add(b)
+    nodes = [node for node in nodes if node in tmp]
+
+    graph = Graph(bonds_by_pair.keys(), nodes)
+    return graph, bonds_by_pair
 
 
 class ChemicalFormula(Immediate):
@@ -501,23 +519,13 @@ class AnalyzeNieghborShells(Immediate):
         return True
 
     def do(self):
-        nodes = list(yield_atoms(context.application.cache.nodes))
-        pairs = list(
-            frozenset([bond.children[0].target, bond.children[1].target])
-            for bond in yield_bonds(context.application.cache.nodes)
-            if bond.children[0].target in nodes and
-               bond.children[1].target in nodes
-        )
-        tmp = set([])
-        for a, b in pairs:
-            tmp.add(a), tmp.add(b)
-        nodes = [node for node in nodes if node in tmp]
-
-        graph = Graph(pairs, nodes)
+        graph, foo = create_graph_bonds(context.application.cache.nodes)
+        graph.init_distances()
+        graph.init_trees_and_shells
         max_shell_size = graph.distances.ravel().max()
 
         def yield_rows():
-            for index, node in enumerate(nodes):
+            for index, node in enumerate(graph.nodes):
                 yield [index+1, node.number, node.name, ""] + [
                     "%i: %s" % chemical_formula(atoms) for atoms in
                     graph.shells[node][1:]
@@ -549,12 +557,6 @@ def first(l):
         return None
 
 
-class ExactNumberMatchFilter(ExactMatchFilter):
-    def compare(self, atom0, atom1):
-        if atom0.number != atom1.number: return False
-        else: return ExactMatchFilter.compare(self, atom0, atom1)
-
-
 class CloneOrder(Immediate):
     description = "Apply the order of the first selection to the second."
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Clone order", order=(0, 4, 1, 5, 0, 3))
@@ -569,34 +571,20 @@ class CloneOrder(Immediate):
             if not issubclass(cls, Frame): return False
         return True
 
-    def create_graph(self, frame):
-        nodes = list(yield_atoms([frame]))
-        pairs = list(
-            frozenset([bond.children[0].target, bond.children[1].target])
-            for bond in yield_bonds([frame])
-            if bond.children[0].target in nodes and
-               bond.children[1].target in nodes
-        )
-        return Graph(pairs, nodes)
-
     def do(self):
         frame1, frame2 = context.application.cache.nodes
 
-        graph1 = self.create_graph(frame1)
-        graph2 = self.create_graph(frame2)
-        #for row in graph1.distances:
-        #    print " ".join("%3i" % item for item in row)
-        #print
-        #for row in graph2.distances:
-        #    print " ".join("%3i" % item for item in row)
+        graph1, foo = create_graph_bonds([frame1])
+        graph2, foo = create_graph_bonds([frame2])
+        del foo
 
         try:
-            match_generator = MatchGenerator(ExactNumberMatchFilter(), graph1, graph2)
-        except MatchFilterError, e:
+            match_generator = MatchGenerator(ExactMatchDefinition(graph1))
+        except MatchDefinitionError, e:
             raise UserError("Can not apply the order of the first selection to the second.")
 
         try:
-            match = match_generator().next()
+            match = match_generator(graph2).next()
         except StopIteration:
             raise UserError("The connectivity of the two selections differs.")
 
@@ -611,6 +599,160 @@ class CloneOrder(Immediate):
             primitive.Move(atom2, frame2, new_index)
 
 
+class RingDistributionWindow(GladeWrapper):
+    def __init__(self):
+        GladeWrapper.__init__(self, "plugins/molecular/gui.glade", "wi_ring_distribution", "window")
+        self.window.hide()
+        self.init_callbacks(RingDistributionWindow)
+        self.init_proxies(["al_image", "cb_filter", "tv_rings"])
+
+        self.figure = pylab.figure(figsize=(4, 4), dpi=100)
+        self.mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(self.figure)
+        self.mpl_widget.set_size_request(400, 400)
+        #self.mpl_widget.set_border_width(6) TODO
+        self.al_image.add(self.mpl_widget)
+
+        self.filter_store = gtk.ListStore(str, object)
+        self.cb_filter.set_model(self.filter_store)
+        cell_renderer = gtk.CellRendererText()
+        self.cb_filter.pack_start(cell_renderer)
+        self.cb_filter.add_attribute(cell_renderer, "text", 0)
+        self.cb_filter.connect("changed", self.on_filter_changed)
+
+        self.ring_store = gtk.ListStore(int, str, str, object)
+        self.tv_rings.set_model(self.ring_store)
+        self.tv_rings.append_column(gtk.TreeViewColumn("Size", gtk.CellRendererText(), text=0))
+        self.tv_rings.append_column(gtk.TreeViewColumn("Diameter", gtk.CellRendererText(), text=1))
+        self.tv_rings.append_column(gtk.TreeViewColumn("Label", gtk.CellRendererText(), text=2))
+        self.tv_rings.get_selection().connect("changed", self.on_ring_selection_changed)
+
+        context.application.action_manager.connect("model-changed", self.on_model_changed)
+
+    def show(self, rings, graph, bonds_by_pair):
+        self.rings = rings
+        self.graph = graph
+        for ring in rings:
+            ring.bonds = [
+                bonds_by_pair[frozenset([ring.forward[index], ring.forward[(index+1)%(ring.length+1)]])]
+                for index in xrange(ring.length+1)
+            ]
+
+        self.fill_stores()
+        self.calculate_properties()
+        self.create_image()
+        self.window.show_all()
+
+    def fill_stores(self):
+        self.filter_store.clear()
+        self.filter_store.append(["All", None])
+        for node in self.graph.nodes:
+            self.filter_store.append([node.get_name(), node])
+        self.cb_filter.set_active(0)
+
+        self.fill_ring_store()
+
+    def fill_ring_store(self):
+        self.ring_store.clear()
+        filter_node = self.filter_store.get_value(self.cb_filter.get_active_iter(), 1)
+        for ring in self.rings:
+            if filter_node is None or filter_node in ring.backward:
+                self.ring_store.append([
+                    len(ring),
+                    "TODO",
+                    str([node.get_name() for index, node in sorted(ring.forward.iteritems())]),
+                    ring,
+                ])
+        self.ring_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
+
+    def calculate_properties(self):
+        ring_sizes = {}
+        for ring in self.rings:
+            size = ring.size
+            if size in ring_sizes:
+                ring_sizes[size] += 1
+            else:
+                ring_sizes[size] = 1
+        self.max_size = max(ring_sizes.iterkeys())
+        self.ring_distribution = numpy.zeros(self.max_size, int)
+        for ring_size, count in ring_sizes.iteritems():
+            self.ring_distribution[ring_size-1] = count
+
+    def create_image(self):
+        pylab.figure(self.figure.number)
+        pylab.clf()
+        pylab.axes([0.08, 0.1, 0.9, 0.85])
+
+        args = zip(
+            numpy.arange(self.max_size)+0.5,
+            numpy.zeros(self.max_size),
+            numpy.ones(self.max_size),
+            self.ring_distribution
+        )
+        for l, b, w, h in args:
+            patch_hist = matplotlib.patches.Rectangle((l, b), w, h, facecolor="w", edgecolor="#AAAAAA")
+            pylab.gca().add_patch(patch_hist)
+
+        pylab.ylim([0, self.ring_distribution.max()])
+        pylab.xlim([0.5, self.max_size+1.5])
+        pylab.xlabel("Ring size")
+        pylab.ylabel("Count")
+
+        self.mpl_widget.draw()
+
+    def cleanup(self):
+        self.window.hide()
+        self.rings = None
+        self.graph = None
+        self.ring_distribution = None
+        self.filter_store.clear()
+        self.ring_store.clear()
+        pylab.figure(self.figure.number)
+        pylab.clf()
+
+    def on_window_delete_event(self, window, event):
+        self.cleanup()
+        return True
+
+    def on_model_changed(self, manager):
+        self.cleanup()
+
+    def on_filter_changed(self, cb_filter):
+        self.fill_ring_store()
+
+    def on_ring_selection_changed(self, selection):
+        model, iter = selection.get_selected()
+        if iter is None:
+            context.application.main.select_nodes([])
+        else:
+            ring = model.get_value(iter, 3)
+            context.application.main.select_nodes(
+                ring.forward.values() + ring.bonds
+            )
+
+
+ring_distribution_window = RingDistributionWindow()
+
+
+class RingDistribution(Immediate):
+    description = "Ring distribution"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Ring distribution", order=(0, 4, 1, 5, 2, 3))
+
+    @staticmethod
+    def analyze_selection():
+        if not Immediate.analyze_selection(): return False
+        if len(context.application.cache.nodes) == 0: return False
+        return True
+
+    def do(self):
+        graph, bonds_by_pair = create_graph_bonds(context.application.cache.nodes)
+        match_generator = MatchGenerator(
+            RingMatchDefinition(10),
+        )
+        rings = list(match_generator(graph))
+
+        ring_distribution_window.show(rings, graph, bonds_by_pair)
+
+
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
@@ -618,6 +760,7 @@ actions = {
     "SaturateWithHydrogens": SaturateWithHydrogens,
     "AnalyzeNieghborShells": AnalyzeNieghborShells,
     "CloneOrder": CloneOrder,
+    "RingDistribution": RingDistribution,
 }
 
 

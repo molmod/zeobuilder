@@ -4,7 +4,6 @@
 <glade-interface>
 
 <widget class="GtkDialog" id="di_minimize">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Minimize status</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -222,7 +221,6 @@
 </widget>
 
 <widget class="GtkWindow" id="wi_conscan_results">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Connection scanner results</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>

@@ -72,8 +72,8 @@ class ContainerMixin(ParentMixin):
     #
 
     def add(self, model_object, index=-1):
-        #print "ADD TO " + self.name + ":", model_object.name
         if index == -1: index = len(self.children)
+        #print "ADD TO " + self.name + ":", model_object.name, index
         self.children.insert(index, model_object)
         model_object.parent = self
         if self.model is not None:

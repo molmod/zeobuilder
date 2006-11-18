@@ -218,20 +218,20 @@ class Main(GladeWrapper):
     def toggle_selection(self, node, on=None):
         if on is None: on = not node.selected
         if on:
-            try:
-                match = not self.filter_active or self.filter_expression(node)
-            except Exception, e:
-                ok_error(
-                    "An error occured while evaluating the filter expression.",
-                    "This is probably due to a mistake in the expression you entered. The selection filter will be deactivated.\n\n%s\n%s" % (e.__class__, e)
+            #try:
+            #    match = not self.filter_active or self.filter_expression(node)
+            #except Exception, e:
+            #    ok_error(
+            #        "An error occured while evaluating the filter expression.",
+            #        "This is probably due to a mistake in the expression you entered. The selection filter will be deactivated.\n\n%s\n%s" % (e.__class__, e)
+            #    )
+            #    self.filter_active = False
+            #if match:
+            if node.parent is not None:
+                self.tree_view.expand_to_path(
+                    context.application.model.get_path(node.parent.iter)
                 )
-                self.filter_active = False
-            if match:
-                if node.parent is not None:
-                    self.tree_view.expand_to_path(
-                        context.application.model.get_path(node.parent.iter)
-                    )
-                self.tree_selection.select_iter(node.iter)
+            self.tree_selection.select_iter(node.iter)
         else:
             self.tree_selection.unselect_iter(node.iter)
 

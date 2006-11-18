@@ -138,6 +138,9 @@ class GLContainerBase(ModelObject, GLMixin, GLContainerMixin):
     # Draw
     #
 
+    def draw_selection(self):
+        GLContainerMixin.draw_selection(self)
+
     def draw(self):
         GLContainerMixin.draw(self)
         GLMixin.draw(self)
@@ -193,6 +196,9 @@ class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
     #
     # Draw
     #
+
+    def draw_selection(self):
+        GLContainerMixin.draw_selection(self)
 
     def draw(self):
         GLContainerMixin.draw(self)

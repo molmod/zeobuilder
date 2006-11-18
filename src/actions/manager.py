@@ -23,7 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import CancelException
 
-import gtk, gobject, profile, pstats
+import gtk, gobject
 import copy
 
 

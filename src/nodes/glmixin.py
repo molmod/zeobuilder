@@ -204,7 +204,7 @@ class GLMixin(gobject.GObject):
             glNewList(self.total_list, GL_COMPILE)
             if self.visible:
                 glPushName(self.draw_list)
-                if self.selected: glCallList(self.boundingbox_list)
+                self.draw_selection()
                 glCallList(self.draw_list)
                 glPopName()
             glEndList()
@@ -213,6 +213,12 @@ class GLMixin(gobject.GObject):
     #
     # Draw
     #
+
+    def draw_selection(self):
+        if self.selected:
+            glMaterial(GL_FRONT, GL_SHININESS, 0.0)
+        else:
+            glMaterial(GL_FRONT, GL_SHININESS, 70.0)
 
     def call_list(self):
         ##print "Executing total list (%i): %s" % (self.total_list, self.get_name())
@@ -389,7 +395,7 @@ class GLTransformationMixin(GLMixin):
             if self.visible:
                 glPushName(self.draw_list)
                 glCallList(self.transformation_list)
-                if self.selected: glCallList(self.boundingbox_list)
+                self.draw_selection()
                 glCallList(self.draw_list)
                 glPopMatrix()
                 glPopName()

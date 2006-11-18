@@ -118,11 +118,7 @@ class SelectChildren(Immediate):
         return True
 
     def do(self):
-        children = context.application.cache.children
-        main = context.application.main
-        main.tree_selection.unselect_all()
-        for child in children:
-            main.toggle_selection(child, on=True)
+        context.application.main.select_nodes(context.application.cache.children)
 
 
 class SelectChildrenByExpression(ImmediateWithMemory):

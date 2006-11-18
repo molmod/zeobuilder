@@ -100,7 +100,7 @@ class Vector(GLReferentBase):
             if self.visible:
                 glPushName(self.draw_list)
                 glPushMatrix()
-                if self.selected: glCallList(self.boundingbox_list)
+                self.draw_selection()
                 glCallList(self.draw_list)
                 glPopMatrix()
                 glPopName()

@@ -893,7 +893,6 @@ Tel: +32 (0)9 264 65 56
 
 <widget class="GtkWindow" id="wi_measurements">
   <property name="border_width">6</property>
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Measurements</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
@@ -2011,7 +2010,6 @@ Tel: +32 (0)9 264 65 56
 </widget>
 
 <widget class="GtkWindow" id="wi_sketch">
-  <property name="visible">True</property>
   <property name="title" translatable="yes">Sketch tool</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>

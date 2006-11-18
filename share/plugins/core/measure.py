@@ -290,8 +290,6 @@ class MeasurementsWindow(GladeWrapper):
             context.application.main.drawing_area.tool_clear()
 
         if chain_len > 1:
-            self.window.show()
-
             if chain_len > 1:
                 show_labels(self.labels_chain2)
                 self.distance_12.set_label(express_distance(0, 1))
@@ -335,6 +333,7 @@ class MeasurementsWindow(GladeWrapper):
             else:
                 hide_labels(self.labels_chain4)
                 hide_labels(self.labels_chain_closed)
+            self.window.show()
         else:
             self.window.hide()
 

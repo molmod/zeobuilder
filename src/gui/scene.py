@@ -31,6 +31,7 @@ from zeobuilder.undefined import Undefined
 from molmod.transformations import Rotation, Translation, Complete
 from molmod.units import angstrom
 
+from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from OpenGL.GL import *
 import numpy
@@ -120,7 +121,8 @@ class Scene(object):
         self.clip_planes = {}
 
     def initialize(self): # gl_context sensitive method
-        glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
+        glutInit([])
+        glMaterial(GL_FRONT, GL_SPECULAR, [0.9, 0.9, 0.9, 1.0])
         glMaterial(GL_FRONT, GL_SHININESS, 70.0)
         glLight(GL_LIGHT0, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
         glLight(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
