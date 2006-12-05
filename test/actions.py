@@ -940,6 +940,16 @@ class BuilderActions(ApplicationTestCase):
             MinimizeDistances(parameters)
         self.run_test_application(fn)
 
+    def test_merge_atoms_connected_with_minimizer(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[2:])
+
+            MergeAtomsConnectedWithMinimizer = context.application.plugins.get_action("MergeAtomsConnectedWithMinimizer")
+            self.assert_(MergeAtomsConnectedWithMinimizer.analyze_selection())
+            MergeAtomsConnectedWithMinimizer()
+        self.run_test_application(fn)
+
     def test_triangle_conscan(self):
         def fn():
             context.application.model.file_open("input/precursor.zml")

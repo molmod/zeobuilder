@@ -401,6 +401,46 @@ class MinimizeDistances(ImmediateWithMemory):
             )
 
 
+class MergeAtomsConnectedWithMinimizer(Immediate):
+    description = "Merge atoms connected by minimizer"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Merge atoms connected by minimizer", order=(0, 4, 1, 6, 0, 2))
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        cache = context.application.cache
+        for cls in cache.classes:
+            if not issubclass(cls, Minimizer):
+                return False
+        # C) passed all tests:
+        return True
+
+    def do(self):
+        Atom = context.application.plugins.get_node("Atom")
+
+        cache = context.application.cache
+        for minimizer in list(cache.nodes):
+            atom1, atom2 = minimizer.get_targets()
+            if isinstance(atom1, Atom) and isinstance(atom2, Atom):
+                replacement = Atom(
+                    name="Merge of %s and %s" % (atom1.name, atom2.name),
+                    number=max([atom1.number, atom2.number])
+                )
+                replacement.transformation.t = 0.5*(
+                    atom1.get_frame_relative_to(minimizer.parent).t +
+                    atom2.get_frame_relative_to(minimizer.parent).t
+                )
+            primitive.Add(replacement, minimizer.parent, minimizer.get_index())
+            for atom in [atom1, atom2]:
+                while len(atom.references) > 0:
+                    primitive.SetTarget(atom.references[0], replacement)
+            primitive.Delete(minimizer)
+            primitive.Delete(atom1)
+            primitive.Delete(atom2)
+
+
 nodes = {
     "Minimizer": Minimizer
 }
@@ -410,6 +450,7 @@ actions = {
     "ConnectMinimizer": ConnectMinimizer,
     "AutoConnectMinimizers": AutoConnectMinimizers,
     "MinimizeDistances": MinimizeDistances,
+    "MergeAtomsConnectedWithMinimizer": MergeAtomsConnectedWithMinimizer,
 }
 
 cache_plugins = {
