@@ -579,8 +579,8 @@ class RotateObjectBase(InteractiveWithMemory):
         if self.changed:
             self.parameters.transformation = copy.deepcopy(self.victim.transformation)
             self.parameters.transformation.apply_inverse_before(self.old_transformation)
-            primitive.SetProperty(self.victim, "transformation",
-                                           self.old_transformation, done=True)
+            primitive.SetProperty(self.victim, "transformation", self.old_transformation, done=True)
+            self.victim.invalidate_transformation_list() # make sure that bonds and connectors are updated after transformation
         InteractiveWithMemory.finish(self)
 
     def immediate_do(self):
@@ -753,6 +753,7 @@ class TranslateObjectBase(InteractiveWithMemory):
             self.parameters.transformation = copy.deepcopy(self.victim.transformation)
             self.parameters.transformation.apply_inverse_before(self.old_transformation)
             primitive.SetProperty(self.victim, "transformation", self.old_transformation, done=True)
+            self.victim.invalidate_transformation_list() # make sure that bonds and connectors are updated after transformation
         InteractiveWithMemory.finish(self)
 
     def immediate_do(self):
