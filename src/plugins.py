@@ -24,10 +24,11 @@ import os, imp
 
 
 class PluginCategory(object):
-    def __init__(self, singular, plural, init):
+    def __init__(self, singular, plural, init, authors=[]):
         self.singular = singular
         self.plural = plural
         self.init = init
+        self.authors = authors
 
 
 def init_nodes(nodes):

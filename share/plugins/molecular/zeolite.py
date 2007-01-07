@@ -24,6 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
+import zeobuilder.authors as authors
 
 import gtk
 
@@ -81,6 +82,7 @@ class CoordinationDialog(object):
 class TetraCoordination(Immediate):
     description = "T-site coordination"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_T-site coordination", order=(0, 4, 1, 5, 2, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

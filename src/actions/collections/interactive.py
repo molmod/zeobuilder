@@ -45,13 +45,14 @@ class InteractiveInfo(object):
 
 
 class InteractiveGroup(object):
-    def __init__(self, image_name, description, initial_mask=None, order=None):
+    def __init__(self, image_name, description, initial_mask=None, order=None, authors=[]):
         # Gui related stuff
         self.image_name = image_name
         self.pixbuf = load_image(image_name, (36, 36))
         self.description = description
         self.initial_mask = initial_mask
         self.order = order
+        self.authors = []
         # actions
         self.keyboard_actions = []
         self.mouse_actions = []

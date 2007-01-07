@@ -35,6 +35,7 @@ from zeobuilder.child_process import ChildProcessDialog
 from zeobuilder.conversion import express_measure
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.data import periodic
 from molmod.transformations import Complete, Translation
@@ -53,6 +54,7 @@ __all__ = ["Minimizer"]
 
 class Minimizer(Vector, ColorMixin):
     info = ModelObjectInfo("plugins/builder/minimizer.svg")
+    authors = [authors.toon_verstraelen]
 
     #
     # Properties
@@ -132,6 +134,7 @@ class Minimizer(Vector, ColorMixin):
 class ConnectMinimizer(ConnectBase):
     description = "Connect with minimizer"
     menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Minimizer", image_name="plugins/builder/minimizer.svg", order=(0, 4, 1, 3, 0, 4))
+    authors = [authors.toon_verstraelen]
 
     def new_connector(self, begin, end):
         return Minimizer(targets=[begin, end])
@@ -140,6 +143,7 @@ class ConnectMinimizer(ConnectBase):
 class AutoConnectMinimizers(AutoConnectMixin, Immediate):
     description = "Connect overlapping atoms with minimizers"
     menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Connect overlapping atoms with minimizers", order=(0, 4, 1, 6, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -275,11 +279,13 @@ def get_minimizer_problem(cache):
             result.frames.add(frame)
     result.frames = list(result.frames)
     return result
+get_minimizer_problem.authors=[authors.toon_verstraelen]
 
 
 class MinimizeDistances(ImmediateWithMemory):
     description = "Minimize the minimizer's lengths"
     menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Minimize selected distances", order=(0, 4, 1, 6, 0, 1))
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Minimization parameters",
@@ -407,6 +413,7 @@ class MinimizeDistances(ImmediateWithMemory):
 class MergeAtomsConnectedWithMinimizer(Immediate):
     description = "Merge atoms connected by minimizer"
     menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Merge atoms connected by minimizer", order=(0, 4, 1, 6, 0, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

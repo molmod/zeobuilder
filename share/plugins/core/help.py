@@ -25,6 +25,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui.glade_wrapper import GladeWrapper
+import zeobuilder.authors as authors
 
 import gtk
 
@@ -37,7 +38,7 @@ class InfoDialog(GladeWrapper):
             "la_file", "la_status", "vb_authors", "tv_authors",
             "bu_information", "sw_extra", "tv_extra",
         ])
-        self.dialog.show_all()
+        self.author_store = authors.init_widgets(self.tv_authors, self.bu_information)
         self.dialog.hide()
 
     def run(self, plugin):
@@ -49,7 +50,13 @@ class InfoDialog(GladeWrapper):
         self.la_status.set_label(plugin.status)
         self.la_file.set_label(plugin.module.__file__)
 
-        self.vb_authors.hide()
+        if hasattr(plugin, "authors"):
+            self.vb_authors.show_all()
+            authors.fill_store(self.author_store, plugin.authors)
+        else:
+            self.author_store.clear()
+            self.vb_authors.hide()
+
         self.sw_extra.hide()
 
         self.dialog.run()
@@ -136,6 +143,7 @@ class ViewPlugins(Immediate):
     description = "Plugins"
     menu_info = MenuInfo("help/_Help:default", "_Plugins", order=(1, 0, 0, 1))
     plugins_dialog = PluginsDialog()
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         self.plugins_dialog.run()

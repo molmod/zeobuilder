@@ -31,6 +31,7 @@ from zeobuilder.gui import load_image
 from zeobuilder.expressions import Expression
 from zeobuilder.conversion import express_measure
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.units import to_unit
 from molmod.graphs import Graph, SubgraphMatchDefinition, MatchGenerator, CriteriaSet
@@ -208,6 +209,7 @@ def search_bonds(selected_nodes):
 class DistributionBondLengths(ImmediateWithMemory):
     description = "Distribution of bond lengths"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bond _lengths", order=(0, 4, 1, 5, 3, 0))
+    authors = [authors.toon_verstraelen]
     required_modules = ["pylab", "matplotlib"]
 
     parameters_dialog = FieldsDialogSimple(
@@ -309,6 +311,7 @@ class DistributionBondLengths(ImmediateWithMemory):
 class DistributionBendingAngles(ImmediateWithMemory):
     description = "Distribution of bending angles"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bending _angles", order=(0, 4, 1, 5, 3, 1))
+    authors = [authors.toon_verstraelen]
     required_modules = ["pylab", "matplotlib"]
 
     parameters_dialog = FieldsDialogSimple(
@@ -438,6 +441,7 @@ class DistributionBendingAngles(ImmediateWithMemory):
 class DistributionDihedralAngles(ImmediateWithMemory):
     description = "Distribution of dihedral angles"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of _dihedral angles", order=(0, 4, 1, 5, 3, 2))
+    authors = [authors.toon_verstraelen]
     required_modules = ["pylab", "matplotlib"]
 
     parameters_dialog = FieldsDialogSimple(

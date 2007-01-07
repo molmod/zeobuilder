@@ -630,6 +630,13 @@ class CoreActions(ApplicationTestCase):
             ViewPlugins()
         self.run_test_application(fn)
 
+    def test_about(self):
+        def fn():
+            About = context.application.plugins.get_action("About")
+            self.assert_(About.analyze_selection())
+            About()
+        self.run_test_application(fn)
+
 
 class MolecularActions(ApplicationTestCase):
     def test_add_atom(self):

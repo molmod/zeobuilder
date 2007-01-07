@@ -27,6 +27,7 @@ from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.zml import dump_to_file, load_from_string, load_from_file
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 import gtk
 
@@ -49,6 +50,7 @@ class Undo(Immediate):
     description = "Undo"
     menu_info = UndoMenuInfo()
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -80,6 +82,7 @@ class Redo(Immediate):
     description = "Redo"
     menu_info = RedoMenuInfo()
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -111,6 +114,7 @@ class Repeat(Immediate):
     description = "Repeat"
     menu_info = RepeatMenuInfo()
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -152,6 +156,7 @@ class Cut(Immediate):
     description = "Cut the selection to the clipboard"
     menu_info = MenuInfo("default/_Edit:clipboard", "Cu_t", accel_key=ord("x"), image_name=gtk.STOCK_CUT, order=(0, 1, 1, 0))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -174,6 +179,7 @@ class Copy(Immediate):
     description = "Copy the selection to the clipboard"
     menu_info = MenuInfo("default/_Edit:clipboard", "_Copy", accel_key=ord("c"), image_name=gtk.STOCK_COPY, order=(0, 1, 1, 1))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -195,6 +201,7 @@ class Paste(Immediate):
     description = "Paste the contents of the clipboard"
     menu_info = MenuInfo("default/_Edit:clipboard", "_Paste", accel_key=ord("v"), image_name=gtk.STOCK_PASTE, order=(0, 1, 1, 2))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -227,6 +234,7 @@ class Paste(Immediate):
 class Delete(Immediate):
     description = "Delete the selected object(s)"
     menu_info = MenuInfo("default/_Edit:deldup", "_Delete", 65535, False, image_name=gtk.STOCK_DELETE, order=(0, 1, 2, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -245,6 +253,7 @@ class Delete(Immediate):
 class Duplicate(Immediate):
     description = "Duplicate nodes"
     menu_info = MenuInfo("default/_Edit:deldup", "_Duplicate", ord("d"), order=(0, 1, 2, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -276,6 +285,7 @@ class Duplicate(Immediate):
 class EditConfiguration(Immediate):
     description = "Edit configuration"
     menu_info = MenuInfo("default/_Edit:preferences", "_Configuration", image_name=gtk.STOCK_PREFERENCES, order=(0, 1, 3, 0))
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         edit_config = FieldsDialogSimple(

@@ -32,6 +32,7 @@ from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.expressions import Expression
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
@@ -104,6 +105,7 @@ def create_graph_bonds(selected_nodes):
 class ChemicalFormula(Immediate):
     description = "Show chemical formula"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Chemical Formula", order=(0, 4, 1, 5, 2, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -168,6 +170,7 @@ def default_rotation_matrix(inertia_tensor):
 class CenterOfMass(CenterAlignBase):
     description = "Center of mass"
     menu_info = MenuInfo("default/_Object:tools/_Transform:center", "Center of _mass frame", order=(0, 4, 1, 2, 2, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -195,6 +198,7 @@ class CenterOfMass(CenterAlignBase):
 class CenterOfMassAndPrincipalAxes(CenterOfMass):
     description = "Center of mass and principal axes"
     menu_info = MenuInfo("default/_Object:tools/_Transform:centeralign", "Center of mass and _principal axes frame", order=(0, 4, 1, 2, 4, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -226,6 +230,7 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
 class SaturateWithHydrogens(Immediate):
     description = "Saturate with hydrogens"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens", order=(0, 4, 1, 5, 1, 2))
+    authors = [authors.toon_verstraelen]
     opening_angles = {
         # (hybr, numsit): angle
           (2,    1):                  0.0,
@@ -513,6 +518,7 @@ neighbor_shells_dialog = NeighborShellsDialog()
 class AnalyzeNieghborShells(Immediate):
     description = "Analyze the neighbor shells"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Neighbor shells", order=(0, 4, 1, 5, 2, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -545,6 +551,7 @@ def combinations(items, n):
             combination_copy = copy.copy(combination)
             combination_copy.add(selected)
             yield combination_copy
+combinations.authors=[authors.toon_verstraelen]
 
 
 def first(l):
@@ -557,11 +564,13 @@ def first(l):
         return l[0]
     else:
         return None
+first.authors=[authors.toon_verstraelen]
 
 
 class CloneOrder(Immediate):
     description = "Apply the order of the first selection to the second."
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Clone order", order=(0, 4, 1, 5, 0, 3))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -740,6 +749,7 @@ class RingDistribution(Immediate):
     description = "Ring distribution"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Ring distribution", order=(0, 4, 1, 5, 2, 3))
     required_modules = ["pylab", "matplotlib"]
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -761,6 +771,7 @@ class RingDistribution(Immediate):
 class FrameMolecules(Immediate):
     description = "Frame molecules"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Frame molecules", order=(0, 4, 1, 5, 0, 4))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

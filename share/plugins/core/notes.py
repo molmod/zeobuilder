@@ -26,12 +26,14 @@ from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObject, ModelObjectInfo
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 import StringIO
 
 
 class Notes(ModelObject):
     info = ModelObjectInfo("plugins/core/notes.svg")
+    authors = [authors.toon_verstraelen]
 
     #
     # Properties
@@ -59,6 +61,7 @@ class Notes(ModelObject):
 class AddNotes(AddBase):
     description = "Add notes"
     menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Notes", image_name="plugins/core/notes.svg", order=(0, 4, 1, 0, 1, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
