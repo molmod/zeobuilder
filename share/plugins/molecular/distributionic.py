@@ -36,7 +36,7 @@ from molmod.units import to_unit
 from molmod.graphs import Graph, SubgraphMatchDefinition, MatchGenerator, CriteriaSet
 from molmod.vectors import angle
 
-import gtk, numpy, pylab, matplotlib
+import gtk, numpy
 
 import math, os
 
@@ -48,8 +48,10 @@ class DistributionDialog(GladeWrapper):
         self.init_callbacks(DistributionDialog)
         self.init_proxies(["fa_image"])
 
+        import zeobuilder.mplwrap as mplwrap
+        import pylab
         figure = pylab.figure(0, figsize=(8, 4), dpi=100)
-        self.mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(figure)
+        self.mpl_widget = mplwrap.FigureCanvas(figure)
         self.mpl_widget.set_size_request(800, 400)
         self.fa_image.add(self.mpl_widget)
 
@@ -107,6 +109,8 @@ class DistributionDialog(GladeWrapper):
         self.comments.append("Stdev (N-1): %s" % express_measure(self.stdev, self.measure, self.decimals))
 
     def create_images(self):
+        import matplotlib, pylab
+
         figure = pylab.figure(0)
         pylab.clf()
         pylab.axes([0.08, 0.1, 0.4, 0.85])
@@ -177,13 +181,11 @@ class DistributionDialog(GladeWrapper):
         filename = ask_save_filename("Save distribution data", filename)
         if filename is not None:
             self.save_data("%s.txt" % filename)
+            import pylab
             pylab.figure(0)
             self.mpl_widget.print_figure("%s.svg" % filename)
             self.mpl_widget.print_figure("%s.eps" % filename, orientation='landscape')
             self.mpl_widget.print_figure("%s.png" % filename, dpi=400)
-
-
-distribution_dialog = DistributionDialog()
 
 
 def search_bonds(selected_nodes):
@@ -206,6 +208,7 @@ def search_bonds(selected_nodes):
 class DistributionBondLengths(ImmediateWithMemory):
     description = "Distribution of bond lengths"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bond _lengths", order=(0, 4, 1, 5, 3, 0))
+    required_modules = ["pylab", "matplotlib"]
 
     parameters_dialog = FieldsDialogSimple(
         "Bond length distribution parameters",
@@ -297,6 +300,7 @@ class DistributionBondLengths(ImmediateWithMemory):
         ]
 
         if len(lengths) > 0:
+            distribution_dialog = DistributionDialog()
             distribution_dialog.run(numpy.array(lengths), "Length", "Bond length", comments)
         else:
             raise UserError("No bonds match the given criteria.")
@@ -305,6 +309,7 @@ class DistributionBondLengths(ImmediateWithMemory):
 class DistributionBendingAngles(ImmediateWithMemory):
     description = "Distribution of bending angles"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of bending _angles", order=(0, 4, 1, 5, 3, 1))
+    required_modules = ["pylab", "matplotlib"]
 
     parameters_dialog = FieldsDialogSimple(
         "Bending angle distribution parameters",
@@ -424,6 +429,7 @@ class DistributionBendingAngles(ImmediateWithMemory):
         ]
 
         if len(angles) > 0:
+            distribution_dialog = DistributionDialog()
             distribution_dialog.run(numpy.array(angles), "Angle", "Bending angle", comments)
         else:
             raise UserError("No bending angles match the given criteria.")
@@ -432,6 +438,7 @@ class DistributionBendingAngles(ImmediateWithMemory):
 class DistributionDihedralAngles(ImmediateWithMemory):
     description = "Distribution of dihedral angles"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:dist", "Distribution of _dihedral angles", order=(0, 4, 1, 5, 3, 2))
+    required_modules = ["pylab", "matplotlib"]
 
     parameters_dialog = FieldsDialogSimple(
         "Dihedral angle distribution parameters",
@@ -576,9 +583,11 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         ]
 
         if len(angles) > 0:
+            distribution_dialog = DistributionDialog()
             distribution_dialog.run(numpy.array(angles), "Angle", "Dihedral angle", comments)
         else:
             raise UserError("No dihedral angles match the given criteria.")
+
 
 actions = {
     "DistributionBondLengths": DistributionBondLengths,

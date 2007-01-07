@@ -38,7 +38,7 @@ from molmod.transformations import Translation, Complete, Rotation
 from molmod.graphs import Graph, MatchDefinitionError, ExactMatchDefinition, RingMatchDefinition, MatchGenerator
 from molmod.vectors import random_orthonormal
 
-import numpy, gtk, pylab, matplotlib
+import numpy, gtk
 
 import math, sys, traceback, copy
 
@@ -609,8 +609,10 @@ class RingDistributionWindow(GladeWrapper):
         self.init_callbacks(RingDistributionWindow)
         self.init_proxies(["al_image", "cb_filter", "tv_rings"])
 
+        import zeobuilder.mplwrap as mplwrap
+        import pylab
         self.figure = pylab.figure(figsize=(4, 4), dpi=100)
-        self.mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(self.figure)
+        self.mpl_widget = mplwrap.FigureCanvas(self.figure)
         self.mpl_widget.set_size_request(400, 400)
         #self.mpl_widget.set_border_width(6) TODO
         self.al_image.add(self.mpl_widget)
@@ -681,6 +683,7 @@ class RingDistributionWindow(GladeWrapper):
             self.ring_distribution[ring_size-1] = count
 
     def create_image(self):
+        import pylab, matplotlib
         pylab.figure(self.figure.number)
         pylab.clf()
         pylab.axes([0.08, 0.1, 0.9, 0.85])
@@ -709,6 +712,7 @@ class RingDistributionWindow(GladeWrapper):
         self.ring_distribution = None
         self.filter_store.clear()
         self.ring_store.clear()
+        import pylab
         pylab.figure(self.figure.number)
         pylab.clf()
 
@@ -733,12 +737,10 @@ class RingDistributionWindow(GladeWrapper):
             )
 
 
-ring_distribution_window = RingDistributionWindow()
-
-
 class RingDistribution(Immediate):
     description = "Ring distribution"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Ring distribution", order=(0, 4, 1, 5, 2, 3))
+    required_modules = ["pylab", "matplotlib"]
 
     @staticmethod
     def analyze_selection():
@@ -753,6 +755,7 @@ class RingDistribution(Immediate):
         )
         rings = list(match_generator(graph))
 
+        ring_distribution_window = RingDistributionWindow()
         ring_distribution_window.show(rings, graph, bonds_by_pair)
 
 

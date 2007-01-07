@@ -623,6 +623,13 @@ class CoreActions(ApplicationTestCase):
             DisconnectFromDatabase()
         self.run_test_application(fn)
 
+    def test_view_plugins(self):
+        def fn():
+            ViewPlugins = context.application.plugins.get_action("ViewPlugins")
+            self.assert_(ViewPlugins.analyze_selection())
+            ViewPlugins()
+        self.run_test_application(fn)
+
 
 class MolecularActions(ApplicationTestCase):
     def test_add_atom(self):

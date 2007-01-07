@@ -83,6 +83,7 @@ class PluginsCollection(object):
             self.find_modules(os.path.join(directory, "plugins"))
         #self.module_descriptions = list(sorted(self.module_descriptions))
         self.load_modules()
+        self.all = {}
         self.load_plugins()
 
     def find_modules(self, directory):
@@ -117,6 +118,25 @@ class PluginsCollection(object):
 
     def load_category(self, category):
         d = {}
+        all = []
+
+        def check_required_modules(plugin):
+            if not hasattr(plugin, "required_modules"):
+                plugin.required_modules = []
+                plugin.failed_modules = []
+                return True
+            all_success = True
+            plugin.failed_modules = []
+            for module_name in plugin.required_modules:
+                try:
+                    f, filename, description = imp.find_module(module_name)
+                    if f is not None:
+                        f.close()
+                except ImportError:
+                    plugin.failed_modules.append(module_name)
+                    all_success = False
+            return all_success
+
 
         #print category.plural
         for module in self.modules:
@@ -125,8 +145,18 @@ class PluginsCollection(object):
             if plugins is not None:
                 for id, plugin in plugins.iteritems():
                     #print "    %s" % id
-                    assert id not in d, "A plugin with id '%s' is already loaded (%s)" % (id, name)
-                    d[id] = plugin
+                    plugin.module = module
+                    plugin.id = id
+                    if id in d:
+                        plugin.status = "Failed! A plugin with id '%s' already exists in this category." % id
+                    elif not check_required_modules(plugin):
+                        plugin.status = "Failed! Some required modules could not be found: %s" % plugin.failed_modules
+                    else:
+                        plugin.status = "Success."
+                        d[id] = plugin
+                    all.append(plugin)
+
+        self.all[category.plural] = all
 
         if category.init is not None:
             category.init(d)
