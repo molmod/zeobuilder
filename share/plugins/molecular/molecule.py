@@ -63,7 +63,7 @@ def yield_bonds(nodes):
                 yield bond
 
 
-def chemical_formula(atoms):
+def chemical_formula(atoms, markup=False):
     atom_counts = {}
     for atom in atoms:
         if atom.number in atom_counts:
@@ -76,7 +76,10 @@ def chemical_formula(atoms):
     items.sort()
     items.reverse()
     for atom_number, count in items:
-        formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
+        if markup:
+            formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
+        else:
+            formula += "%s%i " % (periodic[atom_number].symbol, count)
         total += count
     return total, formula
 
@@ -109,7 +112,7 @@ class ChemicalFormula(Immediate):
         return True
 
     def do(self):
-        total, formula = chemical_formula(yield_atoms(context.application.cache.nodes))
+        total, formula = chemical_formula(yield_atoms(context.application.cache.nodes), True)
         if total > 0:
             answer = "Chemical formula: %s" % formula
             answer += "\nNumber of atoms: %i" % total
@@ -527,7 +530,7 @@ class AnalyzeNieghborShells(Immediate):
         def yield_rows():
             for index, node in enumerate(graph.nodes):
                 yield [index+1, node.number, node.name, ""] + [
-                    "%i: %s" % chemical_formula(atoms) for atoms in
+                    "%i: %s" % chemical_formula(atoms, True) for atoms in
                     graph.shells[node][1:]
                 ]
 
@@ -753,6 +756,48 @@ class RingDistribution(Immediate):
         ring_distribution_window.show(rings, graph, bonds_by_pair)
 
 
+class FrameMolecules(Immediate):
+    description = "Frame molecules"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Frame molecules", order=(0, 4, 1, 5, 0, 4))
+
+    @staticmethod
+    def analyze_selection():
+        if not Immediate.analyze_selection(): return False
+        if len(context.application.cache.nodes) == 0: return False
+        return True
+
+    def do(self):
+        cache = context.application.cache
+
+        graph, bonds_by_pair = create_graph_bonds(cache.nodes)
+        molecules = graph.get_nodes_per_independent_graph()
+        if isinstance(cache.node, ContainerMixin):
+            parent = cache.node
+        else:
+            parent = cache.common_parent
+
+        frames = []
+        Frame = context.application.plugins.get_node("Frame")
+        for atoms in molecules:
+            frame = Frame(name=chemical_formula(atoms)[1])
+            primitive.Add(frame, parent, index=0)
+            for atom in atoms:
+                primitive.Move(atom, frame, select=False)
+            for atom in atoms:
+                # take a copy of the references since they are going to be
+                # refreshed (changed and reverted) during the loop.
+                for reference in copy.copy(atom.references):
+                    referent = reference.parent
+                    if referent.parent != frame:
+                        has_to_move = True
+                        for child in referent.children:
+                            if child.target.parent != frame:
+                                has_to_move = False
+                                break
+                        if has_to_move:
+                            primitive.Move(referent, frame, select=False)
+
+
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
@@ -761,6 +806,7 @@ actions = {
     "AnalyzeNieghborShells": AnalyzeNieghborShells,
     "CloneOrder": CloneOrder,
     "RingDistribution": RingDistribution,
+    "FrameMolecules": FrameMolecules,
 }
 
 

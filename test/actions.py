@@ -878,6 +878,22 @@ class MolecularActions(ApplicationTestCase):
             RingDistribution()
         self.run_test_application(fn)
 
+    def test_frame_molecules(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[0:1])
+
+            UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
+            self.assert_(UnframeAbsolute.analyze_selection())
+            UnframeAbsolute()
+
+            context.application.main.select_nodes(context.application.model.universe.children)
+
+            FrameMolecules = context.application.plugins.get_action("FrameMolecules")
+            self.assert_(FrameMolecules.analyze_selection())
+            FrameMolecules()
+        self.run_test_application(fn)
+
 
 
 class BuilderActions(ApplicationTestCase):
