@@ -42,7 +42,7 @@ class InfoDialog(GladeWrapper):
         self.dialog.hide()
 
     def run(self, plugin):
-        self.dialog.set_title("Plugin information: %s" % plugin.id)
+        self.dialog.set_title("Zeobuilder plugin information: %s" % plugin.id)
         self.la_category.set_label(plugin.category)
         self.la_required_modules.set_label(",".join(plugin.required_modules))
         self.la_failed_modules.set_label(",".join(plugin.failed_modules))
@@ -100,7 +100,7 @@ class PluginsDialog(object):
         self.scrolled_window.set_shadow_type(gtk.SHADOW_IN)
 
         self.dialog = gtk.Dialog(
-            "Plugins",
+            "Zeobuilder plugins",
             context.parent_window,
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
         )
