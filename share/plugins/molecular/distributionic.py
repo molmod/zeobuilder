@@ -33,7 +33,7 @@ from zeobuilder.conversion import express_measure
 import zeobuilder.gui.fields as fields
 
 from molmod.units import to_unit
-from molmod.graphs2 import Graph, SubgraphMatchDefinition, MatchGenerator, CriteriaSet
+from molmod.graphs import Graph, SubgraphMatchDefinition, MatchGenerator, CriteriaSet
 from molmod.vectors import angle
 
 import gtk, numpy, pylab, matplotlib
