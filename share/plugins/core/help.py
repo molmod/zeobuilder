@@ -28,12 +28,16 @@ from zeobuilder.actions.collections.menu import MenuInfo
 import gtk
 
 
+class InfoDialog(object):
+    pass
+
 class PluginsDialog(object):
     def __init__(self):
         # fields: succes, name, category, filename
-        self.store = gtk.ListStore(bool, str, str, str)
+        self.store = gtk.ListStore(bool, str, str, str, object)
 
         self.list_view = gtk.TreeView(self.store)
+        self.list_view.get_selection().connect("changed", self.on_selection_changed)
 
         renderer_pixbuf = gtk.CellRendererPixbuf()
         column = gtk.TreeViewColumn()
@@ -66,12 +70,18 @@ class PluginsDialog(object):
             "Plugins",
             context.parent_window,
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
-            (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE),
         )
         self.dialog.vbox.pack_start(self.scrolled_window, True, True)
+        self.info_button = self.dialog.add_button(gtk.STOCK_INFO, gtk.RESPONSE_OK)
+        self.info_button.set_sensitive(False)
+        self.dialog.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
         self.dialog.show_all()
         self.dialog.hide()
 
+        self.info_dialog = InfoDialog()
+
+    def on_selection_changed(self, tree_selection):
+        self.info_button.set_sensitive(tree_selection.count_selected_rows() == 1)
 
     def run(self):
         # empty the list store
@@ -83,10 +93,15 @@ class PluginsDialog(object):
                     plugin.status.startswith("Success"),
                     plugin.id,
                     category,
-                    plugin.module.__file__
+                    plugin.module.__file__,
+                    plugin,
                 ))
         # show the dialog and hide it after the user closed it.
-        self.dialog.run()
+        response = self.dialog.run()
+        while response == gtk.RESPONSE_OK:
+            plugin = self.store.get_value(self.list_view.get_selection().get_selected()[1], 4)
+            self.info_dialog.run(plugin)
+            response = self.dialog.run()
         self.dialog.hide()
 
 

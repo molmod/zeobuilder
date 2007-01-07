@@ -51,7 +51,7 @@ class AboutDialog(BaseDialog):
 
     def response_loop(self):
         response = BaseDialog.response_loop(self)
-        while (response != gtk.RESPONSE_OK) or (response == gtk.RESPONSE_NONE) or (response == gtk.RESPONSE_DELETE_EVENT):
+        while (response != gtk.RESPONSE_CLOSE) or (response == gtk.RESPONSE_NONE) or (response == gtk.RESPONSE_DELETE_EVENT):
             if response == 1:
                 warranty.run()
             elif response == 2:

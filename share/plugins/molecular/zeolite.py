@@ -32,7 +32,7 @@ class CoordinationDialog(object):
     def __init__(self, coordinated_tetra):
         total = sum([len(tetras) for tetras in coordinated_tetra])
         # create the dialog window
-        self.dialog = gtk.Dialog("Si Coordination of selected objects", None, gtk.DIALOG_MODAL, (gtk.STOCK_OK, gtk.RESPONSE_OK))
+        self.dialog = gtk.Dialog("Si Coordination of selected objects", None, gtk.DIALOG_MODAL, (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
         #self.dialog.connect("response", self.on_dialog_response)
         self.dialog.set_resizable(False)
         # create the table
@@ -119,7 +119,7 @@ class TetraCoordination(Immediate):
         result_dialog = CoordinationDialog(coordinated_tetra)
         response = result_dialog.run()
 
-        if response != gtk.RESPONSE_OK:
+        if response != gtk.RESPONSE_CLOSE:
             main = context.application.main
             main.select_nodes(coordinated_tetra[response])
 

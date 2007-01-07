@@ -417,7 +417,6 @@ class NeighborShellsDialog(FieldsDialogSimple):
         self.scrolled_window.set_size_request(400, 300)
         self.scrolled_window.show_all()
 
-        #self.dialog = gtk.Dialog("Neighbor shells", buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
         self.dialog.vbox.pack_start(self.scrolled_window)
 
     def run(self, max_shell_size, rows, graph):
