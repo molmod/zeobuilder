@@ -146,13 +146,14 @@ class PluginsCollection(object):
                 for id, plugin in plugins.iteritems():
                     #print "    %s" % id
                     plugin.module = module
+                    plugin.category = category.plural
                     plugin.id = id
                     if id in d:
-                        plugin.status = "Failed! A plugin with id '%s' already exists in this category." % id
+                        plugin.status = "Failed: A plugin with id '%s' already exists in this category." % id
                     elif not check_required_modules(plugin):
-                        plugin.status = "Failed! Some required modules could not be found: %s" % plugin.failed_modules
+                        plugin.status = "Failed: Some required modules could not be found: %s." % plugin.failed_modules
                     else:
-                        plugin.status = "Success."
+                        plugin.status = "Success"
                         d[id] = plugin
                     all.append(plugin)
 

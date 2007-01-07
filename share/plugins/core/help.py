@@ -24,12 +24,37 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.gui.glade_wrapper import GladeWrapper
 
 import gtk
 
 
-class InfoDialog(object):
-    pass
+class InfoDialog(GladeWrapper):
+    def __init__(self):
+        GladeWrapper.__init__(self, "plugins/core/gui.glade", "di_plugin_info", "dialog")
+        self.init_proxies([
+            "la_category", "la_required_modules", "la_failed_modules",
+            "la_file", "la_status", "vb_authors", "tv_authors",
+            "bu_information", "sw_extra", "tv_extra",
+        ])
+        self.dialog.show_all()
+        self.dialog.hide()
+
+    def run(self, plugin):
+        self.dialog.set_title("Plugin information: %s" % plugin.id)
+        self.la_category.set_label(plugin.category)
+        self.la_required_modules.set_label(",".join(plugin.required_modules))
+        self.la_failed_modules.set_label(",".join(plugin.failed_modules))
+        self.la_failed_modules.set_label(",".join(plugin.failed_modules))
+        self.la_status.set_label(plugin.status)
+        self.la_file.set_label(plugin.module.__file__)
+
+        self.vb_authors.hide()
+        self.sw_extra.hide()
+
+        self.dialog.run()
+        self.dialog.hide()
+
 
 class PluginsDialog(object):
     def __init__(self):
