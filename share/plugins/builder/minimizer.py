@@ -177,16 +177,17 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         self.init_proxies(["la_num_iter", "la_average_length", "progress_bar"])
         self.state_indices = None
 
-    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps):
+    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps, num_minimizers):
         self.la_num_iter.set_text("0")
         self.la_average_length.set_text(express_measure(0.0, "Length"))
         self.progress_bar.set_fraction(0.0)
         self.progress_bar.set_text("0%")
         self.minimize = minimize
         self.involved_frames = involved_frames
-
         self.update_interval = update_interval
         self.update_steps = update_steps
+        self.num_minimizers = num_minimizers
+
         self.last_time = time.time()
         self.last_step = 0
         self.status = None
@@ -200,6 +201,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         del self.update_steps
         del self.last_time
         del self.last_step
+        del self.num_minimizers
         del self.status
 
         return result
@@ -220,7 +222,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
     def update_gui(self):
         if self.status is not None:
             self.la_num_iter.set_text("%i" % self.status.step)
-            self.la_average_length.set_text(express_measure(math.sqrt(self.status.value), "Length"))
+            self.la_average_length.set_text(express_measure(math.sqrt(self.status.value/self.num_minimizers), "Length"))
             self.progress_bar.set_text("%i%%" % int(self.status.progress*100))
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
@@ -387,7 +389,8 @@ class MinimizeDistances(ImmediateWithMemory):
             self.parameters.auto_close_report_dialog,
             involved_frames,
             self.parameters.update_interval,
-            self.parameters.update_steps
+            self.parameters.update_steps,
+            len(minimizers),
         )
         if result != gtk.RESPONSE_OK:
             for frame, transformation in old_transformations:
