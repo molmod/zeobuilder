@@ -76,6 +76,7 @@ class PluginsDialog(object):
         self.list_view.append_column(column)
 
         column = gtk.TreeViewColumn("Name", gtk.CellRendererText(), text=1)
+        column.set_sort_column_id(1)
         self.list_view.append_column(column)
 
         column = gtk.TreeViewColumn("Category", gtk.CellRendererText(), text=2)
@@ -121,6 +122,7 @@ class PluginsDialog(object):
                     plugin.module.__file__,
                     plugin,
                 ))
+        self.store.set_sort_column_id(1, gtk.SORT_ASCENDING)
         # show the dialog and hide it after the user closed it.
         response = self.dialog.run()
         while response == gtk.RESPONSE_OK:
