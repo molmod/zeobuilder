@@ -131,9 +131,11 @@ class DumpXYZ(DumpFilter):
 
 load_filters = {
     "xyz": LoadXYZ(),
+    "geom": LoadXYZ(),
 }
 
 dump_filters = {
     "xyz": DumpXYZ(),
+    "geom": DumpXYZ(),
 }
 
