@@ -105,6 +105,7 @@ class PluginsDialog(object):
             gtk.DIALOG_MODAL | gtk.DIALOG_DESTROY_WITH_PARENT,
         )
         self.dialog.vbox.pack_start(self.scrolled_window, True, True)
+        self.dialog.vbox.show_all()
         self.info_button = self.dialog.add_button(gtk.STOCK_INFO, gtk.RESPONSE_OK)
         self.info_button.set_sensitive(False)
         self.dialog.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
