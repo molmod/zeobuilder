@@ -32,6 +32,7 @@ from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
@@ -41,6 +42,7 @@ import numpy
 
 class Point(GLGeometricBase, ColorMixin):
     info = ModelObjectInfo("plugins/core/point.svg")
+    authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
         GLGeometricBase.initnonstate(self, Translation)
@@ -161,6 +163,7 @@ class Point(GLGeometricBase, ColorMixin):
 class AddPoint(AddBase):
     description = "Add point"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Point", image_name="plugins/core/point.svg", order=(0, 4, 1, 0, 0, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -173,6 +176,7 @@ class AddPoint(AddBase):
 class CalculateAverage(Immediate):
     description = "Add point at average"
     menu_info = MenuInfo("default/_Object:tools/_Add:special", "_Point at average", order=(0, 4, 1, 0, 2, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

@@ -25,6 +25,7 @@ from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 import gtk
 
@@ -35,6 +36,7 @@ class ViewReset(Immediate):
     description = "Reset view"
     menu_info = MenuInfo("default/_View:viewer", "_Reset viewer", order=(0, 2, 0, 0))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -55,6 +57,7 @@ class ViewerConfiguration(Immediate):
     description = "Edit viewer configuration"
     menu_info = MenuInfo("default/_View:viewer", "_Configure viewer", order=(0, 2, 0, 1))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     viewer_configuration = FieldsDialogSimple(
         "Viewer configuration",
@@ -121,6 +124,7 @@ class RendererConfiguration(Immediate):
     description = "Edit renderer configuration"
     menu_info = MenuInfo("default/_View:viewer", "_Configure renderer", order=(0, 2, 0, 2))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     renderer_configuration = FieldsDialogSimple(
         "Renderer configuration",

@@ -35,6 +35,7 @@ from zeobuilder.gui.fields_dialogs import FieldsDialogSimple, DialogFieldInfo
 from zeobuilder.zml import dump_to_file, load_from_file
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
@@ -166,6 +167,7 @@ def yield_all_positions(l):
 
 class Universe(GLPeriodicContainer, FrameAxes):
     info = ModelObjectInfo("plugins/core/universe.svg")
+    authors = [authors.toon_verstraelen]
     clip_margin = 0.1
 
     #
@@ -472,6 +474,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
 class UnitCellToCluster(ImmediateWithMemory):
     description = "Convert the unit cell to a cluster"
     menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_To cluster", order=(0, 4, 1, 4, 0, 0))
+    authors = [authors.toon_verstraelen]
     store_last_parameters = False
 
     parameters_dialog = FieldsDialogSimple(
@@ -641,6 +644,7 @@ class UnitCellToCluster(ImmediateWithMemory):
 class SuperCell(ImmediateWithMemory):
     description = "Convert the unit cell to larger unit cell"
     menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Super cell", order=(0, 4, 1, 4, 0, 1))
+    authors = [authors.toon_verstraelen]
     store_last_parameters = False
 
     parameters_dialog = FieldsDialogSimple(
@@ -808,6 +812,7 @@ class AddPeriodicities(Immediate):
     description = "Wraps the universe in a unit cell"
     menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Add periodicities", order=(0, 4, 1, 4, 0, 2))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

@@ -29,6 +29,7 @@ from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
@@ -39,6 +40,7 @@ import numpy
 
 class Sphere(GLGeometricBase, ColorMixin):
     info = ModelObjectInfo("plugins/core/sphere.svg")
+    authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
         GLGeometricBase.initnonstate(self, Translation)
@@ -107,6 +109,7 @@ class Sphere(GLGeometricBase, ColorMixin):
 class AddSphere(AddBase):
     description = "Add sphere"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Sphere", image_name="plugins/core/sphere.svg", order=(0, 4, 1, 0, 0, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

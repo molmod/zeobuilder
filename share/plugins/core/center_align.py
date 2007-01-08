@@ -28,6 +28,7 @@ from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import calculate_center
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 from molmod.transformations import Translation, Rotation, Complete
 
@@ -39,6 +40,7 @@ import copy, math
 class DefineCenter(CenterAlignBase):
     description = "Define center"
     menu_info = MenuInfo("default/_Object:tools/_Transform:center", "_Define center", order=(0, 4, 1, 2, 2, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -63,6 +65,7 @@ class DefineCenter(CenterAlignBase):
 class Align(CenterAlignBase):
     description = "Align to parent"
     menu_info = MenuInfo("default/_Object:tools/_Transform:align", "_Align", order=(0, 4, 1, 2, 3, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -87,6 +90,7 @@ class Align(CenterAlignBase):
 class DefineCenterAndAlign(CenterAlignBase):
     description = "Define as center and align to parent"
     menu_info = MenuInfo("default/_Object:tools/_Transform:centeralign", "De_fine center and align", order=(0, 4, 1, 2, 4, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -109,6 +113,7 @@ class DefineCenterAndAlign(CenterAlignBase):
 class CenterToChildren(CenterAlignBase):
     description = "Center to children"
     menu_info = MenuInfo("default/_Object:tools/_Transform:center", "Center to c_hildren", order=(0, 4, 1, 2, 2, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -132,6 +137,7 @@ class CenterToChildren(CenterAlignBase):
 class AlignUnitCell(Immediate):
     description = "Align unit cell"
     menu_info = MenuInfo("default/_Object:tools/_Transform:align", "_Align unit cell", order=(0, 4, 1, 2, 3, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

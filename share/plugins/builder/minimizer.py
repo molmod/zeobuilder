@@ -35,6 +35,7 @@ from zeobuilder.child_process import ChildProcessDialog
 from zeobuilder.conversion import express_measure
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.data import periodic
 from molmod.transformations import Complete, Translation
@@ -53,6 +54,7 @@ __all__ = ["Minimizer"]
 
 class Minimizer(Vector, ColorMixin):
     info = ModelObjectInfo("plugins/builder/minimizer.svg")
+    authors = [authors.toon_verstraelen]
 
     #
     # Properties
@@ -132,6 +134,7 @@ class Minimizer(Vector, ColorMixin):
 class ConnectMinimizer(ConnectBase):
     description = "Connect with minimizer"
     menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Minimizer", image_name="plugins/builder/minimizer.svg", order=(0, 4, 1, 3, 0, 4))
+    authors = [authors.toon_verstraelen]
 
     def new_connector(self, begin, end):
         return Minimizer(targets=[begin, end])
@@ -140,6 +143,7 @@ class ConnectMinimizer(ConnectBase):
 class AutoConnectMinimizers(AutoConnectMixin, Immediate):
     description = "Connect overlapping atoms with minimizers"
     menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Connect overlapping atoms with minimizers", order=(0, 4, 1, 6, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -177,16 +181,17 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         self.init_proxies(["la_num_iter", "la_average_length", "progress_bar"])
         self.state_indices = None
 
-    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps):
+    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps, num_minimizers):
         self.la_num_iter.set_text("0")
         self.la_average_length.set_text(express_measure(0.0, "Length"))
         self.progress_bar.set_fraction(0.0)
         self.progress_bar.set_text("0%")
         self.minimize = minimize
         self.involved_frames = involved_frames
-
         self.update_interval = update_interval
         self.update_steps = update_steps
+        self.num_minimizers = num_minimizers
+
         self.last_time = time.time()
         self.last_step = 0
         self.status = None
@@ -200,6 +205,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         del self.update_steps
         del self.last_time
         del self.last_step
+        del self.num_minimizers
         del self.status
 
         return result
@@ -220,7 +226,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
     def update_gui(self):
         if self.status is not None:
             self.la_num_iter.set_text("%i" % self.status.step)
-            self.la_average_length.set_text(express_measure(math.sqrt(self.status.value), "Length"))
+            self.la_average_length.set_text(express_measure(math.sqrt(self.status.value/self.num_minimizers), "Length"))
             self.progress_bar.set_text("%i%%" % int(self.status.progress*100))
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
@@ -273,11 +279,13 @@ def get_minimizer_problem(cache):
             result.frames.add(frame)
     result.frames = list(result.frames)
     return result
+get_minimizer_problem.authors=[authors.toon_verstraelen]
 
 
 class MinimizeDistances(ImmediateWithMemory):
     description = "Minimize the minimizer's lengths"
     menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Minimize selected distances", order=(0, 4, 1, 6, 0, 1))
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Minimization parameters",
@@ -387,7 +395,8 @@ class MinimizeDistances(ImmediateWithMemory):
             self.parameters.auto_close_report_dialog,
             involved_frames,
             self.parameters.update_interval,
-            self.parameters.update_steps
+            self.parameters.update_steps,
+            len(minimizers),
         )
         if result != gtk.RESPONSE_OK:
             for frame, transformation in old_transformations:
@@ -404,6 +413,7 @@ class MinimizeDistances(ImmediateWithMemory):
 class MergeAtomsConnectedWithMinimizer(Immediate):
     description = "Merge atoms connected by minimizer"
     menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Merge atoms connected by minimizer", order=(0, 4, 1, 6, 0, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

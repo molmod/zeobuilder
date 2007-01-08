@@ -27,6 +27,7 @@ from zeobuilder.nodes.glmixin import GLMixin, GLTransformationMixin
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.reference import Reference
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 
 class MoveObjects(ImmediateWithMemory):
@@ -49,6 +50,7 @@ class MoveObjects(ImmediateWithMemory):
 class Move3DObjects(MoveObjects):
     description = "Drag 'n' drop transformations"
     drag_info = DragInfo(order=0)
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection(parameters=None):
@@ -75,6 +77,7 @@ class Move3DObjects(MoveObjects):
 class MoveNon3DObjects(MoveObjects):
     description = "Drag 'n' drop objects"
     drag_info = DragInfo(order=1)
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         node = context.application.cache.node
@@ -86,6 +89,7 @@ class DropTarget(ImmediateWithMemory):
     description = "Drop target"
     drag_info = DragInfo(order=2)
     store_last_parameters = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection(parameters=None):

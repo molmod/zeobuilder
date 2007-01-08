@@ -29,6 +29,7 @@ from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.transformations import Complete
 
@@ -39,6 +40,7 @@ import math, numpy
 
 class Arrow(Vector, ColorMixin):
     info = ModelObjectInfo("plugins/core/arrow.svg")
+    authors = [authors.toon_verstraelen]
 
     #
     # Properties
@@ -203,6 +205,7 @@ class Arrow(Vector, ColorMixin):
 class ConnectArrow(ConnectBase):
     description = "Connect with arrow"
     menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Arrow", image_name="plugins/core/arrow.svg", order=(0, 4, 1, 3, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     def new_connector(self, begin, end):
         return Arrow(targets=[begin, end])

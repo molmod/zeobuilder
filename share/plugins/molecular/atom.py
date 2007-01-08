@@ -33,6 +33,7 @@ from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.undefined import Undefined
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
@@ -50,6 +51,7 @@ import math
 
 class Atom(GLGeometricBase, UserColorMixin):
     info = ModelObjectInfo("plugins/molecular/atom.svg")
+    authors = [authors.toon_verstraelen]
 
     #
     # State
@@ -172,6 +174,7 @@ class Atom(GLGeometricBase, UserColorMixin):
 class AddAtom(AddBase):
     description = "Add atom"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Atom", image_name="plugins/molecular/atom.svg", order=(0, 4, 1, 0, 0, 4))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -184,6 +187,7 @@ class AddAtom(AddBase):
 class MergeOverlappingAtoms(Immediate):
     description = "Merge overlapping atoms"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Merge overlapping atoms", order=(0, 4, 1, 5, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -265,6 +269,7 @@ class MergeOverlappingAtoms(Immediate):
 class RearrangeAtoms(Immediate):
     description = "Rearrange atoms"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Rearrange Atoms", order=(0, 4, 1, 5, 0, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -310,6 +315,7 @@ class RearrangeAtoms(Immediate):
 class MoldenLabels(Immediate):
     description = "Label the atoms in molden style."
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Molden labels", order=(0, 4, 1, 5, 0, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

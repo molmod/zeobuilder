@@ -33,6 +33,7 @@ from zeobuilder.expressions import Expression
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 import copy, gtk
 
@@ -44,6 +45,7 @@ import copy, gtk
 class SelectNone(Immediate):
     description = "Select none"
     menu_info = MenuInfo("default/_Select:default", "_None", order=(0, 3, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -59,6 +61,7 @@ class SelectNone(Immediate):
 class SelectTargets(Immediate):
     description = "Select targets"
     menu_info = MenuInfo("default/_Select:default", "_Targets", order=(0, 3, 0, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -84,6 +87,7 @@ class SelectTargets(Immediate):
 class SelectParents(Immediate):
     description = "Select parents"
     menu_info = MenuInfo("default/_Select:default", "_Parents", 65365, False, order=(0, 3, 0, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -107,6 +111,7 @@ class SelectParents(Immediate):
 class SelectChildren(Immediate):
     description = "Select children"
     menu_info = MenuInfo("default/_Select:default", "_Children", 65366, False, order=(0, 3, 0, 3))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -124,6 +129,7 @@ class SelectChildren(Immediate):
 class SelectChildrenByExpression(ImmediateWithMemory):
     description = "Select children by expression"
     menu_info = MenuInfo("default/_Select:default", "Children by _expression", order=(0, 3, 0, 4))
+    authors = [authors.toon_verstraelen]
 
     SELECT_PLAIN = 0
     SELECT_RECURSIVE = 1
@@ -211,6 +217,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
 
 class SavedSelection(ReferentBase):
     info = ModelObjectInfo("plugins/core/saved_selection.svg", "RestoreSavedSelection")
+    authors = [authors.toon_verstraelen]
 
     def create_references(self):
         return []
@@ -235,6 +242,7 @@ class SavedSelection(ReferentBase):
 class SaveSelection(Immediate):
     description = "Save selection"
     menu_info = MenuInfo("default/_Select:saved", "_Save selection", image_name="plugins/core/saved_selection.svg", order=(0, 3, 1, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -255,6 +263,7 @@ class SaveSelection(Immediate):
 class RestoreSavedSelection(Immediate):
     description = "Restore saved selection"
     menu_info = MenuInfo("default/_Select:saved", "_Restore saved selection", order=(0, 3, 1, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -284,6 +293,7 @@ class RestoreSavedSelection(Immediate):
 class EditSelectionFilter(Immediate):
     description = "Edit selection filter"
     menu_info = MenuInfo("default/_Select:preferences", "_Selection filter", order=(0, 3, 2, 0))
+    authors = [authors.toon_verstraelen]
 
     selection_filter = FieldsDialogSimple(
         "Selection filter",
@@ -322,6 +332,7 @@ class EditSelectionFilter(Immediate):
 class PickSelection(Interactive):
     description = "Pick a selection"
     interactive_info = InteractiveInfo("plugins/core/selection_picker.svg", mouse=True)
+    authors = [authors.toon_verstraelen]
 
     def button_press(self, drawing_area, event):
         self.beginx = event.x
@@ -393,6 +404,7 @@ interactive_groups = {
         image_name="plugins/core/selection_picker.svg",
         description="Selection Picker",
         initial_mask=0,
-        order=0
+        order=0,
+        authors=[authors.toon_verstraelen],
     )
 }

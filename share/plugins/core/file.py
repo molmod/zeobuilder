@@ -25,6 +25,7 @@ from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.models import Model
 from zeobuilder.filters import run_file_dialog
+import zeobuilder.authors as authors
 
 import gtk, os, copy
 
@@ -33,6 +34,7 @@ class FileNew(Immediate):
     description = "Create a new file"
     menu_info = MenuInfo("default/_File:default", "_New", ord("n"), image_name=gtk.STOCK_NEW, order=(0, 0, 0, 0))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         Universe = context.application.plugins.get_node("Universe")
@@ -46,6 +48,7 @@ class FileOpen(Immediate):
     description = "Open a file"
     menu_info = MenuInfo("default/_File:default", "_Open", ord("o"), image_name=gtk.STOCK_OPEN, order=(0, 0, 0, 1))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         context.application.main.file_open()
@@ -55,6 +58,7 @@ class FileSave(Immediate):
     description = "Save the current file"
     menu_info = MenuInfo("default/_File:default", "_Save", ord("s"), image_name=gtk.STOCK_SAVE, order=(0, 0, 0, 2))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         context.application.main.file_save()
@@ -64,6 +68,7 @@ class FileSaveAs(Immediate):
     description = "Save the current file under a new name"
     menu_info = MenuInfo("default/_File:default", "Save _as", ord("s"), True, True, image_name=gtk.STOCK_SAVE_AS, order=(0, 0, 0, 3))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         context.application.main.file_save_as()
@@ -73,6 +78,7 @@ class FileImport(Immediate):
     description = "Import a file in the current model"
     menu_info = MenuInfo("default/_File:impexp", "_Import", ord("i"), order=(0, 0, 1, 0))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         def file_import(filename):
@@ -109,6 +115,7 @@ class FileExport(Immediate):
     description = "Export the selection to a file"
     menu_info = MenuInfo("default/_File:impexp", "_Export", ord("e"), order=(0, 0, 1, 1))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -128,6 +135,7 @@ class FileQuit(Immediate):
     description = "Quit zeobuilder"
     menu_info = MenuInfo("default/_File:quit", "_Quit", ord("q"), image_name=gtk.STOCK_QUIT, order=(0, 0, 2, 0))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         context.application.main.file_quit()

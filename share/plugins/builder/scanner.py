@@ -37,6 +37,7 @@ from zeobuilder.undefined import Undefined
 from zeobuilder.child_process import ChildProcessDialog
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from conscan import Geometry, ProgressMessage, Connection
 
@@ -50,6 +51,7 @@ import weakref, copy
 
 class ConscanResults(ReferentBase):
     info = ModelObjectInfo("plugins/builder/conscan_results.svg", "ShowConscanResultsWindow")
+    authors = [authors.toon_verstraelen]
 
     #
     # State
@@ -309,6 +311,7 @@ class ConscanResultsWindow(GladeWrapper):
 class ShowConscanResultsWindow(Immediate):
     description = "Show the selected connection scanner results in a window"
     menu_info = MenuInfo("default/_Object:tools/_Builder:conscan", "Show scan results", order=(0, 4, 1, 6, 1, 1))
+    authors = [authors.toon_verstraelen]
 
     conscan_results_window = ConscanResultsWindow()
 
@@ -424,6 +427,7 @@ class ConnectionPointDescription(fields.composed.ComposedInTable):
 class ScanForConnections(ImmediateWithMemory):
     description = "Scan for connections"
     menu_info = MenuInfo("default/_Object:tools/_Builder:conscan", "_Scan for connections", order=(0, 4, 1, 6, 1, 0))
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Connection scanner parameters",

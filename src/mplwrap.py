@@ -20,20 +20,23 @@
 # --
 
 
-import os, sys
 
-class Context(object):
-    def __init__(self):
-        self.title = "Zeobuilder"
-        self.version = "0.1.0"
-        self.user_dir = os.path.expanduser("~/.zeobuilder")
-        if not os.path.isdir(self.user_dir):
-            os.mkdir(self.user_dir)
-        self.share_dirs = [
-            os.path.join(sys.prefix, "share/zeobuilder"),
-            self.user_dir
-        ]
-        self.config_filename = os.path.join(self.user_dir, "settings")
+from matplotlib import rcParams
 
+rcParams["backend"] = "GTKAgg"
+rcParams["numerix"] = "numpy"
+rcParams["font.size"] = 9
+rcParams["legend.fontsize"] = 8
+rcParams["axes.titlesize"] = 9
+rcParams["axes.labelsize"] = 9
+rcParams["xtick.labelsize"] = 9
+rcParams["ytick.labelsize"] = 9
+rcParams["figure.facecolor"] = "w"
 
-context = Context()
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
+
+# UGLY HACK: TODO report this as a bug to the matplotlib project
+import gtk
+from zeobuilder.gui import load_image
+gtk.window_set_default_icon(load_image("zeobuilder.svg"))
+# END UGLY HACK

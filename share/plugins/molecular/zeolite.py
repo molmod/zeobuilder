@@ -24,6 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
+import zeobuilder.authors as authors
 
 import gtk
 
@@ -32,7 +33,7 @@ class CoordinationDialog(object):
     def __init__(self, coordinated_tetra):
         total = sum([len(tetras) for tetras in coordinated_tetra])
         # create the dialog window
-        self.dialog = gtk.Dialog("Si Coordination of selected objects", None, gtk.DIALOG_MODAL, (gtk.STOCK_OK, gtk.RESPONSE_OK))
+        self.dialog = gtk.Dialog("Si Coordination of selected objects", None, gtk.DIALOG_MODAL, (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
         #self.dialog.connect("response", self.on_dialog_response)
         self.dialog.set_resizable(False)
         # create the table
@@ -81,6 +82,7 @@ class CoordinationDialog(object):
 class TetraCoordination(Immediate):
     description = "T-site coordination"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_T-site coordination", order=(0, 4, 1, 5, 2, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -119,7 +121,7 @@ class TetraCoordination(Immediate):
         result_dialog = CoordinationDialog(coordinated_tetra)
         response = result_dialog.run()
 
-        if response != gtk.RESPONSE_OK:
+        if response != gtk.RESPONSE_CLOSE:
             main = context.application.main
             main.select_nodes(coordinated_tetra[response])
 
