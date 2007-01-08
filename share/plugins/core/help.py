@@ -33,13 +33,13 @@ import gtk
 class InfoDialog(GladeWrapper):
     def __init__(self):
         GladeWrapper.__init__(self, "plugins/core/gui.glade", "di_plugin_info", "dialog")
+        self.dialog.hide()
         self.init_proxies([
             "la_category", "la_required_modules", "la_failed_modules",
             "la_file", "la_status", "vb_authors", "tv_authors",
             "bu_information", "sw_extra", "tv_extra",
         ])
         self.author_store = authors.init_widgets(self.tv_authors, self.bu_information)
-        self.dialog.hide()
 
     def run(self, plugin):
         self.dialog.set_title("Zeobuilder plugin information: %s" % plugin.id)
@@ -108,7 +108,6 @@ class PluginsDialog(object):
         self.info_button = self.dialog.add_button(gtk.STOCK_INFO, gtk.RESPONSE_OK)
         self.info_button.set_sensitive(False)
         self.dialog.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
-        self.dialog.show_all()
         self.dialog.hide()
 
         self.info_dialog = InfoDialog()
