@@ -82,19 +82,13 @@ class Model(gobject.GObject):
             self.remove_from_root(victim)
             victim.unparent()
 
-    def set_universe(self, universe):
-        self.universe = universe
-
-    def unset_universe(self):
-        self.universe = None
-
     # file functions
 
     def file_new(self, universe, folder):
         self.file_close()
         self.add_to_root(universe)
         self.add_to_root(folder)
-        self.set_universe(universe)
+        self.universe = universe
         self.folder = folder
         self.emit("file-new")
 
@@ -131,7 +125,7 @@ class Model(gobject.GObject):
         # put the nodes in the tree
         self.add_to_root(universe)
         self.add_to_root(folder)
-        self.set_universe(universe)
+        self.universe = universe
         self.folder = folder
         self.filename = filename
         if not os.path.isabs(self.filename):
@@ -176,7 +170,7 @@ class Model(gobject.GObject):
         self.emit("file-saved")
 
     def file_close(self):
-        if self.universe is not None: self.unset_universe()
+        self.universe = None
         self.folder = None
         self.filename = None
         self.clear()

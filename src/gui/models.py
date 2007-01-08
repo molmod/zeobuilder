@@ -23,6 +23,7 @@
 from zeobuilder import context
 from zeobuilder.nodes.node import Node
 from zeobuilder.nodes.parent_mixin import ParentMixin
+from zeobuilder.nodes.glmixin import GLMixin
 from zeobuilder.gui.simple import ok_error
 from zeobuilder.models import Model as ModelBase
 
@@ -48,17 +49,13 @@ class Model(ModelBase, gtk.TreeStore):
             parent_iter = node.parent.iter
             index = node.parent.children.index(node)
         node.iter = self.insert(parent_iter, index, [node])
+        if isinstance(node, GLMixin): # only the gui model requires gl
+            node.initialize_gl()
 
     def remove_node(self, node):
         #print "Removing node %s (%i)" % (node.get_name(), id(node))
         self.remove(node.iter)
+        if isinstance(node, GLMixin): # only the gui model requires gl
+            node.cleanup_gl()
         del node.iter
-
-    def set_universe(self, universe):
-        ModelBase.set_universe(self, universe)
-        self.universe.request_gl()
-
-    def unset_universe(self):
-        self.universe.drop_gl()
-        ModelBase.unset_universe(self)
 

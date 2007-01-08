@@ -52,7 +52,7 @@ class GLMixin(gobject.GObject):
     #
 
     def initnonstate(self):
-        self.gl_active = 0
+        self.gl_active = False
         self.connect("on-selected", self.on_select_changed)
         self.connect("on-deselected", self.on_select_changed)
 
@@ -88,21 +88,8 @@ class GLMixin(gobject.GObject):
     # OpenGL
     #
 
-    def request_gl(self):
-        self.gl_active += 1
-        ##print "Request GL (active=%i): %s" % (self.gl_active, self.get_name())
-        if self.gl_active == 1:
-            self.initialize_gl()
-
-    def drop_gl(self):
-        self.gl_active -= 1
-        ##print "Release GL (active=%i): %s" % (self.gl_active, self.get_name())
-        if self.gl_active == 0:
-            self.cleanup_gl()
-        elif self.gl_active < 0:
-            raise GLMixinError("request_gl and drop_gl must be called pairwise.")
-
     def initialize_gl(self):
+        self.gl_active = True
         self.bounding_box = BoundingBox()
         self.draw_list = glGenLists(3)
         self.boundingbox_list = self.draw_list + 1
@@ -118,6 +105,7 @@ class GLMixin(gobject.GObject):
             self.parent.invalidate_all_lists()
 
     def cleanup_gl(self):
+        self.gl_active = False
         del context.application.main.drawing_area.scene.gl_names[self.draw_list]
         ##print "Deleting lists (%i, %i, %i): %s" % (self.draw_list, self.boundingbox_list, self.total_list, self.get_name())
         glDeleteLists(self.draw_list, 3)
@@ -137,7 +125,7 @@ class GLMixin(gobject.GObject):
     #
 
     def invalidate_draw_list(self):
-        if self.gl_active > 0 and self.draw_list_valid:
+        if self.gl_active and self.draw_list_valid:
             self.draw_list_valid = False
             context.application.main.drawing_area.queue_draw()
             context.application.main.drawing_area.scene.add_revalidation(self.revalidate_draw_list)
@@ -148,7 +136,7 @@ class GLMixin(gobject.GObject):
 
 
     def invalidate_boundingbox_list(self):
-        if self.gl_active > 0 and self.boundingbox_list_valid:
+        if self.gl_active and self.boundingbox_list_valid:
             self.boundingbox_list_valid = False
             context.application.main.drawing_area.queue_draw()
             context.application.main.drawing_area.scene.add_revalidation(self.revalidate_boundingbox_list)
@@ -158,7 +146,7 @@ class GLMixin(gobject.GObject):
                 self.parent.invalidate_boundingbox_list()
 
     def invalidate_total_list(self):
-        if self.gl_active > 0 and self.total_list_valid:
+        if self.gl_active and self.total_list_valid:
             self.total_list_valid = False
             context.application.main.drawing_area.queue_draw()
             context.application.main.drawing_area.scene.add_revalidation(self.revalidate_total_list)
@@ -177,7 +165,7 @@ class GLMixin(gobject.GObject):
     #
 
     def revalidate_draw_list(self):
-        if self.gl_active > 0:
+        if self.gl_active:
             ##print "Compiling draw list (%i): %s" % (self.draw_list, self.get_name())
             glNewList(self.draw_list, GL_COMPILE)
             self.prepare_draw()
@@ -187,7 +175,7 @@ class GLMixin(gobject.GObject):
             self.draw_list_valid = True
 
     def revalidate_boundingbox_list(self):
-        if self.gl_active > 0:
+        if self.gl_active:
             ##print "Compiling selection list (%i): %s" % (self.boundingbox_list, self.get_name())
             glNewList(self.boundingbox_list, GL_COMPILE)
             self.revalidate_bounding_box()
@@ -199,7 +187,7 @@ class GLMixin(gobject.GObject):
         self.bounding_box.clear()
 
     def revalidate_total_list(self):
-        if self.gl_active > 0:
+        if self.gl_active:
             ##print "Compiling total list (%i): %s" % (self.total_list, self.get_name())
             glNewList(self.total_list, GL_COMPILE)
             if self.visible:
@@ -349,7 +337,7 @@ class GLTransformationMixin(GLMixin):
 
     def invalidate_transformation_list(self):
         ##print "CALL %s: on-transformation-list-invalidated" % self.get_name()
-        if self.gl_active > 0 and self.transformation_list_valid:
+        if self.gl_active and self.transformation_list_valid:
             self.transformation_list_valid = False
             context.application.main.drawing_area.queue_draw()
             context.application.main.drawing_area.scene.add_revalidation(self.revalidate_transformation_list)
@@ -380,7 +368,7 @@ class GLTransformationMixin(GLMixin):
     #
 
     def revalidate_transformation_list(self):
-        if self.gl_active > 0:
+        if self.gl_active:
             ##print "Compiling transformation list (%i): %s" % (self.transformation_list,  self.get_name())
             glNewList(self.transformation_list, GL_COMPILE)
             glPushMatrix()
@@ -389,7 +377,7 @@ class GLTransformationMixin(GLMixin):
             self.transformation_list_valid = True
 
     def revalidate_total_list(self):
-        if self.gl_active > 0:
+        if self.gl_active:
             ##print "Compiling total list (%i): %s" % (self.total_list, self.get_name())
             glNewList(self.total_list, GL_COMPILE)
             if self.visible:
