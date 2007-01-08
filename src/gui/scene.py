@@ -42,6 +42,9 @@ import math
 __all__ = ["Scene"]
 
 
+glutInit([])
+
+
 class Scene(object):
     select_buffer_size = 4096
 
@@ -121,7 +124,6 @@ class Scene(object):
         self.clip_planes = {}
 
     def initialize(self): # gl_context sensitive method
-        glutInit([])
         glMaterial(GL_FRONT, GL_SPECULAR, [0.9, 0.9, 0.9, 1.0])
         glMaterial(GL_FRONT, GL_SHININESS, 70.0)
         glLight(GL_LIGHT0, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
