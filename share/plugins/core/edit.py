@@ -223,9 +223,7 @@ class Paste(Immediate):
             if string_representation is None:
                 return
             nodes = load_from_string(string_representation)
-            for node in nodes:
-                if parent.check_add(node.__class__):
-                    primitive.Add(node, parent)
+            primitive.AddMany([node for node in nodes if parent.check_add(node.__class__)], parent)
 
         clipboard = gtk.clipboard_get()
         clipboard.request_contents("ZML", load_func)

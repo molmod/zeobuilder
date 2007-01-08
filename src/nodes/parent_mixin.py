@@ -79,6 +79,16 @@ class ContainerMixin(ParentMixin):
         if self.model is not None:
             model_object.set_model(self.model)
 
+    def add_many(self, model_objects, index=-1):
+        if index == -1: index = len(self.children)
+        #print "ADD MANY TO " + self.name + ":", [model_object.name for model_object in model_objects], index
+        for model_object in model_objects[::-1]:
+            self.children.insert(index, model_object)
+            model_object.parent = self
+        if self.model is not None:
+            for model_object in model_objects:
+                model_object.set_model(self.model)
+
     def remove(self, model_object):
         #print "REMOVE FROM " + self.name + ":", model_object.name
         if self.model is not None:
