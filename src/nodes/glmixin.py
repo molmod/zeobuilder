@@ -89,6 +89,7 @@ class GLMixin(gobject.GObject):
     #
 
     def initialize_gl(self):
+        assert not self.gl_active
         self.gl_active = True
         self.bounding_box = BoundingBox()
         self.draw_list = glGenLists(3)
@@ -105,6 +106,7 @@ class GLMixin(gobject.GObject):
             self.parent.invalidate_all_lists()
 
     def cleanup_gl(self):
+        assert self.gl_active
         self.gl_active = False
         del context.application.main.drawing_area.scene.gl_names[self.draw_list]
         ##print "Deleting lists (%i, %i, %i): %s" % (self.draw_list, self.boundingbox_list, self.total_list, self.get_name())
