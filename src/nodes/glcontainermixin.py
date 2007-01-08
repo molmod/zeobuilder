@@ -36,24 +36,16 @@ class GLContainerMixin(ContainerMixin):
     # Tree
     #
 
-    def request_gl(self):
-        for child in self.children:
-            child.request_gl()
-
-    def drop_gl(self):
-        for child in self.children:
-            child.drop_gl()
-
     def add(self, model_object, index=-1):
-        if self.gl_active > 0:
-            model_object.request_gl()
         ContainerMixin.add(self, model_object, index)
+        self.invalidate_all_lists()
+
+    def add_many(self, model_objects, index=-1):
+        ContainerMixin.add_many(self, model_objects, index)
         self.invalidate_all_lists()
 
     def remove(self, model_object):
         ContainerMixin.remove(self, model_object)
-        if self.gl_active > 0:
-            model_object.drop_gl()
         self.invalidate_all_lists()
 
     @classmethod

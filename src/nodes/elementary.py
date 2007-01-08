@@ -113,14 +113,6 @@ class GLContainerBase(ModelObject, GLMixin, GLContainerMixin):
         GLContainerMixin.unset_model(self)
         ModelObject.unset_model(self)
 
-    def request_gl(self):
-        GLMixin.request_gl(self)
-        GLContainerMixin.request_gl(self)
-
-    def drop_gl(self):
-        GLContainerMixin.drop_gl(self)
-        GLMixin.drop_gl(self)
-
     def delete_referents(self):
         GLContainerMixin.delete_referents(self)
         ModelObject.delete_referents(self)
@@ -172,14 +164,6 @@ class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
     def unset_model(self):
         GLContainerMixin.unset_model(self)
         ModelObject.unset_model(self)
-
-    def request_gl(self):
-        GLTransformationMixin.request_gl(self)
-        GLContainerMixin.request_gl(self)
-
-    def drop_gl(self):
-        GLTransformationMixin.drop_gl(self)
-        GLContainerMixin.drop_gl(self)
 
     def delete_referents(self):
         GLContainerMixin.delete_referents(self)

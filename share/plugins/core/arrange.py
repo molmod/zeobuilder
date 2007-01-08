@@ -29,6 +29,7 @@ from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.vector import Vector
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 import copy
 
@@ -63,6 +64,7 @@ class GroupBase(Immediate):
 class GroupInFolder(GroupBase):
     description = "Frame"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Group in folder", order=(0, 4, 1, 1, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -77,6 +79,7 @@ class GroupInFolder(GroupBase):
 class Frame(GroupBase):
     description = "Frame"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Frame", order=(0, 4, 1, 1, 0, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -119,6 +122,7 @@ class UngroupBase(Immediate):
 class Ungroup(UngroupBase):
     description = "Ungroup"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Ungroup", order=(0, 4, 1, 1, 0, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -137,6 +141,7 @@ class Ungroup(UngroupBase):
 class UnframeRelative(UngroupBase):
     description = "Unframe (relative)"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Unframe relative", order=(0, 4, 1, 1, 0, 3))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -155,6 +160,7 @@ class UnframeRelative(UngroupBase):
 class UnframeAbsolute(UnframeRelative):
     description = "Unframe (absolute)"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Unframe absolute", order=(0, 4, 1, 1, 0, 4))
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         cache = context.application.cache
@@ -165,7 +171,7 @@ class UnframeAbsolute(UnframeRelative):
         UnframeRelative.do(self)
 
 
-class OneLevelHigher(Immediate):
+class OneLevelHigherBase(Immediate):
     @staticmethod
     def analyze_selection():
         # A) calling ancestor
@@ -190,14 +196,15 @@ class OneLevelHigher(Immediate):
             primitive.Move(node, new_parent)
 
 
-class OneLevelHigherRelative(OneLevelHigher):
+class OneLevelHigherRelative(OneLevelHigherBase):
     description = "One level higher (relative)"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:level", "_One level higher (relative)", order=(0, 4, 1, 1, 1, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
         # A) calling ancestor
-        if not OneLevelHigher.analyze_selection(): return False
+        if not OneLevelHigherBase.analyze_selection(): return False
         # B) validating
         if not isinstance(context.application.cache.parent, GLFrameBase): return False
         # C) passed all tests
@@ -207,6 +214,7 @@ class OneLevelHigherRelative(OneLevelHigher):
 class OneLevelHigherAbsolute(OneLevelHigherRelative):
     description = "One level higher (relative)"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:level", "_One level higher (absolute)", order=(0, 4, 1, 1, 1, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -228,6 +236,7 @@ class OneLevelHigherAbsolute(OneLevelHigherRelative):
 class SeparateFrame(Immediate):
     description = "Separate the selected frame"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:single", "_Separate frame", order=(0, 4, 1, 1, 2, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -256,6 +265,7 @@ class SeparateFrame(Immediate):
 class SwapVector(Immediate):
     description = "Swap vector"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:single", "_Swap vector", order=(0, 4, 1, 1, 2, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

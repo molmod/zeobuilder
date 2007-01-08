@@ -31,6 +31,7 @@ from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo, FieldsDialogSimple
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
 
@@ -43,6 +44,7 @@ import math
 
 class Bond(Vector):
     info = ModelObjectInfo("plugins/molecular/bond.svg")
+    authors = [authors.toon_verstraelen]
 
     #
     # State
@@ -212,24 +214,28 @@ class ConnectBond(ConnectBase):
 class ConnectSingleBond(ConnectBond):
     description = "Connect with a single bond"
     menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Single bond", image_name="plugins/molecular/bond1.svg", order=(0, 4, 1, 3, 0, 1))
+    authors = [authors.toon_verstraelen]
     bond_type = BOND_SINGLE
 
 
 class ConnectDoubleBond(ConnectBond):
     description = "Connect with a double bond"
     menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Double bond", image_name="plugins/molecular/bond2.svg", order=(0, 4, 1, 3, 0, 2))
+    authors = [authors.toon_verstraelen]
     bond_type = BOND_DOUBLE
 
 
 class ConnectTripleBond(ConnectBond):
     description = "Connect with a triple bond"
     menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Triple bond", image_name="plugins/molecular/bond3.svg", order=(0, 4, 1, 3, 0, 3))
+    authors = [authors.toon_verstraelen]
     bond_type = BOND_TRIPLE
 
 
 class AutoConnectPhysical(AutoConnectMixin, Immediate):
     description = "Add bonds (database)"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (database)", order=(0, 4, 1, 5, 1, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -258,6 +264,7 @@ class AutoConnectPhysical(AutoConnectMixin, Immediate):
 class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
     description = "Add bonds (parameters)"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (parameters)", order=(0, 4, 1, 5, 1, 1))
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Bond specification",

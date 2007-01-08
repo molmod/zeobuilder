@@ -21,6 +21,7 @@
 
 
 from zeobuilder.database import DatabasePage, database_widgets
+import zeobuilder.authors as authors
 
 from molmod.descriptors import MolecularDescriptorTV1
 
@@ -47,6 +48,7 @@ CREATE TABLE objects (
 class ObjectsDatabasePage(DatabasePage):
     order = 1
     name = "Objects"
+    authors = [authors.toon_verstraelen]
     required_tables = set(["objects",
         MolecularDescriptorTV1.internal_table_name,
         MolecularDescriptorTV1.external_table_name,

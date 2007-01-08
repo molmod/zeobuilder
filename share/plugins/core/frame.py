@@ -26,12 +26,14 @@ from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.elementary import GLFrameBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.helpers import FrameAxes
+import zeobuilder.authors as authors
 
 from molmod.transformations import Complete
 
 
 class Frame(GLFrameBase, FrameAxes):
     info = ModelObjectInfo("plugins/core/frame.svg")
+    authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
         GLFrameBase.initnonstate(self, Complete)
@@ -81,6 +83,7 @@ class Frame(GLFrameBase, FrameAxes):
 class AddFrame(AddBase):
     description = "Add frame"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Frame", image_name="plugins/core/frame.svg", order=(0, 4, 1, 0, 0, 3))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

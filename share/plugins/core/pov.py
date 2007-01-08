@@ -22,11 +22,14 @@
 
 from zeobuilder import context
 from zeobuilder.filters import DumpFilter, FilterError, Indenter
+import zeobuilder.authors as authors
 
 import numpy
 
 
 class DumpPOV(DumpFilter):
+    authors = [authors.toon_verstraelen]
+
     def __init__(self):
         DumpFilter.__init__(self, "Persistence of vision (render engine) (*.pov)")
 

@@ -24,6 +24,7 @@ from zeobuilder.nodes.reference import Reference
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 import gtk
 
@@ -34,6 +35,7 @@ class EditProperties(Immediate):
     description = "Edit Properties"
     menu_info = MenuInfo("default/_Object:basic", "_Properties", ord("e"), image_name=gtk.STOCK_PROPERTIES, order=(0, 4, 0, 2))
     repeatable = False
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

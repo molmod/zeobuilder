@@ -32,13 +32,14 @@ from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.expressions import Expression
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs2 import Graph, MatchDefinitionError, ExactMatchDefinition, RingMatchDefinition, MatchGenerator
+from molmod.graphs import Graph, MatchDefinitionError, ExactMatchDefinition, RingMatchDefinition, MatchGenerator
 from molmod.vectors import random_orthonormal
 
-import numpy, gtk, pylab, matplotlib
+import numpy, gtk
 
 import math, sys, traceback, copy
 
@@ -63,7 +64,7 @@ def yield_bonds(nodes):
                 yield bond
 
 
-def chemical_formula(atoms):
+def chemical_formula(atoms, markup=False):
     atom_counts = {}
     for atom in atoms:
         if atom.number in atom_counts:
@@ -76,7 +77,10 @@ def chemical_formula(atoms):
     items.sort()
     items.reverse()
     for atom_number, count in items:
-        formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
+        if markup:
+            formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
+        else:
+            formula += "%s%i " % (periodic[atom_number].symbol, count)
         total += count
     return total, formula
 
@@ -101,6 +105,7 @@ def create_graph_bonds(selected_nodes):
 class ChemicalFormula(Immediate):
     description = "Show chemical formula"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Chemical Formula", order=(0, 4, 1, 5, 2, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -109,7 +114,7 @@ class ChemicalFormula(Immediate):
         return True
 
     def do(self):
-        total, formula = chemical_formula(yield_atoms(context.application.cache.nodes))
+        total, formula = chemical_formula(yield_atoms(context.application.cache.nodes), True)
         if total > 0:
             answer = "Chemical formula: %s" % formula
             answer += "\nNumber of atoms: %i" % total
@@ -165,6 +170,7 @@ def default_rotation_matrix(inertia_tensor):
 class CenterOfMass(CenterAlignBase):
     description = "Center of mass"
     menu_info = MenuInfo("default/_Object:tools/_Transform:center", "Center of _mass frame", order=(0, 4, 1, 2, 2, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -192,6 +198,7 @@ class CenterOfMass(CenterAlignBase):
 class CenterOfMassAndPrincipalAxes(CenterOfMass):
     description = "Center of mass and principal axes"
     menu_info = MenuInfo("default/_Object:tools/_Transform:centeralign", "Center of mass and _principal axes frame", order=(0, 4, 1, 2, 4, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -223,6 +230,7 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
 class SaturateWithHydrogens(Immediate):
     description = "Saturate with hydrogens"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens", order=(0, 4, 1, 5, 1, 2))
+    authors = [authors.toon_verstraelen]
     opening_angles = {
         # (hybr, numsit): angle
           (2,    1):                  0.0,
@@ -414,7 +422,6 @@ class NeighborShellsDialog(FieldsDialogSimple):
         self.scrolled_window.set_size_request(400, 300)
         self.scrolled_window.show_all()
 
-        #self.dialog = gtk.Dialog("Neighbor shells", buttons=(gtk.STOCK_OK, gtk.RESPONSE_OK))
         self.dialog.vbox.pack_start(self.scrolled_window)
 
     def run(self, max_shell_size, rows, graph):
@@ -511,6 +518,7 @@ neighbor_shells_dialog = NeighborShellsDialog()
 class AnalyzeNieghborShells(Immediate):
     description = "Analyze the neighbor shells"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Neighbor shells", order=(0, 4, 1, 5, 2, 2))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -527,7 +535,7 @@ class AnalyzeNieghborShells(Immediate):
         def yield_rows():
             for index, node in enumerate(graph.nodes):
                 yield [index+1, node.number, node.name, ""] + [
-                    "%i: %s" % chemical_formula(atoms) for atoms in
+                    "%i: %s" % chemical_formula(atoms, True) for atoms in
                     graph.shells[node][1:]
                 ]
 
@@ -543,6 +551,7 @@ def combinations(items, n):
             combination_copy = copy.copy(combination)
             combination_copy.add(selected)
             yield combination_copy
+combinations.authors=[authors.toon_verstraelen]
 
 
 def first(l):
@@ -555,11 +564,13 @@ def first(l):
         return l[0]
     else:
         return None
+first.authors=[authors.toon_verstraelen]
 
 
 class CloneOrder(Immediate):
     description = "Apply the order of the first selection to the second."
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Clone order", order=(0, 4, 1, 5, 0, 3))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -606,8 +617,10 @@ class RingDistributionWindow(GladeWrapper):
         self.init_callbacks(RingDistributionWindow)
         self.init_proxies(["al_image", "cb_filter", "tv_rings"])
 
+        import zeobuilder.mplwrap as mplwrap
+        import pylab
         self.figure = pylab.figure(figsize=(4, 4), dpi=100)
-        self.mpl_widget = matplotlib.backends.backend_gtkagg.FigureCanvasGTKAgg(self.figure)
+        self.mpl_widget = mplwrap.FigureCanvas(self.figure)
         self.mpl_widget.set_size_request(400, 400)
         #self.mpl_widget.set_border_width(6) TODO
         self.al_image.add(self.mpl_widget)
@@ -678,6 +691,7 @@ class RingDistributionWindow(GladeWrapper):
             self.ring_distribution[ring_size-1] = count
 
     def create_image(self):
+        import pylab, matplotlib
         pylab.figure(self.figure.number)
         pylab.clf()
         pylab.axes([0.08, 0.1, 0.9, 0.85])
@@ -706,6 +720,7 @@ class RingDistributionWindow(GladeWrapper):
         self.ring_distribution = None
         self.filter_store.clear()
         self.ring_store.clear()
+        import pylab
         pylab.figure(self.figure.number)
         pylab.clf()
 
@@ -730,12 +745,11 @@ class RingDistributionWindow(GladeWrapper):
             )
 
 
-ring_distribution_window = RingDistributionWindow()
-
-
 class RingDistribution(Immediate):
     description = "Ring distribution"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Ring distribution", order=(0, 4, 1, 5, 2, 3))
+    required_modules = ["pylab", "matplotlib"]
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -750,7 +764,51 @@ class RingDistribution(Immediate):
         )
         rings = list(match_generator(graph))
 
+        ring_distribution_window = RingDistributionWindow()
         ring_distribution_window.show(rings, graph, bonds_by_pair)
+
+
+class FrameMolecules(Immediate):
+    description = "Frame molecules"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Frame molecules", order=(0, 4, 1, 5, 0, 4))
+    authors = [authors.toon_verstraelen]
+
+    @staticmethod
+    def analyze_selection():
+        if not Immediate.analyze_selection(): return False
+        if len(context.application.cache.nodes) == 0: return False
+        return True
+
+    def do(self):
+        cache = context.application.cache
+
+        graph, bonds_by_pair = create_graph_bonds(cache.nodes)
+        molecules = graph.get_nodes_per_independent_graph()
+        if isinstance(cache.node, ContainerMixin):
+            parent = cache.node
+        else:
+            parent = cache.common_parent
+
+        frames = []
+        Frame = context.application.plugins.get_node("Frame")
+        for atoms in molecules:
+            frame = Frame(name=chemical_formula(atoms)[1])
+            primitive.Add(frame, parent, index=0)
+            for atom in atoms:
+                primitive.Move(atom, frame, select=False)
+            for atom in atoms:
+                # take a copy of the references since they are going to be
+                # refreshed (changed and reverted) during the loop.
+                for reference in copy.copy(atom.references):
+                    referent = reference.parent
+                    if referent.parent != frame:
+                        has_to_move = True
+                        for child in referent.children:
+                            if child.target.parent != frame:
+                                has_to_move = False
+                                break
+                        if has_to_move:
+                            primitive.Move(referent, frame, select=False)
 
 
 actions = {
@@ -761,6 +819,7 @@ actions = {
     "AnalyzeNieghborShells": AnalyzeNieghborShells,
     "CloneOrder": CloneOrder,
     "RingDistribution": RingDistribution,
+    "FrameMolecules": FrameMolecules,
 }
 
 

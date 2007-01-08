@@ -623,6 +623,20 @@ class CoreActions(ApplicationTestCase):
             DisconnectFromDatabase()
         self.run_test_application(fn)
 
+    def test_view_plugins(self):
+        def fn():
+            ViewPlugins = context.application.plugins.get_action("ViewPlugins")
+            self.assert_(ViewPlugins.analyze_selection())
+            ViewPlugins()
+        self.run_test_application(fn)
+
+    def test_about(self):
+        def fn():
+            About = context.application.plugins.get_action("About")
+            self.assert_(About.analyze_selection())
+            About()
+        self.run_test_application(fn)
+
 
 class MolecularActions(ApplicationTestCase):
     def test_add_atom(self):
@@ -878,6 +892,22 @@ class MolecularActions(ApplicationTestCase):
             RingDistribution()
         self.run_test_application(fn)
 
+    def test_frame_molecules(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[0:1])
+
+            UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
+            self.assert_(UnframeAbsolute.analyze_selection())
+            UnframeAbsolute()
+
+            context.application.main.select_nodes(context.application.model.universe.children)
+
+            FrameMolecules = context.application.plugins.get_action("FrameMolecules")
+            self.assert_(FrameMolecules.analyze_selection())
+            FrameMolecules()
+        self.run_test_application(fn)
+
 
 
 class BuilderActions(ApplicationTestCase):
@@ -938,6 +968,16 @@ class BuilderActions(ApplicationTestCase):
             MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
             self.assert_(MinimizeDistances.analyze_selection(parameters))
             MinimizeDistances(parameters)
+        self.run_test_application(fn)
+
+    def test_merge_atoms_connected_with_minimizer(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[2:])
+
+            MergeAtomsConnectedWithMinimizer = context.application.plugins.get_action("MergeAtomsConnectedWithMinimizer")
+            self.assert_(MergeAtomsConnectedWithMinimizer.analyze_selection())
+            MergeAtomsConnectedWithMinimizer()
         self.run_test_application(fn)
 
     def test_triangle_conscan(self):

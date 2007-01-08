@@ -26,7 +26,7 @@ from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.reference import Reference
 
 
-__all__ = ["PrimitiveError", "Add", "SetAttribute", "Delete", "Move",
+__all__ = ["PrimitiveError", "Add", "AddMany", "SetAttribute", "Delete", "Move",
            "SetProperty", "Transform", "SetTarget"]
 
 
@@ -37,9 +37,8 @@ class PrimitiveError(Exception):
 class Primitive(object):
     changes_selection = False # see actions.composed.Action.__init__
 
-    def __init__(self, victim, done=False):
+    def __init__(self, done=False):
         #print "INIT", self
-        self.victim = victim
         self.done = done
         if context.application.action_manager is not None:
             context.application.action_manager.append_primitive_to_current_action(self)
@@ -69,10 +68,11 @@ class Add(Primitive):
             raise PrimitiveError, "ADD: Parent must be a %s. You gave %s." % (ContainerMixin, parent)
         if not parent.check_add(victim.__class__):
             raise PrimitiveError, "ADD: Can not add %s to %s." % (victim, parent)
+        self.victim = victim
         self.parent = parent
         self.index = index
         self.changes_selection = select
-        Primitive.__init__(self, victim, False)
+        Primitive.__init__(self, False)
 
     def redo(self):
         Primitive.redo(self)
@@ -85,8 +85,35 @@ class Add(Primitive):
         self.parent.remove(self.victim)
 
 
+class AddMany(Primitive):
+    def __init__(self, victims, parent, index=-1, select=True):
+        if not isinstance(parent, ContainerMixin):
+            raise PrimitiveError, "ADD MANY: Parent must be a %s. You gave %s." % (ContainerMixin, parent)
+        for victim in victims:
+            if not parent.check_add(victim.__class__):
+                raise PrimitiveError, "ADD MANY: Can not add %s to %s." % (victim, parent)
+        self.victims = victims
+        self.parent = parent
+        self.index = index
+        self.changes_selection = select
+        Primitive.__init__(self, False)
+
+    def redo(self):
+        Primitive.redo(self)
+        self.parent.add_many(self.victims, self.index)
+        if self.changes_selection:
+            for victim in self.victims:
+                context.application.main.toggle_selection(victim, on=True)
+
+    def undo(self):
+        Primitive.undo(self)
+        for victim in self.victims:
+            self.parent.remove(victim)
+
+
 class SetAttribute(Primitive):
     def __init__(self, victim, attribute_name, value, done=False):
+        self.victim = victim
         self.attribute_name = attribute_name
         if done:
             self.new_value = None
@@ -94,7 +121,7 @@ class SetAttribute(Primitive):
         else:
             self.new_value = value
             self.old_value = None
-        Primitive.__init__(self, victim, done)
+        Primitive.__init__(self, done)
 
     def redo(self):
         Primitive.redo(self)
@@ -113,9 +140,10 @@ class Delete(Primitive):
     def __init__(self, victim):
         if victim.get_fixed():
             raise PrimitiveError, "DELETE: The victim is fixed."
+        self.victim = victim
         self.old_parent = None
         self.old_index = None
-        Primitive.__init__(self, victim, False)
+        Primitive.__init__(self, False)
 
     def init(self):
         self.victim.delete_referents()
@@ -140,12 +168,13 @@ class Move(Primitive):
             raise PrimitiveError, "MOVE: New parent must be a %s. You gave %s." % (ContainerMixin, new_parent)
         if not new_parent.check_add(victim.__class__):
             raise PrimitiveError, "MOVE: Can not move %s to %s." % (victim, new_parent)
+        self.victim = victim
         self.new_parent = new_parent
         self.new_index = new_index
         self.old_parent = None
         self.old_index = None
         self.changes_selection = select
-        Primitive.__init__(self, victim, False)
+        Primitive.__init__(self, False)
 
     def redo(self):
         Primitive.redo(self)
@@ -167,6 +196,7 @@ class SetProperty(Primitive):
     def __init__(self, victim, name, value, done=False):
         # When using done=True, only call this primitive after the changes
         # to the properties were made and pass a deep copy of the old value
+        self.victim = victim
         self.name = name
         self.property = victim.properties_by_name[name]
         if done:
@@ -177,7 +207,7 @@ class SetProperty(Primitive):
         else:
             self.new_value = value
             self.old_value = None
-        Primitive.__init__(self, victim, done)
+        Primitive.__init__(self, done)
 
     def redo(self):
         Primitive.redo(self)
@@ -196,11 +226,12 @@ class Transform(Primitive):
             raise PrimitiveError, "TRANSFORM: Object must be a %s. You gave %s." % (GLTransformationMixin, victim)
         if victim.get_fixed():
             raise PrimitiveError, "TRANSFORM: Object %s is fixed." % victim
+        self.victim = victim
         self.transformation = transformation
         self.after = after
         if done:
             self.victim.invalidate_transformation_list()
-        Primitive.__init__(self, victim, done)
+        Primitive.__init__(self, done)
 
     def redo(self):
         Primitive.redo(self)
@@ -228,7 +259,7 @@ class SetTarget(Primitive):
         self.victim = victim
         self.new_target = target
         self.old_target = 0
-        Primitive.__init__(self, victim, False)
+        Primitive.__init__(self, False)
 
     def redo(self):
         Primitive.redo(self)

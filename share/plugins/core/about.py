@@ -25,6 +25,7 @@ from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui import load_image
+import zeobuilder.authors as authors
 
 import gtk.gdk
 
@@ -43,6 +44,14 @@ class BaseDialog(GladeWrapper):
         return self.dialog.run()
 
 
+class CreditsDialog(BaseDialog):
+    def __init__(self):
+        BaseDialog.__init__(self, "di_credits")
+        self.init_proxies(["tv_authors", "bu_information"])
+        author_store = authors.init_widgets(self.tv_authors, self.bu_information)
+        authors.fill_store(author_store)
+
+
 class AboutDialog(BaseDialog):
     def __init__(self):
         BaseDialog.__init__(self, "di_about")
@@ -51,7 +60,7 @@ class AboutDialog(BaseDialog):
 
     def response_loop(self):
         response = BaseDialog.response_loop(self)
-        while (response != gtk.RESPONSE_OK) or (response == gtk.RESPONSE_NONE) or (response == gtk.RESPONSE_DELETE_EVENT):
+        while (response != gtk.RESPONSE_CLOSE) or (response == gtk.RESPONSE_NONE) or (response == gtk.RESPONSE_DELETE_EVENT):
             if response == 1:
                 warranty.run()
             elif response == 2:
@@ -64,12 +73,13 @@ class AboutDialog(BaseDialog):
 about = AboutDialog()
 warranty = BaseDialog("di_warranty")
 license = BaseDialog("di_license")
-credits = BaseDialog("di_credits")
+credits = CreditsDialog()
 
 
 class About(Immediate):
     description = "Show the about box"
     menu_info = MenuInfo("help/_Help:default", "_About", image_name=gtk.STOCK_ABOUT, order=(1, 0, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     def do(self):
         about.run()

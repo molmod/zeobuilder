@@ -42,6 +42,9 @@ import math
 __all__ = ["Scene"]
 
 
+glutInit([])
+
+
 class Scene(object):
     select_buffer_size = 4096
 
@@ -100,13 +103,12 @@ class Scene(object):
 
         config.register_setting(
             "background_color",
+            numpy.array([1, 1, 1, 0], float),
+            None,
+        )
+        config.register_setting(
+            "fog_color",
             numpy.array([0, 0, 0, 0], float),
-            DialogFieldInfo("Default Viewer", (1, 3), fields.faulty.Length(
-                label_text="Window depth",
-                attribute_name="window_depth",
-                low=0.0,
-                low_inclusive=False,
-            )),
             None,
         )
         config.register_setting(
@@ -121,7 +123,6 @@ class Scene(object):
         self.clip_planes = {}
 
     def initialize(self): # gl_context sensitive method
-        glutInit([])
         glMaterial(GL_FRONT, GL_SPECULAR, [0.9, 0.9, 0.9, 1.0])
         glMaterial(GL_FRONT, GL_SHININESS, 70.0)
         glLight(GL_LIGHT0, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
@@ -196,7 +197,7 @@ class Scene(object):
     def apply_renderer_settings(self): # gl_context sensitive method
         configuration = context.application.configuration
         glClearColor(*configuration.background_color)
-        glFogfv(GL_FOG_COLOR, configuration.background_color)
+        glFogfv(GL_FOG_COLOR, configuration.fog_color)
         if isinstance(configuration.fog_depth, Undefined):
             glDisable(GL_FOG)
         else:

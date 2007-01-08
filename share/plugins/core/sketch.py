@@ -33,6 +33,7 @@ from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
@@ -178,6 +179,7 @@ class SketchOptions(GladeWrapper):
 class Sketch(Interactive):
     description = "Sketch objects and connectors"
     interactive_info = InteractiveInfo("plugins/core/geom_sketch.svg", mouse=True)
+    authors = [authors.toon_verstraelen]
 
     options = SketchOptions()
 
@@ -308,6 +310,7 @@ interactive_groups = {
     "geom_sketch": SketchInteractiveGroup(
         image_name="plugins/core/geom_sketch.svg",
         description="Geometric sketch tool",
-        order=6
+        order=6,
+        authors=[authors.toon_verstraelen],
     )
 }

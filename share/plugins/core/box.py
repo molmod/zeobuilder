@@ -29,6 +29,7 @@ from zeobuilder.nodes.elementary import GLGeometricBase
 from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.transformations import Complete
 
@@ -38,6 +39,7 @@ import copy, numpy
 
 class Box(GLGeometricBase, ColorMixin):
     info = ModelObjectInfo("plugins/core/box.svg")
+    authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
         GLGeometricBase.initnonstate(self, Complete)
@@ -134,6 +136,7 @@ class Box(GLGeometricBase, ColorMixin):
 class AddBox(AddBase):
     description = "Add box"
     menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Box", image_name="plugins/core/box.svg", order=(0, 4, 1, 0, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

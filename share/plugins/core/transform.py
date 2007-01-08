@@ -30,6 +30,7 @@ from zeobuilder.nodes.analysis import calculate_center, some_fixed, list_by_pare
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
+import zeobuilder.authors as authors
 
 from molmod.transformations import Translation, Rotation, Complete
 
@@ -49,6 +50,7 @@ import math, copy
 class TransformationReset(Immediate):
     description = "Reset the transformation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:immediate", "_Reset", order=(0, 4, 1, 2, 0, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -69,6 +71,7 @@ class TransformationReset(Immediate):
 class TransformationInvert(Immediate):
     description = "Apply inversion"
     menu_info = MenuInfo("default/_Object:tools/_Transform:immediate", "_Invert", order=(0, 4, 1, 2, 0, 1))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -118,6 +121,7 @@ class TransformationInvert(Immediate):
 class RotateDialog(ImmediateWithMemory):
     description = "Apply rotation (dialog)"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "R_otate objects", order=(0, 4, 1, 2, 1, 0))
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Rotation",
@@ -153,6 +157,7 @@ class RotateDialog(ImmediateWithMemory):
 class RotateAroundCenterDialog(ImmediateWithMemory):
     description = "Apply rotation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "Rotate objects around c_enter", order=(0, 4, 1, 2, 1, 1))
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Rotation around Center",
@@ -239,11 +244,13 @@ def parent_of_translated_nodes(cache):
     for node in cache.translated_nodes[1:]:
         if node.parent != parent: return None
     return parent
+parent_of_translated_nodes.authors=[authors.toon_verstraelen]
 
 
 class TranslateDialog(ImmediateWithMemory):
     description = "Apply translation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate objects", order=(0, 4, 1, 2, 1, 2))
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Translation",
@@ -293,6 +300,7 @@ class TranslateDialog(ImmediateWithMemory):
 class RoundRotation(Immediate):
     description = "Round rotation"
     menu_info = MenuInfo("default/_Object:tools/_Transform:special", "_Round rotation", order=(0, 4, 1, 2, 5, 0))
+    authors = [authors.toon_verstraelen]
     axes = {"x": numpy.array([1, 0, 0], float),
             "y": numpy.array([0, 1, 0], float),
             "z": numpy.array([0, 0, 1], float)}
@@ -579,8 +587,8 @@ class RotateObjectBase(InteractiveWithMemory):
         if self.changed:
             self.parameters.transformation = copy.deepcopy(self.victim.transformation)
             self.parameters.transformation.apply_inverse_before(self.old_transformation)
-            primitive.SetProperty(self.victim, "transformation",
-                                           self.old_transformation, done=True)
+            primitive.SetProperty(self.victim, "transformation", self.old_transformation, done=True)
+            self.victim.invalidate_transformation_list() # make sure that bonds and connectors are updated after transformation
         InteractiveWithMemory.finish(self)
 
     def immediate_do(self):
@@ -590,6 +598,7 @@ class RotateObjectBase(InteractiveWithMemory):
 class RotateObjectMouse(RotateObjectBase, RotateMouseMixin):
     description = "Rotate object"
     interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=0)
+    authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
         self.do_rotation(*RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
@@ -598,6 +607,7 @@ class RotateObjectMouse(RotateObjectBase, RotateMouseMixin):
 class RotateObjectKeyboard(RotateObjectBase, RotateKeyboardMixin):
     description = "Rotate object"
     interactive_info = InteractiveInfo("plugins/core/rotate.svg", keyboard=True, order=0)
+    authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -629,6 +639,7 @@ class RotateWorldBase(Interactive):
 class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
     description = "Rotate world"
     interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=1)
+    authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
         self.do_rotation(drawing_area, *RotateMouseMixin.button_motion(self, drawing_area, event, start_button))
@@ -637,6 +648,7 @@ class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
 class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
     description = "Rotate world"
     interactive_info = InteractiveInfo("plugins/core/rotate.svg", keyboard=True, order=1)
+    authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -753,6 +765,7 @@ class TranslateObjectBase(InteractiveWithMemory):
             self.parameters.transformation = copy.deepcopy(self.victim.transformation)
             self.parameters.transformation.apply_inverse_before(self.old_transformation)
             primitive.SetProperty(self.victim, "transformation", self.old_transformation, done=True)
+            self.victim.invalidate_transformation_list() # make sure that bonds and connectors are updated after transformation
         InteractiveWithMemory.finish(self)
 
     def immediate_do(self):
@@ -762,6 +775,7 @@ class TranslateObjectBase(InteractiveWithMemory):
 class TranslateObjectMouse(TranslateObjectBase, TranslateMouseMixin):
     description = "Translate the selected object"
     interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=0)
+    authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
         self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
@@ -770,6 +784,7 @@ class TranslateObjectMouse(TranslateObjectBase, TranslateMouseMixin):
 class TranslateObjectKeyboard(TranslateObjectBase, TranslateKeyboardMixin):
     description = "Translate the selected object"
     interactive_info = InteractiveInfo("plugins/core/translate.svg", keyboard=True, order=0)
+    authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -801,6 +816,7 @@ class TranslateWorldBase(Interactive):
 class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
     description = "Translate world"
     interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=1)
+    authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
         self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
@@ -809,6 +825,7 @@ class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
 class TranslateWorldKeyboard(TranslateWorldBase, TranslateKeyboardMixin):
     description = "Translate world"
     interactive_info = InteractiveInfo("plugins/core/translate.svg", keyboard=True, order=1)
+    authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -844,6 +861,7 @@ class TranslateViewerBase(Interactive):
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
     description = "Translate the viewer position"
     interactive_info = InteractiveInfo("plugins/core/translate_viewer.svg", mouse=True, order=0)
+    authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
         self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
@@ -852,6 +870,7 @@ class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
 class TranslateViewerKeyboard(TranslateViewerBase, TranslateKeyboardMixin):
     description = "Translate the viewer position"
     interactive_info = InteractiveInfo("plugins/core/translate_viewer.svg", keyboard=True, order=0)
+    authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -897,6 +916,7 @@ class TranslateRotationCenterBase(Interactive):
 class TranslateRotationCenterMouse(TranslateRotationCenterBase, TranslateMouseMixin):
     description = "Translate the rotation center"
     interactive_info = InteractiveInfo("plugins/core/translate_center.svg", mouse=True, order=0)
+    authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
         self.do_translation(TranslateMouseMixin.button_motion(self, drawing_area, event, start_button), drawing_area)
@@ -905,6 +925,7 @@ class TranslateRotationCenterMouse(TranslateRotationCenterBase, TranslateMouseMi
 class TranslateRotationCenterKeyboard(TranslateRotationCenterBase, TranslateKeyboardMixin):
     description = "Translate the rotation center"
     interactive_info = InteractiveInfo("plugins/core/translate_center.svg", keyboard=True, order=0)
+    authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
     def key_press(self, drawing_area, event):
@@ -944,23 +965,27 @@ interactive_groups = {
         description="Rotate",
         initial_mask=gtk.gdk.CONTROL_MASK,
         order=1,
+        authors=[authors.toon_verstraelen],
     ),
     "translate": InteractiveGroup(
         image_name="plugins/core/translate.svg",
         description="Translate",
         initial_mask=gtk.gdk.SHIFT_MASK,
         order=2,
+        authors=[authors.toon_verstraelen],
     ),
     "translate_viewer": InteractiveGroup(
         image_name="plugins/core/translate_viewer.svg",
         description="Translate the viewer",
         initial_mask=None,
         order=4,
+        authors=[authors.toon_verstraelen],
     ),
     "translate_center": InteractiveGroup(
         image_name="plugins/core/translate_center.svg",
         description="Translate the rotation center",
         initial_mask=(gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
         order=3,
+        authors=[authors.toon_verstraelen],
     ),
 }

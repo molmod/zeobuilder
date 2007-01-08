@@ -26,15 +26,18 @@ from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import ContainerBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
+import zeobuilder.authors as authors
 
 
 class Folder(ContainerBase):
     info = ModelObjectInfo("plugins/core/folder.svg")
+    authors = [authors.toon_verstraelen]
 
 
 class AddFolder(AddBase):
     description = "Add folder"
     menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Folder", image_name="plugins/core/folder.svg", order=(0, 4, 1, 0, 1, 0))
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():

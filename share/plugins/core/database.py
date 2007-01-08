@@ -31,8 +31,9 @@ from zeobuilder.gui.simple import yes_no_question
 from zeobuilder.database import database_widgets, DatabasePage
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
+import zeobuilder.authors as authors
 
-import gtk, MySQLdb
+import gtk
 
 import os, pwd
 
@@ -43,6 +44,8 @@ class DatabaseError(Exception):
 
 class Database(ModelObject):
     info = ModelObjectInfo("plugins/core/database.svg", default_action_name="ShowDatabaseWindow")
+    required_modules = ["MySQLdb"]
+    authors = [authors.toon_verstraelen]
 
     #
     # State
@@ -125,6 +128,7 @@ class Database(ModelObject):
     def connect(self, password):
         assert not self.get_connected()
 
+        import MySQLdb
         self.connection = MySQLdb.connect(
             host=self.host,
             user=self.user,
@@ -236,6 +240,8 @@ database_window = DatabaseWindow()
 class StatusDatabasePage(DatabasePage):
     order = 0
     name = "Status"
+    required_modules = ["MySQLdb"]
+    authors = [authors.toon_verstraelen]
 
     def __init__(self):
         DatabasePage.__init__(self)
@@ -282,6 +288,8 @@ class StatusDatabasePage(DatabasePage):
 class NewDatabase(ImmediateWithMemory):
     description = "Create a new database"
     menu_info = MenuInfo("default/_Object:tools/_Database:default", "_New database connection", image_name="plugins/core/database.svg", order=(0, 4, 1, 8, 0, 0))
+    required_modules = ["MySQLdb"]
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Database connection",
@@ -342,6 +350,8 @@ class ConnectToDatabase(ImmediateWithMemory):
     description = "Connect to the selected database"
     menu_info = MenuInfo("default/_Object:tools/_Database:default", "_Connect", order=(0, 4, 1, 8, 0, 1))
     store_last_parameters = False
+    required_modules = ["MySQLdb"]
+    authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
         "Connect to database",
@@ -383,6 +393,8 @@ class ConnectToDatabase(ImmediateWithMemory):
 class DisconnectFromDatabase(Immediate):
     description = "Disconnect from the selected database"
     menu_info = MenuInfo("default/_Object:tools/_Database:default", "_Disconnect", order=(0, 4, 1, 8, 0, 2))
+    required_modules = ["MySQLdb"]
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -402,6 +414,8 @@ class DisconnectFromDatabase(Immediate):
 class ShowDatabaseWindow(Immediate):
     description = "Show the database window of the selected database"
     menu_info = MenuInfo("default/_Object:tools/_Database:default", "_Show database window", order=(0, 4, 1, 8, 0, 3))
+    required_modules = ["MySQLdb"]
+    authors = [authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -421,12 +435,14 @@ class ShowDatabaseWindow(Immediate):
 
 
 plugin_categories = {
-    "database_page": PluginCategory("database_page", "database_pages", database_window.init_pages)
+    "database_page": PluginCategory("database_page", "database_pages", database_window.init_pages, [authors.toon_verstraelen])
 }
+
 
 database_pages = {
     "StatusDatabasePage": StatusDatabasePage(),
 }
+
 
 nodes = {
     "Database": Database

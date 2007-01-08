@@ -1,0 +1,96 @@
+# Zeobuilder is an extensible GUI-toolkit for molecular model construction.
+# Copyright (C) 2005 Toon Verstraelen
+#
+# This file is part of Zeobuilder.
+#
+# Zeobuilder is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+#
+# --
+
+
+from zeobuilder.gui.glade_wrapper import GladeWrapper
+
+import gtk
+
+
+class Author(object):
+    def __init__(self, name, role, affiliation):
+        self.name = name
+        self.role = role
+        self.affiliation = affiliation
+
+
+toon_verstraelen = Author(
+"Toon Verstraelen",
+"Lead Developer",
+"""Center for Molecular Modeling
+Ghent University
+Proeftuinstraat 86
+9000 Gent
+Belgium
+Tel: +32 (0)9 264 65 56
+<span foreground="#0000FF" underline="single">Toon.Verstraelen@UGent.be</span>""")
+
+
+all = [
+    toon_verstraelen
+]
+
+
+class AuthorDialog(GladeWrapper):
+    def __init__(self):
+        GladeWrapper.__init__(self, "zeobuilder.glade", "di_author", "dialog")
+        self.init_proxies(["la_author", "la_affiliation"])
+        self.dialog.hide()
+
+    def run(self, author):
+        self.la_author.set_markup("<b>%s</b>\n%s" % (author.name, author.role))
+        self.la_affiliation.set_markup(author.affiliation)
+        self.dialog.run()
+        self.dialog.hide()
+
+author_dialog = AuthorDialog()
+
+
+def init_widgets(list_view, button):
+    store = gtk.ListStore(str, str, object)
+    list_view.set_model(store)
+
+    column = gtk.TreeViewColumn("Author", gtk.CellRendererText(), text=0)
+    list_view.append_column(column)
+    column = gtk.TreeViewColumn("Role", gtk.CellRendererText(), text=1)
+    list_view.append_column(column)
+
+    def on_selection_changed(tree_selection):
+        button.set_sensitive(tree_selection.count_selected_rows() == 1)
+
+    list_view.get_selection().connect("changed", on_selection_changed)
+    button.set_sensitive(False)
+
+    def on_button_clicked(button):
+        iter = list_view.get_selection().get_selected()[1]
+        author = store.get_value(iter, 2)
+        author_dialog.run(author)
+
+    button.connect("clicked", on_button_clicked)
+
+    return store
+
+
+def fill_store(store, authors=all):
+    store.clear()
+    for author in authors:
+        store.append((author.name, author.role, author))
+

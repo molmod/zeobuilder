@@ -27,6 +27,7 @@ from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.conversion import express_measure
+import zeobuilder.authors as authors
 
 from molmod.vectors import angle
 from molmod.transformations import Translation
@@ -341,6 +342,7 @@ class MeasurementsWindow(GladeWrapper):
 class Measure(Interactive):
     description = "Measure distances and angles"
     interactive_info = InteractiveInfo("plugins/core/measure.svg", mouse=True)
+    authors = [authors.toon_verstraelen]
 
     measurements = MeasurementsWindow()
 
@@ -385,6 +387,7 @@ interactive_groups = {
     "measure": InteractiveGroup(
         image_name="plugins/core/measure.svg",
         description="Measurement tool",
-        order=5
+        order=5,
+        authors=[authors.toon_verstraelen],
     )
 }
