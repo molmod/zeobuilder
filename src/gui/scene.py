@@ -103,13 +103,12 @@ class Scene(object):
 
         config.register_setting(
             "background_color",
+            numpy.array([1, 1, 1, 0], float),
+            None,
+        )
+        config.register_setting(
+            "fog_color",
             numpy.array([0, 0, 0, 0], float),
-            DialogFieldInfo("Default Viewer", (1, 3), fields.faulty.Length(
-                label_text="Window depth",
-                attribute_name="window_depth",
-                low=0.0,
-                low_inclusive=False,
-            )),
             None,
         )
         config.register_setting(
@@ -198,7 +197,7 @@ class Scene(object):
     def apply_renderer_settings(self): # gl_context sensitive method
         configuration = context.application.configuration
         glClearColor(*configuration.background_color)
-        glFogfv(GL_FOG_COLOR, configuration.background_color)
+        glFogfv(GL_FOG_COLOR, configuration.fog_color)
         if isinstance(configuration.fog_depth, Undefined):
             glDisable(GL_FOG)
         else:

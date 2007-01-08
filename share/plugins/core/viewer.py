@@ -133,6 +133,10 @@ class RendererConfiguration(Immediate):
                 label_text="Background color",
                 attribute_name="background_color",
             ),
+            fields.edit.Color(
+                label_text="Fog color",
+                attribute_name="fog_color",
+            ),
             fields.optional.CheckOptional(fields.faulty.Length(
                 label_text="Fog depth",
                 attribute_name="fog_depth",
