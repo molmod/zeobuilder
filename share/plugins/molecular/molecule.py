@@ -24,6 +24,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.actions.abstract import CenterAlignBase
 from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.conversion import express_measure
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.gui.simple import ok_information, ok_error, ask_save_filename
@@ -632,11 +633,12 @@ class RingDistributionWindow(GladeWrapper):
         self.cb_filter.add_attribute(cell_renderer, "text", 0)
         self.cb_filter.connect("changed", self.on_filter_changed)
 
-        self.ring_store = gtk.ListStore(int, str, str, object)
+        self.ring_store = gtk.ListStore(int, str, str, str, object)
         self.tv_rings.set_model(self.ring_store)
         self.tv_rings.append_column(gtk.TreeViewColumn("Size", gtk.CellRendererText(), text=0))
-        self.tv_rings.append_column(gtk.TreeViewColumn("Diameter", gtk.CellRendererText(), text=1))
-        self.tv_rings.append_column(gtk.TreeViewColumn("Label", gtk.CellRendererText(), text=2))
+        self.tv_rings.append_column(gtk.TreeViewColumn("Av. diameter", gtk.CellRendererText(), text=1))
+        self.tv_rings.append_column(gtk.TreeViewColumn("Min. diameter", gtk.CellRendererText(), text=2))
+        self.tv_rings.append_column(gtk.TreeViewColumn("Label", gtk.CellRendererText(), text=3))
         self.tv_rings.get_selection().connect("changed", self.on_ring_selection_changed)
 
         context.application.action_manager.connect("model-changed", self.on_model_changed)
@@ -668,10 +670,21 @@ class RingDistributionWindow(GladeWrapper):
         self.ring_store.clear()
         filter_node = self.filter_store.get_value(self.cb_filter.get_active_iter(), 1)
         for ring in self.rings:
+            center = sum(
+                node.get_absolute_frame().t
+                for node in ring.forward.itervalues()
+            )/len(ring.forward)
+            radii = [
+                numpy.linalg.norm(node.get_absolute_frame().t - center)
+                for node in ring.forward.itervalues()
+            ]
+            av_radius = 2*sum(radii)/len(radii)
+            min_radius = 2*min(radii)
             if filter_node is None or filter_node in ring.backward:
                 self.ring_store.append([
                     len(ring),
-                    "TODO",
+                    express_measure(av_radius, "Length"),
+                    express_measure(min_radius, "Length"),
                     str([node.get_name() for index, node in sorted(ring.forward.iteritems())]),
                     ring,
                 ])
@@ -739,15 +752,15 @@ class RingDistributionWindow(GladeWrapper):
         if iter is None:
             context.application.main.select_nodes([])
         else:
-            ring = model.get_value(iter, 3)
+            ring = model.get_value(iter, 4)
             context.application.main.select_nodes(
                 ring.forward.values() + ring.bonds
             )
 
 
-class RingDistribution(Immediate):
+class StrongRingDistribution(Immediate):
     description = "Ring distribution"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Ring distribution", order=(0, 4, 1, 5, 2, 3))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Strong ring distribution", order=(0, 4, 1, 5, 2, 3))
     required_modules = ["pylab", "matplotlib"]
     authors = [authors.toon_verstraelen]
 
@@ -818,7 +831,7 @@ actions = {
     "SaturateWithHydrogens": SaturateWithHydrogens,
     "AnalyzeNieghborShells": AnalyzeNieghborShells,
     "CloneOrder": CloneOrder,
-    "RingDistribution": RingDistribution,
+    "StrongRingDistribution": StrongRingDistribution,
     "FrameMolecules": FrameMolecules,
 }
 

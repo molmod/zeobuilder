@@ -87,7 +87,7 @@
 </widget>
 
 <widget class="GtkWindow" id="wi_ring_distribution">
-  <property name="title" translatable="yes">Ring Distribution</property>
+  <property name="title" translatable="yes">Strong ring distribution</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>

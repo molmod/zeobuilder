@@ -882,14 +882,14 @@ class MolecularActions(ApplicationTestCase):
             CloneOrder()
         self.run_test_application(fn)
 
-    def test_ring_distribution(self):
+    def test_strong_ring_distribution(self):
         def fn():
             context.application.model.file_open("input/minimizers.zml")
             context.application.main.select_nodes([context.application.model.universe.children[1]])
 
-            RingDistribution = context.application.plugins.get_action("RingDistribution")
-            self.assert_(RingDistribution.analyze_selection())
-            RingDistribution()
+            StrongRingDistribution = context.application.plugins.get_action("StrongRingDistribution")
+            self.assert_(StrongRingDistribution.analyze_selection())
+            StrongRingDistribution()
         self.run_test_application(fn)
 
     def test_frame_molecules(self):
