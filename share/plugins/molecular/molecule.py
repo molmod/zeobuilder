@@ -94,10 +94,12 @@ def create_graph_bonds(selected_nodes):
         if bond.children[0].target in nodes and
             bond.children[1].target in nodes
     )
-    tmp = set([])
-    for a, b in bonds_by_pair.iterkeys():
-        tmp.add(a), tmp.add(b)
-    nodes = [node for node in nodes if node in tmp]
+    # uncommented these lines to make sure that the order of the list nodes
+    # is respected.
+    #tmp = set([])
+    #for a, b in bonds_by_pair.iterkeys():
+    #    tmp.add(a), tmp.add(b)
+    #nodes = [node for node in nodes if node in tmp]
 
     graph = Graph(bonds_by_pair.keys(), nodes)
     return graph, bonds_by_pair
