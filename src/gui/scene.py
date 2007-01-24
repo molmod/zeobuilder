@@ -128,12 +128,14 @@ class Scene(object):
         glLight(GL_LIGHT0, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
         glLight(GL_LIGHT0, GL_AMBIENT, [0.1, 0.1, 0.1, 1.0])
         glLight(GL_LIGHT0, GL_POSITION, [1.0, 1.0, 3.0, 0.0])
+        #glLightModel(GL_LIGHT_MODEL_TWO_SIDE, 1)
         glEnable(GL_LIGHT0)
         glEnable(GL_LIGHTING)
 
         # Some default gl settings
         glDepthFunc(GL_LESS)
         glEnable(GL_DEPTH_TEST)
+        glEnable(GL_CULL_FACE)
 
         self.initialize_interactive_tool()
         self.initialize_rotation_center()
