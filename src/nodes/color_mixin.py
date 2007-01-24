@@ -65,7 +65,6 @@ class ColorMixin(gobject.GObject):
 
     def draw(self):
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color)
-        glMaterial(GL_BACK, GL_AMBIENT_AND_DIFFUSE, self.color)
 
 
 class UserColorMixin(gobject.GObject):
@@ -91,7 +90,7 @@ class UserColorMixin(gobject.GObject):
     dialog_fields = set([
         DialogFieldInfo("Markup", (1, 7), fields.optional.CheckOptional(
             fields.edit.Color(
-                label_text="User define color",
+                label_text="User defined color",
                 attribute_name="user_color",
             )
         )),
@@ -112,4 +111,3 @@ class UserColorMixin(gobject.GObject):
 
     def draw(self):
         glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.get_color())
-        glMaterial(GL_BACK, GL_AMBIENT_AND_DIFFUSE, self.get_color())
