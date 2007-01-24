@@ -99,7 +99,7 @@
 	  <child>
 	    <widget class="GtkLabel" id="label2">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">Average minimizer length:</property>
+	      <property name="label" translatable="yes">RMS Error:</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">False</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>
@@ -169,7 +169,7 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkLabel" id="la_average_length">
+	    <widget class="GtkLabel" id="la_rms_error">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">0.0</property>
 	      <property name="use_underline">False</property>

@@ -68,9 +68,14 @@ class Minimizer(Vector, ColorMixin):
         self.quality = quality
         self.invalidate_draw_list()
 
+    def set_rest_length(self, rest_length):
+        self.rest_length = rest_length
+        self.invalidate_draw_list()
+
     properties = [
         Property("radius", 0.5, lambda self: self.radius, set_radius),
         Property("quality", 15, lambda self: self.quality, set_quality),
+        Property("rest_length", 0.0, lambda self: self.rest_length, set_rest_length),
     ]
 
     #
@@ -89,6 +94,12 @@ class Minimizer(Vector, ColorMixin):
             attribute_name="quality",
             minimum=3,
         )),
+        DialogFieldInfo("Basic", (0, 8), fields.faulty.Length(
+            label_text="Rest length",
+            attribute_name="rest_length",
+            low=0.0,
+            low_inclusive=True,
+        )),
     ])
 
     #
@@ -97,12 +108,30 @@ class Minimizer(Vector, ColorMixin):
 
     def draw(self):
         Vector.draw(self)
-        if self.length <= 0: return
-        # halter
         ColorMixin.draw(self)
-        gluCylinder(self.quadric, self.radius, 0.0, 0.5*self.length, self.quality, 1)
-        glTranslate(0.0, 0.0, 0.5*self.length)
-        gluCylinder(self.quadric, 0.0, self.radius, 0.5*self.length, self.quality, 1)
+        if self.length > self.rest_length:
+            l_cyl = self.rest_length
+            l_cone = 0.5*(self.length - l_cyl)
+            if l_cone > 0:
+                gluCylinder(self.quadric, self.radius, 0.0, l_cone, self.quality, 1)
+                glTranslate(0.0, 0.0, l_cone)
+            if l_cyl > 0:
+                gluCylinder(self.quadric, 0.5*self.radius, 0.5*self.radius, l_cyl, self.quality, 1)
+                glTranslate(0.0, 0.0, l_cyl)
+            if l_cone > 0:
+                gluCylinder(self.quadric, 0.0, self.radius, l_cone, self.quality, 1)
+        else:
+            l_cyl = self.length
+            l_cone = 0.5*(self.rest_length - self.length)
+            if l_cone > 0:
+                glTranslate(0.0, 0.0, -l_cone)
+                gluCylinder(self.quadric, 0.0, self.radius, l_cone, self.quality, 1)
+                glTranslate(0.0, 0.0, l_cone)
+            if l_cyl > 0:
+                gluCylinder(self.quadric, 0.5*self.radius, 0.5*self.radius, l_cyl, self.quality, 1)
+                glTranslate(0.0, 0.0, l_cyl)
+            if l_cone > 0:
+                gluCylinder(self.quadric, self.radius, 0.0, l_cone, self.quality, 1)
 
     def write_pov(self, indenter):
         if self.length <= 0: return
@@ -178,12 +207,12 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         GladeWrapper.__init__(self, "plugins/builder/gui.glade", "di_minimize", "dialog")
         ChildProcessDialog.__init__(self, self.dialog, self.dialog.action_area.get_children())
         self.init_callbacks(MinimizeReportDialog)
-        self.init_proxies(["la_num_iter", "la_average_length", "progress_bar"])
+        self.init_proxies(["la_num_iter", "la_rms_error", "progress_bar"])
         self.state_indices = None
 
     def run(self, minimize, auto_close, involved_frames, update_interval, update_steps, num_minimizers):
         self.la_num_iter.set_text("0")
-        self.la_average_length.set_text(express_measure(0.0, "Length"))
+        self.la_rms_error.set_text(express_measure(0.0, "Length"))
         self.progress_bar.set_fraction(0.0)
         self.progress_bar.set_text("0%")
         self.minimize = minimize
@@ -226,7 +255,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
     def update_gui(self):
         if self.status is not None:
             self.la_num_iter.set_text("%i" % self.status.step)
-            self.la_average_length.set_text(express_measure(math.sqrt(self.status.value/self.num_minimizers), "Length"))
+            self.la_rms_error.set_text(express_measure(math.sqrt(self.status.value/self.num_minimizers), "Length"))
             self.progress_bar.set_text("%i%%" % int(self.status.progress*100))
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
@@ -377,7 +406,7 @@ class MinimizeDistances(ImmediateWithMemory):
                 raise UserError("The involved frames shoud be at least capable of being translated.")
 
         for minimizer, frames in minimizers.iteritems():
-            cost_term = iterative.expr.Spring()
+            cost_term = iterative.expr.Spring(minimizer.rest_length)
             for target, frame in frames.iteritems():
                 cost_term.register_input_variable(
                     cost_function.state_variables[involved_frames.index(frame)],
