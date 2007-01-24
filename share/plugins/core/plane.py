@@ -23,10 +23,12 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.nodes.elementary import GLReferentBase
 from zeobuilder.nodes.color_mixin import ColorMixin
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 import zeobuilder.actions.primitive as primitive
@@ -66,6 +68,32 @@ class Plane(GLReferentBase, ColorMixin):
                 child.set_model(self.model)
 
     #
+    # Properties
+    #
+
+    def set_margin(self, margin):
+        self.margin = margin
+        self.invalidate_draw_list()
+        self.invalidate_boundingbox_list()
+
+    properties = [
+        Property("margin", 1.0, lambda self: self.margin, set_margin),
+    ]
+
+    #
+    # Dialog fields (see action EditProperties)
+    #
+
+    dialog_fields = set([
+        DialogFieldInfo("Geometry", (2, 10), fields.faulty.Length(
+            label_text="Margin",
+            attribute_name="margin",
+            low=0.0,
+            low_inclusive=True,
+        )),
+    ])
+
+    #
     # Draw
     #
 
@@ -86,11 +114,10 @@ class Plane(GLReferentBase, ColorMixin):
         px = numpy.dot(tmp, self.x)
         py = numpy.dot(tmp, self.y)
 
-        margin = 1.0
-        px_low = px.min() - margin
-        px_high = px.max() + margin
-        py_low = py.min() - margin
-        py_high = py.max() + margin
+        px_low = px.min() - self.margin
+        px_high = px.max() + self.margin
+        py_low = py.min() - self.margin
+        py_high = py.max() + self.margin
 
         self.l_l = self.x*px_low + self.y*py_low + self.center
         self.l_h = self.x*px_low + self.y*py_high + self.center
