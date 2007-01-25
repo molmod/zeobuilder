@@ -494,7 +494,7 @@ class CoreActions(ApplicationTestCase):
             TransformationReset()
         self.run_test_application(fn)
 
-    def test_transformation_reset(self):
+    def test_transformation_invert(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
@@ -539,6 +539,19 @@ class CoreActions(ApplicationTestCase):
             TranslateDialog = context.application.plugins.get_action("TranslateDialog")
             self.assert_(TranslateDialog.analyze_selection(parameters))
             TranslateDialog(parameters)
+        self.run_test_application(fn)
+
+
+    def test_mirror_dialog(self):
+        def fn():
+            context.application.model.file_open("input/core_objects.zml")
+            context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
+            parameters = Parameters()
+            parameters.center = numpy.array([1.0, 0.2, -0.9], float)
+            parameters.normal = numpy.array([2.0, 4.1, -1.0], float)
+            MirrorDialog = context.application.plugins.get_action("MirrorDialog")
+            self.assert_(MirrorDialog.analyze_selection(parameters))
+            MirrorDialog(parameters)
         self.run_test_application(fn)
 
     def test_unit_cell_to_cluster(self):
@@ -653,7 +666,7 @@ class CoreActions(ApplicationTestCase):
             AddPlane = context.application.plugins.get_action("AddPlane")
             self.assert_(AddPlane.analyze_selection())
             AddPlane()
-        self.run_test_application(fn, quit=False)
+        self.run_test_application(fn)
 
 
 class MolecularActions(ApplicationTestCase):

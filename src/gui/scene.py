@@ -296,6 +296,7 @@ class Scene(object):
                 for revalidation in self.revalidations:
                     revalidation()
                 self.revalidations = []
+            glCullFace(GL_BACK)
             universe.call_list()
 
         for GL_CLIP_PLANEi in self.clip_planes:

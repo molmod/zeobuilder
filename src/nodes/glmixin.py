@@ -375,6 +375,12 @@ class GLTransformationMixin(GLMixin):
             glNewList(self.transformation_list, GL_COMPILE)
             glPushMatrix()
             self.transformation.gl_apply()
+            if issubclass(self.Transformation, Rotation) and numpy.linalg.det(self.transformation.r) < 0:
+                # only define front or back facing of this object changes the handedness!
+                if numpy.linalg.det(self.get_absolute_parentframe().r) < 0:
+                    glCullFace(GL_BACK)
+                else:
+                    glCullFace(GL_FRONT)
             glEndList()
             self.transformation_list_valid = True
 

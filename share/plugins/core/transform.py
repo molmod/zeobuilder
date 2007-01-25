@@ -32,7 +32,7 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation, Rotation, Complete
+from molmod.transformations import Translation, Rotation, Complete, rotation_around_center
 
 from molmod.vectors import angle
 from molmod.quaternions import quaternion_product, quaternion_from_rotation_matrix, quaternion_to_rotation_matrix
@@ -295,6 +295,85 @@ class TranslateDialog(ImmediateWithMemory):
     def do(self):
         for victim in context.application.cache.translated_nodes:
             primitive.Transform(victim, self.parameters.translation)
+
+
+class MirrorDialog(ImmediateWithMemory):
+    description = "Apply mirror transformation"
+    menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Mirror", order=(0, 4, 1, 2, 1, 3))
+    authors = [authors.toon_verstraelen]
+
+    parameters_dialog = FieldsDialogSimple(
+        "Mirror transformation",
+        fields.group.Table(fields=[
+            fields.composed.ComposedArray(
+                FieldClass=fields.faulty.Length,
+                array_name="c.%s",
+                suffices=["x", "y", "z"],
+                attribute_name="center",
+                label_text="Point on the mirror plane.",
+                scientific=False,
+            ),
+            fields.composed.ComposedArray(
+                FieldClass=fields.faulty.Float,
+                array_name="n.%s",
+                suffices=["x", "y", "z"],
+                attribute_name="normal",
+                label_text="Normal of the mirror plane.",
+                scientific=False,
+            ),
+        ]),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+    )
+
+    @staticmethod
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        # B) validating
+        cache = context.application.cache
+        if len(cache.translated_nodes) == 0: return False
+        if cache.parent_of_translated_nodes is None: return False
+        if cache.some_nodes_fixed: return False
+        # C) passed all tests:
+        return True
+
+    @classmethod
+    def default_parameters(cls):
+        result = Parameters()
+        result.center = numpy.zeros(3, float)
+        result.normal = numpy.zeros(3, float)
+        return result
+
+    def ask_parameters(self):
+        cache = context.application.cache
+        last = cache.last
+        next_to_last = cache.next_to_last
+        parent = cache.parent_of_translated_nodes
+        Plane = context.application.plugins.get_node("Plane")
+        if isinstance(last, Plane):
+            f = last.parent.get_frame_relative_to(parent)
+            self.parameters.center = f.vector_apply(last.center)
+            self.parameters.normal = f.vector_apply(last.normal)
+
+            #b = last.children[0].translation_relative_to(parent)
+            #e = last.children[1].translation_relative_to(parent)
+            #if (b is not None) and (e is not None):
+            #    self.parameters.translation.t = e - b
+        else:
+            self.use_last_parameters()
+        if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
+            self.parameters.clear()
+
+    def do(self):
+        transformation = rotation_around_center(
+            self.parameters.center,
+            math.pi,
+            self.parameters.normal,
+            True
+        )
+
+        for victim in context.application.cache.translated_nodes:
+            primitive.Transform(victim, transformation)
 
 
 class RoundRotation(Immediate):
@@ -943,6 +1022,7 @@ actions = {
     "RotateDialog": RotateDialog,
     "RotateAroundCenterDialog": RotateAroundCenterDialog,
     "TranslateDialog": TranslateDialog,
+    "MirrorDialog": MirrorDialog,
     "RoundRotation": RoundRotation,
     "RotateObjectMouse": RotateObjectMouse,
     "RotateObjectKeyboard": RotateObjectKeyboard,
