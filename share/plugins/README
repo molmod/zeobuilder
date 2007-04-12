@@ -1,0 +1,11 @@
+This is how the plugins are organized:
+
+- core: 
+    everything of zeobuilder that does not know about atoms and molecules
+- molecular:
+    features related to atoms and molecules
+- builder:
+    all specialized molecular building features
+    
+If you are planning to add a bunch of plugins that deserve a separate directory,
+please go ahead. Do not make a mess of it.
