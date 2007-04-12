@@ -43,6 +43,9 @@ class LoadFilters(ApplicationTestCase):
     def test_xyz(self):
         self.helper_file_open("tpa.xyz")
 
+    def test_pdb(self):
+        self.helper_file_open("pept.pdb")
+
 
 class DumpFilters(ApplicationTestCase):
     def helper_file_save(self, in_filename, out_filename):
@@ -59,3 +62,6 @@ class DumpFilters(ApplicationTestCase):
 
     def test_xyz(self):
         self.helper_file_save("tpa.zml", "test.xyz")
+
+    def test_psf(self):
+        self.helper_file_save("precursor.zml", "test.psf")
