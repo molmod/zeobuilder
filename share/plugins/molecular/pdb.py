@@ -20,6 +20,10 @@
 # --
 
 
+# See http://www.wwpdb.org/docs.html for details about the pdb format.
+# The implementation below only supports a small fraction of the full 
+# pdb specification.
+
 import numpy
 
 from zeobuilder import context
@@ -28,7 +32,7 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
 from molmod.data import periodic
-from molmod.units import to_angstrom, from_angstrom
+from molmod.units import angstrom, angstrom
 
 
 class LoadPDB(LoadFilter):
@@ -49,25 +53,75 @@ class LoadPDB(LoadFilter):
             if len(line) != 81:
                 raise FilterError("Each line in a PDB file must counter 80 characters, error at line %i, len=%i" % (counter, len(line)-1))
             if line.startswith("ATOM"):
-                atom_info = periodic[line[77:79].strip()]
-                atom = Atom(name=line[13:17].strip(), number=atom_info.number)
+                atom_info = periodic[line[76:78].strip()]
+                atom = Atom(name=line[12:16].strip(), number=atom_info.number)
                 try:
-                    atom.transformation.t = from_angstrom(
-                        numpy.array([
-                            float(line[31:39].strip()), 
-                            float(line[39:47].strip()), 
-                            float(line[47:55].strip())
-                        ])
-                    )
+                    atom.transformation.t = numpy.array([
+                            float(line[30:38].strip()), 
+                            float(line[38:46].strip()), 
+                            float(line[46:54].strip())
+                    ]) * angstrom
                 except ValueError:
                     raise FilterError("Error while reading PDB file: could not read coordinates at line %i." % counter)
                 universe.add(atom)
+            elif line.startswith("CRYST1"):
+                space_group = line[55:66].strip().upper()
+                print line[55:66]
+                if space_group != "P 1":
+                    raise FilterError("Error while reading PDB file: only unit cells with space group P 1 are supported.")
+                a = float(line[6:15].strip())*angstrom
+                b = float(line[15:24].strip())*angstrom
+                c = float(line[24:33].strip())*angstrom
+                alpha = float(line[33:40].strip())*numpy.pi/180
+                beta = float(line[40:47].strip())*numpy.pi/180
+                gamma = float(line[47:54].strip())*numpy.pi/180
+                universe.set_parameters([a, b, c], [alpha, beta, gamma])
+                universe.cell_active = numpy.array([True, True, True])
             counter += 1
 
         return [universe, folder]
 
 
+class DumpPDB(DumpFilter):
+    authors = [authors.toon_verstraelen]
+
+    def __init__(self):
+        DumpFilter.__init__(self, "The PDB format (*.pdb)")
+
+    def __call__(self, f, universe, folder, nodes=None):
+        atom_counter = 0
+        if nodes is None:
+            nodes = [universe]
+        
+        Atom = context.application.plugins.get_node("Atom")
+        if universe.cell_active.all():
+            lengths, angles = universe.get_parameters()
+            a, b, c = lengths/angstrom
+            alpha, beta, gamma = angles/numpy.pi*180
+            print >> f, "CRYST1% 9.3f% 9.3f% 9.3f% 7.2f% 7.2f% 7.2f P 1        1             " % (
+                a, b, c, alpha, beta, gamma
+            )
+        print >> f, "MODEL        1                                                                  "
+        self.counter = 1
+        def write_xyz_lines(nodes):
+            for node in nodes:
+                if isinstance(node, Atom):
+                    x, y, z = node.get_frame_relative_to(universe).t/angstrom
+                    s = periodic[node.number].symbol.upper()
+                    print >> f, "ATOM  % 5i % 4s FOO     1    % 8.3f% 8.3f% 8.3f  1.00  1.00          % 2s 0" % (self.counter, s, x, y, z, s)
+                    self.counter += 1
+                else:
+                    if isinstance(node, GLContainerMixin):
+                        write_xyz_lines(node.children)
+        write_xyz_lines(nodes)
+        print >> f, "ENDMDL                                                                          "
+
+
 load_filters = {
     "pdb": LoadPDB(),
+}
+
+dump_filters = {
+    "pdb": DumpPDB(),
 }
 
