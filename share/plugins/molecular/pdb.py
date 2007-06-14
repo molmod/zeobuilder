@@ -21,7 +21,7 @@
 
 
 # See http://www.wwpdb.org/docs.html for details about the pdb format.
-# The implementation below only supports a small fraction of the full 
+# The implementation below only supports a small fraction of the full
 # pdb specification.
 
 import numpy
@@ -57,8 +57,8 @@ class LoadPDB(LoadFilter):
                 atom = Atom(name=line[12:16].strip(), number=atom_info.number)
                 try:
                     atom.transformation.t = numpy.array([
-                            float(line[30:38].strip()), 
-                            float(line[38:46].strip()), 
+                            float(line[30:38].strip()),
+                            float(line[38:46].strip()),
                             float(line[46:54].strip())
                     ]) * angstrom
                 except ValueError:
@@ -92,7 +92,7 @@ class DumpPDB(DumpFilter):
         atom_counter = 0
         if nodes is None:
             nodes = [universe]
-        
+
         Atom = context.application.plugins.get_node("Atom")
         if universe.cell_active.all():
             lengths, angles = universe.get_parameters()
