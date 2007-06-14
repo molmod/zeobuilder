@@ -68,8 +68,6 @@ class ActionManager(gobject.GObject):
         # now
         self.current_action = None
         self.sub_action_counter = 0
-        self.current_primitive = None
-        self.consequences = []
         # flag
         self.record_primitives = False
         self.active = True
@@ -89,26 +87,17 @@ class ActionManager(gobject.GObject):
             not self.record_primitives or
             not self.active
         ), "Can only add primitives when there is a current_action."
-        if self.current_primitive is None:
-            if not primitive.done:
-                if primitive.changes_selection and \
-                   not self.current_action.primitives_change_selection:
-                    self.current_action.primitives_change_selection = True
-                    context.application.main.tree_selection.unselect_all()
-                primitive.init()
-                self.current_primitive = primitive
-                primitive.redo()
-                self.current_primitive = None
-            if self.record_primitives and self.active:
-                self.current_action.primitives.append(primitive)
-            while len(self.consequences) > 0:
-                self.current_primitive = self.consequences.pop(0)
-                self.current_primitive.redo()
-                if self.record_primitives and self.active:
-                    self.current_action.primitives.append(self.current_primitive)
-                self.current_primitive = None
-        else:
-            self.consequences.append(primitive)
+
+        if primitive.changes_selection and \
+           not self.current_action.primitives_change_selection:
+            self.current_action.primitives_change_selection = True
+            context.application.main.tree_selection.unselect_all()
+
+        if not primitive.done:
+            primitive.init()
+            primitive.redo()
+        if self.record_primitives and self.active:
+            self.current_action.primitives.append(primitive)
 
     def cancel_current_action(self):
         assert self.current_action is not None, "Need a current action to cancel."
