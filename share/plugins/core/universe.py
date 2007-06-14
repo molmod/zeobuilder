@@ -122,12 +122,22 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     def add(self, modelobject, index=-1):
         GLContainerBase.add(self, modelobject, index)
         if isinstance(modelobject, GLTransformationMixin):
+            #print "ADD to universe", modelobject.name
             self.child_connections[modelobject] = modelobject.connect("on-transformation-list-invalidated", self.on_child_transformation_changed)
             self.on_child_transformation_changed(modelobject)
+
+    def add_many(self, modelobjects, index=-1):
+        GLContainerBase.add_many(self, modelobjects, index)
+        for modelobject in modelobjects:
+            if isinstance(modelobject, GLTransformationMixin):
+                #print "ADD MANY to universe", modelobject.name
+                self.child_connections[modelobject] = modelobject.connect("on-transformation-list-invalidated", self.on_child_transformation_changed)
+                self.on_child_transformation_changed(modelobject)
 
     def remove(self, modelobject):
         GLContainerBase.remove(self, modelobject)
         if isinstance(modelobject, GLTransformationMixin):
+            print #"REMOVE from universe", modelobject.name
             modelobject.disconnect(self.child_connections[modelobject])
 
     #
