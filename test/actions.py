@@ -579,7 +579,12 @@ class CoreActions(ApplicationTestCase):
     def test_add_periodicities(self):
         def fn():
             context.application.model.file_open("input/periodic.zml")
-            context.application.main.toggle_selection(context.application.model.universe.children[2], on=True)
+            context.application.model.universe.cell_active[:] = False
+            context.application.main.select_nodes([
+                context.application.model.universe.children[2],
+                context.application.model.universe.children[4],
+                context.application.model.universe.children[7],
+            ])
             AddPeriodicities = context.application.plugins.get_action("AddPeriodicities")
             self.assert_(AddPeriodicities.analyze_selection())
             AddPeriodicities()
