@@ -177,15 +177,17 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         # A) calling ancestor
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         cache = context.application.cache
-        if cache.parent is None: return False
         if len(cache.nodes) == 1:
             if not isinstance(cache.last, GLTransformationMixin) or \
                not isinstance(cache.last.transformation, Rotation): return False
+            if cache.last.get_fixed(): return False
         elif len(cache.nodes) == 2:
-            if not isinstance(cache.last, GLTransformationMixin) or \
-               not isinstance(cache.last.transformation, Translation): return False
+            if not ((isinstance(cache.last, GLTransformationMixin) and
+                     isinstance(cache.last.transformation, Translation)) or
+                    isinstance(cache.last, Vector)): return False
             if not isinstance(cache.next_to_last, GLTransformationMixin) or \
                not isinstance(cache.next_to_last.transformation, Complete): return False
+            if cache.last.get_fixed(): return False
         else:
             return False
         if cache.some_nodes_fixed: return False
@@ -203,10 +205,10 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
         nodes = cache.nodes
         last = cache.last
         next_to_last = cache.next_to_last
-        parent = cache.parent
 
         if isinstance(last, Vector):
             if (len(nodes) >= 2) and isinstance(next_to_last, Vector):
+                raise NotImplementedError("This part of the code is not supported yet.")
                 b1 = last.children[0].translation_relative_to(parent)
                 e1 = last.children[1].translation_relative_to(parent)
                 b2 = next_to_last.children[0].translation_relative_to(parent)
@@ -218,12 +220,14 @@ class RotateAroundCenterDialog(ImmediateWithMemory):
                     rotation_vector = numpy.cross(e1 - b1, e2 - b2)
                     self.parameters.complete.set_rotation_properties(angle, rotation_vector, False)
             else:
-                b = last.children[0].translation_relative_to(self.parent)
-                e = last.children[1].translation_relative_to(self.parent)
+                parent = next_to_last.parent
+                b = last.children[0].translation_relative_to(parent)
+                e = last.children[1].translation_relative_to(parent)
                 if (b is not None) and (e is not None):
                     self.parameters.complete.t = b
                     self.parameters.complete.set_rotation_properties(math.pi*0.25, e - b, False)
         elif isinstance(last, GLTransformationMixin) and isinstance(last.transformation, Translation):
+            parent = last.parent
             self.parameters.complete.t = last.get_frame_relative_to(parent).t
         else:
             self.parameters.complete.t = calculate_center(cache.translations)
