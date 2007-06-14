@@ -357,7 +357,7 @@ class MirrorDialog(ImmediateWithMemory):
         if isinstance(last, Plane):
             f = last.parent.get_frame_relative_to(parent)
             self.parameters.center = f.vector_apply(last.center)
-            self.parameters.normal = f.vector_apply(last.normal)
+            self.parameters.normal = numpy.dot(f.r, last.normal)
 
             #b = last.children[0].translation_relative_to(parent)
             #e = last.children[1].translation_relative_to(parent)
