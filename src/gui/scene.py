@@ -135,7 +135,6 @@ class Scene(object):
         # Some default gl settings
         glDepthFunc(GL_LESS)
         glEnable(GL_DEPTH_TEST)
-        glEnable(GL_CULL_FACE)
 
         self.initialize_interactive_tool()
         self.initialize_rotation_center()
