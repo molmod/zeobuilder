@@ -395,8 +395,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
         glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
 
     def draw(self):
-        GLPeriodicContainer.draw(self)
         FrameAxes.draw(self, self.selected)
+        GLPeriodicContainer.draw(self)
 
     def write_pov(self, indenter):
         indenter.write_line("union {", 1)

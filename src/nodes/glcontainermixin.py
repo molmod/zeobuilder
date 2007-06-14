@@ -59,6 +59,7 @@ class GLContainerMixin(ContainerMixin):
     #
 
     def draw_selection(self):
+        glMaterial(GL_FRONT, GL_SHININESS, 70.0)
         if self.selected:
             glCallList(self.boundingbox_list)
 
