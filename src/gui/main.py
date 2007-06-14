@@ -71,7 +71,7 @@ class Main(GladeWrapper):
         renderer_text = gtk.CellRendererText()
         column.pack_start(renderer_text, expand=False)
         def cell_data_func(column, cell, model, iter):
-            cell.set_property("text", model.get_path(iter)[-1]+1)
+            cell.set_property("text", model.get_path(iter)[-1])
         column.set_cell_data_func(renderer_text, cell_data_func)
         self.tree_view.append_column(column)
 
