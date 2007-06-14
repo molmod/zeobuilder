@@ -68,7 +68,7 @@ class CenterAlignBase(Immediate):
 
     def do(self, parent, transformed_children, transformation):
         if isinstance(parent, GLTransformationMixin) and not parent.get_fixed():
-            primitive.Transform(parent, transformation)
+            primitive.Transform(parent, transformation, after=False)
         inverse = copy.deepcopy(transformation)
         inverse.invert()
         for child in transformed_children:
