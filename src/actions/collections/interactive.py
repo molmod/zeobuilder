@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Interactive as InteractiveAction
+from zeobuilder.actions.composed import Interactive as InteractiveAction, UserError, CancelException
 from zeobuilder.gui import load_image
 
 import gtk.gdk, copy
@@ -219,21 +219,45 @@ class InteractiveBar(gtk.Table):
         current_action = candidate()
         self.start_button = event.button
         if hasattr(current_action, "button_press"):
-            current_action.button_press(drawing_area, event)
+            try:
+                current_action.button_press(drawing_area, event)
+            except UserError, e:
+                e.show_message()
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
+            except CancelException:
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
 
     def button_motion(self, drawing_area, event):
         current_action = context.application.action_manager.current_action
         if (current_action is not None) and \
            isinstance(current_action, InteractiveAction) and \
            hasattr(current_action, "button_motion"):
-            current_action.button_motion(drawing_area, event, self.start_button)
+            try:
+                current_action.button_motion(drawing_area, event, self.start_button)
+            except UserError, e:
+                e.show_message()
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
+            except CancelException:
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
 
     def button_release(self, drawing_area, event):
         current_action = context.application.action_manager.current_action
         if current_action is not None and \
            isinstance(current_action, InteractiveAction) and \
            hasattr(current_action, "button_release"):
-            current_action.button_release(drawing_area, event)
+            try:
+                current_action.button_release(drawing_area, event)
+            except UserError, e:
+                e.show_message()
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
+            except CancelException:
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
         self.start_button = 0
 
     def key_press(self, widget, event):
@@ -250,7 +274,15 @@ class InteractiveBar(gtk.Table):
             current_action = candidate()
 
         if hasattr(current_action, "key_press"):
-            current_action.key_press(context.application.main.drawing_area, event)
+            try:
+                current_action.key_press(context.application.main.drawing_area, event)
+            except UserError, e:
+                e.show_message()
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
+            except CancelException:
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
             return True
 
     def key_release(self, widget, event):
@@ -258,5 +290,13 @@ class InteractiveBar(gtk.Table):
         if current_action is not None and \
            isinstance(current_action, InteractiveAction) and \
            hasattr(current_action, "key_release"):
-            current_action.key_release(context.application.main.drawing_area, event)
+            try:
+                current_action.key_release(context.application.main.drawing_area, event)
+            except UserError, e:
+                e.show_message()
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
+            except CancelException:
+                if context.application.action_manager is not None:
+                    context.application.action_manager.cancel_current_action()
             return True

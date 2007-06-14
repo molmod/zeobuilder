@@ -35,7 +35,7 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-import copy, gtk
+import copy, gtk, OpenGL
 
 
 #
@@ -371,8 +371,15 @@ class PickSelection(Interactive):
                 top = self.endy
                 bottom = self.beginy
 
-            for hit in drawing_area.yield_hits((left, top, right, bottom)):
-                main.toggle_selection(hit, event.button!=3)
+            try:
+                for hit in drawing_area.yield_hits((left, top, right, bottom)):
+                    main.toggle_selection(hit, event.button!=3)
+            except OpenGL.GL.GLerror, e:
+                if e.errno[0] == 1283:
+                    raise UserError("Too many objects in selection. Increase selection buffer size.")
+                else:
+                    raise
+
         else:
             hit = drawing_area.get_nearest(event.x, event.y)
             if hit is None:
