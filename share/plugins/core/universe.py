@@ -144,7 +144,9 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     def wrap(self, child):
         cell_index = self.to_index(child.transformation.t)
         if cell_index.any():
-            child.transformation.t -= numpy.dot(self.cell, cell_index)
+            new_transformation = copy.deepcopy(child.transformation)
+            new_transformation.t -= numpy.dot(self.cell, cell_index)
+            primitive.SetProperty(child, "transformation", new_transformation)
 
     def update_child_positions(self):
         if not self.cell_active.any(): return
