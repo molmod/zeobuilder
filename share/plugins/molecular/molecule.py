@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2005 Toon Verstraelen
+# Copyright (C) 2005 Toon Verstraelen, Bartek Szyja
 #
 # This file is part of Zeobuilder.
 #
@@ -767,6 +767,37 @@ class FrameMolecules(Immediate):
                             primitive.Move(referent, frame, select=False)
 
 
+class SelectBondedNeighbors(Immediate):
+    description = "Select bonded neighbors"
+    menu_info = MenuInfo("default/_Select:default", "_Bonded neighbors", order=(0, 3, 0, 5))
+    authors = [authors.bartek_szyja]
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        if len(context.application.cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+
+    def do(self):
+
+        Atom = context.application.plugins.get_node("Atom")
+
+        to_select = []
+
+        for node in context.application.cache.nodes:
+            if isinstance(node, Atom):
+                to_select.append(node)
+                for bond in node.yield_bonds():
+                    if bond.children[0].target not in context.application.cache.nodes:
+                        to_select.append(bond.children[0].target)
+                    if bond.children[1].target not in context.application.cache.nodes:
+                        to_select.append(bond.children[1].target)
+        context.application.main.select_nodes(to_select)
+
+
 actions = {
     "ChemicalFormula": ChemicalFormula,
     "CenterOfMass": CenterOfMass,
@@ -776,6 +807,7 @@ actions = {
     "CloneOrder": CloneOrder,
     "StrongRingDistribution": StrongRingDistribution,
     "FrameMolecules": FrameMolecules,
+    "SelectBondedNeighbors": SelectBondedNeighbors,
 }
 
 

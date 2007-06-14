@@ -38,14 +38,27 @@ toon_verstraelen = Author(
 """Center for Molecular Modeling
 Ghent University
 Proeftuinstraat 86
-9000 Gent
-Belgium
+9000 Gent, Belgium
 Tel: +32 (0)9 264 65 56
 <span foreground="#0000FF" underline="single">Toon.Verstraelen@UGent.be</span>""")
 
 
+bartek_szyja = Author(
+"Bartek Szyja",
+"Contributor",
+"""Eindhoven University of Technology
+Chemical Engineering and Chemistry
+Molecular Heterogeneous Catalysis
+PO Box 513, STW 4.22
+5600 MB Eindhoven, The Netherlands
+Tel: +31 40 247 2124
+Fax: +31 40 245 5054
+<span foreground="#0000FF" underline="single">B.M.Szyja@tue.nl</span>""")
+
+
 all = [
-    toon_verstraelen
+    toon_verstraelen,
+    bartek_szyja,
 ]
 
 

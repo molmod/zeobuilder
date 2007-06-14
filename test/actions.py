@@ -944,6 +944,14 @@ class MolecularActions(ApplicationTestCase):
             FrameMolecules()
         self.run_test_application(fn)
 
+    def test_select_bonded_neighbors(self):
+        def fn():
+            context.application.model.file_open("input/minimizers.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[0].children[0:1])
+            SelectBondedNeighbors = context.application.plugins.get_action("SelectBondedNeighbors")
+            self.assert_(SelectBondedNeighbors.analyze_selection())
+            SelectBondedNeighbors()
+        self.run_test_application(fn)
 
 
 class BuilderActions(ApplicationTestCase):
