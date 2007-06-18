@@ -820,9 +820,9 @@ class SuperCell(ImmediateWithMemory):
             primitive.Add(connector, universe)
 
 
-class AddPeriodicities(Immediate):
+class DefineUnitCellVectors(Immediate):
     description = "Wraps the universe in a unit cell"
-    menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Add periodicities", order=(0, 4, 1, 4, 0, 2))
+    menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Define unit cell vector(s)", order=(0, 4, 1, 4, 0, 2))
     repeatable = False
     authors = [authors.toon_verstraelen]
 
@@ -865,5 +865,5 @@ nodes = {
 actions = {
     "UnitCellToCluster": UnitCellToCluster,
     "SuperCell": SuperCell,
-    "AddPeriodicities": AddPeriodicities,
+    "DefineUnitCellVectors": DefineUnitCellVectors,
 }

@@ -576,7 +576,7 @@ class CoreActions(ApplicationTestCase):
             SuperCell(parameters)
         self.run_test_application(fn)
 
-    def test_add_periodicities(self):
+    def test_define_unit_cell_vectors(self):
         def fn():
             context.application.model.file_open("input/periodic.zml")
             context.application.model.universe.cell_active[:] = False
@@ -585,9 +585,9 @@ class CoreActions(ApplicationTestCase):
                 context.application.model.universe.children[4],
                 context.application.model.universe.children[7],
             ])
-            AddPeriodicities = context.application.plugins.get_action("AddPeriodicities")
-            self.assert_(AddPeriodicities.analyze_selection())
-            AddPeriodicities()
+            DefineUnitCellVectors = context.application.plugins.get_action("DefineUnitCellVectors")
+            self.assert_(DefineUnitCellVectors.analyze_selection())
+            DefineUnitCellVectors()
         self.run_test_application(fn)
 
     def test_calculate_average(self):
