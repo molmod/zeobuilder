@@ -66,7 +66,6 @@ class LoadPDB(LoadFilter):
                 universe.add(atom)
             elif line.startswith("CRYST1"):
                 space_group = line[55:66].strip().upper()
-                print line[55:66]
                 if space_group != "P 1":
                     raise FilterError("Error while reading PDB file: only unit cells with space group P 1 are supported.")
                 a = float(line[6:15].strip())*angstrom

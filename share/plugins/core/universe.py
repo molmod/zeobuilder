@@ -137,7 +137,7 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     def remove(self, modelobject):
         GLContainerBase.remove(self, modelobject)
         if isinstance(modelobject, GLTransformationMixin):
-            print #"REMOVE from universe", modelobject.name
+            #print "REMOVE from universe", modelobject.name
             modelobject.disconnect(self.child_connections[modelobject])
 
     #
