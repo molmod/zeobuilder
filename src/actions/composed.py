@@ -158,7 +158,6 @@ class ImmediateMixin(object):
             if context.application.action_manager is not None:
                 context.application.action_manager.cancel_current_action()
 
-
     def do(self):
         raise NotImplementedError
 
@@ -221,9 +220,7 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
             else:
                 self.parameters = self.default_parameters()
             self.ask_parameters()
-        if self.parameters.empty():
-            raise CancelException
-        else:
+        if not self.parameters.empty():
             if self.store_last_parameters:
                 self.store_parameters(self.parameters)
             Immediate.__init__(self)

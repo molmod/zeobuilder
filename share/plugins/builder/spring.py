@@ -49,11 +49,11 @@ import numpy, gtk
 import math, copy, time
 
 
-__all__ = ["Minimizer"]
+__all__ = ["Spring"]
 
 
-class Minimizer(Vector, ColorMixin):
-    info = ModelObjectInfo("plugins/builder/minimizer.svg")
+class Spring(Vector, ColorMixin):
+    info = ModelObjectInfo("plugins/builder/spring.svg")
     authors = [authors.toon_verstraelen]
 
     #
@@ -160,18 +160,18 @@ class Minimizer(Vector, ColorMixin):
             self.bounding_box.extend_with_point(numpy.array([self.radius, self.radius, self.length]))
 
 
-class ConnectMinimizer(ConnectBase):
-    description = "Connect with minimizer"
-    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Minimizer", image_name="plugins/builder/minimizer.svg", order=(0, 4, 1, 3, 0, 4))
+class ConnectSpring(ConnectBase):
+    description = "Connect with spring"
+    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Spring", image_name="plugins/builder/spring.svg", order=(0, 4, 1, 3, 0, 4))
     authors = [authors.toon_verstraelen]
 
     def new_connector(self, begin, end):
-        return Minimizer(targets=[begin, end])
+        return Spring(targets=[begin, end])
 
 
-class AutoConnectMinimizers(AutoConnectMixin, Immediate):
-    description = "Connect overlapping atoms with minimizers"
-    menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Connect overlapping atoms with minimizers", order=(0, 4, 1, 6, 0, 0))
+class AutoConnectSprings(AutoConnectMixin, Immediate):
+    description = "Connect overlapping atoms with springs"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:spring", "_Connect overlapping atoms with springs", order=(0, 4, 1, 6, 0, 0))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
@@ -188,13 +188,13 @@ class AutoConnectMinimizers(AutoConnectMixin, Immediate):
     def get_vector(self, atom1, atom2, distance):
         for reference in atom2.references:
             referent = reference.parent
-            if isinstance(referent, Minimizer):
+            if isinstance(referent, Spring):
                 if (referent.children[0].target == atom1) or \
                    (referent.children[1].target == atom1):
                     return None
 
         if 0.5*(periodic[atom1.number].radius + periodic[atom2.number].radius) >= distance:
-            return Minimizer(targets=[atom1, atom2])
+            return Spring(targets=[atom1, atom2])
         else:
             return None
 
@@ -202,15 +202,15 @@ class AutoConnectMinimizers(AutoConnectMixin, Immediate):
         AutoConnectMixin.do(self, periodic.max_radius)
 
 
-class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
+class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
     def __init__(self):
-        GladeWrapper.__init__(self, "plugins/builder/gui.glade", "di_minimize", "dialog")
+        GladeWrapper.__init__(self, "plugins/builder/gui.glade", "di_optimize", "dialog")
         ChildProcessDialog.__init__(self, self.dialog, self.dialog.action_area.get_children())
-        self.init_callbacks(MinimizeReportDialog)
+        self.init_callbacks(OptimizationReportDialog)
         self.init_proxies(["la_num_iter", "la_rms_error", "progress_bar"])
         self.state_indices = None
 
-    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps, num_minimizers):
+    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps, num_springs):
         self.la_num_iter.set_text("0")
         self.la_rms_error.set_text(express_measure(0.0, "Length"))
         self.progress_bar.set_fraction(0.0)
@@ -219,7 +219,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         self.involved_frames = involved_frames
         self.update_interval = update_interval
         self.update_steps = update_steps
-        self.num_minimizers = num_minimizers
+        self.num_springs = num_springs
 
         self.last_time = time.time()
         self.last_step = 0
@@ -234,7 +234,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         del self.update_steps
         del self.last_time
         del self.last_step
-        del self.num_minimizers
+        del self.num_springs
         del self.status
 
         return result
@@ -255,7 +255,7 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
     def update_gui(self):
         if self.status is not None:
             self.la_num_iter.set_text("%i" % self.status.step)
-            self.la_rms_error.set_text(express_measure(math.sqrt(self.status.value/self.num_minimizers), "Length"))
+            self.la_rms_error.set_text(express_measure(math.sqrt(self.status.value/self.num_springs), "Length"))
             self.progress_bar.set_text("%i%%" % int(self.status.progress*100))
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
@@ -280,16 +280,16 @@ class MinimizeReportDialog(ChildProcessDialog, GladeWrapper):
         self.update_gui()
 
 
-def get_minimizer_problem(cache):
-    class MinimizerProblem:
-        minimizers = {}
+def get_spring_problem(cache):
+    class SpringProblem:
+        springs = {}
         frames = set([])
-    result = MinimizerProblem()
+    result = SpringProblem()
     parent = cache.parent
     if parent is None:
         return
     for node in cache.nodes:
-        if not isinstance(node, Minimizer):
+        if not isinstance(node, Spring):
             return
         two_frames = {}
         for child in node.children:
@@ -303,17 +303,17 @@ def get_minimizer_problem(cache):
             if not isinstance(frame, GLFrameBase):
                 return None
             two_frames[child.target] = frame
-        result.minimizers[node] = two_frames
+        result.springs[node] = two_frames
         for frame in two_frames.itervalues():
             result.frames.add(frame)
     result.frames = list(result.frames)
     return result
-get_minimizer_problem.authors=[authors.toon_verstraelen]
+get_spring_problem.authors=[authors.toon_verstraelen]
 
 
-class MinimizeDistances(ImmediateWithMemory):
-    description = "Minimize the minimizer's lengths"
-    menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Minimize selected distances", order=(0, 4, 1, 6, 0, 1))
+class OptimizeSprings(ImmediateWithMemory):
+    description = "Optimize the springs"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:spring", "_Optimize the selected springs", order=(0, 4, 1, 6, 0, 1))
     authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
@@ -338,7 +338,7 @@ class MinimizeDistances(ImmediateWithMemory):
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK)),
     )
 
-    report_dialog = MinimizeReportDialog()
+    report_dialog = OptimizationReportDialog()
 
     @staticmethod
     def analyze_selection(parameters=None):
@@ -347,11 +347,11 @@ class MinimizeDistances(ImmediateWithMemory):
         # B) validating
         cache = context.application.cache
         for Class in cache.classes:
-            if not issubclass(Class, Minimizer): return False
+            if not issubclass(Class, Spring): return False
         if cache.parent is None: return False
-        minimizer_problem = cache.minimizer_problem
-        if minimizer_problem is None: return False
-        if len(minimizer_problem.frames) == 0: return False
+        spring_problem = cache.spring_problem
+        if spring_problem is None: return False
+        if len(spring_problem.frames) == 0: return False
         # C) passed all tests:
         return True
 
@@ -374,8 +374,8 @@ class MinimizeDistances(ImmediateWithMemory):
     def do(self):
         cache = context.application.cache
         parent = cache.parent
-        involved_frames = cache.minimizer_problem.frames
-        minimizers = cache.minimizer_problem.minimizers
+        involved_frames = cache.spring_problem.frames
+        springs = cache.spring_problem.springs
         max_step = []
 
         old_transformations = [
@@ -405,8 +405,8 @@ class MinimizeDistances(ImmediateWithMemory):
             else:
                 raise UserError("The involved frames shoud be at least capable of being translated.")
 
-        for minimizer, frames in minimizers.iteritems():
-            cost_term = iterative.expr.Spring(minimizer.rest_length)
+        for spring, frames in springs.iteritems():
+            cost_term = iterative.expr.Spring(spring.rest_length)
             for target, frame in frames.iteritems():
                 cost_term.register_input_variable(
                     cost_function.state_variables[involved_frames.index(frame)],
@@ -425,7 +425,7 @@ class MinimizeDistances(ImmediateWithMemory):
             involved_frames,
             self.parameters.update_interval,
             self.parameters.update_steps,
-            len(minimizers),
+            len(springs),
         )
         if result != gtk.RESPONSE_OK:
             for frame, transformation in old_transformations:
@@ -439,9 +439,9 @@ class MinimizeDistances(ImmediateWithMemory):
             )
 
 
-class MergeAtomsConnectedWithMinimizer(Immediate):
-    description = "Merge atoms connected by minimizer"
-    menu_info = MenuInfo("default/_Object:tools/_Builder:minimizer", "_Merge atoms connected by minimizer", order=(0, 4, 1, 6, 0, 2))
+class MergeAtomsConnectedWithSpring(Immediate):
+    description = "Merge atoms connected by spring"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:spring", "_Merge atoms connected by spring", order=(0, 4, 1, 6, 0, 2))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
@@ -451,7 +451,7 @@ class MergeAtomsConnectedWithMinimizer(Immediate):
         # B) validating
         cache = context.application.cache
         for cls in cache.classes:
-            if not issubclass(cls, Minimizer):
+            if not issubclass(cls, Spring):
                 return False
         # C) passed all tests:
         return True
@@ -460,38 +460,38 @@ class MergeAtomsConnectedWithMinimizer(Immediate):
         Atom = context.application.plugins.get_node("Atom")
 
         cache = context.application.cache
-        for minimizer in list(cache.nodes):
-            atom1, atom2 = minimizer.get_targets()
+        for spring in list(cache.nodes):
+            atom1, atom2 = spring.get_targets()
             if isinstance(atom1, Atom) and isinstance(atom2, Atom):
                 replacement = Atom(
                     name="Merge of %s and %s" % (atom1.name, atom2.name),
                     number=max([atom1.number, atom2.number])
                 )
                 replacement.transformation.t = 0.5*(
-                    atom1.get_frame_relative_to(minimizer.parent).t +
-                    atom2.get_frame_relative_to(minimizer.parent).t
+                    atom1.get_frame_relative_to(spring.parent).t +
+                    atom2.get_frame_relative_to(spring.parent).t
                 )
-            primitive.Add(replacement, minimizer.parent, minimizer.get_index())
+            primitive.Add(replacement, spring.parent, spring.get_index())
             for atom in [atom1, atom2]:
                 while len(atom.references) > 0:
                     primitive.SetTarget(atom.references[0], replacement)
-            primitive.Delete(minimizer)
+            primitive.Delete(spring)
             primitive.Delete(atom1)
             primitive.Delete(atom2)
 
 
 nodes = {
-    "Minimizer": Minimizer
+    "Spring": Spring
 }
 
 
 actions = {
-    "ConnectMinimizer": ConnectMinimizer,
-    "AutoConnectMinimizers": AutoConnectMinimizers,
-    "MinimizeDistances": MinimizeDistances,
-    "MergeAtomsConnectedWithMinimizer": MergeAtomsConnectedWithMinimizer,
+    "ConnectSpring": ConnectSpring,
+    "AutoConnectSprings": AutoConnectSprings,
+    "OptimizeSprings": OptimizeSprings,
+    "MergeAtomsConnectedWithSpring": MergeAtomsConnectedWithSpring,
 }
 
 cache_plugins = {
-    "minimizer_problem": get_minimizer_problem,
+    "spring_problem": get_spring_problem,
 }

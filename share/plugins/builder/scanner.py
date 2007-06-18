@@ -198,69 +198,69 @@ class ConscanResultsWindow(GladeWrapper):
         self.frame2.set_transformation(transformation)
         primitive.SetProperty(self.frame2, "transformation", old_transformation, done=True)
 
-    def connect_minimizers(self):
+    def connect_springs(self):
         model, iter = self.tree_selection.get_selected()
-        Minimizer = context.application.plugins.get_node("Minimizer")
+        Spring = context.application.plugins.get_node("Spring")
         if self.cb_inverse.get_active() and len(model.get_value(iter, 3)[3]) > 0:
-            minimizers = [
-                Minimizer(targets=[node1(), node2()])
+            springs = [
+                Spring(targets=[node1(), node2()])
                 for node1, node2
                 in model.get_value(iter, 3)[3]
             ]
         else:
-            minimizers = [
-                Minimizer(targets=[node1(), node2()])
+            springs = [
+                Spring(targets=[node1(), node2()])
                 for node1, node2
                 in model.get_value(iter, 3)[2]
             ]
         parent = common_parent([self.frame1, self.frame2])
-        for minimizer in minimizers:
-            primitive.Add(minimizer, parent)
-        return minimizers
+        for spring in springs:
+            primitive.Add(spring, parent)
+        return springs
 
-    def free_optimize(self, minimizers):
-        context.application.main.select_nodes(minimizers)
-        MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
+    def free_optimize(self, springs):
+        context.application.main.select_nodes(springs)
+        OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
         parameters = Parameters()
         parameters.allow_rotation = True
         parameters.update_interval = 0.4
         parameters.update_steps = 1
         parameters.auto_close_report_dialog = True
-        MinimizeDistances(parameters)
+        OptimizeSprings(parameters)
 
-    def translate_optimize(self, minimizers):
-        context.application.main.select_nodes(minimizers)
-        MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
+    def translate_optimize(self, springs):
+        context.application.main.select_nodes(springs)
+        OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
         parameters = Parameters()
         parameters.allow_rotation = False
         parameters.update_interval = 0.4
         parameters.update_steps = 1
         parameters.auto_close_report_dialog = True
-        MinimizeDistances(parameters)
+        OptimizeSprings(parameters)
 
     def round_rotation(self):
         context.application.main.select_nodes([self.frame1, self.frame2])
         RoundRotation = context.application.plugins.get_action("RoundRotation")
         RoundRotation()
 
-    def clean_minimizers(self, minimizers):
-        for minimizer in minimizers:
-            primitive.Delete(minimizer)
+    def clean_springs(self, springs):
+        for spring in springs:
+            primitive.Delete(spring)
 
     def optimize(self):
-        minimizers = self.connect_minimizers()
-        self.free_optimize(minimizers)
-        self.clean_minimizers(minimizers)
+        springs = self.connect_springs()
+        self.free_optimize(springs)
+        self.clean_springs(springs)
 
     def optimize_and_round(self):
-        minimizers = self.connect_minimizers()
-        self.free_optimize(minimizers)
+        springs = self.connect_springs()
+        self.free_optimize(springs)
         try:
             self.round_rotation()
-            self.translate_optimize(minimizers)
+            self.translate_optimize(springs)
         except UserError, CancelException:
             pass
-        self.clean_minimizers(minimizers)
+        self.clean_springs(springs)
 
     def auto_apply(self):
         if self.cb_auto_apply.get_active() and \
@@ -288,7 +288,7 @@ class ConscanResultsWindow(GladeWrapper):
         action.finish()
 
     def on_bu_apply_opt_clicked(self, button):
-        action = CustomAction("Apply connection and minimize distances")
+        action = CustomAction("Apply connection and optimize springs")
         old_selection = copy.copy(context.application.cache.nodes)
         self.apply_normal()
         self.optimize()
@@ -296,7 +296,7 @@ class ConscanResultsWindow(GladeWrapper):
         action.finish()
 
     def on_bu_apply_opt_round_clicked(self, button):
-        action = CustomAction("Apply connection, minimize and round rotation")
+        action = CustomAction("Apply connection, optimize and round rotation")
         old_selection = copy.copy(context.application.cache.nodes)
         self.apply_normal()
         self.optimize_and_round()

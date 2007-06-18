@@ -911,7 +911,7 @@ class MolecularActions(ApplicationTestCase):
 
     def test_clone_order(self):
         def fn():
-            context.application.model.file_open("input/minimizers.zml")
+            context.application.model.file_open("input/springs.zml")
             context.application.main.select_nodes(context.application.model.universe.children[:2])
             CloneOrder = context.application.plugins.get_action("CloneOrder")
             self.assert_(CloneOrder.analyze_selection())
@@ -920,7 +920,7 @@ class MolecularActions(ApplicationTestCase):
 
     def test_strong_ring_distribution(self):
         def fn():
-            context.application.model.file_open("input/minimizers.zml")
+            context.application.model.file_open("input/springs.zml")
             context.application.main.select_nodes([context.application.model.universe.children[1]])
 
             StrongRingDistribution = context.application.plugins.get_action("StrongRingDistribution")
@@ -930,7 +930,7 @@ class MolecularActions(ApplicationTestCase):
 
     def test_frame_molecules(self):
         def fn():
-            context.application.model.file_open("input/minimizers.zml")
+            context.application.model.file_open("input/springs.zml")
             context.application.main.select_nodes(context.application.model.universe.children[0:1])
 
             UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
@@ -946,7 +946,7 @@ class MolecularActions(ApplicationTestCase):
 
     def test_select_bonded_neighbors(self):
         def fn():
-            context.application.model.file_open("input/minimizers.zml")
+            context.application.model.file_open("input/springs.zml")
             context.application.main.select_nodes(context.application.model.universe.children[0].children[0:1])
             SelectBondedNeighbors = context.application.plugins.get_action("SelectBondedNeighbors")
             self.assert_(SelectBondedNeighbors.analyze_selection())
@@ -968,23 +968,23 @@ class BuilderActions(ApplicationTestCase):
             self.assert_(AddAtom.analyze_selection())
             AddAtom()
             context.application.main.select_nodes(context.application.model.universe.children)
-            ConnectMinimizer = context.application.plugins.get_action("ConnectMinimizer")
-            self.assert_(ConnectMinimizer.analyze_selection())
-            ConnectMinimizer()
+            ConnectSpring = context.application.plugins.get_action("ConnectSpring")
+            self.assert_(ConnectSpring.analyze_selection())
+            ConnectSpring()
         self.run_test_application(fn)
 
-    def test_auto_connect_minimizers_lau(self):
+    def test_auto_connect_springs_lau(self):
         def fn():
             context.application.model.file_open("input/lau_double.zml")
             context.application.main.select_nodes([context.application.model.universe])
-            AutoConnectMinimizers = context.application.plugins.get_action("AutoConnectMinimizers")
-            self.assert_(AutoConnectMinimizers.analyze_selection())
-            AutoConnectMinimizers()
+            AutoConnectSprings = context.application.plugins.get_action("AutoConnectSprings")
+            self.assert_(AutoConnectSprings.analyze_selection())
+            AutoConnectSprings()
         self.run_test_application(fn)
 
-    def test_minimize_distances(self):
+    def test_optimize_springs(self):
         def fn():
-            context.application.model.file_open("input/minimizers.zml")
+            context.application.model.file_open("input/springs.zml")
             context.application.main.select_nodes(context.application.model.universe.children[2:])
 
             parameters = Parameters()
@@ -993,14 +993,14 @@ class BuilderActions(ApplicationTestCase):
             parameters.update_steps = 1
             parameters.auto_close_report_dialog = True
 
-            MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
-            self.assert_(MinimizeDistances.analyze_selection(parameters))
-            MinimizeDistances(parameters)
+            OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
+            self.assert_(OptimizeSprings.analyze_selection(parameters))
+            OptimizeSprings(parameters)
         self.run_test_application(fn)
 
-    def test_minimize_distances_translation(self):
+    def test_optimize_springs_translation(self):
         def fn():
-            context.application.model.file_open("input/minimizers.zml")
+            context.application.model.file_open("input/springs.zml")
             context.application.main.select_nodes(context.application.model.universe.children[2:])
 
             parameters = Parameters()
@@ -1009,19 +1009,19 @@ class BuilderActions(ApplicationTestCase):
             parameters.update_steps = 1
             parameters.auto_close_report_dialog = True
 
-            MinimizeDistances = context.application.plugins.get_action("MinimizeDistances")
-            self.assert_(MinimizeDistances.analyze_selection(parameters))
-            MinimizeDistances(parameters)
+            OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
+            self.assert_(OptimizeSprings.analyze_selection(parameters))
+            OptimizeSprings(parameters)
         self.run_test_application(fn)
 
-    def test_merge_atoms_connected_with_minimizer(self):
+    def test_merge_atoms_connected_with_spring(self):
         def fn():
-            context.application.model.file_open("input/minimizers.zml")
+            context.application.model.file_open("input/springs.zml")
             context.application.main.select_nodes(context.application.model.universe.children[2:])
 
-            MergeAtomsConnectedWithMinimizer = context.application.plugins.get_action("MergeAtomsConnectedWithMinimizer")
-            self.assert_(MergeAtomsConnectedWithMinimizer.analyze_selection())
-            MergeAtomsConnectedWithMinimizer()
+            MergeAtomsConnectedWithSpring = context.application.plugins.get_action("MergeAtomsConnectedWithSpring")
+            self.assert_(MergeAtomsConnectedWithSpring.analyze_selection())
+            MergeAtomsConnectedWithSpring()
         self.run_test_application(fn)
 
     def test_triangle_conscan(self):

@@ -2076,8 +2076,8 @@
       </model_object>
      </list>
     </model_object>
-    <model_object id='187' class='Minimizer'>
-     <str label="name">Minimizer 1</str>
+    <model_object id='187' class='Spring'>
+     <str label="name">Spring 1</str>
      <array label="color">
       <shape>4 </shape>
       <cells>0.7 0.7 0.7 1.0 </cells>
@@ -2091,8 +2091,8 @@
       <reference to='113' />
      </list>
     </model_object>
-    <model_object id='188' class='Minimizer'>
-     <str label="name">Minimizer 2</str>
+    <model_object id='188' class='Spring'>
+     <str label="name">Spring 2</str>
      <array label="color">
       <shape>4 </shape>
       <cells>0.7 0.7 0.7 1.0 </cells>
@@ -2106,8 +2106,8 @@
       <reference to='116' />
      </list>
     </model_object>
-    <model_object id='189' class='Minimizer'>
-     <str label="name">Minimizer 3</str>
+    <model_object id='189' class='Spring'>
+     <str label="name">Spring 3</str>
      <array label="color">
       <shape>4 </shape>
       <cells>0.7 0.7 0.7 1.0 </cells>
@@ -2121,8 +2121,8 @@
       <reference to='9' />
      </list>
     </model_object>
-    <model_object id='190' class='Minimizer'>
-     <str label="name">Minimizer</str>
+    <model_object id='190' class='Spring'>
+     <str label="name">Spring</str>
      <array label="color">
       <shape>4 </shape>
       <cells>0.7 0.7 0.7 1.0 </cells>
