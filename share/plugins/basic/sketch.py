@@ -58,7 +58,7 @@ class SketchOptions(GladeWrapper):
     )
 
     def __init__(self):
-        GladeWrapper.__init__(self, "plugins/core/gui.glade", "wi_sketch", "window")
+        GladeWrapper.__init__(self, "plugins/basic/gui.glade", "wi_sketch", "window")
         self.window.hide()
         self.init_callbacks(self.__class__)
         self.init_proxies([
@@ -178,7 +178,7 @@ class SketchOptions(GladeWrapper):
 
 class Sketch(Interactive):
     description = "Sketch objects and connectors"
-    interactive_info = InteractiveInfo("plugins/core/geom_sketch.svg", mouse=True)
+    interactive_info = InteractiveInfo("plugins/basic/geom_sketch.svg", mouse=True)
     authors = [authors.toon_verstraelen]
 
     options = SketchOptions()
@@ -308,7 +308,7 @@ class SketchInteractiveGroup(InteractiveGroup):
 
 interactive_groups = {
     "geom_sketch": SketchInteractiveGroup(
-        image_name="plugins/core/geom_sketch.svg",
+        image_name="plugins/basic/geom_sketch.svg",
         description="Geometric sketch tool",
         order=6,
         authors=[authors.toon_verstraelen],

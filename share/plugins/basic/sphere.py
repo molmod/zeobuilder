@@ -39,7 +39,7 @@ import numpy
 
 
 class Sphere(GLGeometricBase, ColorMixin):
-    info = ModelObjectInfo("plugins/core/sphere.svg")
+    info = ModelObjectInfo("plugins/basic/sphere.svg")
     authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
@@ -108,7 +108,7 @@ class Sphere(GLGeometricBase, ColorMixin):
 
 class AddSphere(AddBase):
     description = "Add sphere"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Sphere", image_name="plugins/core/sphere.svg", order=(0, 4, 1, 0, 0, 1))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Sphere", image_name="plugins/basic/sphere.svg", order=(0, 4, 1, 0, 0, 1))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

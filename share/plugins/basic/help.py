@@ -32,7 +32,7 @@ import gtk
 
 class InfoDialog(GladeWrapper):
     def __init__(self):
-        GladeWrapper.__init__(self, "plugins/core/gui.glade", "di_plugin_info", "dialog")
+        GladeWrapper.__init__(self, "plugins/basic/gui.glade", "di_plugin_info", "dialog")
         self.dialog.hide()
         self.init_proxies([
             "la_category", "la_required_modules", "la_failed_modules",

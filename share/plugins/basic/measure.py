@@ -41,7 +41,7 @@ import math
 
 class MeasurementsWindow(GladeWrapper):
     def __init__(self):
-        GladeWrapper.__init__(self, "plugins/core/gui.glade", "wi_measurements", "window")
+        GladeWrapper.__init__(self, "plugins/basic/gui.glade", "wi_measurements", "window")
         self.window.hide()
         self.init_callbacks(self.__class__)
 
@@ -341,7 +341,7 @@ class MeasurementsWindow(GladeWrapper):
 
 class Measure(Interactive):
     description = "Measure distances and angles"
-    interactive_info = InteractiveInfo("plugins/core/measure.svg", mouse=True)
+    interactive_info = InteractiveInfo("plugins/basic/measure.svg", mouse=True)
     authors = [authors.toon_verstraelen]
 
     measurements = MeasurementsWindow()
@@ -385,7 +385,7 @@ actions = {
 
 interactive_groups = {
     "measure": InteractiveGroup(
-        image_name="plugins/core/measure.svg",
+        image_name="plugins/basic/measure.svg",
         description="Measurement tool",
         order=5,
         authors=[authors.toon_verstraelen],

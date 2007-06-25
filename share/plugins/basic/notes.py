@@ -32,7 +32,7 @@ import StringIO
 
 
 class Notes(ModelObject):
-    info = ModelObjectInfo("plugins/core/notes.svg")
+    info = ModelObjectInfo("plugins/basic/notes.svg")
     authors = [authors.toon_verstraelen]
 
     #
@@ -60,7 +60,7 @@ class Notes(ModelObject):
 
 class AddNotes(AddBase):
     description = "Add notes"
-    menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Notes", image_name="plugins/core/notes.svg", order=(0, 4, 1, 0, 1, 1))
+    menu_info = MenuInfo("default/_Object:tools/_Add:non3d", "_Notes", image_name="plugins/basic/notes.svg", order=(0, 4, 1, 0, 1, 1))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

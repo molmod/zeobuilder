@@ -38,7 +38,7 @@ import copy, numpy
 
 
 class Box(GLGeometricBase, ColorMixin):
-    info = ModelObjectInfo("plugins/core/box.svg")
+    info = ModelObjectInfo("plugins/basic/box.svg")
     authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
@@ -135,7 +135,7 @@ class Box(GLGeometricBase, ColorMixin):
 
 class AddBox(AddBase):
     description = "Add box"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Box", image_name="plugins/core/box.svg", order=(0, 4, 1, 0, 0, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Box", image_name="plugins/basic/box.svg", order=(0, 4, 1, 0, 0, 0))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

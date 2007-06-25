@@ -41,7 +41,7 @@ import numpy
 
 
 class Point(GLGeometricBase, ColorMixin):
-    info = ModelObjectInfo("plugins/core/point.svg")
+    info = ModelObjectInfo("plugins/basic/point.svg")
     authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
@@ -162,7 +162,7 @@ class Point(GLGeometricBase, ColorMixin):
 
 class AddPoint(AddBase):
     description = "Add point"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Point", image_name="plugins/core/point.svg", order=(0, 4, 1, 0, 0, 2))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Point", image_name="plugins/basic/point.svg", order=(0, 4, 1, 0, 0, 2))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

@@ -680,7 +680,7 @@ class RotateObjectBase(InteractiveWithMemory):
 
 class RotateObjectMouse(RotateObjectBase, RotateMouseMixin):
     description = "Rotate object"
-    interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/rotate.svg", mouse=True, order=0)
     authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
@@ -689,7 +689,7 @@ class RotateObjectMouse(RotateObjectBase, RotateMouseMixin):
 
 class RotateObjectKeyboard(RotateObjectBase, RotateKeyboardMixin):
     description = "Rotate object"
-    interactive_info = InteractiveInfo("plugins/core/rotate.svg", keyboard=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/rotate.svg", keyboard=True, order=0)
     authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
@@ -721,7 +721,7 @@ class RotateWorldBase(Interactive):
 
 class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
     description = "Rotate world"
-    interactive_info = InteractiveInfo("plugins/core/rotate.svg", mouse=True, order=1)
+    interactive_info = InteractiveInfo("plugins/basic/rotate.svg", mouse=True, order=1)
     authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
@@ -730,7 +730,7 @@ class RotateWorldMouse(RotateWorldBase, RotateMouseMixin):
 
 class RotateWorldKeyboard(RotateWorldBase, RotateKeyboardMixin):
     description = "Rotate world"
-    interactive_info = InteractiveInfo("plugins/core/rotate.svg", keyboard=True, order=1)
+    interactive_info = InteractiveInfo("plugins/basic/rotate.svg", keyboard=True, order=1)
     authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
@@ -857,7 +857,7 @@ class TranslateObjectBase(InteractiveWithMemory):
 
 class TranslateObjectMouse(TranslateObjectBase, TranslateMouseMixin):
     description = "Translate the selected object"
-    interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/translate.svg", mouse=True, order=0)
     authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
@@ -866,7 +866,7 @@ class TranslateObjectMouse(TranslateObjectBase, TranslateMouseMixin):
 
 class TranslateObjectKeyboard(TranslateObjectBase, TranslateKeyboardMixin):
     description = "Translate the selected object"
-    interactive_info = InteractiveInfo("plugins/core/translate.svg", keyboard=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/translate.svg", keyboard=True, order=0)
     authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
@@ -898,7 +898,7 @@ class TranslateWorldBase(Interactive):
 
 class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
     description = "Translate world"
-    interactive_info = InteractiveInfo("plugins/core/translate.svg", mouse=True, order=1)
+    interactive_info = InteractiveInfo("plugins/basic/translate.svg", mouse=True, order=1)
     authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
@@ -907,7 +907,7 @@ class TranslateWorldMouse(TranslateWorldBase, TranslateMouseMixin):
 
 class TranslateWorldKeyboard(TranslateWorldBase, TranslateKeyboardMixin):
     description = "Translate world"
-    interactive_info = InteractiveInfo("plugins/core/translate.svg", keyboard=True, order=1)
+    interactive_info = InteractiveInfo("plugins/basic/translate.svg", keyboard=True, order=1)
     authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
@@ -943,7 +943,7 @@ class TranslateViewerBase(Interactive):
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
     description = "Translate the viewer position"
-    interactive_info = InteractiveInfo("plugins/core/translate_viewer.svg", mouse=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/translate_viewer.svg", mouse=True, order=0)
     authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
@@ -952,7 +952,7 @@ class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
 
 class TranslateViewerKeyboard(TranslateViewerBase, TranslateKeyboardMixin):
     description = "Translate the viewer position"
-    interactive_info = InteractiveInfo("plugins/core/translate_viewer.svg", keyboard=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/translate_viewer.svg", keyboard=True, order=0)
     authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
@@ -998,7 +998,7 @@ class TranslateRotationCenterBase(Interactive):
 
 class TranslateRotationCenterMouse(TranslateRotationCenterBase, TranslateMouseMixin):
     description = "Translate the rotation center"
-    interactive_info = InteractiveInfo("plugins/core/translate_center.svg", mouse=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/translate_center.svg", mouse=True, order=0)
     authors = [authors.toon_verstraelen]
 
     def button_motion(self, drawing_area, event, start_button):
@@ -1007,7 +1007,7 @@ class TranslateRotationCenterMouse(TranslateRotationCenterBase, TranslateMouseMi
 
 class TranslateRotationCenterKeyboard(TranslateRotationCenterBase, TranslateKeyboardMixin):
     description = "Translate the rotation center"
-    interactive_info = InteractiveInfo("plugins/core/translate_center.svg", keyboard=True, order=0)
+    interactive_info = InteractiveInfo("plugins/basic/translate_center.svg", keyboard=True, order=0)
     authors = [authors.toon_verstraelen]
     sensitive_keys = [65365, 65366, 65363, 65361, 65364, 65362]
 
@@ -1045,28 +1045,28 @@ actions = {
 
 interactive_groups = {
     "rotate": InteractiveGroup(
-        image_name="plugins/core/rotate.svg",
+        image_name="plugins/basic/rotate.svg",
         description="Rotate",
         initial_mask=gtk.gdk.CONTROL_MASK,
         order=1,
         authors=[authors.toon_verstraelen],
     ),
     "translate": InteractiveGroup(
-        image_name="plugins/core/translate.svg",
+        image_name="plugins/basic/translate.svg",
         description="Translate",
         initial_mask=gtk.gdk.SHIFT_MASK,
         order=2,
         authors=[authors.toon_verstraelen],
     ),
     "translate_viewer": InteractiveGroup(
-        image_name="plugins/core/translate_viewer.svg",
+        image_name="plugins/basic/translate_viewer.svg",
         description="Translate the viewer",
         initial_mask=None,
         order=4,
         authors=[authors.toon_verstraelen],
     ),
     "translate_center": InteractiveGroup(
-        image_name="plugins/core/translate_center.svg",
+        image_name="plugins/basic/translate_center.svg",
         description="Translate the rotation center",
         initial_mask=(gtk.gdk.CONTROL_MASK | gtk.gdk.SHIFT_MASK),
         order=3,

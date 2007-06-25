@@ -39,7 +39,7 @@ import math, numpy
 
 
 class Arrow(Vector, ColorMixin):
-    info = ModelObjectInfo("plugins/core/arrow.svg")
+    info = ModelObjectInfo("plugins/basic/arrow.svg")
     authors = [authors.toon_verstraelen]
 
     #
@@ -204,7 +204,7 @@ class Arrow(Vector, ColorMixin):
 
 class ConnectArrow(ConnectBase):
     description = "Connect with arrow"
-    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Arrow", image_name="plugins/core/arrow.svg", order=(0, 4, 1, 3, 0, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Connect:pair", "_Arrow", image_name="plugins/basic/arrow.svg", order=(0, 4, 1, 3, 0, 0))
     authors = [authors.toon_verstraelen]
 
     def new_connector(self, begin, end):

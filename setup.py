@@ -55,7 +55,7 @@ setup(
             glob.glob('share/plugins/%s/*.svg' % plugin) +
             glob.glob('share/plugins/%s/*.glade' % plugin)
         ) for plugin
-        in ["core", "molecular", "builder"]
+        in ["basic", "molecular", "builder"]
     ],
     packages=[
         'zeobuilder',

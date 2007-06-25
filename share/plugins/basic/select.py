@@ -216,7 +216,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
 
 
 class SavedSelection(ReferentBase):
-    info = ModelObjectInfo("plugins/core/saved_selection.svg", "RestoreSavedSelection")
+    info = ModelObjectInfo("plugins/basic/saved_selection.svg", "RestoreSavedSelection")
     authors = [authors.toon_verstraelen]
 
     def create_references(self):
@@ -241,7 +241,7 @@ class SavedSelection(ReferentBase):
 
 class SaveSelection(Immediate):
     description = "Save selection"
-    menu_info = MenuInfo("default/_Select:saved", "_Save selection", image_name="plugins/core/saved_selection.svg", order=(0, 3, 1, 0))
+    menu_info = MenuInfo("default/_Select:saved", "_Save selection", image_name="plugins/basic/saved_selection.svg", order=(0, 3, 1, 0))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
@@ -331,7 +331,7 @@ class EditSelectionFilter(Immediate):
 
 class PickSelection(Interactive):
     description = "Pick a selection"
-    interactive_info = InteractiveInfo("plugins/core/selection_picker.svg", mouse=True)
+    interactive_info = InteractiveInfo("plugins/basic/selection_picker.svg", mouse=True)
     authors = [authors.toon_verstraelen]
 
     def button_press(self, drawing_area, event):
@@ -408,7 +408,7 @@ actions = {
 
 interactive_groups = {
     "selection": InteractiveGroup(
-        image_name="plugins/core/selection_picker.svg",
+        image_name="plugins/basic/selection_picker.svg",
         description="Selection Picker",
         initial_mask=0,
         order=0,

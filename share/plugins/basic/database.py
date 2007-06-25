@@ -43,7 +43,7 @@ class DatabaseError(Exception):
 
 
 class Database(ModelObject):
-    info = ModelObjectInfo("plugins/core/database.svg", default_action_name="ShowDatabaseWindow")
+    info = ModelObjectInfo("plugins/basic/database.svg", default_action_name="ShowDatabaseWindow")
     required_modules = ["MySQLdb"]
     authors = [authors.toon_verstraelen]
 
@@ -287,7 +287,7 @@ class StatusDatabasePage(DatabasePage):
 
 class NewDatabase(ImmediateWithMemory):
     description = "Create a new database"
-    menu_info = MenuInfo("default/_Object:tools/_Database:default", "_New database connection", image_name="plugins/core/database.svg", order=(0, 4, 1, 8, 0, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Database:default", "_New database connection", image_name="plugins/basic/database.svg", order=(0, 4, 1, 8, 0, 0))
     required_modules = ["MySQLdb"]
     authors = [authors.toon_verstraelen]
 

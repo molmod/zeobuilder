@@ -178,7 +178,7 @@ def yield_all_positions(l):
 
 
 class Universe(GLPeriodicContainer, FrameAxes):
-    info = ModelObjectInfo("plugins/core/universe.svg")
+    info = ModelObjectInfo("plugins/basic/universe.svg")
     authors = [authors.toon_verstraelen]
     clip_margin = 0.1
 

@@ -41,7 +41,7 @@ import math
 
 
 class Plane(GLReferentBase, ColorMixin):
-    info = ModelObjectInfo("plugins/core/plane.svg")
+    info = ModelObjectInfo("plugins/basic/plane.svg")
     authors = [authors.toon_verstraelen]
 
     #
@@ -174,7 +174,7 @@ class Plane(GLReferentBase, ColorMixin):
 
 class AddPlane(Immediate):
     description = "Add plane"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Plane", image_name="plugins/core/plane.svg", order=(0, 4, 1, 0, 0, 5))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Plane", image_name="plugins/basic/plane.svg", order=(0, 4, 1, 0, 0, 5))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

@@ -32,7 +32,7 @@ from molmod.transformations import Complete
 
 
 class Frame(GLFrameBase, FrameAxes):
-    info = ModelObjectInfo("plugins/core/frame.svg")
+    info = ModelObjectInfo("plugins/basic/frame.svg")
     authors = [authors.toon_verstraelen]
 
     def initnonstate(self):
@@ -82,7 +82,7 @@ class Frame(GLFrameBase, FrameAxes):
 
 class AddFrame(AddBase):
     description = "Add frame"
-    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Frame", image_name="plugins/core/frame.svg", order=(0, 4, 1, 0, 0, 3))
+    menu_info = MenuInfo("default/_Object:tools/_Add:3d", "_Frame", image_name="plugins/basic/frame.svg", order=(0, 4, 1, 0, 0, 3))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

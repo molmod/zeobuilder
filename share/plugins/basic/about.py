@@ -32,7 +32,7 @@ import gtk.gdk
 
 class BaseDialog(GladeWrapper):
     def __init__(self, dialog_name):
-        GladeWrapper.__init__(self, "plugins/core/gui.glade", dialog_name, "dialog")
+        GladeWrapper.__init__(self, "plugins/basic/gui.glade", dialog_name, "dialog")
         self.dialog.hide()
 
     def run(self):
