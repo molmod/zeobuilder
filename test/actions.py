@@ -26,6 +26,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Parameters
 from zeobuilder.undefined import Undefined
 from zeobuilder.expressions import Expression
+import zeobuilder.actions.primitive as primitive
 
 from molmod.transformations import Rotation, Translation, Complete
 from molmod.data import BOND_SINGLE
@@ -36,7 +37,7 @@ import gtk, numpy
 import math
 
 
-__all__ = ["CoreActions", "MolecularActions", "BuilderActions"]
+__all__ = ["CoreActions", "MolecularActions", "BuilderActions", "PrimitiveActions"]
 
 
 class CoreActions(ApplicationTestCase):
@@ -1090,3 +1091,31 @@ class BuilderActions(ApplicationTestCase):
             FileNew()
             context.application.model.file_open("output/tmp.zml")
         self.run_test_application(fn)
+
+
+class PrimitiveActions(ApplicationTestCase):
+    def test_set_extra(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            universe = context.application.model.root[0]
+            context.application.action_manager.record_primitives = False
+            p = primitive.SetExtra(universe, "foo", "bar")
+            self.assert_(universe.extra["foo"] == "bar")
+            p.undo()
+            self.assert_("foo" not in universe.extra)
+        self.run_test_application(fn)
+
+    def test_unset_extra(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            universe = context.application.model.root[0]
+            universe.extra["foo"] = "bar"
+            context.application.action_manager.record_primitives = False
+            p = primitive.UnsetExtra(universe, "foo")
+            self.assert_("foo" not in universe.extra)
+            p.undo()
+            self.assert_(universe.extra["foo"] == "bar")
+        self.run_test_application(fn)
+

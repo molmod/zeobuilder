@@ -271,3 +271,53 @@ class SetTarget(Primitive):
         Primitive.undo(self)
         self.victim.set_target(self.old_target)
 
+
+class SetExtra(Primitive):
+    def __init__(self, victim, extra_name, value, done=False):
+        self.victim = victim
+        self.extra_name = extra_name
+        self.create_new = (extra_name not in self.victim.extra)
+        if done:
+            self.new_value = None
+            self.old_value = value
+        else:
+            self.new_value = value
+            self.old_value = None
+        Primitive.__init__(self, done)
+
+    def redo(self):
+        Primitive.redo(self)
+        if self.old_value is None and not self.create_new:
+            self.old_value = self.victim.extra[self.extra_name]
+        self.victim.extra[self.extra_name] = self.new_value
+
+    def undo(self):
+        Primitive.undo(self)
+        if self.new_value is None:
+            self.new_value = self.victim[self.extra_name]
+        if self.create_new:
+            del self.victim.extra[self.extra_name]
+        else:
+            self.victim.extra[self.extra_name] = self.old_value
+
+
+class UnsetExtra(Primitive):
+    def __init__(self, victim, extra_name, done=False, old_value=None):
+        self.victim = victim
+        self.extra_name = extra_name
+        if done:
+            self.old_value = old_value
+        else:
+            self.old_value = None
+        Primitive.__init__(self, done)
+
+    def redo(self):
+        Primitive.redo(self)
+        if self.old_value is None:
+            self.old_value = self.victim.extra[self.extra_name]
+        del self.victim.extra[self.extra_name]
+
+    def undo(self):
+        Primitive.undo(self)
+        self.victim.extra[self.extra_name] = self.old_value
+

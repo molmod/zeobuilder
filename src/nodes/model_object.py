@@ -97,8 +97,12 @@ class ModelObject(Node):
     def set_name(self, name):
         self.name = name
 
+    def set_extra(self, extra):
+        self.extra = extra
+
     properties = [
-        Property("name", default_name, get_name, set_name)
+        Property("name", default_name, get_name, set_name),
+        Property("extra", {}, (lambda self: self.extra), set_extra),
     ]
 
     #
