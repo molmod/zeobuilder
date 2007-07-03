@@ -29,7 +29,7 @@ from zeobuilder.expressions import Expression
 
 from molmod.transformations import Rotation, Translation, Complete
 from molmod.data import BOND_SINGLE
-from molmod.units import from_angstrom
+from molmod.units import angstrom
 
 import gtk, numpy
 
@@ -1040,9 +1040,9 @@ class BuilderActions(ApplicationTestCase):
                 Expression("node.get_radius()"),
                 Expression("-1"),
             )
-            parameters.action_radius = from_angstrom(4)
+            parameters.action_radius = 4*angstrom
             parameters.allow_inversions = True
-            parameters.minimum_triangle_size = from_angstrom(0.1)
+            parameters.minimum_triangle_size = 0.1*angstrom
             parameters.rotation2 = Undefined()
             parameters.auto_close_report_dialog = True
 
@@ -1075,7 +1075,7 @@ class BuilderActions(ApplicationTestCase):
                 Expression("node.get_radius()"),
                 Expression("-1"),
             )
-            parameters.action_radius = from_angstrom(4)
+            parameters.action_radius = 4*angstrom
             parameters.allow_inversions = Undefined()
             parameters.minimum_triangle_size = Undefined()
             parameters.rotation2 = rotation2
