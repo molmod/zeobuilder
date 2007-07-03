@@ -316,9 +316,9 @@ class ShowConscanResultsWindow(Immediate):
     conscan_results_window = ConscanResultsWindow()
 
     @staticmethod
-    def analyze_selection(parameters=None):
+    def analyze_selection():
         # A) calling ancestor
-        if not ImmediateWithMemory.analyze_selection(parameters): return False
+        if not Immediate.analyze_selection(): return False
         # B) validating
         if not isinstance(context.application.cache.node, ConscanResults): return False
         # C) passed all tests:
