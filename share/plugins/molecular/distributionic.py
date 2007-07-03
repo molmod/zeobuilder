@@ -29,11 +29,10 @@ from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.simple import ask_save_filename
 from zeobuilder.gui import load_image
 from zeobuilder.expressions import Expression
-from zeobuilder.conversion import express_measure
+from zeobuilder.conversion import express_measure, to_unit
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.units import to_unit
 from molmod.graphs import Graph, SubgraphMatchDefinition, MatchGenerator, CriteriaSet
 from molmod.vectors import angle
 

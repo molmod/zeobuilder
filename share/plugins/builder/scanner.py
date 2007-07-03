@@ -42,7 +42,7 @@ import zeobuilder.authors as authors
 from conscan import Geometry, ProgressMessage, Connection
 
 from molmod.transformations import Rotation, Translation
-from molmod.units import from_angstrom
+from molmod.units import angstrom
 
 import gtk, numpy
 
@@ -537,14 +537,14 @@ class ScanForConnections(ImmediateWithMemory):
         result.repulse_description1 = (Expression("True"), Expression("node.get_radius()"), Expression("-1"))
         result.connect_description2 = (Expression("True"), Expression("node.get_radius()"), Expression("0.5"))
         result.repulse_description2 = (Expression("True"), Expression("node.get_radius()"), Expression("-1"))
-        result.action_radius = from_angstrom(7)
-        result.overlap_tolerance = from_angstrom(0.1)
+        result.action_radius = 7*angstrom
+        result.overlap_tolerance = 0.1*angstrom
         result.allow_inversions = True
-        result.triangle_side_tolerance = from_angstrom(0.1)
-        result.minimum_triangle_size = from_angstrom(0.1)
+        result.triangle_side_tolerance = 0.1*angstrom
+        result.minimum_triangle_size = 0.1*angstrom
         result.rotation_tolerance = 0.05
         result.rotation2 = Undefined(rotation2)
-        result.distance_tolerance = Undefined(from_angstrom(0.1))
+        result.distance_tolerance = Undefined(0.1*angstrom)
         return result
 
     def ask_parameters(self):

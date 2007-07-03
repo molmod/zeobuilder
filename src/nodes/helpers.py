@@ -24,7 +24,7 @@ from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
-from molmod.units import from_angstrom
+from molmod.units import angstrom
 
 from OpenGL.GL import *
 import numpy
@@ -84,8 +84,8 @@ class FrameAxes(object):
         self.invalidate_boundingbox_list()
 
     properties = [
-        Property("axis_thickness", from_angstrom(0.1), lambda self: self.axis_thickness, set_axis_thickness),
-        Property("axis_length", from_angstrom(1.0), lambda self: self.axis_length, set_axis_length),
+        Property("axis_thickness", 0.1*angstrom, lambda self: self.axis_thickness, set_axis_thickness),
+        Property("axis_length", 1.0*angstrom, lambda self: self.axis_length, set_axis_length),
         Property("axes_visible", True, lambda self: self.axes_visible, set_axes_visible)
     ]
 

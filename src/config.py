@@ -24,7 +24,7 @@
 # and the gui allows the user to change the configuration
 
 
-from molmod.units import measures, units_by_measure
+from zeobuilder.conversion import measures, units_by_measure
 
 import os.path
 

@@ -21,10 +21,48 @@
 
 
 from zeobuilder import context
-from molmod.units import from_unit, to_unit, units_by_measure
+import molmod.units
 
 
-__all__ = ["eval_measure", "express_measure", "express_data_size"]
+__all__ = [
+    "measures", "unit", "units_by_measure", "to_unit", "from_unit",
+    "eval_measure", "express_measure", "express_data_size"
+]
+
+
+measures = ["Length", "Energy", "Mass", "Charge", "Angle", "Time"]
+
+units = {
+    "au": 1,
+    "A": molmod.units.angstrom,
+    "nm": molmod.units.nanometer,
+    "kJ/mol": molmod.units.kjmol,
+    "kcal/mol": molmod.units.kcalmol,
+    "eV": molmod.units.ev,
+    "u": molmod.units.unified,
+    "rad": 1,
+    "deg": molmod.units.degree,
+    "ns": molmod.units.nanosecond,
+    "ps": molmod.units.picosecond,
+    "fs": molmod.units.femtosecond,
+}
+
+units_by_measure = {
+    "Length": ["au", "A", "nm"],
+    "Energy": ["au", "kJ/mol", "kcal/mol", "eV"],
+    "Mass": ["au", "u"],
+    "Charge": ["au"],
+    "Angle": ["rad", "deg"],
+    "Time": ["au", "ns", "ps", "fs"],
+}
+
+from_unit = dict((unit, eval("lambda x: x*%s" % value)) for unit, value in units.iteritems())
+to_unit = dict((unit, eval("lambda x: x/%s" % value)) for unit, value in units.iteritems())
+
+# some sanity checks
+assert len(measures) == len(set(measures)), "Some measures have the same name."
+assert len(measures) == len(units_by_measure), "Some measures don't have units."
+assert len(units) == len(set(sum((u for u in units_by_measure.itervalues()), [])))
 
 
 # * evaluation routines (from string to value)

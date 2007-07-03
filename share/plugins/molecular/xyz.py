@@ -28,7 +28,7 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
 from molmod.data import periodic
-from molmod.units import to_angstrom, from_angstrom
+from molmod.units import angstrom
 
 
 class LoadXYZ(LoadFilter):
@@ -72,9 +72,7 @@ class LoadXYZ(LoadFilter):
             else:
                 atom = Atom(name=atom_info.symbol, number=atom_info.number)
             try:
-                atom.transformation.t = from_angstrom(
-                    numpy.array([float(word) for word in words[1:4]])
-                )
+                atom.transformation.t = numpy.array([float(word) for word in words[1:4]])*angstrom
             except ValueError:
                 raise FilterError("Error while reading XYZ file: could not read coordinates at line %i." % (index+2))
             universe.add(atom)
@@ -110,13 +108,13 @@ class DumpXYZ(DumpFilter):
         def atom_line(atom):
             coordinate = atom.get_frame_relative_to(universe).t
             print >> f, "% 2s % 13.6f% 13.6f% 13.6f" % (
-                (periodic[atom.number].symbol,) + tuple(to_angstrom(coordinate))
+                (periodic[atom.number].symbol,) + tuple(coordinate/angstrom)
             )
 
         def point_line(atom):
             coordinate = atom.get_frame_relative_to(universe).t
             print >> f, " X % 13.6f% 13.6f% 13.6f" % (
-                tuple(to_angstrom(coordinate))
+                tuple(coordinate/angstrom)
             )
 
         def write_xyz_lines(nodes):

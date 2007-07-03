@@ -26,8 +26,9 @@ from edit import CheckButton, ComboBox
 from mixin import InvalidField, EditMixin, FaultyMixin, TableMixin
 import popups
 
+from zeobuilder.conversion import measures, units_by_measure
+
 from molmod.transformations import Translation as MathTranslation, Rotation as MathRotation
-from molmod.units import measures, units_by_measure
 from molmod.unit_cell import check_cell, UnitCell
 
 import numpy, gtk
