@@ -74,14 +74,14 @@ def dump_to_file(f, node):
         if name is None: name_key = ""
         else: name_key = " label=" + xml.sax.saxutils.quoteattr(name)
 
-        if cls == str:
+        if issubclass(cls, str):
             indenter.write_line("<str%s>%s</str>" % (name_key, xml.sax.saxutils.escape(node)))
-        elif cls == float:
+        elif issubclass(cls, float):
             indenter.write_line("<float%s>%s</float>" % (name_key, str(node)))
-        elif cls == int:
-            indenter.write_line("<int%s>%s</int>" % (name_key, str(node)))
-        elif cls == bool:
+        elif issubclass(cls, bool):
             indenter.write_line("<bool%s>%s</bool>" % (name_key, str(node)))
+        elif issubclass(cls, int):
+            indenter.write_line("<int%s>%s</int>" % (name_key, str(node)))
         elif cls == Undefined:
             pass
         elif cls == list:
