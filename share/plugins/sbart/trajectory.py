@@ -93,7 +93,7 @@ class Trajectory(ReferentBase):
 
 class LoadFrame(ImmediateWithMemory):
     description = "Load a certain frame from the trajectory"
-    menu_info = MenuInfo("default/_Object:tools/_Trajectory:conscan", "LoadFrame", order=(0, 4, 1, 7, 1, 1))
+    menu_info = MenuInfo("default/_Object:tools/_Trajectory:conscan", "Load frame", order=(0, 4, 1, 7, 1, 1))
     authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
