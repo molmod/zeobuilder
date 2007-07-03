@@ -70,20 +70,27 @@ class Indenter(object):
     def write_line(self, line, indent=0):
         if not self.new_line:
             self.stream.write("\n")
-        if indent >= 0: self.stream.write(self.indent_string*self.indent)
+            #sys.stdout.write("\n")
+        if indent >= 0:
+            self.stream.write(self.indent_string*self.indent)
+            #sys.stdout.write(self.indent_string*self.indent)
         self.indent += indent
         if self.indent < 0: self.indent = 0
         if indent < 0: self.stream.write(self.indent_string*self.indent)
         self.stream.write(line)
+        #sys.stdout.write(line)
         self.stream.write("\n")
+        #sys.stdout.write("\n")
         self.new_line = True
 
     def write(self, string, line_break=False):
         if self.new_line:
             self.stream.write(self.indent_string*self.indent)
+            #sys.stdout.write(self.indent_string*self.indent)
         self.stream.write(string)
         if line_break:
             self.stream.write("\n")
+            #sys.stdout.write("\n")
         self.new_line = line_break
 
 
