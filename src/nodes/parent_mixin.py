@@ -165,9 +165,6 @@ class ReferentMixin(ParentMixin):
     def target_moved(self, reference, target):
         pass
 
-    def get_targets(self):
-        return [child.target for child in self.children]
-
     #
     # Flags
     #
