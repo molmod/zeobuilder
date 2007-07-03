@@ -37,7 +37,10 @@ import gtk, numpy
 import math
 
 
-__all__ = ["CoreActions", "MolecularActions", "BuilderActions", "PrimitiveActions"]
+__all__ = [
+    "CoreActions", "MolecularActions", "BuilderActions", "TrajectoryActions",
+    "PrimitiveActions"
+]
 
 
 class CoreActions(ApplicationTestCase):
@@ -1090,6 +1093,19 @@ class BuilderActions(ApplicationTestCase):
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
             context.application.model.file_open("output/tmp.zml")
+        self.run_test_application(fn)
+
+
+class TrajectoryActions(ApplicationTestCase):
+    def test_load_frame(self):
+        def fn():
+            context.application.model.file_open("input/ethane-ethane-pos.xyz")
+            context.application.main.select_nodes(context.application.model.folder.children)
+            LoadFrame = context.application.plugins.get_action("LoadFrame")
+            parameters = Parameters()
+            parameters.frame_index = 50
+            self.assert_(LoadFrame.analyze_selection(parameters))
+            LoadFrame(parameters)
         self.run_test_application(fn)
 
 

@@ -27,6 +27,8 @@ from zeobuilder.filters import LoadFilter, DumpFilter, FilterError
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
+
+from ccop.xyz import XYZReader
 from molmod.data import periodic
 from molmod.units import angstrom
 
@@ -38,44 +40,37 @@ class LoadXYZ(LoadFilter):
         LoadFilter.__init__(self, "The XYZ format (*.xyz)")
 
     def __call__(self, f):
-        try:
-            num_atoms = int(f.readline())
-        except ValueError:
-            raise FilterError("Error while reading XYZ file: the number of atoms is not found on the first line.")
+        xyz_reader = XYZReader(f)
+        molecule = xyz_reader.get_first_molecule()
 
         Universe = context.application.plugins.get_node("Universe")
         universe = Universe()
         Folder = context.application.plugins.get_node("Folder")
         folder = Folder()
 
-        title = f.readline()[:-1].strip()
-        if len(title) > 0:
-            universe.name = title
+        if len(molecule.title) > 0:
+            universe.name = molecule.title
 
         Atom = context.application.plugins.get_node("Atom")
         Point = context.application.plugins.get_node("Point")
 
-        for index, line in enumerate(f):
-            words = line.split()
-            if len(words) == 0:
-                break
-
-            if index > num_atoms:
-                raise FilterError("Error while reading XYZ file: too many atoms")
-
-            if len(words) < 4:
-                raise FilterError("Error while reading XYZ file: data at line %i" % (index+2))
-
-            atom_info = periodic[words[0]]
-            if atom_info is None:
-                atom = Point(name="Dummy")
+        for number, symbol, coordinate in zip(molecule.numbers, xyz_reader.symbols, molecule.coordinates):
+            if number == 0:
+                atom = Point(name=symbol)
             else:
-                atom = Atom(name=atom_info.symbol, number=atom_info.number)
-            try:
-                atom.transformation.t = numpy.array([float(word) for word in words[1:4]])*angstrom
-            except ValueError:
-                raise FilterError("Error while reading XYZ file: could not read coordinates at line %i." % (index+2))
+                atom = Atom(name=symbol, number=number)
+            atom.transformation.t = coordinate
             universe.add(atom)
+
+        geometries = []
+        for title, coordinates in xyz_reader:
+            geometries.append(coordinates)
+        if len(geometries) > 0:
+            geometries = numpy.array(geometries)
+            Trajectory = context.application.plugins.get_node("Trajectory")
+            trajectory = Trajectory(targets=universe.children, frames=geometries)
+            folder.add(trajectory)
+
         return [universe, folder]
 
 

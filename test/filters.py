@@ -42,6 +42,7 @@ class LoadFilters(ApplicationTestCase):
 
     def test_xyz(self):
         self.helper_file_open("tpa.xyz")
+        self.helper_file_open("ethane-ethane-pos.xyz")
 
     def test_pdb(self):
         self.helper_file_open("lau.pdb")
