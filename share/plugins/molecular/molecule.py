@@ -661,8 +661,10 @@ class RingDistributionWindow(GladeWrapper):
         for l, b, w, h in args:
             patch_hist = matplotlib.patches.Rectangle((l, b), w, h, facecolor="w", edgecolor="#AAAAAA")
             pylab.gca().add_patch(patch_hist)
+            if h > 0:
+                pylab.text(l+0.5*w, h, str(h), horizontalalignment='center')
 
-        pylab.ylim([0, self.ring_distribution.max()])
+        pylab.ylim([0, self.ring_distribution.max()*1.2])
         pylab.xlim([0.5, self.max_size+1.5])
         pylab.xlabel("Ring size")
         pylab.ylabel("Count")
