@@ -51,7 +51,7 @@ class Notes(ModelObject):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Basic", (0, 1), fields.edit.TextView(
+        DialogFieldInfo("Basic", (0, 10), fields.edit.TextView(
             label_text="Notes",
             attribute_name="notes",
         ))

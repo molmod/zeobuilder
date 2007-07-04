@@ -122,6 +122,10 @@ class ModelObject(Node):
             label_text="Name",
             attribute_name="name",
         )),
+        DialogFieldInfo("Basic", (0, 1), fields.read.Mapping(
+            label_text="Extra attributes",
+            attribute_name="extra",
+        )),
     ])
 
     #

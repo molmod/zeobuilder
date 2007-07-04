@@ -27,8 +27,10 @@ from molmod.transformations import Rotation
 
 import math, gtk, numpy
 
-__all__ = ["Label", "Handedness", "BBox", "Distance", "VectorLength",
-           "DataSize"]
+__all__ = [
+    "Label", "Handedness", "BBox", "Distance", "VectorLength", "DataSize",
+    "Mapping",
+]
 
 
 class Label(Read):
@@ -113,4 +115,38 @@ class VectorLength(Distance):
 class DataSize(Label):
     def convert_to_representation(self, value):
         return express_data_size(value)
+
+
+class Mapping(Read):
+    def create_widgets(self):
+        Read.create_widgets(self)
+        self.list_store = gtk.ListStore(str, str)
+        self.tree_view = gtk.TreeView(self.list_store)
+
+        renderer_text = gtk.CellRendererText()
+        column = gtk.TreeViewColumn("Key", renderer_text, text=0)
+        #column.pack_start(renderer_text, expand=False)
+        self.tree_view.append_column(column)
+
+        renderer_text = gtk.CellRendererText()
+        column = gtk.TreeViewColumn("Value", renderer_text, text=1)
+        #column.pack_start(renderer_text, expand=True)
+        self.tree_view.append_column(column)
+
+        self.data_widget = gtk.ScrolledWindow()
+        self.data_widget.add(self.tree_view)
+        self.data_widget.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+        self.data_widget.set_size_request(-1, 100)
+        self.data_widget.set_shadow_type(gtk.SHADOW_IN)
+
+    def convert_to_representation(self, value):
+        if value == ambiguous:
+            return {}
+        else:
+            return value
+
+    def write_to_widget(self, representation, original=False):
+        for key, value in sorted(representation.iteritems()):
+            value = str(value)[:100].replace("\n", " ")
+            self.list_store.append((key,str(value)))
 
