@@ -27,7 +27,7 @@ import zeobuilder.actions.primitive as primitive
 
 import gobject
 
-import copy
+import copy, numpy
 
 
 __all__ = ["ModelObject", "ModelObjectInfo"]
@@ -64,7 +64,15 @@ class ModelObject(Node):
         #print " MIN  => Deleting     " + str(self.__class__) + " (" + str(Node.count) + ") " + hex(id(self))
 
     def __getstate__(self):
-        return dict((p.name, p.get(self)) for p in self.properties)
+        result = {}
+        for p in self.properties:
+            value = p.get(self)
+            equal = (value == p.default(self))
+            if isinstance(equal, numpy.ndarray):
+                equal = equal.all()
+            if not equal:
+                result[p.name] = value
+        return result
 
     def initstate(self, **initstate):
         for p in self.properties:
