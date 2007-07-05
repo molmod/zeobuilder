@@ -175,7 +175,7 @@ class VisBackendOpenGL(VisBackend):
         #print "NAME UP  ", self.name_counter
 
     def pop_name(self):
-        glPopName
+        glPopName()
         #self.name_counter -= 1
         #print "NAME DOWN", self.name_counter
         #assert self.name_counter >= 0
