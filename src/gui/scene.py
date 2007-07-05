@@ -283,10 +283,11 @@ class Scene(object):
             self.modelview_matrix = numpy.transpose(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX), float))
 
         # define the clipping planes:
+        clip_constants = [GL_CLIP_PLANE0, GL_CLIP_PLANE1, GL_CLIP_PLANE2, GL_CLIP_PLANE3, GL_CLIP_PLANE4, GL_CLIP_PLANE5]
         for plane_i, coefficients in self.clip_planes.iteritems():
-            glEnable(GL_CLIP_PLANE0 + plane_i)
+            glEnable(clip_constants[plane_i])
             temp = coefficients.copy()
-            glClipPlane(GL_CLIP_PLANE0 + plane_i, coefficients)
+            glClipPlane(clip_constants[plane_i], coefficients)
 
         if universe is not None:
             if selection_box is None: # When just picking objects, don't change the call lists, not needed.
@@ -297,8 +298,8 @@ class Scene(object):
             glCullFace(GL_BACK)
             universe.call_list()
 
-        for GL_CLIP_PLANEi in self.clip_planes:
-            glDisable(GL_CLIP_PLANEi)
+        for plane_i in self.clip_planes:
+            glDisable(clip_constants[plane_i])
 
         if selection_box is not None:
             # now let the caller analyze the hits by returning the selection
