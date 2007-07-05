@@ -29,8 +29,6 @@ import zeobuilder.gui.fields as fields
 
 from molmod.transformations import Complete
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
 import numpy
 
 import math
@@ -96,15 +94,16 @@ class Vector(GLReferentBase):
 
     def revalidate_total_list(self):
         if self.gl_active:
-            glNewList(self.total_list, GL_COMPILE)
+            vb = context.application.vis_backend
+            vb.begin_list(self.total_list)
             if self.visible:
-                glPushName(self.draw_list)
-                glPushMatrix()
+                vb.push_name(self.draw_list)
+                vb.push_matrix()
                 self.draw_selection()
-                glCallList(self.draw_list)
-                glPopMatrix()
-                glPopName()
-            glEndList()
+                vb.call_list(self.draw_list)
+                vb.pop_matrix()
+                #glPopName()
+            vb.end_list()
             self.total_list_valid = True
 
     def revalidate_draw_list(self):
@@ -113,14 +112,14 @@ class Vector(GLReferentBase):
 
     def revalidate_boundingbox_list(self):
         if self.gl_active:
+            vb = context.application.vis_backend
             #print "Compiling selection list (" + str(self.boundingbox_list) + "): " + str(self.name)
-            glNewList(self.boundingbox_list, GL_COMPILE)
-            glPushMatrix()
-            self.orientation.gl_apply()
+            vb.begin_list(self.boundingbox_list)
+            vb.push_matrix(self.orientation)
             self.revalidate_bounding_box()
             self.bounding_box.draw()
-            glPopMatrix()
-            glEndList()
+            vb.pop_matrix()
+            vb.end_list()
             self.boundingbox_list_valid = True
 
     #

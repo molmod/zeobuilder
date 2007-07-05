@@ -23,8 +23,7 @@
 from parent_mixin import ContainerMixin
 from glmixin import GLMixin
 
-
-from OpenGL.GL import *
+from zeobuilder import context
 
 
 __all__ = ["GLContainerMixin"]
@@ -59,9 +58,11 @@ class GLContainerMixin(ContainerMixin):
     #
 
     def draw_selection(self):
-        glMaterial(GL_FRONT, GL_SHININESS, 70.0)
+        vb = context.application.vis_backend
+        vb.set_bright(True)
         if self.selected:
-            glCallList(self.boundingbox_list)
+            vb.call_list(self.boundingbox_list)
+        vb.set_bright(False)
 
     def draw(self):
         for child in self.children:

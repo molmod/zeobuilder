@@ -36,7 +36,6 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
-from OpenGL.GL import *
 import numpy
 
 
@@ -91,38 +90,40 @@ class Point(GLGeometricBase, ColorMixin):
 
     def draw_spike(self):
         ColorMixin.draw(self)
-        glBegin(GL_QUAD_STRIP)
-        # (100)
-        glNormal3f(0.5773502692, -0.5773502692, -0.5773502692)
-        glVertex3f(self.spike_length, self.spike_length, self.spike_length)
-        glNormal3f(1, 0, 0)
-        glVertex3f(self.spike_thickness, 0, 0)
-        # (010)
-        glNormal3f(-0.5773502692, 0.5773502692, -0.5773502692)
-        glVertex3f(self.spike_length, self.spike_length, self.spike_length)
-        glNormal3f(0, 1, 0)
-        glVertex3f(0, self.spike_thickness, 0)
-        # (010)
-        glNormal3f(-0.5773502692, -0.5773502692, 0.5773502692)
-        glVertex3f(self.spike_length, self.spike_length, self.spike_length)
-        glNormal3f(0, 0, 1)
-        glVertex3f(0, 0, self.spike_thickness)
-        # (100)
-        glNormal3f(0.5773502692, -0.5773502692, -0.5773502692)
-        glVertex3f(self.spike_length, self.spike_length, self.spike_length)
-        glNormal3f(1, 0, 0)
-        glVertex3f(self.spike_thickness, 0, 0)
-        glEnd()
+        vb = context.application.vis_backend
+        vb.draw_quad_strip(
+            coordinates = numpy.array([
+                [self.spike_length, self.spike_length, self.spike_length],
+                [self.spike_thickness, 0, 0],
+                [self.spike_length, self.spike_length, self.spike_length],
+                [0, self.spike_thickness, 0],
+                [self.spike_length, self.spike_length, self.spike_length],
+                [0, 0, self.spike_thickness],
+                [self.spike_length, self.spike_length, self.spike_length],
+                [self.spike_thickness, 0, 0],
+            ], float),
+            normals = numpy.array([
+                [0.5773502692, -0.5773502692, -0.5773502692],
+                [1, 0, 0],
+                [-0.5773502692, 0.5773502692, -0.5773502692],
+                [0, 1, 0],
+                [-0.5773502692, -0.5773502692, 0.5773502692],
+                [0, 0, 1],
+                [0.5773502692, -0.5773502692, -0.5773502692],
+                [1, 0, 0],
+            ], float),
+        )
 
     def draw(self):
         GLGeometricBase.draw(self)
-        glPushMatrix()
+        vb = context.application.vis_backend
+        vb.push_matrix()
         for i in range(2):
             for i in range(4):
                 self.draw_spike()
-                glRotate(90, 1.0, 0.0, 0.0)
-            glRotate(180, 0.0, 1.0, 0.0)
-        glPopMatrix()
+                vb.rotate(90, 1.0, 0.0, 0.0)
+            vb.rotate(180, 0.0, 1.0, 0.0)
+        vb.pop_matrix
 
     def write_pov(self, indenter):
         def write_spike(signs):

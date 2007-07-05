@@ -33,8 +33,6 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
-from OpenGL.GL import *
-from OpenGL.GLUT import *
 import numpy
 
 
@@ -88,7 +86,8 @@ class Sphere(GLGeometricBase, ColorMixin):
     def draw(self):
         GLGeometricBase.draw(self)
         ColorMixin.draw(self)
-        glutSolidSphere(self.radius, self.quality, self.quality / 2)
+        vb = context.application.vis_backend
+        vb.draw_sphere(self.radius, self.quality)
 
     def write_pov(self, indenter):
         indenter.write_line("sphere {", 1)

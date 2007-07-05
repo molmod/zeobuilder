@@ -33,8 +33,6 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Complete
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
 import math, numpy
 
 
@@ -120,6 +118,7 @@ class Arrow(Vector, ColorMixin):
     def draw(self):
         Vector.draw(self)
         ColorMixin.draw(self)
+        vb = context.application.vis_backend
         if self.length == 0.0: return
         # usefull variable
         if self.arrow_radius <= 0:
@@ -128,33 +127,33 @@ class Arrow(Vector, ColorMixin):
             arrowtop_length = self.arrow_length/self.arrow_radius*self.radius
         # stick and bottom
         if (self.length - arrowtop_length > 0) and (self.radius > 0):
-            gluCylinder(self.quadric, self.radius, self.radius, self.length - arrowtop_length, self.quality, 1)
-            gluQuadricOrientation(self.quadric, GLU_INSIDE)
-            gluDisk(self.quadric, 0, self.radius, self.quality, 1)
+            vb.draw_cylinder(self.radius, self.length - arrowtop_length, self.quality)
+            vb.set_quadric_inside()
+            vb.draw_disk(self.radius, self.quality)
         # arrowtop
         if (self.radius > 0):
             if (arrowtop_length > 0):
-                glPushMatrix()
-                glTranslate(0.0, 0.0, self.length - arrowtop_length)
-                gluQuadricOrientation(self.quadric, GLU_OUTSIDE)
-                gluCylinder(self.quadric, self.radius, 0, arrowtop_length, self.quality, self.quality)
-                glPopMatrix()
+                vb.push_matrix()
+                vb.translate(0.0, 0.0, self.length - arrowtop_length)
+                vb.set_quadric_outside()
+                vb.draw_cone(self.radius, 0, arrowtop_length, self.quality)
+                vb.pop_matrix()
             else:
-                glPushMatrix()
-                glTranslate(0.0, 0.0, self.length)
-                gluQuadricOrientation(self.quadric, GLU_OUTSIDE)
-                gluDisk(self.quadric, 0, self.radius, self.quality, 1)
-                glPopMatrix()
+                vb.push_matrix()
+                vb.translate(0.0, 0.0, self.length)
+                vb.set_quadric_outside()
+                vb.draw_disk(self.radius, self.quality)
+                vb.pop_matrix()
         # arrow
         if (self.arrow_radius - self.radius > 0) and (self.arrow_length - arrowtop_length) > 0:
-            glPushMatrix()
-            glTranslate(0.0, 0.0, (self.length - self.arrow_length)*(self.arrow_position))
-            gluQuadricOrientation(self.quadric, GLU_OUTSIDE)
-            gluCylinder(self.quadric, self.arrow_radius, self.radius, self.arrow_length - arrowtop_length, self.quality, self.quality)
-            gluQuadricOrientation(self.quadric, GLU_INSIDE)
-            gluDisk(self.quadric, 0, self.arrow_radius, self.quality, 1)
-            glPopMatrix()
-        gluQuadricOrientation(self.quadric, GLU_OUTSIDE)
+            vb.push_matrix()
+            vb.translate(0.0, 0.0, (self.length - self.arrow_length)*(self.arrow_position))
+            vb.set_quadric_outside()
+            vb.draw_cone(self.arrow_radius, self.radius, self.arrow_length - arrowtop_length, self.quality)
+            vb.set_quadric_inside()
+            vb.draw_disk(self.arrow_radius, self.quality)
+            vb.pop_matrix()
+        vb.set_quadric_outside()
 
     def write_pov(self, indenter):
         self.calc_vector_dimensions()

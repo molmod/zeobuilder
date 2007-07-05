@@ -35,8 +35,6 @@ import zeobuilder.authors as authors
 
 from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
 import numpy, gtk
 
 import math
@@ -132,12 +130,13 @@ class Bond(Vector):
         begin = self.children[0].target
         end = self.children[1].target
 
-        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, begin.get_color())
-        glTranslate(0.0, 0.0, self.begin_position)
-        gluCylinder(self.quadric, self.begin_radius, half_radius, half_length, self.quality, 1)
-        glTranslate(0.0, 0.0, half_length)
-        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, end.get_color())
-        gluCylinder(self.quadric, half_radius, self.end_radius, half_length, self.quality, 1)
+        vb = context.application.vis_backend
+        vb.set_color(*begin.get_color())
+        vb.translate(0.0, 0.0, self.begin_position)
+        vb.draw_cone(self.begin_radius, half_radius, half_length, self.quality)
+        vb.translate(0.0, 0.0, half_length)
+        vb.set_color(*end.get_color())
+        vb.draw_cone(half_radius, self.end_radius, half_length, self.quality)
 
     def write_pov(self, indenter):
         self.calc_vector_dimensions()

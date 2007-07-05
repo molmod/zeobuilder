@@ -63,6 +63,8 @@ class Application(object):
 
     def initialize_model(self):
         from zeobuilder.gui.models import Model
+        from zeobuilder.vis_backends import VizBackendOpenGL
+        self.vis_backend = VizBackendOpenGL()
         self.model = Model()
 
     def initialize_cache(self):

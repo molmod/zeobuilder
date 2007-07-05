@@ -33,7 +33,6 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Complete
 
-from OpenGL.GL import *
 import copy, numpy
 
 
@@ -78,44 +77,25 @@ class Box(GLGeometricBase, ColorMixin):
     def draw(self):
         GLGeometricBase.draw(self)
         ColorMixin.draw(self)
-        glBegin(GL_QUADS)
-        #
-        glNormal3f(0, 0, -1.0)
-        glVertex3f(-0.5*self.size[0],  0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0],  0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0], -0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f(-0.5*self.size[0], -0.5*self.size[1], -0.5*self.size[2])
-        #
-        glNormal3f(0, 0, 1.0)
-        glVertex3f(-0.5*self.size[0], -0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0], -0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0],  0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f(-0.5*self.size[0],  0.5*self.size[1],  0.5*self.size[2])
-        #
-        glNormal3f(0, -1.0, 0)
-        glVertex3f(-0.5*self.size[0], -0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0], -0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0], -0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f(-0.5*self.size[0], -0.5*self.size[1],  0.5*self.size[2])
-        #
-        glNormal3f(0,  1.0, 0)
-        glVertex3f(-0.5*self.size[0],  0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0],  0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0],  0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f(-0.5*self.size[0],  0.5*self.size[1], -0.5*self.size[2])
-        #
-        glNormal3f(-1.0, 0, 0)
-        glVertex3f(-0.5*self.size[0], -0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f(-0.5*self.size[0],  0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f(-0.5*self.size[0],  0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f(-0.5*self.size[0], -0.5*self.size[1], -0.5*self.size[2])
-        #
-        glNormal3f( 1.0, 0, 0)
-        glVertex3f( 0.5*self.size[0], -0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0],  0.5*self.size[1], -0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0],  0.5*self.size[1],  0.5*self.size[2])
-        glVertex3f( 0.5*self.size[0], -0.5*self.size[1],  0.5*self.size[2])
-        glEnd()
+        vb = context.application.vis_backend
+
+        x,y,z = numpy.identity(3)*0.5*self.size
+        sides = [(x,y,z), (x,y,-z), (y,z,x), (y,z,-x), (z,x,y), (z,x,-y)]
+
+        vb.draw_quads(
+            quads=numpy.array([
+                [
+                     a+b+normal,
+                     a-b+normal,
+                    -a-b+normal,
+                    -a+b+normal,
+                ] for a,b,normal in sides
+            ], float),
+            normals=numpy.array([
+                normal
+                for a,b,normal in sides
+            ], float),
+        )
 
     def write_pov(self, indenter):
         indenter.write_line("box {", 1)

@@ -73,10 +73,6 @@ class DumpPOV(DumpFilter):
         indenter.write_line("}", -1)
         indenter.write_line("#declare my_finish = finish { ambient .3 diffuse .6 phong 1 phong_size 30};")
 
-        # In the current implementation, each GLMixin node has to provide a
-        # write_pov method. In principle one could make a 3D draw front end with
-        # an opengl and povray backend to avoid this clumsy approach, but this
-        # is would be an overengineered solution.
         if nodes is not None:
             for node in nodes:
                 node.write_pov(indenter)

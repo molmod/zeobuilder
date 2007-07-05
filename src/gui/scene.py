@@ -118,7 +118,6 @@ class Scene(object):
         )
 
         self.reset_view()
-        self.gl_names = {}
         self.revalidations = []
         self.clip_planes = {}
 
@@ -284,10 +283,10 @@ class Scene(object):
             self.modelview_matrix = numpy.transpose(numpy.array(glGetFloatv(GL_MODELVIEW_MATRIX), float))
 
         # define the clipping planes:
-        for GL_CLIP_PLANEi, coefficients in self.clip_planes.iteritems():
-            glEnable(GL_CLIP_PLANEi)
+        for plane_i, coefficients in self.clip_planes.iteritems():
+            glEnable(GL_CLIP_PLANE0 + plane_i)
             temp = coefficients.copy()
-            glClipPlane(GL_CLIP_PLANEi, coefficients)
+            glClipPlane(GL_CLIP_PLANE0 + plane_i, coefficients)
 
         if universe is not None:
             if selection_box is None: # When just picking objects, don't change the call lists, not needed.
@@ -324,10 +323,12 @@ class Scene(object):
         self.apply_renderer_settings()
 
     def yield_hits(self, selection_box): # gl_context sensitive method
+        vb = context.application.vis_backend
         for selection in self.draw(selection_box):
-            yield self.gl_names.get(selection[2][-1])
+            yield vb.names.get(selection[2][-1])
 
     def get_nearest(self, x, y): # gl_context sensitive method
+        vb = context.application.vis_backend
         nearest = None
         for selection in self.draw((x, y, x, y)):
             if nearest is None:
@@ -337,7 +338,7 @@ class Scene(object):
         if nearest is None:
             return None
         else:
-            return self.gl_names.get(nearest[2][-1])
+            return vb.names.get(nearest[2][-1])
 
     def compile_tool_rectangle(self, left, top, right, bottom): # gl_context sensitive method
         glNewList(self.tool_draw_list, GL_COMPILE)

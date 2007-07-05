@@ -29,7 +29,6 @@ import zeobuilder.gui.fields as fields
 
 from molmod.transformations import Translation, Rotation, Complete
 
-from OpenGL.GL import *
 import gobject, numpy
 
 import copy
@@ -90,14 +89,13 @@ class GLMixin(gobject.GObject):
 
     def initialize_gl(self):
         assert not self.gl_active
+        vb = context.application.vis_backend
         self.gl_active = True
         self.bounding_box = BoundingBox()
-        self.draw_list = glGenLists(3)
-        self.boundingbox_list = self.draw_list + 1
-        self.total_list = self.draw_list + 2
+        self.draw_list = vb.create_list(self)
+        self.boundingbox_list = vb.create_list()
+        self.total_list = vb.create_list()
         ##print "Created lists (%i, %i, %i): %s" % (self.draw_list, self.boundingbox_list, self.total_list, self.get_name())
-        #assert self.draw_list not in context.application.main.drawing_area.scene.gl_names, "Duplicate Drawlist %i: %s and %s, in model %s and %s" % (self.draw_list, self, context.application.main.drawing_area.scene.gl_names[self.draw_list], self.model, context.application.main.drawing_area.scene.gl_names[self.draw_list].model)
-        context.application.main.drawing_area.scene.gl_names[self.draw_list] = self
         self.draw_list_valid = True
         self.boundingbox_list_valid = True
         self.total_list_valid = True
@@ -108,9 +106,11 @@ class GLMixin(gobject.GObject):
     def cleanup_gl(self):
         assert self.gl_active
         self.gl_active = False
-        del context.application.main.drawing_area.scene.gl_names[self.draw_list]
+        vb = context.application.vis_backend
         ##print "Deleting lists (%i, %i, %i): %s" % (self.draw_list, self.boundingbox_list, self.total_list, self.get_name())
-        glDeleteLists(self.draw_list, 3)
+        vb.delete_list(self.draw_list)
+        vb.delete_list(self.boundingbox_list)
+        vb.delete_list(self.total_list)
         del self.bounding_box
         del self.draw_list
         del self.boundingbox_list
@@ -168,21 +168,23 @@ class GLMixin(gobject.GObject):
 
     def revalidate_draw_list(self):
         if self.gl_active:
+            vb = context.application.vis_backend
             ##print "Compiling draw list (%i): %s" % (self.draw_list, self.get_name())
-            glNewList(self.draw_list, GL_COMPILE)
+            vb.begin_list(self.draw_list)
             self.prepare_draw()
             self.draw()
             self.finish_draw()
-            glEndList()
+            vb.end_list()
             self.draw_list_valid = True
 
     def revalidate_boundingbox_list(self):
         if self.gl_active:
+            vb = context.application.vis_backend
             ##print "Compiling selection list (%i): %s" % (self.boundingbox_list, self.get_name())
-            glNewList(self.boundingbox_list, GL_COMPILE)
+            vb.begin_list(self.boundingbox_list)
             self.revalidate_bounding_box()
             self.bounding_box.draw()
-            glEndList()
+            vb.end_list()
             self.boundingbox_list_valid = True
 
     def revalidate_bounding_box(self):
@@ -190,14 +192,15 @@ class GLMixin(gobject.GObject):
 
     def revalidate_total_list(self):
         if self.gl_active:
+            vb = context.application.vis_backend
             ##print "Compiling total list (%i): %s" % (self.total_list, self.get_name())
-            glNewList(self.total_list, GL_COMPILE)
+            vb.begin_list(self.total_list)
             if self.visible:
-                glPushName(self.draw_list)
+                vb.push_name(self.draw_list)
                 self.draw_selection()
-                glCallList(self.draw_list)
-                glPopName()
-            glEndList()
+                vb.call_list(self.draw_list)
+                vb.pop_name()
+            vb.end_list()
             self.total_list_valid = True
 
     #
@@ -205,14 +208,15 @@ class GLMixin(gobject.GObject):
     #
 
     def draw_selection(self):
+        vb = context.application.vis_backend
         if self.selected:
-            glMaterial(GL_FRONT, GL_SHININESS, 0.0)
+            vb.set_bright(True)
         else:
-            glMaterial(GL_FRONT, GL_SHININESS, 70.0)
+            vb.set_bright(False)
 
     def call_list(self):
         ##print "Executing total list (%i): %s" % (self.total_list, self.get_name())
-        glCallList(self.total_list)
+        context.application.vis_backend.call_list(self.total_list)
 
     def prepare_draw(self):
         pass
@@ -321,15 +325,17 @@ class GLTransformationMixin(GLMixin):
     #
 
     def initialize_gl(self):
-        self.transformation_list = glGenLists(1)
+        vb = context.application.vis_backend
+        self.transformation_list = vb.create_list()
         ##print "Created transformation list (%i): %s" % (self.transformation_list, self.get_name())
         self.transformation_list_valid = True
         GLMixin.initialize_gl(self)
 
     def cleanup_gl(self):
         GLMixin.cleanup_gl(self)
+        vb = context.application.vis_backend
         ##print "Deleting transformation list (%i): %s" % (self.transformation_list, self.get_name())
-        glDeleteLists(self.transformation_list, 1)
+        vb.delete_list(self.transformation_list)
         del self.transformation_list
         del self.transformation_list_valid
 
@@ -371,25 +377,26 @@ class GLTransformationMixin(GLMixin):
 
     def revalidate_transformation_list(self):
         if self.gl_active:
+            vb = context.application.vis_backend
             ##print "Compiling transformation list (%i): %s" % (self.transformation_list,  self.get_name())
-            glNewList(self.transformation_list, GL_COMPILE)
-            glPushMatrix()
-            self.transformation.gl_apply()
-            glEndList()
+            vb.begin_list(self.transformation_list)
+            vb.push_matrix(self.transformation)
+            vb.end_list()
             self.transformation_list_valid = True
 
     def revalidate_total_list(self):
         if self.gl_active:
+            vb = context.application.vis_backend
             ##print "Compiling total list (%i): %s" % (self.total_list, self.get_name())
-            glNewList(self.total_list, GL_COMPILE)
+            vb.begin_list(self.total_list)
             if self.visible:
-                glPushName(self.draw_list)
-                glCallList(self.transformation_list)
+                vb.push_name(self.draw_list)
+                vb.call_list(self.transformation_list)
                 self.draw_selection()
-                glCallList(self.draw_list)
-                glPopMatrix()
-                glPopName()
-            glEndList()
+                vb.call_list(self.draw_list)
+                vb.pop_matrix()
+                vb.pop_name()
+            vb.end_list()
             self.total_list_valid = True
 
     #

@@ -42,8 +42,6 @@ from molmod.transformations import Complete, Translation
 
 import iterative
 
-from OpenGL.GL import *
-from OpenGL.GLU import *
 import numpy, gtk
 
 import math, copy, time
@@ -109,29 +107,30 @@ class Spring(Vector, ColorMixin):
     def draw(self):
         Vector.draw(self)
         ColorMixin.draw(self)
+        vb = context.application.vis_backend
         if self.length > self.rest_length:
             l_cyl = self.rest_length
             l_cone = 0.5*(self.length - l_cyl)
             if l_cone > 0:
-                gluCylinder(self.quadric, self.radius, 0.0, l_cone, self.quality, 1)
-                glTranslate(0.0, 0.0, l_cone)
+                vb.draw_cone(self.radius, 0.0, l_cone, self.quality)
+                vb.translate(0.0, 0.0, l_cone)
             if l_cyl > 0:
-                gluCylinder(self.quadric, 0.5*self.radius, 0.5*self.radius, l_cyl, self.quality, 1)
-                glTranslate(0.0, 0.0, l_cyl)
+                vb.draw_cone(0.5*self.radius, 0.5*self.radius, l_cyl, self.quality)
+                vb.translate(0.0, 0.0, l_cyl)
             if l_cone > 0:
-                gluCylinder(self.quadric, 0.0, self.radius, l_cone, self.quality, 1)
+                vb.draw_cone(0.0, self.radius, l_cone, self.quality)
         else:
             l_cyl = self.length
             l_cone = 0.5*(self.rest_length - self.length)
             if l_cone > 0:
-                glTranslate(0.0, 0.0, -l_cone)
-                gluCylinder(self.quadric, 0.0, self.radius, l_cone, self.quality, 1)
-                glTranslate(0.0, 0.0, l_cone)
+                vb.translate(0.0, 0.0, -l_cone)
+                vb.draw_cone(0.0, self.radius, l_cone, self.quality)
+                vb.translate(0.0, 0.0, l_cone)
             if l_cyl > 0:
-                gluCylinder(self.quadric, 0.5*self.radius, 0.5*self.radius, l_cyl, self.quality, 1)
-                glTranslate(0.0, 0.0, l_cyl)
+                vb.draw_cylinder(0.5*self.radius, l_cyl, self.quality)
+                vb.translate(0.0, 0.0, l_cyl)
             if l_cone > 0:
-                gluCylinder(self.quadric, self.radius, 0.0, l_cone, self.quality, 1)
+                vb.draw_cone(self.radius, 0.0, l_cone, self.quality)
 
     def write_pov(self, indenter):
         if self.length <= 0: return

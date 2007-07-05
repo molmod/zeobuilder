@@ -33,8 +33,6 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 import zeobuilder.actions.primitive as primitive
 
-
-from OpenGL.GL import *
 import numpy
 
 import math
@@ -129,19 +127,24 @@ class Plane(GLReferentBase, ColorMixin):
         GLReferentBase.draw(self)
         ColorMixin.draw(self)
         self.update_normal()
-        glBegin(GL_QUADS)
-        glNormal3(self.normal)
-        glVertex(self.l_l + 0.001*self.normal)
-        glVertex(self.l_h + 0.001*self.normal)
-        glVertex(self.h_h + 0.001*self.normal)
-        glVertex(self.h_l + 0.001*self.normal)
-        glNormal3(-self.normal)
-        glVertex(self.h_l - 0.001*self.normal)
-        glVertex(self.h_h - 0.001*self.normal)
-        glVertex(self.l_h - 0.001*self.normal)
-        glVertex(self.l_l - 0.001*self.normal)
-        glEnd()
-
+        vb = context.application.vis_backend
+        vb.draw_quads(
+            quads=numpy.array([
+                [
+                    self.l_l + 0.001*self.normal,
+                    self.l_h + 0.001*self.normal,
+                    self.h_h + 0.001*self.normal,
+                    self.h_l + 0.001*self.normal,
+                ],
+                [
+                    self.h_l - 0.001*self.normal,
+                    self.h_h - 0.001*self.normal,
+                    self.l_h - 0.001*self.normal,
+                    self.l_l - 0.001*self.normal,
+                ],
+            ], float),
+            normals=[self.normal, -self.normal]
+        )
 
     #
     # Revalidation

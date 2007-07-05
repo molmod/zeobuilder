@@ -20,13 +20,13 @@
 # --
 
 
+from zeobuilder import context
 from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
 from molmod.units import angstrom
 
-from OpenGL.GL import *
 import numpy
 
 import copy
@@ -36,28 +36,33 @@ __all__ = ["FrameAxes", "BoundingBox"]
 
 
 def draw_axis_spike(thickness, length):
-    glBegin(GL_QUAD_STRIP)
-    # (+,+)
-    glNormal(0.0,  0.7071067812,  0.7071067812)
-    glVertex(thickness,  thickness,  thickness)
-    glVertex(length, 0.0, 0.0)
-    # (+,-)
-    glNormal(0.0,  0.7071067812, -0.7071067812)
-    glVertex(thickness,  thickness, -thickness)
-    glVertex(length, 0.0, 0.0)
-    # (-,-)
-    glNormal(0.0, -0.7071067812, -0.7071067812)
-    glVertex(-thickness, -thickness, -thickness)
-    glVertex(length, 0.0, 0.0)
-    # (-,+)
-    glNormal(0.0, -0.7071067812,  0.7071067812)
-    glVertex(thickness, -thickness,  thickness)
-    glVertex(length, 0.0, 0.0)
-    # (+,+)
-    glNormal(0.0,  0.7071067812,  0.7071067812)
-    glVertex(thickness, thickness, thickness)
-    glVertex(length, 0.0, 0.0)
-    glEnd()
+    vb = context.application.vis_backend
+    vb.draw_quad_strip(
+        coordinates=numpy.array([
+            [thickness,  thickness,  thickness],
+            [length, 0.0, 0.0],
+            [thickness,  thickness, -thickness],
+            [length, 0.0, 0.0],
+            [-thickness, -thickness, -thickness],
+            [length, 0.0, 0.0],
+            [thickness, -thickness,  thickness],
+            [length, 0.0, 0.0],
+            [thickness, thickness, thickness],
+            [length, 0.0, 0.0],
+        ], float),
+        normals=numpy.array([
+            [0.0,  0.7071067812,  0.7071067812],
+            [0.0,  0.7071067812,  0.7071067812],
+            [0.0,  0.7071067812, -0.7071067812],
+            [0.0,  0.7071067812, -0.7071067812],
+            [0.0, -0.7071067812, -0.7071067812],
+            [0.0, -0.7071067812, -0.7071067812],
+            [0.0, -0.7071067812,  0.7071067812],
+            [0.0, -0.7071067812,  0.7071067812],
+            [0.0,  0.7071067812,  0.7071067812],
+            [0.0,  0.7071067812,  0.7071067812],
+        ]),
+    )
 
 
 class FrameAxes(object):
@@ -120,19 +125,20 @@ class FrameAxes(object):
         if self.axes_visible:
             col = {True: 2.0, False: 1.2}[light]
             sat = {True: 0.2, False: 0.1}[light]
-            glPushMatrix()
+            vb = context.application.vis_backend
+            vb.push_matrix()
             # x-axis
-            glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [col, sat, sat, 1.0])
+            vb.set_color(col, sat, sat)
             draw_axis_spike(self.axis_thickness, self.axis_length)
             # y-axis
-            glRotate(120, 1.0, 1.0, 1.0)
-            glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [sat, col, sat, 1.0])
+            vb.rotate(120, 1.0, 1.0, 1.0)
+            vb.set_color(sat, col, sat)
             draw_axis_spike(self.axis_thickness, self.axis_length)
             # z-axis
-            glRotate(120, 1.0, 1.0, 1.0)
-            glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, [sat, sat, col, 1.0])
+            vb.rotate(120, 1.0, 1.0, 1.0)
+            vb.set_color(sat, sat, col)
             draw_axis_spike(self.axis_thickness, self.axis_length)
-            glPopMatrix()
+            vb.pop_matrix()
 
     def write_pov(self, indenter):
         if not self.axes_visible: return
@@ -224,71 +230,36 @@ class BoundingBox(object):
         # that visualises the selection
         sel_margin = 0.06
         gray = 4.5
-        glMaterial(GL_FRONT, GL_DIFFUSE, [0.0, 0.0, 0.0, 0.0])
-        glMaterial(GL_FRONT, GL_AMBIENT, [gray, gray, gray, 1.0])
-        glMaterial(GL_FRONT, GL_SPECULAR, [0.0, 0.0, 0.0, 0.0])
 
-        # the ridges parallell to the z-axis
-        glLineWidth(1)
-        #glLineStipple(1, -1)
-        #glLineStipple(1, -21846)
-        glBegin(GL_LINES)
-        # 1 -> 5
-        glNormalf(-1.0, -1.0,  0.0)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[0][1] - sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[0][1] - sel_margin, self.corners[0][2] - sel_margin)
-        # 2 -> 6
-        glNormalf( 1.0, -1.0,  0.0)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[0][1] - sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[0][1] - sel_margin, self.corners[0][2] - sel_margin)
-        # 3 -> 7
-        glNormalf( 1.0,  1.0,  0.0)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[1][1] + sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[1][1] + sel_margin, self.corners[0][2] - sel_margin)
-        # 4 -> 8
-        glNormalf(-1.0,  1.0,  0.0)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[1][1] + sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[1][1] + sel_margin, self.corners[0][2] - sel_margin)
-        glEnd()
+        vb = context.application.vis_backend
+        vb.set_specular(False)
+        vb.set_color(gray, gray, gray)
+        vb.set_line_width(1)
 
-        # the ridges parallell to the y-axis
-        glBegin(GL_LINES)
-        # 1 -> 4
-        glNormalf(-1.0,  0.0,  1.0)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[0][1] - sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[1][1] + sel_margin, self.corners[1][2] + sel_margin)
-        # 2 -> 3
-        glNormalf( 1.0,  0.0,  1.0)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[0][1] - sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[1][1] + sel_margin, self.corners[1][2] + sel_margin)
-        # 6 -> 7
-        glNormalf( 1.0,  0.0, -1.0)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[0][1] - sel_margin, self.corners[0][2] - sel_margin)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[1][1] + sel_margin, self.corners[0][2] - sel_margin)
-        # 5 -> 8
-        glNormalf(-1.0,  0.0, -1.0)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[0][1] - sel_margin, self.corners[0][2] - sel_margin)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[1][1] + sel_margin, self.corners[0][2] - sel_margin)
-        glEnd()
+        corners = []
+        for x in [0, 1]:
+            for y in [0, 1]:
+                for z in [0, 1]:
+                    corners.append([
+                        self.corners[x][0] - sel_margin*(2*x-1),
+                        self.corners[y][1] - sel_margin*(2*x-1),
+                        self.corners[z][2] - sel_margin*(2*x-1),
+                    ])
+        corners = numpy.array(corners)
 
-        # the ridges parallell to the x-axis
-        glBegin(GL_LINES)
-        # 1 -> 2
-        glNormalf( 0.0, -1.0,  1.0)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[0][1] - sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[0][1] - sel_margin, self.corners[1][2] + sel_margin)
-        # 4 -> 3
-        glNormalf( 0.0,  1.0,  1.0)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[1][1] + sel_margin, self.corners[1][2] + sel_margin)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[1][1] + sel_margin, self.corners[1][2] + sel_margin)
-        # 6 -> 5
-        glNormalf( 0.0, -1.0, -1.0)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[0][1] - sel_margin, self.corners[0][2] - sel_margin)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[0][1] - sel_margin, self.corners[0][2] - sel_margin)
-        # 7 -> 8
-        glNormalf( 0.0,  1.0, -1.0)
-        glVertexf(self.corners[1][0] + sel_margin, self.corners[1][1] + sel_margin, self.corners[0][2] - sel_margin)
-        glVertexf(self.corners[0][0] - sel_margin, self.corners[1][1] + sel_margin, self.corners[0][2] - sel_margin)
-        glEnd()
+        vb.draw_line(corners[0], corners[4])
+        vb.draw_line(corners[1], corners[5])
+        vb.draw_line(corners[2], corners[6])
+        vb.draw_line(corners[3], corners[7])
 
-        glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
+        vb.draw_line(corners[0], corners[2])
+        vb.draw_line(corners[1], corners[3])
+        vb.draw_line(corners[4], corners[6])
+        vb.draw_line(corners[5], corners[7])
+
+        vb.draw_line(corners[0], corners[1])
+        vb.draw_line(corners[2], corners[3])
+        vb.draw_line(corners[4], corners[5])
+        vb.draw_line(corners[6], corners[7])
+
+        vb.set_specular(True)

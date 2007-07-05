@@ -42,7 +42,6 @@ from molmod.transformations import Translation
 from molmod.unit_cell import UnitCell
 from molmod.units import angstrom
 
-from OpenGL.GL import *
 import numpy, gtk
 
 import math, copy, StringIO
@@ -265,16 +264,18 @@ class Universe(GLPeriodicContainer, FrameAxes):
     #
 
     def initialize_gl(self):
+        vb = context.application.vis_backend
         self.set_clip_planes()
-        self.box_list = glGenLists(1)
+        self.box_list = vb.create_list()
         ##print "Created box list (%i): %s" % (self.box_list, self.get_name())
         self.box_list_valid = True
         GLPeriodicContainer.initialize_gl(self)
 
     def cleanup_gl(self):
+        vb = context.application.vis_backend
         GLPeriodicContainer.cleanup_gl(self)
         ##print "Deleting box list (%i): %s" % (self.box_list, self.get_name())
-        glDeleteLists(self.box_list, 1)
+        vb.delete_list(self.box_list)
         del self.box_list
         del self.box_list_valid
         self.unset_clip_planes()
@@ -294,18 +295,14 @@ class Universe(GLPeriodicContainer, FrameAxes):
         scene = context.application.main.drawing_area.scene
         assert len(scene.clip_planes) == 0
         active, inactive = self.get_active_inactive()
-        planes = [
-            (GL_CLIP_PLANE0, GL_CLIP_PLANE1),
-            (GL_CLIP_PLANE2, GL_CLIP_PLANE3),
-            (GL_CLIP_PLANE4, GL_CLIP_PLANE5),
-        ]
-        for index, (PLANE_A, PLANE_B) in zip(active, planes):
+        planes = [(0, 1),(2, 3),(4, 5)]
+        for index, (plane_a, plane_b) in zip(active, planes):
             axis = self.cell[:,index]
             ortho = self.cell_reciproke[index] / numpy.linalg.norm(self.cell_reciproke[index])
             length = abs(numpy.dot(ortho, axis))
             repetitions = self.repetitions[index]
-            scene.clip_planes[PLANE_A] = numpy.array(list( ortho) + [self.clip_margin])
-            scene.clip_planes[PLANE_B] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
+            scene.clip_planes[plane_a] = numpy.array(list( ortho) + [self.clip_margin])
+            scene.clip_planes[plane_b] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
 
     def unset_clip_planes(self):
         context.application.main.drawing_area.scene.clip_planes = {}
@@ -331,42 +328,46 @@ class Universe(GLPeriodicContainer, FrameAxes):
     # Draw
     #
 
-    def draw_box_helper(self, light, draw_line, set_color):
-        col  = {True: 4.0, False: 2.5}[light]
-        sat  = {True: 0.0, False: 0.5}[light]
-        gray = {True: 4.0, False: 2.5}[light]
+    def draw_box(self):
+        vb = context.application.vis_backend
+        vb.set_line_width(2)
+        vb.set_specular(False)
+
+        col  = {True: 4.0, False: 2.5}[self.selected]
+        sat  = {True: 0.0, False: 0.5}[self.selected]
+        gray = {True: 4.0, False: 2.5}[self.selected]
 
         def draw_three(origin):
             if self.cell_active[0]:
-                set_color(col, sat, sat)
-                draw_line(origin, origin+self.cell[:,0])
+                vb.set_color(col, sat, sat)
+                vb.draw_line(origin, origin+self.cell[:,0])
             if self.cell_active[1]:
-                set_color(sat, col, sat)
-                draw_line(origin, origin+self.cell[:,1])
+                vb.set_color(sat, col, sat)
+                vb.draw_line(origin, origin+self.cell[:,1])
             if self.cell_active[2]:
-                set_color(sat, sat, col)
-                draw_line(origin, origin+self.cell[:,2])
+                vb.set_color(sat, sat, col)
+                vb.draw_line(origin, origin+self.cell[:,2])
 
         def draw_gray(origin, axis1, axis2, n1, n2, delta, nd):
-            set_color(gray, gray, gray)
+            vb.set_color(gray, gray, gray)
             if n1 == 0 and n2 == 0:
                 return
             for i1 in xrange(n1+1):
                 if i1 == 0:
                     b2 = 1
-                    draw_line(origin+delta, origin+nd*delta)
+                    vb.draw_line(origin+delta, origin+nd*delta)
                 else:
                     b2 = 0
                 for i2 in xrange(b2, n2+1):
-                    draw_line(origin+i1*axis1+i2*axis2, origin+i1*axis1+i2*axis2+nd*delta)
+                    vb.draw_line(origin+i1*axis1+i2*axis2, origin+i1*axis1+i2*axis2+nd*delta)
 
         def draw_ortho(origin, axis1, axis2, n1, n2, delta):
-            set_color(gray, gray, gray)
+            vb.set_color(gray, gray, gray)
             if n1 == 0 and n2 == 0:
                 return
             for i1 in xrange(n1+1):
                 for i2 in xrange(n2+1):
-                    draw_line(
+                    vb.draw_line(
                         origin + i1*axis1 + i2*axis2 - 0.5*delta,
                         origin + i1*axis1 + i2*axis2 + 0.5*delta
                     )
@@ -390,21 +391,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
         else:
             draw_ortho(origin, self.cell[:,2], self.cell[:,0], repetitions[2], repetitions[0], self.cell[:,1])
 
-    def draw_box(self):
-        def draw_line(begin, end):
-            glVertexf(begin)
-            glVertexf(end)
 
-        def set_color(r, g, b):
-            glMaterial(GL_FRONT, GL_AMBIENT, [r, g, b, 1.0])
-
-        glLineWidth(2)
-        glMaterial(GL_FRONT, GL_DIFFUSE, [0.0, 0.0, 0.0, 0.0])
-        glMaterial(GL_FRONT, GL_SPECULAR, [0.0, 0.0, 0.0, 0.0])
-        glBegin(GL_LINES)
-        self.draw_box_helper(self.selected, draw_line, set_color)
-        glEnd()
-        glMaterial(GL_FRONT, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
+        vb.set_specular(True)
 
     def draw(self):
         FrameAxes.draw(self, self.selected)
@@ -436,22 +424,23 @@ class Universe(GLPeriodicContainer, FrameAxes):
     def revalidate_box_list(self):
         if self.gl_active > 0:
             ##print "Compiling box list (%i): %s" % (self.box_list,  self.get_name())
-            glNewList(self.box_list, GL_COMPILE)
-            glPushMatrix()
+            vb = context.application.vis_backend
+            vb.begin_list(self.box_list)
             if sum(self.cell_active) > 0:
                 self.draw_box()
-            glEndList()
+            vb.end_list()
             self.box_list_valid = True
 
     def revalidate_total_list(self):
         if self.gl_active > 0:
             ##print "Compiling total list (%i): %s" % (self.total_list, self.get_name())
-            glNewList(self.total_list, GL_COMPILE)
+            vb = context.application.vis_backend
+            vb.begin_list(self.total_list)
             if self.visible:
-                glPushName(self.draw_list)
-                if self.box_visible: glCallList(self.box_list)
+                vb.push_name(self.draw_list)
+                if self.box_visible: vb.call_list(self.box_list)
                 if self.selected and sum(self.cell_active) == 0:
-                    glCallList(self.boundingbox_list)
+                    vb.call_list(self.boundingbox_list)
 
                 # repeat the draw list for all the unit cell images.
                 if self.clipping:
@@ -459,15 +448,14 @@ class Universe(GLPeriodicContainer, FrameAxes):
                 else:
                     repetitions = self.repetitions * self.cell_active + 1 - self.cell_active
                 for position in yield_all_positions(repetitions):
-                    glPushMatrix()
+                    vb.push_matrix()
                     t = numpy.dot(self.cell, numpy.array(position) - self.cell_active * self.clipping)
-                    glTranslate(t[0], t[1], t[2])
-                    glCallList(self.draw_list)
-                    glPopMatrix()
+                    vb.translate(*t)
+                    vb.call_list(self.draw_list)
+                    vb.pop_matrix()
 
-                glPopMatrix()
-                glPopName()
-            glEndList()
+                vb.pop_name()
+            vb.end_list()
             self.total_list_valid = True
 
     def revalidate_bounding_box(self):

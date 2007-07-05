@@ -20,12 +20,12 @@
 # --
 
 
+from zeobuilder import context
 from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 from zeobuilder.undefined import Undefined
 import zeobuilder.gui.fields as fields
 
-from OpenGL.GL import *
 import numpy, gobject
 
 
@@ -64,7 +64,7 @@ class ColorMixin(gobject.GObject):
     #
 
     def draw(self):
-        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.color)
+        context.application.vis_backend.set_color(*self.color)
 
 
 class UserColorMixin(gobject.GObject):
@@ -106,8 +106,5 @@ class UserColorMixin(gobject.GObject):
         else:
             return self.user_color
 
-    def default_color(self):
-        raise NotImplementedError
-
     def draw(self):
-        glMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, self.get_color())
+        context.application.vis_backend.set_color(*self.get_color())

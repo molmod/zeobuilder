@@ -42,8 +42,6 @@ from molmod.unit_cell import UnitCell
 from molmod.binning import PositionedObject, SparseBinnedObjects, IntraAnalyseNeighboringObjects
 from molmod.clusters import Cluster, ClusterFactory
 
-from OpenGL.GL import *
-from OpenGL.GLUT import *
 import numpy
 
 import math
@@ -128,7 +126,8 @@ class Atom(GLGeometricBase, UserColorMixin):
     def draw(self):
         GLGeometricBase.draw(self)
         UserColorMixin.draw(self)
-        glutSolidSphere(self.get_radius(), self.quality, self.quality / 2)
+        vb = context.application.vis_backend
+        vb.draw_sphere(self.get_radius(), self.quality)
 
     def write_pov(self, indenter):
         indenter.write_line("sphere {", 1)
