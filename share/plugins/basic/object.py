@@ -58,7 +58,9 @@ class EditProperties(Immediate):
         edit_properties.run(victims)
         for changed_name in edit_properties.changed_names:
             for victim, old_state in old_states.iteritems():
-                primitive.SetProperty(victim, changed_name, old_state[changed_name], done=True)
+                old_value = old_state.get(changed_name)
+                if old_value is None: old_value = victim.properties_by_name[changed_name].default(victim)
+                primitive.SetProperty(victim, changed_name, old_value, done=True)
 
 
 actions = {
