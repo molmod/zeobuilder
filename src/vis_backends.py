@@ -24,10 +24,10 @@ from OpenGL.GLU import *
 from OpenGL.GL import *
 
 
-__all__ = ["VizBackend", "VizBackendOpenGL"]
+__all__ = ["VisBackend", "VisBackendOpenGL"]
 
 
-class VizBackend(object):
+class VisBackend(object):
     def __init__(self):
         self.names = {}
 
@@ -135,9 +135,9 @@ class VizBackend(object):
         raise NotImplementedError
 
 
-class VizBackendOpenGL(VizBackend):
+class VisBackendOpenGL(VisBackend):
     def __init__(self):
-        VizBackend.__init__(self)
+        VisBackend.__init__(self)
         self.quadric = gluNewQuadric()
         gluQuadricNormals(self.quadric, GLU_SMOOTH)
 
