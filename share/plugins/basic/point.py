@@ -123,7 +123,7 @@ class Point(GLGeometricBase, ColorMixin):
                 self.draw_spike()
                 vb.rotate(90, 1.0, 0.0, 0.0)
             vb.rotate(180, 0.0, 1.0, 0.0)
-        vb.pop_matrix
+        vb.pop_matrix()
 
     def write_pov(self, indenter):
         def write_spike(signs):

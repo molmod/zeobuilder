@@ -82,7 +82,7 @@ class Vector(GLReferentBase):
 
     def draw(self):
         self.calc_vector_dimensions()
-        self.orientation.gl_apply()
+        context.application.vis_backend.transform(self.orientation)
 
     def write_pov(self, indenter):
         GLReferentBase.write_pov(self, indenter)
@@ -102,7 +102,7 @@ class Vector(GLReferentBase):
                 self.draw_selection()
                 vb.call_list(self.draw_list)
                 vb.pop_matrix()
-                #glPopName()
+                vb.pop_name()
             vb.end_list()
             self.total_list_valid = True
 
@@ -115,7 +115,8 @@ class Vector(GLReferentBase):
             vb = context.application.vis_backend
             #print "Compiling selection list (" + str(self.boundingbox_list) + "): " + str(self.name)
             vb.begin_list(self.boundingbox_list)
-            vb.push_matrix(self.orientation)
+            vb.push_matrix()
+            vb.transform(self.orientation)
             self.revalidate_bounding_box()
             self.bounding_box.draw()
             vb.pop_matrix()

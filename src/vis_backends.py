@@ -75,13 +75,16 @@ class VisBackend(object):
     # Transform functions
     #
 
-    def push_matrix(self, transformation=None):
+    def push_matrix(self):
         raise NotImplementedError
 
     def translate(self, x, y, z):
         raise NotImplementedError
 
     def rotate(self, angle, x, y, z):
+        raise NotImplementedError
+
+    def transform(self, transformation):
         raise NotImplementedError
 
     def pop_matrix(self):
@@ -140,6 +143,8 @@ class VisBackendOpenGL(VisBackend):
         VisBackend.__init__(self)
         self.quadric = gluNewQuadric()
         gluQuadricNormals(self.quadric, GLU_SMOOTH)
+        #self.name_counter = 0
+        #self.matrix_counter = 0
 
     #
     # List related functuions
@@ -166,18 +171,23 @@ class VisBackendOpenGL(VisBackend):
 
     def push_name(self, name):
         glPushName(name)
+        #self.name_counter += 1
+        #print "NAME UP  ", self.name_counter
 
     def pop_name(self):
         glPopName
+        #self.name_counter -= 1
+        #print "NAME DOWN", self.name_counter
+        #assert self.name_counter >= 0
 
     #
     # Transform functions
     #
 
-    def push_matrix(self, transformation=None):
+    def push_matrix(self):
         glPushMatrix()
-        if transformation is not None:
-            transformation.gl_apply()
+        #self.matrix_counter += 1
+        #print "MATRIX UP  ", self.matrix_counter
 
     def translate(self, x, y, z):
         glTranslate(x, y, z)
@@ -185,8 +195,15 @@ class VisBackendOpenGL(VisBackend):
     def rotate(self, angle, x, y, z):
         glRotate(angle, x, y, z)
 
+    def transform(self, transformation):
+        transformation.gl_apply()
+
     def pop_matrix(self):
         glPopMatrix()
+        #self.matrix_counter -= 1
+        #print "MATRIX DOWN", self.matrix_counter
+        #assert self.matrix_counter >= 0
+
 
     #
     # Layout related functions

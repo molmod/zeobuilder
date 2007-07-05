@@ -380,7 +380,7 @@ class GLTransformationMixin(GLMixin):
             vb = context.application.vis_backend
             ##print "Compiling transformation list (%i): %s" % (self.transformation_list,  self.get_name())
             vb.begin_list(self.transformation_list)
-            vb.push_matrix(self.transformation)
+            vb.transform(self.transformation)
             vb.end_list()
             self.transformation_list_valid = True
 
@@ -391,6 +391,7 @@ class GLTransformationMixin(GLMixin):
             vb.begin_list(self.total_list)
             if self.visible:
                 vb.push_name(self.draw_list)
+                vb.push_matrix()
                 vb.call_list(self.transformation_list)
                 self.draw_selection()
                 vb.call_list(self.draw_list)
