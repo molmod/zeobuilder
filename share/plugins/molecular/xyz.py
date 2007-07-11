@@ -28,7 +28,7 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
 
-from ccop.xyz import XYZReader
+from ccio.xyz import XYZReader
 from molmod.data import periodic
 from molmod.units import angstrom
 
