@@ -54,19 +54,6 @@ class Vector(GLReferentBase):
         ]
 
     #
-    # Tree
-    #
-
-    def initialize_gl(self):
-        GLReferentBase.initialize_gl(self)
-        self.quadric = context.application.main.drawing_area.scene.quadric
-
-    def cleanup_gl(self):
-        self.quadric = None
-        GLReferentBase.cleanup_gl(self)
-
-
-    #
     # Dialog fields (see action EditProperties)
     #
 

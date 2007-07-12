@@ -91,28 +91,31 @@ class Point(GLGeometricBase, ColorMixin):
     def draw_spike(self):
         ColorMixin.draw(self)
         vb = context.application.vis_backend
-        vb.draw_quad_strip(
-            coordinates = numpy.array([
-                [self.spike_length, self.spike_length, self.spike_length],
-                [self.spike_thickness, 0, 0],
-                [self.spike_length, self.spike_length, self.spike_length],
-                [0, self.spike_thickness, 0],
-                [self.spike_length, self.spike_length, self.spike_length],
-                [0, 0, self.spike_thickness],
-                [self.spike_length, self.spike_length, self.spike_length],
-                [self.spike_thickness, 0, 0],
-            ], float),
-            normals = numpy.array([
-                [0.5773502692, -0.5773502692, -0.5773502692],
-                [1, 0, 0],
-                [-0.5773502692, 0.5773502692, -0.5773502692],
-                [0, 1, 0],
-                [-0.5773502692, -0.5773502692, 0.5773502692],
-                [0, 0, 1],
-                [0.5773502692, -0.5773502692, -0.5773502692],
-                [1, 0, 0],
-            ], float),
-        )
+        vb.draw_quad_strip((
+            numpy.array([0.5773502692, -0.5773502692, -0.5773502692]),
+            [numpy.array([self.spike_length, self.spike_length, self.spike_length])]
+        ), (
+            numpy.array([1, 0, 0]),
+            [numpy.array([self.spike_thickness, 0, 0])]
+        ), (
+            numpy.array([-0.5773502692, 0.5773502692, -0.5773502692]),
+            [numpy.array([self.spike_length, self.spike_length, self.spike_length])]
+        ), (
+            numpy.array([0, 1, 0]),
+            [numpy.array([0, self.spike_thickness, 0])]
+        ), (
+            numpy.array([-0.5773502692, -0.5773502692, 0.5773502692]),
+            [numpy.array([self.spike_length, self.spike_length, self.spike_length])]
+        ), (
+            numpy.array([0, 0, 1]),
+            [numpy.array([0, 0, self.spike_thickness])]
+        ), (
+            numpy.array([0.5773502692, -0.5773502692, -0.5773502692]),
+            [numpy.array([self.spike_length, self.spike_length, self.spike_length])]
+        ), (
+            numpy.array([1, 0, 0]),
+            [numpy.array([self.spike_thickness, 0, 0])]
+        ))
 
     def draw(self):
         GLGeometricBase.draw(self)

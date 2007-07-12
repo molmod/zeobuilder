@@ -48,24 +48,23 @@ class ViewReset(Immediate):
         return True
 
     def do(self):
-        drawing_area = context.application.main.drawing_area
-        drawing_area.scene.reset_view()
-        drawing_area.queue_draw()
+        context.application.camera.reset()
+        context.application.main.drawing_area.queue_draw()
 
 
-class ViewerConfiguration(Immediate):
-    description = "Edit viewer configuration"
-    menu_info = MenuInfo("default/_View:viewer", "_Configure viewer", order=(0, 2, 0, 1))
+class CameraSettings(Immediate):
+    description = "Edit camera settings"
+    menu_info = MenuInfo("default/_View:viewer", "_Camera settings", order=(0, 2, 0, 1))
     repeatable = False
     authors = [authors.toon_verstraelen]
 
     viewer_configuration = FieldsDialogSimple(
-        "Viewer configuration",
+        "Camera configuration",
          fields.group.HBox(fields=[
             fields.group.Table([
                 fields.composed.Translation(
                     label_text="Rotation center",
-                    attribute_name="center",
+                    attribute_name="rotation_center",
                 ),
                 fields.composed.Rotation(
                     label_text="Model rotation",
@@ -74,8 +73,8 @@ class ViewerConfiguration(Immediate):
             ]),
             fields.group.Table([
                 fields.composed.Translation(
-                    label_text="Viewer position",
-                    attribute_name="viewer",
+                    label_text="Eye position",
+                    attribute_name="eye",
                 ),
                 fields.faulty.Length(
                     label_text="Window size",
@@ -114,10 +113,9 @@ class ViewerConfiguration(Immediate):
         return True
 
     def do(self):
-        drawing_area = context.application.main.drawing_area
-        if self.viewer_configuration.run(drawing_area.scene) == gtk.RESPONSE_OK:
-            drawing_area.scene.update_znear()
-            drawing_area.scene.apply_renderer_settings()
+        camera = context.application.camera
+        if self.viewer_configuration.run(camera) == gtk.RESPONSE_OK:
+            context.application.main.drawing_area.queue_draw()
 
 
 class RendererConfiguration(Immediate):
@@ -148,18 +146,18 @@ class RendererConfiguration(Immediate):
     )
 
     def do(self):
-        scene = context.application.main.drawing_area.scene
         class Settings(object):
             pass
         settings = Settings()
         settings.__dict__ = context.application.configuration.settings
         if self.renderer_configuration.run(settings) == gtk.RESPONSE_OK:
             context.application.configuration.settings = settings.__dict__
-            scene.apply_renderer_settings()
+            context.application.scene.apply_renderer_settings()
+            context.application.main.drawing_area.queue_draw()
 
 
 actions = {
     "ViewReset": ViewReset,
-    "ViewerConfiguration": ViewerConfiguration,
+    "CameraSettings": CameraSettings,
     "RendererConfiguration": RendererConfiguration,
 }

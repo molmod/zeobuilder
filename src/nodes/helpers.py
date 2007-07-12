@@ -37,32 +37,43 @@ __all__ = ["FrameAxes", "BoundingBox"]
 
 def draw_axis_spike(thickness, length):
     vb = context.application.vis_backend
-    vb.draw_quad_strip(
-        coordinates=numpy.array([
-            [thickness,  thickness,  thickness],
-            [length, 0.0, 0.0],
-            [thickness,  thickness, -thickness],
-            [length, 0.0, 0.0],
-            [-thickness, -thickness, -thickness],
-            [length, 0.0, 0.0],
-            [thickness, -thickness,  thickness],
-            [length, 0.0, 0.0],
-            [thickness, thickness, thickness],
-            [length, 0.0, 0.0],
-        ], float),
-        normals=numpy.array([
+    vb.draw_quad_strip(*[
+        (
             [0.0,  0.7071067812,  0.7071067812],
-            [0.0,  0.7071067812,  0.7071067812],
+            [
+                [thickness,  thickness,  thickness],
+                [length, 0.0, 0.0],
+            ],
+        ),
+        (
             [0.0,  0.7071067812, -0.7071067812],
-            [0.0,  0.7071067812, -0.7071067812],
+            [
+                [thickness,  thickness, -thickness],
+                [length, 0.0, 0.0],
+            ],
+        ),
+        (
             [0.0, -0.7071067812, -0.7071067812],
-            [0.0, -0.7071067812, -0.7071067812],
+            [
+                [-thickness, -thickness, -thickness],
+                [length, 0.0, 0.0],
+            ],
+        ),
+        (
             [0.0, -0.7071067812,  0.7071067812],
-            [0.0, -0.7071067812,  0.7071067812],
+            [
+                [thickness, -thickness,  thickness],
+                [length, 0.0, 0.0],
+            ],
+        ),
+        (
             [0.0,  0.7071067812,  0.7071067812],
-            [0.0,  0.7071067812,  0.7071067812],
-        ]),
-    )
+            [
+                [thickness, thickness, thickness],
+                [length, 0.0, 0.0],
+            ],
+        ),
+    ])
 
 
 class FrameAxes(object):

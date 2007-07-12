@@ -37,7 +37,7 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
-import gtk
+import gtk, numpy
 
 
 ERASE_RECTANGLE = 0
@@ -94,6 +94,7 @@ class SketchOptions(GladeWrapper):
         #  3) fill the vector combo box
         self.vector_store = gtk.ListStore(str)
         self.vector_store.append(["Arrow"])
+        self.vector_store.append(["Spring"])
         self.cb_vector.set_model(self.vector_store)
 
         renderer_pixbuf = gtk.CellRendererPixbuf()
@@ -122,13 +123,16 @@ class SketchOptions(GladeWrapper):
     def replace(self, gl_object):
         if not gl_object.get_fixed():
             state = gl_object.__getstate__()
-            del state["name"]
-            del state["transformation"]
-            parent = gl_object.parent
+            state.pop("name", None)
+            state.pop("transformation", None)
             new = context.application.plugins.get_node(
                 self.object_store.get_value(self.cb_object.get_active_iter(), 0)
             )(**state)
             new.transformation.t[:] = gl_object.transformation.t
+            for reference in gl_object.references[::-1]:
+                if not reference.check_target(new):
+                    return
+            parent = gl_object.parent
             primitive.Add(new, parent, select=False)
             for reference in gl_object.references[::-1]:
                 reference.set_target(new)
@@ -144,8 +148,8 @@ class SketchOptions(GladeWrapper):
             select=False
         )
 
-    def erase_at(self, x, y, parent):
-        for node in context.application.main.drawing_area.yield_hits((x-2, y-2, x+2, y+2)):
+    def erase_at(self, p, parent):
+        for node in context.application.main.drawing_area.yield_hits((p[0]-2, p[1]-2, p[0]+2, p[1]+2)):
             try:
                 match = (
                     node is not None and node != parent and
@@ -160,16 +164,16 @@ class SketchOptions(GladeWrapper):
             if match:
                 primitive.Delete(node)
 
-    def tool_draw(self, x1, y1, x2, y2):
+    def tool_draw(self, p1, p2):
         drawing_area = context.application.main.drawing_area
-        x1, y1 = drawing_area.to_reduced(x1, y1)
-        x2, y2 = drawing_area.to_reduced(x2, y2)
-        drawing_area.tool_line(x1, y1, x2, y2)
+        r1 = drawing_area.screen_to_camera(p1)
+        r2 = drawing_area.screen_to_camera(p2)
+        context.application.vis_backend.tool("line", r1, r2)
 
-    def tool_special(self, x1, y1, x2, y2):
+    def tool_special(self, p1, p2):
         pass
 
-    def move_special(self, gl_object1, gl_object2, x1, y1, x2, y2):
+    def move_special(self, gl_object1, gl_object2, p1, p2):
         pass
 
     def click_special(self, gl_object):
@@ -190,16 +194,17 @@ class Sketch(Interactive):
         )
 
     def button_press(self, drawing_area, event):
+        camera = context.application.camera
         self.first_hit = drawing_area.get_nearest(event.x, event.y)
         if not self.hit_criterion(self.first_hit):
             self.first_hit = None
 
         if self.first_hit is not None:
-            self.begin_x, self.begin_y = drawing_area.position_of_object(self.first_hit)
+            tmp = camera.object_to_camera(self.first_hit)
+            self.begin = drawing_area.camera_to_screen(tmp).astype(float)
             self.parent = self.first_hit.parent
         else:
-            self.begin_x = event.x
-            self.begin_y = event.y
+            self.begin = numpy.array([event.x, event.y], float)
             node = context.application.cache.node
             if isinstance(node, GLContainerMixin):
                 self.parent = node
@@ -214,16 +219,18 @@ class Sketch(Interactive):
             self.origin = self.parent.get_absolute_frame().t
         else:
             self.origin = self.first_hit.get_absolute_frame().t
-        self.end_x = event.x
-        self.end_y = event.y
+        self.end = numpy.array([event.x, event.y], float)
 
         if event.button == 1:
             self.first_added = (self.first_hit is None)
             if self.first_added:
                 self.first_hit = self.options.add_new(
                     self.parent.get_absolute_frame().vector_apply_inverse(
-                        drawing_area.vector_in_plane(
-                            event.x, event.y, self.origin
+                        camera.vector_in_plane(
+                            drawing_area.screen_to_camera(
+                                numpy.array([event.x, event.y], float)
+                            ),
+                            self.origin,
                         )
                     ),
                     self.parent
@@ -234,26 +241,25 @@ class Sketch(Interactive):
             # a special modification of the selected object is going to happen
         elif event.button == 3:
             self.tool = self.options.erase_at
-            self.tool(event.x, event.y, self.parent)
+            self.tool(numpy.array([event.x, event.y], float), self.parent)
 
         if self.tool is None:
             self.finish()
 
     def button_motion(self, drawing_area, event, start_button):
         if self.tool == self.options.erase_at:
-            self.tool(event.x, event.y, self.parent)
+            self.tool(numpy.array([event.x, event.y], float), self.parent)
         else:
-            self.end_x = event.x
-            self.end_y = event.y
-            self.tool(self.begin_x, self.begin_y, self.end_x, self.end_y)
+            self.end = numpy.array([event.x, event.y], float)
+            self.tool(self.begin, self.end)
 
     def button_release(self, drawing_area, event):
-        drawing_area.tool_clear()
-        self.end_x = event.x
-        self.end_y = event.y
+        camera = context.application.camera
+        context.application.vis_backend.tool("clear")
+        self.end = numpy.array([event.x, event.y], float)
 
         if self.tool == self.options.erase_at:
-            self.tool(event.x, event.y, self.parent)
+            self.tool(numpy.array([event.x, event.y], float), self.parent)
             self.finish()
             return
 
@@ -261,8 +267,7 @@ class Sketch(Interactive):
         if not self.hit_criterion(self.last_hit):
             self.last_hit = None
         moved = (
-            (abs(self.begin_x - self.end_x) > 2) or
-            (abs(self.begin_x - self.end_x) > 2)
+            (abs(self.begin - self.end) > 2).any()
         ) and (
             ((self.first_hit is None) and (self.last_hit is None)) or
             (self.first_hit != self.last_hit)
@@ -273,15 +278,18 @@ class Sketch(Interactive):
                 if self.last_hit is None:
                     self.last_hit = self.options.add_new(
                         self.parent.get_absolute_frame().vector_apply_inverse(
-                            drawing_area.vector_in_plane(
-                                event.x, event.y, self.origin
+                            camera.vector_in_plane(
+                                drawing_area.screen_to_camera(
+                                    numpy.array([event.x, event.y], float)
+                                ),
+                                self.origin
                             )
                         ),
                         self.parent
                     )
                 self.options.connect(self.first_hit, self.last_hit)
             elif self.tool == self.options.tool_special:
-                self.options.move_special(self.first_hit, self.last_hit, self.begin_x, self.begin_y, self.end_x, self.end_y)
+                self.options.move_special(self.first_hit, self.last_hit, self.begin, self.end)
         else:
             if self.tool == self.options.tool_draw and not self.first_added:
                 self.options.replace(self.first_hit)

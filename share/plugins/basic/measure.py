@@ -103,14 +103,15 @@ class MeasurementsWindow(GladeWrapper):
             if len(self.model_objects) == 1:
                 self.clear()
             else:
-                context.application.main.drawing_area.tool_clear(queue=False)
+                context.application.vis_backend.tool("clear")
 
     def on_action_ended(self, action_manager):
         if not isinstance(action_manager.current_action, Measure):
             self.reveal()
 
     def reveal(self):
-        drawing_area = context.application.main.drawing_area
+        #drawing_area = context.application.main.drawing_area
+        camera = context.application.camera
 
         # first check wether some modelobjects have disapeared:
         self.model_objects = [
@@ -121,12 +122,12 @@ class MeasurementsWindow(GladeWrapper):
         ]
         # update the vectors and the points
         self.vectors = [
-            drawing_area.vector_of_object(model_object)
+            camera.object_to_eye(model_object)
             for model_object
             in self.model_objects
         ]
         self.points = [
-            drawing_area.to_reduced(*drawing_area.position_of_vector(vector))
+            camera.eye_to_camera(vector)
             for vector
             in self.vectors
         ]
@@ -140,10 +141,10 @@ class MeasurementsWindow(GladeWrapper):
         self.update_widgets()
 
     def add_object(self, model_object):
-        drawing_area = context.application.main.drawing_area
+        camera = context.application.camera
 
-        vector = drawing_area.vector_of_object(model_object)
-        point = drawing_area.to_reduced(*drawing_area.position_of_vector(vector))
+        vector = camera.object_to_eye(model_object)
+        point = camera.eye_to_camera(vector)
 
         chain_len = len(self.model_objects)
         if chain_len > 0:
@@ -286,9 +287,9 @@ class MeasurementsWindow(GladeWrapper):
 
         chain_len = len(self.model_objects)
         if chain_len > 0:
-            context.application.main.drawing_area.tool_custom(self.draw_tool_chain)
+            context.application.vis_backend.tool("custom", self.draw_tool_chain)
         else:
-            context.application.main.drawing_area.tool_clear()
+            context.application.vis_backend.tool("clear")
 
         if chain_len > 1:
             if chain_len > 1:

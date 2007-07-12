@@ -292,20 +292,20 @@ class Universe(GLPeriodicContainer, FrameAxes):
     def set_clip_planes(self):
         if not self.clipping:
             return
-        scene = context.application.main.drawing_area.scene
-        assert len(scene.clip_planes) == 0
+        clip_planes = context.application.scene.clip_planes
+        assert len(clip_planes) == 0
         active, inactive = self.get_active_inactive()
-        planes = [(0, 1),(2, 3),(4, 5)]
-        for index, (plane_a, plane_b) in zip(active, planes):
+        for index in active:
             axis = self.cell[:,index]
             ortho = self.cell_reciproke[index] / numpy.linalg.norm(self.cell_reciproke[index])
             length = abs(numpy.dot(ortho, axis))
             repetitions = self.repetitions[index]
-            scene.clip_planes[plane_a] = numpy.array(list( ortho) + [self.clip_margin])
-            scene.clip_planes[plane_b] = numpy.array(list(-ortho) + [repetitions*length + self.clip_margin])
+            clip_planes.append(numpy.array(list(ortho) + [self.clip_margin]))
+            clip_planes.append(numpy.array(list(-ortho) + [repetitions*length + self.clip_margin]))
+        context.application.main.drawing_area.queue_draw()
 
     def unset_clip_planes(self):
-        context.application.main.drawing_area.scene.clip_planes = {}
+        context.application.scene.clip_planes = []
         context.application.main.drawing_area.queue_draw()
 
     #
@@ -317,7 +317,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
         if self.gl_active > 0 and self.box_list_valid:
             self.box_list_valid = False
             context.application.main.drawing_area.queue_draw()
-            context.application.main.drawing_area.scene.add_revalidation(self.revalidate_box_list)
+            context.application.scene.add_revalidation(self.revalidate_box_list)
             ##print "EMIT %s: on-box-list-invalidated" % self.get_name()
 
     def invalidate_all_lists(self):

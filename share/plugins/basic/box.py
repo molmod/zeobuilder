@@ -79,23 +79,21 @@ class Box(GLGeometricBase, ColorMixin):
         ColorMixin.draw(self)
         vb = context.application.vis_backend
 
-        x,y,z = numpy.identity(3)*0.5*self.size
-        sides = [(x,y,z), (x,y,-z), (y,z,x), (y,z,-x), (z,x,y), (z,x,-y)]
+        x,y,z = numpy.identity(3)
+        sides = numpy.array([(x,y,z,z), (x,y,-z,-z), (y,z,x,x), (y,z,-x,-x), (z,x,y,y), (z,x,-y,-y)], float)
+        sides[:,:3] *= 0.5*self.size
 
-        vb.draw_quads(
-            quads=numpy.array([
+        vb.draw_quads(*[
+            (
+                normal,
                 [
-                     a+b+normal,
-                     a-b+normal,
-                    -a-b+normal,
-                    -a+b+normal,
-                ] for a,b,normal in sides
-            ], float),
-            normals=numpy.array([
-                normal
-                for a,b,normal in sides
-            ], float),
-        )
+                     a+b+c,
+                     a-b+c,
+                    -a-b+c,
+                    -a+b+c,
+                ]
+            ) for a,b,c,normal in sides
+        ])
 
     def write_pov(self, indenter):
         indenter.write_line("box {", 1)

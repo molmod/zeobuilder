@@ -63,8 +63,6 @@ class Application(object):
 
     def initialize_model(self):
         from zeobuilder.gui.models import Model
-        from zeobuilder.vis_backends import VisBackendOpenGL
-        self.vis_backend = VisBackendOpenGL()
         self.model = Model()
 
     def initialize_cache(self):
@@ -76,7 +74,13 @@ class Application(object):
         self.action_manager = ActionManager()
 
     def initialize_gui(self):
+        from zeobuilder.gui.visual.scene import Scene
+        from zeobuilder.gui.visual.camera import Camera
+        from zeobuilder.gui.visual.vis_backends import VisBackendOpenGL
         from zeobuilder.gui.main import Main
+        self.camera = Camera()
+        self.scene = Scene()
+        self.vis_backend = VisBackendOpenGL(self.scene, self.camera)
         self.main = Main()
         context.parent_window = self.main.window
 

@@ -130,7 +130,7 @@ class GLMixin(gobject.GObject):
         if self.gl_active and self.draw_list_valid:
             self.draw_list_valid = False
             context.application.main.drawing_area.queue_draw()
-            context.application.main.drawing_area.scene.add_revalidation(self.revalidate_draw_list)
+            context.application.scene.add_revalidation(self.revalidate_draw_list)
             self.emit("on-draw-list-invalidated")
             ##print "EMIT %s: on-draw-list-invalidated" % self.get_name()
             if isinstance(self.parent, GLMixin):
@@ -141,7 +141,7 @@ class GLMixin(gobject.GObject):
         if self.gl_active and self.boundingbox_list_valid:
             self.boundingbox_list_valid = False
             context.application.main.drawing_area.queue_draw()
-            context.application.main.drawing_area.scene.add_revalidation(self.revalidate_boundingbox_list)
+            context.application.scene.add_revalidation(self.revalidate_boundingbox_list)
             self.emit("on-boundingbox-list-invalidated")
             ##print "EMIT %s: on-boundingbox-list-invalidated"  % self.get_name()
             if isinstance(self.parent, GLMixin):
@@ -151,7 +151,7 @@ class GLMixin(gobject.GObject):
         if self.gl_active and self.total_list_valid:
             self.total_list_valid = False
             context.application.main.drawing_area.queue_draw()
-            context.application.main.drawing_area.scene.add_revalidation(self.revalidate_total_list)
+            context.application.scene.add_revalidation(self.revalidate_total_list)
             self.emit("on-total-list-invalidated")
             ##print "EMIT %s: on-total-list-invalidated" % self.get_name()
             if isinstance(self.parent, GLMixin):
@@ -348,7 +348,7 @@ class GLTransformationMixin(GLMixin):
         if self.gl_active and self.transformation_list_valid:
             self.transformation_list_valid = False
             context.application.main.drawing_area.queue_draw()
-            context.application.main.drawing_area.scene.add_revalidation(self.revalidate_transformation_list)
+            context.application.scene.add_revalidation(self.revalidate_transformation_list)
             self.emit("on-transformation-list-invalidated")
             ##print "EMIT %s: on-transformation-list-invalidated" % self.get_name()
             if isinstance(self.parent, GLMixin):

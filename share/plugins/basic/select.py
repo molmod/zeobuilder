@@ -35,7 +35,7 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-import copy, gtk, OpenGL
+import copy, gtk, numpy
 
 
 #
@@ -347,16 +347,16 @@ class PickSelection(Interactive):
     def button_motion(self, drawing_area, event, startbutton):
         self.endx = event.x
         self.endy = event.y
-        left, top = drawing_area.to_reduced(self.beginx, self.beginy)
-        right, bottom = drawing_area.to_reduced(event.x, event.y)
-        drawing_area.tool_rectangle(left, top, right, bottom)
+        r1 = drawing_area.screen_to_camera(numpy.array([self.beginx, self.beginy], float))
+        r2 = drawing_area.screen_to_camera(numpy.array([event.x, event.y], float))
+        context.application.vis_backend.tool("rectangle", r1, r2)
 
     def button_release(self, drawing_area, event):
-        drawing_area.tool_clear()
+        context.application.vis_backend.tool("clear")
         main = context.application.main
         if (event.button == 1):
             main.tree_selection.unselect_all()
-        if abs(self.beginx - self.endx) > 1 or abs(self.beginy < self.endy) > 1:
+        if abs(self.beginx - self.endx) > 1 or abs(self.beginy - self.endy) > 1:
             if self.beginx < self.endx:
                 left = self.beginx
                 right = self.endx
@@ -371,14 +371,8 @@ class PickSelection(Interactive):
                 top = self.endy
                 bottom = self.beginy
 
-            try:
-                for hit in drawing_area.yield_hits((left, top, right, bottom)):
-                    main.toggle_selection(hit, event.button!=3)
-            except OpenGL.GL.GLerror, e:
-                if e.errno[0] == 1283:
-                    raise UserError("Too many objects in selection. Increase selection buffer size.")
-                else:
-                    raise
+            for hit in drawing_area.yield_hits((left, top, right, bottom)):
+                main.toggle_selection(hit, event.button!=3)
 
         else:
             hit = drawing_area.get_nearest(event.x, event.y)

@@ -128,23 +128,23 @@ class Plane(GLReferentBase, ColorMixin):
         ColorMixin.draw(self)
         self.update_normal()
         vb = context.application.vis_backend
-        vb.draw_quads(
-            quads=numpy.array([
-                [
-                    self.l_l + 0.001*self.normal,
-                    self.l_h + 0.001*self.normal,
-                    self.h_h + 0.001*self.normal,
-                    self.h_l + 0.001*self.normal,
-                ],
-                [
-                    self.h_l - 0.001*self.normal,
-                    self.h_h - 0.001*self.normal,
-                    self.l_h - 0.001*self.normal,
-                    self.l_l - 0.001*self.normal,
-                ],
-            ], float),
-            normals=[self.normal, -self.normal]
-        )
+        vb.draw_quads((
+            self.normal,
+            [
+                self.l_l + 0.001*self.normal,
+                self.l_h + 0.001*self.normal,
+                self.h_h + 0.001*self.normal,
+                self.h_l + 0.001*self.normal,
+            ],
+        ), (
+            - self.normal,
+            [
+                self.h_l - 0.001*self.normal,
+                self.h_h - 0.001*self.normal,
+                self.l_h - 0.001*self.normal,
+                self.l_l - 0.001*self.normal,
+            ],
+        ))
 
     #
     # Revalidation

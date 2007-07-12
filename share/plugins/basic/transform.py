@@ -516,9 +516,6 @@ class RoundRotation(Immediate):
 
 
 class RotateMouseMixin(object):
-    #def get_screen_rotation_center(self):
-    #    raise NotImplementedError
-
     def button_press(self, drawing_area, event):
         if event.button == 1: # XY rotate
             self.former_x = event.x
@@ -640,12 +637,13 @@ class RotateObjectBase(InteractiveWithMemory):
 
         self.rotation_center = rotation_center_object.get_frame_relative_to(self.victim.parent).t
         drawing_area = context.application.main.drawing_area
-        self.screen_rotation_center = drawing_area.position_of_object(rotation_center_object)
-        self.eye_to_model_rotation = drawing_area.eye_to_model_rotation(self.victim)
+        camera = context.application.camera
+        self.screen_rotation_center = drawing_area.camera_to_screen(camera.object_to_camera(rotation_center_object))
+        self.eye_rotation = camera.object_eye_rotation(self.victim)
         self.old_transformation = copy.deepcopy(self.victim.transformation)
 
     def do_rotation(self, rotation_angle, rotation_axis):
-        rotation_axis = numpy.dot(self.eye_to_model_rotation, rotation_axis)
+        rotation_axis = numpy.dot(self.eye_rotation, rotation_axis)
         if self.rotation_axis is not None:
             if numpy.dot(self.rotation_axis, rotation_axis) > 0:
                 rotation_axis = self.rotation_axis
@@ -710,12 +708,14 @@ class RotateWorldBase(Interactive):
     def interactive_init(self):
         Interactive.interactive_init(self)
         drawing_area = context.application.main.drawing_area
-        self.screen_rotation_center = drawing_area.position_of_vector(drawing_area.scene.viewer.t)
+        camera = context.application.camera
+        self.screen_rotation_center = drawing_area.camera_to_screen(camera.model_to_camera(camera.rotation_center.t))
 
     def do_rotation(self, drawing_area, rotation_angle, rotation_axis):
+        camera = context.application.camera
         rotation = Rotation()
         rotation.set_rotation_properties(rotation_angle, rotation_axis, False)
-        drawing_area.scene.rotation.apply_before(rotation)
+        camera.rotation.apply_before(rotation)
         drawing_area.queue_draw()
 
 
@@ -749,7 +749,10 @@ class TranslateMixin(object):
 
     def convert(self, translation, drawing_area):
         depth = self.get_victim_depth(drawing_area)
-        translation[0:2] *= drawing_area.depth_to_scale(depth)
+        factor = context.application.camera.depth_to_scale(depth)
+        factor = numpy.array([factor, factor], float)
+        factor = abs(drawing_area.screen_to_camera(factor, translate=False))
+        translation[0:2] *= factor[0]
         translation[2] *= (1 + abs(self.get_victim_depth(drawing_area))) * 0.01
         return translation
 
@@ -766,7 +769,7 @@ class TranslateMouseMixin(TranslateMixin):
         translation = numpy.zeros(3, float)
 
         if start_button == 2:
-            return vector
+            return translation
         elif start_button == 1: # XY translation
             translation[0] =   event.x - self.former_x
             translation[1] = -(event.y - self.former_y)
@@ -829,16 +832,17 @@ class TranslateObjectBase(InteractiveWithMemory):
     def interactive_init(self):
         InteractiveWithMemory.interactive_init(self)
         self.victim = context.application.cache.node
-        self.eye_to_model_rotation = context.application.main.drawing_area.eye_to_model_rotation(self.victim)
+        self.eye_rotation = context.application.camera.object_eye_rotation(self.victim)
         self.changed = False
 
         self.old_transformation = copy.deepcopy(self.victim.transformation)
 
     def get_victim_depth(self, drawing_area):
-        return drawing_area.depth_of_object(self.victim)
+        camera = context.application.camera
+        return camera.object_to_depth(self.victim)
 
     def do_translation(self, vector, drawing_area):
-        self.victim.transformation.t += numpy.dot(self.eye_to_model_rotation, vector)
+        self.victim.transformation.t += numpy.dot(self.eye_rotation, vector)
         self.victim.revalidate_transformation_list()
         drawing_area.queue_draw()
         self.changed = True
@@ -886,13 +890,15 @@ class TranslateWorldBase(Interactive):
 
     def interactive_init(self):
         Interactive.interactive_init(self)
-        self.eye_to_model_rotation = context.application.main.drawing_area.eye_to_model_rotation(None)
+        self.eye_rotation = context.application.camera.object_eye_rotation(None)
 
     def get_victim_depth(self, drawing_area):
-        return -drawing_area.scene.modelview_matrix[2,3]
+        camera = context.application.camera
+        return -camera.model_to_eye(numpy.zeros(3, float))[2]
 
     def do_translation(self, vector, drawing_area):
-        drawing_area.scene.rotation_center.t -= numpy.dot(self.eye_to_model_rotation, vector)
+        camera = context.application.camera
+        camera.eye.t -= vector
         drawing_area.queue_draw()
 
 
@@ -926,19 +932,19 @@ class TranslateViewerBase(Interactive):
         return True
 
     def get_victim_depth(self, drawing_area):
-        scene = drawing_area.scene
-        return scene.viewer.t[2] + scene.znear
+        camera = context.application.camera
+        return camera.eye.t[2] + camera.znear
 
     def do_translation(self, vector, drawing_area):
-        scene = drawing_area.scene
-        scene.viewer.t[:2] -= vector[:2]
-        if (scene.opening_angle > 0):
-            scene.viewer.t[2] -= vector[2]
+        camera = context.application.camera
+        camera.eye.t[:2] -= vector[:2]
+        if (camera.opening_angle > 0):
+            camera.eye.t[2] -= vector[2]
         else:
-            window_size = scene.window_size*(1 + 0.01*vector[2])
+            window_size = camera.window_size*(1 + 0.01*vector[2])
             if window_size < 0.001: window_size = 0.001
             elif window_size > 1000: window_size = 1000
-            drawing_area.set_window_size(window_size)
+            camera.window_size = window_size
         drawing_area.queue_draw()
 
 class TranslateViewerMouse(TranslateViewerBase, TranslateMouseMixin):
@@ -972,27 +978,26 @@ class TranslateRotationCenterBase(Interactive):
 
     def interactive_init(self):
         Interactive.interactive_init(self)
-        self.eye_to_model_rotation = context.application.main.drawing_area.eye_to_model_rotation(None)
+        self.eye_rotation = context.application.camera.object_eye_rotation(None)
 
     def get_victim_depth(self, drawing_area):
-        scene = drawing_area.scene
-        return scene.viewer.t[2] + scene.znear
+        camera = context.application.camera
+        return camera.eye.t[2] + camera.znear
 
     def do_translation(self, vector, drawing_area):
-        scene = drawing_area.scene
+        camera = context.application.camera
         tmp = vector.copy()
         tmp[2] = 0
-        transformed_vector = numpy.dot(self.eye_to_model_rotation, tmp)
-        scene.viewer.t[:2] -= vector[:2]
-        scene.rotation_center.t += transformed_vector
-        if (scene.opening_angle > 0):
-            scene.viewer.t[2] -= vector[2]
-            scene.rotation_center.t[2] += transformed_vector[2]
+        transformed_vector = numpy.dot(self.eye_rotation, tmp)
+        camera.eye.t[:2] -= vector[:2]
+        camera.rotation_center.t += transformed_vector
+        if (camera.opening_angle > 0):
+            camera.eye.t[2] -= vector[2]
         else:
-            window_size = scene.window_size*(1 + 0.01*vector[-1])
+            window_size = camera.window_size*(1 + 0.01*vector[-1])
             if window_size < 0.001: window_size = 0.001
             elif window_size > 1000: window_size = 1000
-            drawing_area.set_window_size(window_size)
+            camera.window_size = window_size
         drawing_area.queue_draw()
 
 

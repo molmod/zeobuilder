@@ -24,7 +24,7 @@ from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ParentMixin
 from zeobuilder.gui.simple import nosave_cancel_save_question
 from zeobuilder.gui.glade_wrapper import GladeWrapper
-from zeobuilder.gui.drawing_area import DrawingArea
+from zeobuilder.gui.visual.drawing_area import DrawingArea
 from zeobuilder.filters import run_file_dialog
 from zeobuilder.expressions import Expression
 
@@ -134,7 +134,8 @@ class Main(GladeWrapper):
         if self.file_close_check():
             context.application.model.file_close()
             context.application.model.file_new(universe, folder)
-            self.drawing_area.scene.reset_view()
+            context.application.camera.reset()
+            self.drawing_area.queue_draw()
 
     def file_open(self):
         if self.file_close_check():
@@ -142,7 +143,8 @@ class Main(GladeWrapper):
                 context.application.file_open_dialog,
                 context.application.model.file_open
             ):
-                self.drawing_area.scene.reset_view()
+                context.application.camera.reset()
+                self.drawing_area.queue_draw()
 
     def file_save(self):
         if context.application.model.filename is None:
