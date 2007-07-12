@@ -161,12 +161,14 @@ class VisBackend(object):
         raise NotImplementedError
 
 
+glutInit([]) # FIXME, due to unittests
+
+
 class VisBackendOpenGL(VisBackend):
     select_buffer_size = 4096
 
     def __init__(self, scene, camera):
         VisBackend.__init__(self, scene, camera)
-        glutInit([])
         VisBackend.__init__(self)
         self.quadric = gluNewQuadric()
         gluQuadricNormals(self.quadric, GLU_SMOOTH)
