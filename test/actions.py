@@ -1108,15 +1108,14 @@ class BuilderActions(ApplicationTestCase):
 
     def test_create_tube(self):
         def fn():
-            FileNew = context.application.plugins.get_action("FileNew")
-            FileNew()
+            context.application.model.file_open("input/carbon_layer.zml")
             parameters = Parameters()
-            parameters.n = 5
+            parameters.n = 10
             parameters.m = 3
             CreateTube = context.application.plugins.get_action("CreateTube")
             self.assert_(CreateTube.analyze_selection(parameters))
             CreateTube(parameters)
-        self.run_test_application(fn)
+        self.run_test_application(fn, quit=False)
 
 
 class TrajectoryActions(ApplicationTestCase):

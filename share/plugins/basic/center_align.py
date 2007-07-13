@@ -147,14 +147,14 @@ class AlignUnitCell(Immediate):
         node = context.application.cache.node
         Universe = context.application.plugins.get_node("Universe")
         if not isinstance(node, Universe): return False
-        if sum(node.cell_active) != 3: return False
+        if node.cell_active.sum() == 0: return False
         # C) passed all tests:
         return True
 
     def do(self):
         universe = context.application.cache.node
         # first make sure the cell is right handed
-        if numpy.linalg.det(universe.cell) < 0:
+        if numpy.linalg.det(universe.cell) < 0 and universe.cell_active.sum() == 3:
             new_cell = universe.cell.copy()
             temp = new_cell[:,0].copy()
             new_cell[:,0] = new_cell[:,1]
@@ -162,23 +162,15 @@ class AlignUnitCell(Immediate):
             primitive.SetProperty(universe, "cell", new_cell)
 
         # then rotate the unit cell box to the normalized frame:
-        #   - a parallel x
-        #   - b in xy-plane with b_y positive
-        #   - c with c_z positive
-        new_x = universe.cell[:,0].copy()
-        new_x /= math.sqrt(numpy.dot(new_x, new_x))
-        new_z = numpy.cross(new_x, universe.cell[:,1])
-        new_z /= math.sqrt(numpy.dot(new_z, new_z))
-        new_y = numpy.cross(new_z, new_x)
-        new_y /= math.sqrt(numpy.dot(new_y, new_y))
         rotation = Rotation()
-        rotation.r = numpy.array([new_x, new_y, new_z])
+        rotation.r = numpy.array(universe.calc_align_rotation_matrix())
         new_cell = numpy.dot(rotation.r, universe.cell)
+        old_cell_active = universe.cell_active.copy()
         universe.cell_active = numpy.array([False, False, False])
         primitive.SetProperty(universe, "cell", new_cell)
         for child in context.application.cache.transformed_children:
             primitive.Transform(child, rotation)
-        universe.cell_active = numpy.array([True, True, True])
+        universe.cell_active = old_cell_active
         primitive.SetProperty(universe, "cell", new_cell)
 
 

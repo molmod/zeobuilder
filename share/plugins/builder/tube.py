@@ -23,6 +23,7 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import ImmediateWithMemory, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.moltools import yield_atoms
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
@@ -30,8 +31,9 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 from molmod.units import angstrom
+from molmod.unit_cell import UnitCell
 
-import numpy, gtk
+import numpy, gtk, copy
 
 
 class CreateTube(ImmediateWithMemory):
@@ -42,9 +44,7 @@ class CreateTube(ImmediateWithMemory):
     @staticmethod
     def analyze_selection(parameters=None):
         if not ImmediateWithMemory.analyze_selection(parameters): return False
-        cache = context.application.cache
-        Universe = context.application.plugins.get_node("Universe")
-        if not (len(cache.nodes)==0 or isinstance(cache.node, Universe)): return False
+        if context.application.model.universe.cell_active.sum() != 2: return False
         return True
 
     parameters_dialog = FieldsDialogSimple(
@@ -76,44 +76,82 @@ class CreateTube(ImmediateWithMemory):
     def do(self):
         n = self.parameters.n
         m = self.parameters.m
-        r = 1.4210*angstrom
         ratio = float(m)/n
 
-        flat_a = numpy.array([2*r*numpy.sin(60*numpy.pi/180), 0], float)
-        flat_b = numpy.array([  r*numpy.cos(30*numpy.pi/180), r*(1+numpy.sin(30*numpy.pi/180))], float)
+        universe = context.application.model.universe
 
-        def pattern():
-            yield 6, numpy.zeros(2, float)
-            yield 6, (flat_a + flat_b)*(2.0/3.0)
+        active, inactive = universe.get_active_inactive()
+        lengths, angles = universe.get_parameters()
+        a = lengths[active[0]]
+        b = lengths[active[1]]
+        theta = angles[inactive[0]]
+        flat_a = numpy.array([a, 0], float)
+        flat_b = numpy.array([b*numpy.cos(theta), b*numpy.sin(theta)], float)
+
+        tmp_cell = UnitCell()
+        tmp_cell.add_cell_vector(universe.cell[:,active[0]])
+        tmp_cell.add_cell_vector(universe.cell[:,active[1]])
+        r = tmp_cell.calc_align_rotation_matrix()
+
+        pattern = [
+            (atom.number, numpy.dot(r, atom.get_absolute_frame().t))
+            for atom in yield_atoms([universe])
+        ]
+
+        def yield_pattern():
+            for number, coordinate in pattern:
+                yield number, coordinate.copy()
 
         def yield_cells():
-            """Yields the indices of the unit cells of the graphene sheet"""
-            for row in xrange(-m, n+m):
+            "Yields the indices of the periodic images that are part of the tube."
+            for row in xrange(-m-1, n+m):
                 col_start = int(numpy.ceil(ratio*row))
-                for col in xrange(col_start, col_start+n):
+                for col in xrange(col_start, col_start+n+1):
                     if -col*ratio <= row and -(col-m)*ratio > (row-n):
-                        yield row, col
+                        yield col, row
 
-        newx = n*flat_a + m*flat_b
-        radius = numpy.linalg.norm(newx)/(2*numpy.pi)
-        newx /= numpy.linalg.norm(newx)
+        newa = n*flat_a - m*flat_b
+        newb = m*flat_a + n*flat_b
+        radius = numpy.linalg.norm(newa)/(2*numpy.pi)
+        newx = newa/numpy.linalg.norm(newa)
         newy = numpy.array([-newx[1], newx[0]], float)
         rotation = numpy.array([newx, newy], float)
 
+        # first delete everything the universe:
+        for child in copy.copy(universe.children):
+            primitive.Delete(child)
 
         Atom = context.application.plugins.get_node("Atom")
-        universe = context.application.cache.node
-        if universe is None:
-            universe = context.application.model.universe
-        for i,j in yield_cells():
-            for number, coordinate in pattern():
-                coordinate += i*flat_a + j*flat_b
-                coordinate = numpy.dot(rotation, coordinate)
-                translation = Translation()
-                translation.t[0] = radius*numpy.cos(coordinate[0]/radius)
-                translation.t[1] = radius*numpy.sin(coordinate[0]/radius)
-                translation.t[2] = coordinate[1]
-                primitive.Add(Atom(number=number, transformation=translation), universe)
+        # add the new atoms
+        if False:
+            new_cell = numpy.array([
+                [newa[0], newb[0], 0],
+                [newa[1], newb[1], 0],
+                [0, 0, 10],
+            ], float)
+            primitive.SetProperty(universe, "cell", new_cell)
+            primitive.SetProperty(universe, "cell_active", numpy.array([True, True, False], bool))
+            for i,j in yield_cells():
+                for number, coordinate in yield_pattern():
+                    coordinate[:2] += i*flat_a + j*flat_b
+                    translation = Translation()
+                    translation.t[:] = coordinate
+                    primitive.Add(Atom(number=number, transformation=translation), universe)
+        else:
+            tube_length = numpy.dot(rotation, newb)[1]
+            print tube_length
+            primitive.SetProperty(universe, "cell", numpy.identity(3, float)*tube_length)
+            primitive.SetProperty(universe, "cell_active", numpy.array([False, False, True], bool))
+            for i,j in yield_cells():
+                for number, coordinate in yield_pattern():
+                    coordinate[:2] += i*flat_a + j*flat_b
+                    coordinate[:2] = numpy.dot(rotation, coordinate[:2])
+                    translation = Translation()
+                    translation.t[0] = (radius+coordinate[2])*numpy.cos(coordinate[0]/radius)
+                    translation.t[1] = (radius+coordinate[2])*numpy.sin(coordinate[0]/radius)
+                    translation.t[2] = coordinate[1]
+                    primitive.Add(Atom(number=number, transformation=translation), universe)
+
 
 
 
