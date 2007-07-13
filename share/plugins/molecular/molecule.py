@@ -734,26 +734,62 @@ class FrameMolecules(Immediate):
     @staticmethod
     def analyze_selection():
         if not Immediate.analyze_selection(): return False
-        if len(context.application.cache.nodes) == 0: return False
+        if not isinstance(context.application.cache.node, ContainerMixin): return False
         return True
+
+    def calc_new_positions(self, atoms, graph, parent):
+
+        positions = dict((atom, atom.get_frame_up_to(parent).t) for atom in atoms)
+
+        Universe = context.application.plugins.get_node("Universe")
+        if not isinstance(parent, Universe): positions
+        if (parent.cell_active == False).all(): positions
+
+        # find the atom that is the closest to the origin
+        closest = atoms[0]
+        closest_distance = numpy.linalg.norm(positions[closest])
+        for atom, position in positions.iteritems():
+            distance = numpy.linalg.norm(position)
+            if distance < closest_distance:
+                closest_distance = distance
+                closest = atom
+
+        #
+        result = {}
+        moved = [closest]
+        not_moved = set(atoms)
+        not_moved.discard(closest)
+        while len(moved) > 0:
+            subject = moved.pop(0)
+            for neighbor in graph.neighbors[subject]:
+                if neighbor in not_moved:
+                    not_moved.discard(neighbor)
+                    moved.append(neighbor)
+                    delta = positions[neighbor] - positions[subject]
+                    delta = parent.shortest_vector(delta)
+                    positions[neighbor] = positions[subject] + delta
+        return positions
+
+
 
     def do(self):
         cache = context.application.cache
 
         graph, bonds_by_pair = create_graph_bonds(cache.nodes)
         molecules = graph.get_nodes_per_independent_graph()
-        if isinstance(cache.node, ContainerMixin):
-            parent = cache.node
-        else:
-            parent = cache.common_parent
+        parent = cache.node
 
-        frames = []
         Frame = context.application.plugins.get_node("Frame")
         for atoms in molecules:
+            new_positions = self.calc_new_positions(atoms, graph, parent)
             frame = Frame(name=chemical_formula(atoms)[1])
             primitive.Add(frame, parent, index=0)
             for atom in atoms:
                 primitive.Move(atom, frame, select=False)
+                new_position = new_positions[atom]
+                translation = Translation()
+                translation.t = atom.get_parentframe_up_to(parent).vector_apply_inverse(new_position)
+                primitive.SetProperty(atom, "transformation", translation)
             for atom in atoms:
                 # take a copy of the references since they are going to be
                 # refreshed (changed and reverted) during the loop.

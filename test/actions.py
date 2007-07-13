@@ -934,18 +934,29 @@ class MolecularActions(ApplicationTestCase):
 
     def test_frame_molecules(self):
         def fn():
-            context.application.model.file_open("input/springs.zml")
-            context.application.main.select_nodes(context.application.model.universe.children[0:1])
+            context.application.model.file_open("input/methane_box22_125.xyz")
+            universe = context.application.model.universe
 
-            UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
-            self.assert_(UnframeAbsolute.analyze_selection())
-            UnframeAbsolute()
+            context.application.action_manager.record_primitives = False
+            primitive.SetProperty(universe, "cell", numpy.identity(3, float)*22*angstrom)
+            primitive.SetProperty(universe, "cell_active", numpy.array([True, True, True], bool))
 
-            context.application.main.select_nodes(context.application.model.universe.children)
+            context.application.main.select_nodes([universe])
+            AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
+            self.assert_(AutoConnectPhysical.analyze_selection())
+            AutoConnectPhysical()
 
+            context.application.main.select_nodes([universe])
             FrameMolecules = context.application.plugins.get_action("FrameMolecules")
             self.assert_(FrameMolecules.analyze_selection())
             FrameMolecules()
+
+            Bond = context.application.plugins.get_node("Bond")
+            for frame in universe.children:
+                for bond in frame.children:
+                    if isinstance(bond, Bond):
+                        bond.calc_vector_dimensions()
+                        self.assert_(bond.length < 2*angstrom)
         self.run_test_application(fn)
 
     def test_select_bonded_neighbors(self):
