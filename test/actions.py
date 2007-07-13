@@ -1106,6 +1106,18 @@ class BuilderActions(ApplicationTestCase):
             context.application.model.file_open("output/tmp.zml")
         self.run_test_application(fn)
 
+    def test_create_tube(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            parameters = Parameters()
+            parameters.n = 5
+            parameters.m = 3
+            CreateTube = context.application.plugins.get_action("CreateTube")
+            self.assert_(CreateTube.analyze_selection(parameters))
+            CreateTube(parameters)
+        self.run_test_application(fn)
+
 
 class TrajectoryActions(ApplicationTestCase):
     def test_load_frame(self):
