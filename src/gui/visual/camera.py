@@ -235,7 +235,11 @@ class Camera(object):
 
     def depth_to_scale(self, depth):
         """ transforms a depth into a scale (au/camcoords)"""
-        return depth/self.znear*self.window_size
+        znear = self.znear
+        if znear > 0:
+            return depth/znear*self.window_size
+        else:
+            return self.window_size
 
     def vector_in_plane(self, r, p_m):
         """Returns a vector at camera position r in a plane (through p, orthogonal to viewing direction)
