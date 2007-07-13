@@ -64,6 +64,7 @@ setup(
         'zeobuilder.nodes',
         'zeobuilder.gui',
         'zeobuilder.gui.fields',
+        'zeobuilder.gui.visual',
     ],
     scripts=['scripts/zeobuilder'],
     classifiers=[
