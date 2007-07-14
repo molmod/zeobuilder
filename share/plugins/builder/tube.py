@@ -21,7 +21,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import ImmediateWithMemory, Parameters
+from zeobuilder.actions.composed import ImmediateWithMemory, Parameters, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.moltools import yield_atoms
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
@@ -53,7 +53,7 @@ class CreateTube(ImmediateWithMemory):
             fields.faulty.Int(
                 label_text="n",
                 attribute_name="n",
-                minimum=0,
+                minimum=1,
                 maximum=100,
             ),
             fields.faulty.Int(
@@ -71,6 +71,8 @@ class CreateTube(ImmediateWithMemory):
         result = Parameters()
         result.n = 5
         result.m = 1
+        result.max_length = 50*angstrom
+        result.max_error = 0.01*angstrom
         return result
 
     def do(self):
@@ -102,20 +104,56 @@ class CreateTube(ImmediateWithMemory):
             for number, coordinate in pattern:
                 yield number, coordinate.copy()
 
+        new_a = n*flat_a - m*flat_b
+        radius = numpy.linalg.norm(new_a)/(2*numpy.pi)
+        new_x = new_a/numpy.linalg.norm(new_a)
+        new_y = numpy.array([-new_x[1], new_x[0]], float)
+
+        new_b = None
+        stack_size = 1
+        #nominator = numpy.dot(new_x, flat_b)
+        stack_vector = flat_b - flat_a*numpy.dot(new_x, flat_b)/numpy.dot(new_x, flat_a)
+        stack_length = numpy.linalg.norm(stack_vector)
+        nominator = numpy.linalg.norm(stack_vector - flat_b)
+        denominator = numpy.linalg.norm(flat_a)
+        #print "nominator", nominator
+        #print "denominator", denominator
+        fraction = nominator/denominator
+        while True:
+            repeat = fraction*stack_size
+            if stack_length*stack_size > self.parameters.max_length:
+                break
+            #print repeat, round(repeat)
+            #print abs(repeat - round(repeat))*denominator, " < ", self.parameters.max_error
+            if abs(repeat - round(repeat))*denominator < self.parameters.max_error:
+                new_b = stack_vector*stack_size
+                break
+            stack_size += 1
+        if new_b is None:
+            raise UserError("Could not create a periodic tube shorter than the given maximum length.")
+        rotation = numpy.array([new_x, new_y], float)
+
         def yield_cells():
             "Yields the indices of the periodic images that are part of the tube."
-            for row in xrange(-m-1, n+m):
-                col_start = int(numpy.ceil(ratio*row))
-                for col in xrange(col_start, col_start+n+1):
-                    if -col*ratio <= row and -(col-m)*ratio > (row-n):
-                        yield col, row
+            to_fractional = numpy.linalg.inv(numpy.array([new_a, new_b]).transpose())
+            col_len = int(numpy.linalg.norm(new_a + m*stack_vector)/numpy.linalg.norm(flat_a))+4
+            #print "col_len", col_len
+            #print "flat_b", flat_b
+            #print "stack_vector", stack_vector
+            shift = numpy.linalg.norm(flat_b - stack_vector)/numpy.linalg.norm(flat_a)
+            #print "shift", shift
+            for row in xrange(-m-1, stack_size+1):
+                col_start = int(numpy.floor(row*shift))-1
+                #print "col_start", col_start, "at", row, row*shift
+                for col in xrange(col_start, col_start+col_len):
+                    p = col*flat_a + row*flat_b
+                    i = numpy.dot(to_fractional, p)
+                    #if (i >= 0).all() and (i < 1).all():
+                    #if i[1] >= 0 and i[1] < 1:
+                    #if ((-row*n <= col*m) and ((stack_size-row)*n > col*m)):
+                    #    yield p
+                    yield p, (i >= 0).all() and (i < 1).all()
 
-        newa = n*flat_a - m*flat_b
-        newb = m*flat_a + n*flat_b
-        radius = numpy.linalg.norm(newa)/(2*numpy.pi)
-        newx = newa/numpy.linalg.norm(newa)
-        newy = numpy.array([-newx[1], newx[0]], float)
-        rotation = numpy.array([newx, newy], float)
 
         # first delete everything the universe:
         for child in copy.copy(universe.children):
@@ -124,27 +162,35 @@ class CreateTube(ImmediateWithMemory):
         Atom = context.application.plugins.get_node("Atom")
         # add the new atoms
         if False:
+            rot_a = numpy.dot(rotation, new_a)
+            rot_b = numpy.dot(rotation, new_b)
             new_cell = numpy.array([
-                [newa[0], newb[0], 0],
-                [newa[1], newb[1], 0],
+                [rot_a[0], rot_b[0], 0],
+                [rot_a[1], rot_b[1], 0],
                 [0, 0, 10],
             ], float)
             primitive.SetProperty(universe, "cell", new_cell)
             primitive.SetProperty(universe, "cell_active", numpy.array([True, True, False], bool))
-            for i,j in yield_cells():
+            primitive.SetProperty(universe, "repetitions", numpy.array([2, 2, 1], int))
+            #primitive.SetProperty(universe, "cell_active", numpy.array([False, False, False], bool))
+            for p, accept in yield_cells():
+                if not accept: continue
                 for number, coordinate in yield_pattern():
-                    coordinate[:2] += i*flat_a + j*flat_b
+                    coordinate[:2] += p
+                    coordinate[:2] = numpy.dot(rotation, coordinate[:2])
                     translation = Translation()
                     translation.t[:] = coordinate
                     primitive.Add(Atom(number=number, transformation=translation), universe)
         else:
-            tube_length = numpy.dot(rotation, newb)[1]
-            print tube_length
+            tube_length = numpy.linalg.norm(new_b)
+            #print stack_size, tube_length
             primitive.SetProperty(universe, "cell", numpy.identity(3, float)*tube_length)
             primitive.SetProperty(universe, "cell_active", numpy.array([False, False, True], bool))
-            for i,j in yield_cells():
+            primitive.SetProperty(universe, "repetitions", numpy.array([1, 1, 2], int))
+            for p, accept in yield_cells():
+                if not accept: continue
                 for number, coordinate in yield_pattern():
-                    coordinate[:2] += i*flat_a + j*flat_b
+                    coordinate[:2] += p
                     coordinate[:2] = numpy.dot(rotation, coordinate[:2])
                     translation = Translation()
                     translation.t[0] = (radius+coordinate[2])*numpy.cos(coordinate[0]/radius)

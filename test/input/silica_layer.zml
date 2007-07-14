@@ -4,7 +4,7 @@
   <model_object id='0' class='Universe'>
    <array label="cell">
     <shape>3 3 </shape>
-    <cells>4.7243153348 9.4486306696 0.0 8.18251415987 0.0 0.0 0.0 0.0 18.8972613392 </cells>
+    <cells>9.4486306696 4.7243153348 0.0 0.0 8.18251415987 0.0 0.0 0.0 18.8972613392 </cells>
    </array>
    <float label="axis_length">1.0</float>
    <array label="cell_active">

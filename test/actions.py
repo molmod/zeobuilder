@@ -1108,10 +1108,12 @@ class BuilderActions(ApplicationTestCase):
 
     def test_create_tube(self):
         def fn():
-            context.application.model.file_open("input/carbon_layer.zml")
+            context.application.model.file_open("input/silica_layer.zml")
             parameters = Parameters()
             parameters.n = 10
-            parameters.m = 3
+            parameters.m = 4
+            parameters.max_length = 300*angstrom
+            parameters.max_error = 0.01*angstrom
             CreateTube = context.application.plugins.get_action("CreateTube")
             self.assert_(CreateTube.analyze_selection(parameters))
             CreateTube(parameters)
