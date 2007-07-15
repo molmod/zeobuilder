@@ -88,6 +88,7 @@ class Scene(object):
             camera = context.application.camera
             zfar = camera.znear + camera.window_depth
             vb.set_fog(configuration.fog_color, zfar - configuration.fog_depth, zfar)
+        context.application.main.drawing_area.queue_draw()
 
     def get_model_center(self):
         universe = context.application.model.universe

@@ -115,7 +115,7 @@ class CameraSettings(Immediate):
     def do(self):
         camera = context.application.camera
         if self.viewer_configuration.run(camera) == gtk.RESPONSE_OK:
-            context.application.main.drawing_area.queue_draw()
+            context.application.scene.update_render_settings()
 
 
 class RendererConfiguration(Immediate):
@@ -152,8 +152,7 @@ class RendererConfiguration(Immediate):
         settings.__dict__ = context.application.configuration.settings
         if self.renderer_configuration.run(settings) == gtk.RESPONSE_OK:
             context.application.configuration.settings = settings.__dict__
-            context.application.scene.apply_renderer_settings()
-            context.application.main.drawing_area.queue_draw()
+            context.application.scene.update_render_settings()
 
 
 actions = {
