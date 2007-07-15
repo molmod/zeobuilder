@@ -1112,12 +1112,14 @@ class BuilderActions(ApplicationTestCase):
             parameters = Parameters()
             parameters.n = 10
             parameters.m = 4
+            parameters.flat = False
             parameters.max_length = 300*angstrom
             parameters.max_error = 0.01*angstrom
+            parameters.tube_length = Undefined(0.01*angstrom)
             CreateTube = context.application.plugins.get_action("CreateTube")
             self.assert_(CreateTube.analyze_selection(parameters))
             CreateTube(parameters)
-        self.run_test_application(fn, quit=False)
+        self.run_test_application(fn)
 
 
 class TrajectoryActions(ApplicationTestCase):
