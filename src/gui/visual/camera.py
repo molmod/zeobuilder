@@ -177,12 +177,20 @@ class Camera(object):
 
     def eye_to_camera(self, vector_e):
         tmp = numpy.ones(2, float)
-        return -vector_e[:2]/vector_e[2]/self.window_size*self.znear
+        znear = self.znear
+        if znear > 0:
+            return -vector_e[:2]/vector_e[2]/self.window_size*znear
+        else:
+            return vector_e[:2]/self.window_size
 
     def camera_window_to_eye(self, vector_c):
         tmp = numpy.zeros(3, float)
         tmp[:2] = vector_c*self.window_size
-        tmp[2] = -self.znear
+        znear = self.znear
+        if znear > 0:
+            tmp[2] = -self.znear
+        else:
+            tmp[2] = -self.window_size/3.0
         return tmp
 
     def model_to_eye(self, vector_m):
@@ -260,17 +268,23 @@ class Camera(object):
         r_m = self.camera_window_to_model(r)
         center_m = self.camera_window_to_model(numpy.zeros(2, float))
 
-        # normal and p define the plane
         normal = (eye_m - center_m)
         normal /= numpy.linalg.norm(normal)
 
-        # the line is defined as r = eye_m + d*t, where t = -infinity ... infinity
-        d =  eye_m - r_m
+        if self.znear > 0:
+            # the line is defined as r = eye_m + d*t, where t = -infinity ... infinity
+            d =  eye_m - r_m
 
-        # t at the intersection:
-        t = -numpy.dot(eye_m - p_m, normal)/numpy.dot(d, normal)
+            # t at the intersection:
+            t = -numpy.dot(eye_m - p_m, normal)/numpy.dot(d, normal)
 
-        result = eye_m + d*t
+            return eye_m + d*t
+        else:
+            # the line is defined as r = r_m + d*t, where t = -infinity ... infinity
+            d = normal
 
-        return result
+            # t at the intersection:
+            t = -numpy.dot(r_m - p_m, normal)/numpy.dot(d, normal)
+
+            return r_m + d*t
 
