@@ -216,7 +216,7 @@ class CreateTube(ImmediateWithMemory):
                 for col in xrange(col_start, col_start+col_len):
                     p = col*flat_a + row*flat_b
                     i = numpy.dot(to_fractional, p)
-                    if (i >= 0).all() and (i < 1).all():
+                    if (i >= 0).all() and (i < 1-1e-15).all():
                         yield p
                     #yield p, (i >= 0).all() and (i < 1).all()
 
