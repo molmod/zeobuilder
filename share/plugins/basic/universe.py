@@ -31,6 +31,7 @@ from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.helpers import FrameAxes
 from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.nodes.vector import Vector
+from zeobuilder.undefined import Undefined
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple, DialogFieldInfo
 from zeobuilder.zml import dump_to_file, load_from_file
 import zeobuilder.actions.primitive as primitive
@@ -526,7 +527,7 @@ class UnitCellToCluster(ImmediateWithMemory):
     def do(self):
         universe = context.application.model.universe
         def extend_to_cluster(axis, interval):
-            if interval is None: return
+            if (interval is None) or isinstance(interval, Undefined): return
             assert universe.cell_active[axis]
             interval.sort()
             index_min = int(math.floor(interval[0]))
