@@ -317,9 +317,9 @@ class CoreActions(ApplicationTestCase):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[0], on=True)
-            DefineCenter = context.application.plugins.get_action("DefineCenter")
-            self.assert_(DefineCenter.analyze_selection())
-            DefineCenter()
+            DefineOrigin = context.application.plugins.get_action("DefineOrigin")
+            self.assert_(DefineOrigin.analyze_selection())
+            DefineOrigin()
         self.run_test_application(fn)
 
     def test_align(self):
@@ -335,9 +335,9 @@ class CoreActions(ApplicationTestCase):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[0], on=True)
-            DefineCenterAndAlign = context.application.plugins.get_action("DefineCenterAndAlign")
-            self.assert_(DefineCenterAndAlign.analyze_selection())
-            DefineCenterAndAlign()
+            DefineOriginAndAlign = context.application.plugins.get_action("DefineOriginAndAlign")
+            self.assert_(DefineOriginAndAlign.analyze_selection())
+            DefineOriginAndAlign()
         self.run_test_application(fn)
 
     def test_center_to_children(self):

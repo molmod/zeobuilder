@@ -37,9 +37,9 @@ import numpy
 import copy, math
 
 
-class DefineCenter(CenterAlignBase):
-    description = "Define center"
-    menu_info = MenuInfo("default/_Object:tools/_Transform:center", "_Define center", order=(0, 4, 1, 2, 2, 0))
+class DefineOrigin(CenterAlignBase):
+    description = "Define origin"
+    menu_info = MenuInfo("default/_Object:tools/_Transform:center", "_Define origin", order=(0, 4, 1, 2, 2, 0))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
@@ -87,9 +87,9 @@ class Align(CenterAlignBase):
         CenterAlignBase.do(self, cache.parent, cache.transformed_neighbours, rotation)
 
 
-class DefineCenterAndAlign(CenterAlignBase):
-    description = "Define as center and align to parent"
-    menu_info = MenuInfo("default/_Object:tools/_Transform:centeralign", "De_fine center and align", order=(0, 4, 1, 2, 4, 0))
+class DefineOriginAndAlign(CenterAlignBase):
+    description = "Define as origin and align to parent"
+    menu_info = MenuInfo("default/_Object:tools/_Transform:centeralign", "De_fine origin and align", order=(0, 4, 1, 2, 4, 0))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
@@ -175,9 +175,9 @@ class AlignUnitCell(Immediate):
 
 
 actions = {
-    "DefineCenter": DefineCenter,
+    "DefineOrigin": DefineOrigin,
     "Align": Align,
-    "DefineCenterAndAlign": DefineCenterAndAlign,
+    "DefineOriginAndAlign": DefineOriginAndAlign,
     "CenterToChildren": CenterToChildren,
     "AlignUnitCell": AlignUnitCell,
 }
