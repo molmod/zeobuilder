@@ -215,7 +215,7 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
         self.progress_bar.set_fraction(0.0)
         self.progress_bar.set_text("0%")
         self.minimize = minimize
-        self.involved_frames = involved_frames
+        self.involved_frames = [frame for frame in involved_frames if frame is not None]
         self.update_interval = update_interval
         self.update_steps = update_steps
         self.num_springs = num_springs
@@ -263,7 +263,7 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
                         frame.transformation.r,
                         frame.transformation.t
                     ) = variable.extract_state(state_index, self.status.state)
-                else:
+                elif isinstance(variable, iterative.var.Translation):
                     frame.transformation.t = variable.extract_state(state_index, self.status.state)
                 frame.invalidate_transformation_list()
             context.application.main.drawing_area.queue_draw()
@@ -287,21 +287,25 @@ def get_spring_problem(cache):
     parent = cache.parent
     if parent is None:
         return
+
+    def get_frame(trace):
+        parent_pos = trace.index(parent)
+        if parent_pos < len(trace) - 2:
+            frame = trace[parent_pos+1]
+            if isinstance(frame, GLFrameBase):
+                return frame
+        return None
+
     for node in cache.nodes:
         if not isinstance(node, Spring):
-            return
+            return None
         two_frames = {}
         for child in node.children:
-            trace = child.target.trace()
-            if parent not in trace:
-                return None
-            parent_pos = trace.index(parent)
-            if parent_pos == len(trace) - 1:
-                return None
-            frame = trace[parent_pos + 1]
-            if not isinstance(frame, GLFrameBase):
-                return None
+            frame = get_frame(child.target.trace())
             two_frames[child.target] = frame
+        tmp = two_frames.values()
+        if tmp[0] == tmp[1]:
+            return None
         result.springs[node] = two_frames
         for frame in two_frames.itervalues():
             result.frames.add(frame)
@@ -379,13 +383,16 @@ class OptimizeSprings(ImmediateWithMemory):
 
         old_transformations = [
             (frame, copy.deepcopy(frame.transformation))
-            for frame
-            in involved_frames
+            for frame in involved_frames if frame is not None
         ]
+
+        variable_indices = dict((frame, index) for index, frame in enumerate(frame for frame in involved_frames if frame is not None))
 
         cost_function = iterative.expr.Root(1, 10, True)
         for frame in involved_frames:
-            if self.parameters.allow_rotation and isinstance(frame.transformation, Complete):
+            if frame is None:
+                pass
+            elif self.parameters.allow_rotation and isinstance(frame.transformation, Complete):
                 variable = iterative.var.Frame(
                     frame.transformation.r,
                     frame.transformation.t,
@@ -405,12 +412,18 @@ class OptimizeSprings(ImmediateWithMemory):
                 raise UserError("The involved frames shoud be at least capable of being translated.")
 
         for spring, frames in springs.iteritems():
-            cost_term = iterative.expr.Spring(spring.rest_length)
+            spring_term = iterative.expr.Spring(spring.rest_length)
             for target, frame in frames.iteritems():
-                cost_term.register_input_variable(
-                    cost_function.state_variables[involved_frames.index(frame)],
-                    target.get_frame_up_to(frame).t
-                )
+                if frame is None:
+                    spring_term.register_input_variable(
+                        iterative.expressions.NoFrame(),
+                        target.get_frame_up_to(parent).t
+                    )
+                else:
+                    spring_term.register_input_variable(
+                        cost_function.state_variables[variable_indices[frame]],
+                        target.get_frame_up_to(frame).t
+                    )
 
         minimize = iterative.alg.DefaultMinimize(
             cost_function,

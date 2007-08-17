@@ -1029,6 +1029,24 @@ class BuilderActions(ApplicationTestCase):
             OptimizeSprings(parameters)
         self.run_test_application(fn)
 
+    def test_optimize_springs_fixed(self):
+        def fn():
+            context.application.model.file_open("input/springs.zml")
+            context.application.main.select_nodes(
+                context.application.model.universe.children[7:9][::-1] +
+                context.application.model.universe.children[2:6][::-1]
+            )
+            parameters = Parameters()
+            parameters.allow_rotation = True
+            parameters.update_interval = 0.4
+            parameters.update_steps = 1
+            parameters.auto_close_report_dialog = True
+
+            OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
+            self.assert_(OptimizeSprings.analyze_selection(parameters))
+            OptimizeSprings(parameters)
+        self.run_test_application(fn, quit=False)
+
     def test_merge_atoms_connected_with_spring(self):
         def fn():
             context.application.model.file_open("input/springs.zml")

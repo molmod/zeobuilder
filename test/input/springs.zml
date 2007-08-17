@@ -2,29 +2,17 @@
 <zml_file version='0.1'>
  <list>
   <model_object id='0' class='Universe'>
-   <array label="cell_active">
-    <shape>3 </shape>
-    <cells>False False False </cells>
-   </array>
-   <str label="name">LAU</str>
-   <float label="axis_length">1.0</float>
-   <array label="repetitions">
-    <shape>3 </shape>
-    <cells>1 1 1 </cells>
-   </array>
-   <bool label="clipping">False</bool>
    <array label="cell">
     <shape>3 3 </shape>
     <cells>25.7380698211 0.0 0.0 0.0 24.3396724887 0.0 -9.88326763323 0.0 14.3808158105 </cells>
    </array>
-   <bool label="visible">True</bool>
+   <float label="axis_length">1.0</float>
    <float label="axis_thickness">0.08</float>
-   <bool label="axes_visible">True</bool>
-   <bool label="box_visible">True</bool>
+   <str label="name">LAU</str>
    <list label="children">
     <model_object id='1' class='Frame'>
-     <str label="name">Frame</str>
-     <bool label="visible">True</bool>
+     <float label="axis_length">1.0</float>
+     <float label="axis_thickness">0.08</float>
      <transformation label="transformation">
       <array label="translation_vector">
        <shape>3 </shape>
@@ -35,13 +23,9 @@
        <cells>-0.590705670721 -0.126373601515 -0.796929434403 -0.13267811304 0.989428056388 -0.0585545860878 -0.795904095289 -0.0711465675341 0.601227774666 </cells>
       </array>
      </transformation>
-     <float label="axis_length">1.0</float>
-     <float label="axis_thickness">0.08</float>
-     <bool label="axes_visible">True</bool>
      <list label="children">
       <model_object id='2' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -53,7 +37,6 @@
       </model_object>
       <model_object id='3' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -65,7 +48,6 @@
       </model_object>
       <model_object id='4' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -77,7 +59,6 @@
       </model_object>
       <model_object id='5' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -89,7 +70,6 @@
       </model_object>
       <model_object id='6' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -101,7 +81,6 @@
       </model_object>
       <model_object id='7' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -113,7 +92,6 @@
       </model_object>
       <model_object id='8' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -125,7 +103,6 @@
       </model_object>
       <model_object id='9' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -137,7 +114,6 @@
       </model_object>
       <model_object id='10' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -149,7 +125,6 @@
       </model_object>
       <model_object id='11' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -161,7 +136,6 @@
       </model_object>
       <model_object id='12' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -173,7 +147,6 @@
       </model_object>
       <model_object id='13' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -185,7 +158,6 @@
       </model_object>
       <model_object id='14' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -197,7 +169,6 @@
       </model_object>
       <model_object id='15' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -209,7 +180,6 @@
       </model_object>
       <model_object id='16' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -221,7 +191,6 @@
       </model_object>
       <model_object id='17' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -233,7 +202,6 @@
       </model_object>
       <model_object id='18' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -245,7 +213,6 @@
       </model_object>
       <model_object id='19' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -257,7 +224,6 @@
       </model_object>
       <model_object id='20' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -269,7 +235,6 @@
       </model_object>
       <model_object id='21' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -281,7 +246,6 @@
       </model_object>
       <model_object id='22' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -293,7 +257,6 @@
       </model_object>
       <model_object id='23' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -305,7 +268,6 @@
       </model_object>
       <model_object id='24' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -317,7 +279,6 @@
       </model_object>
       <model_object id='25' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -329,7 +290,6 @@
       </model_object>
       <model_object id='26' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -341,7 +301,6 @@
       </model_object>
       <model_object id='27' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -353,7 +312,6 @@
       </model_object>
       <model_object id='28' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -365,7 +323,6 @@
       </model_object>
       <model_object id='29' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -377,7 +334,6 @@
       </model_object>
       <model_object id='30' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -389,7 +345,6 @@
       </model_object>
       <model_object id='31' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -401,7 +356,6 @@
       </model_object>
       <model_object id='32' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -413,7 +367,6 @@
       </model_object>
       <model_object id='33' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -425,7 +378,6 @@
       </model_object>
       <model_object id='34' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -437,7 +389,6 @@
       </model_object>
       <model_object id='35' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -449,7 +400,6 @@
       </model_object>
       <model_object id='36' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -461,7 +411,6 @@
       </model_object>
       <model_object id='37' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -473,7 +422,6 @@
       </model_object>
       <model_object id='38' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -485,7 +433,6 @@
       </model_object>
       <model_object id='39' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -497,7 +444,6 @@
       </model_object>
       <model_object id='40' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -509,7 +455,6 @@
       </model_object>
       <model_object id='41' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -521,7 +466,6 @@
       </model_object>
       <model_object id='42' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -533,7 +477,6 @@
       </model_object>
       <model_object id='43' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -545,7 +488,6 @@
       </model_object>
       <model_object id='44' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -557,7 +499,6 @@
       </model_object>
       <model_object id='45' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -568,8 +509,6 @@
        <str label="name">Single O</str>
       </model_object>
       <model_object id='46' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 1</str>
        <list label="targets">
@@ -578,8 +517,6 @@
        </list>
       </model_object>
       <model_object id='47' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 2</str>
        <list label="targets">
@@ -588,8 +525,6 @@
        </list>
       </model_object>
       <model_object id='48' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 3</str>
        <list label="targets">
@@ -598,8 +533,6 @@
        </list>
       </model_object>
       <model_object id='49' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 4</str>
        <list label="targets">
@@ -608,8 +541,6 @@
        </list>
       </model_object>
       <model_object id='50' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 1</str>
        <list label="targets">
@@ -618,8 +549,6 @@
        </list>
       </model_object>
       <model_object id='51' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 2</str>
        <list label="targets">
@@ -628,8 +557,6 @@
        </list>
       </model_object>
       <model_object id='52' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 3</str>
        <list label="targets">
@@ -638,8 +565,6 @@
        </list>
       </model_object>
       <model_object id='53' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 4</str>
        <list label="targets">
@@ -648,8 +573,6 @@
        </list>
       </model_object>
       <model_object id='54' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 5</str>
        <list label="targets">
@@ -658,8 +581,6 @@
        </list>
       </model_object>
       <model_object id='55' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 6</str>
        <list label="targets">
@@ -668,8 +589,6 @@
        </list>
       </model_object>
       <model_object id='56' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 7</str>
        <list label="targets">
@@ -678,8 +597,6 @@
        </list>
       </model_object>
       <model_object id='57' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 8</str>
        <list label="targets">
@@ -688,8 +605,6 @@
        </list>
       </model_object>
       <model_object id='58' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 9</str>
        <list label="targets">
@@ -698,8 +613,6 @@
        </list>
       </model_object>
       <model_object id='59' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 10</str>
        <list label="targets">
@@ -708,8 +621,6 @@
        </list>
       </model_object>
       <model_object id='60' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 11</str>
        <list label="targets">
@@ -718,8 +629,6 @@
        </list>
       </model_object>
       <model_object id='61' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 12</str>
        <list label="targets">
@@ -728,8 +637,6 @@
        </list>
       </model_object>
       <model_object id='62' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 13</str>
        <list label="targets">
@@ -738,8 +645,6 @@
        </list>
       </model_object>
       <model_object id='63' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 14</str>
        <list label="targets">
@@ -748,8 +653,6 @@
        </list>
       </model_object>
       <model_object id='64' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 15</str>
        <list label="targets">
@@ -758,8 +661,6 @@
        </list>
       </model_object>
       <model_object id='65' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 16</str>
        <list label="targets">
@@ -768,8 +669,6 @@
        </list>
       </model_object>
       <model_object id='66' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 17</str>
        <list label="targets">
@@ -778,8 +677,6 @@
        </list>
       </model_object>
       <model_object id='67' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 18</str>
        <list label="targets">
@@ -788,8 +685,6 @@
        </list>
       </model_object>
       <model_object id='68' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 19</str>
        <list label="targets">
@@ -798,8 +693,6 @@
        </list>
       </model_object>
       <model_object id='69' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 20</str>
        <list label="targets">
@@ -808,8 +701,6 @@
        </list>
       </model_object>
       <model_object id='70' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 21</str>
        <list label="targets">
@@ -818,8 +709,6 @@
        </list>
       </model_object>
       <model_object id='71' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 22</str>
        <list label="targets">
@@ -828,8 +717,6 @@
        </list>
       </model_object>
       <model_object id='72' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 23</str>
        <list label="targets">
@@ -838,8 +725,6 @@
        </list>
       </model_object>
       <model_object id='73' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 24</str>
        <list label="targets">
@@ -848,8 +733,6 @@
        </list>
       </model_object>
       <model_object id='74' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 25</str>
        <list label="targets">
@@ -858,8 +741,6 @@
        </list>
       </model_object>
       <model_object id='75' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 26</str>
        <list label="targets">
@@ -868,8 +749,6 @@
        </list>
       </model_object>
       <model_object id='76' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 27</str>
        <list label="targets">
@@ -878,8 +757,6 @@
        </list>
       </model_object>
       <model_object id='77' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 28</str>
        <list label="targets">
@@ -888,8 +765,6 @@
        </list>
       </model_object>
       <model_object id='78' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 29</str>
        <list label="targets">
@@ -898,8 +773,6 @@
        </list>
       </model_object>
       <model_object id='79' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 30</str>
        <list label="targets">
@@ -908,8 +781,6 @@
        </list>
       </model_object>
       <model_object id='80' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 31</str>
        <list label="targets">
@@ -918,8 +789,6 @@
        </list>
       </model_object>
       <model_object id='81' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 32</str>
        <list label="targets">
@@ -928,8 +797,6 @@
        </list>
       </model_object>
       <model_object id='82' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 33</str>
        <list label="targets">
@@ -938,8 +805,6 @@
        </list>
       </model_object>
       <model_object id='83' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 34</str>
        <list label="targets">
@@ -948,8 +813,6 @@
        </list>
       </model_object>
       <model_object id='84' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 35</str>
        <list label="targets">
@@ -958,8 +821,6 @@
        </list>
       </model_object>
       <model_object id='85' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 36</str>
        <list label="targets">
@@ -968,8 +829,6 @@
        </list>
       </model_object>
       <model_object id='86' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 37</str>
        <list label="targets">
@@ -978,8 +837,6 @@
        </list>
       </model_object>
       <model_object id='87' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 38</str>
        <list label="targets">
@@ -988,8 +845,6 @@
        </list>
       </model_object>
       <model_object id='88' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 39</str>
        <list label="targets">
@@ -998,8 +853,6 @@
        </list>
       </model_object>
       <model_object id='89' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 40</str>
        <list label="targets">
@@ -1008,8 +861,6 @@
        </list>
       </model_object>
       <model_object id='90' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 41</str>
        <list label="targets">
@@ -1018,8 +869,6 @@
        </list>
       </model_object>
       <model_object id='91' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 42</str>
        <list label="targets">
@@ -1028,8 +877,6 @@
        </list>
       </model_object>
       <model_object id='92' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 43</str>
        <list label="targets">
@@ -1038,8 +885,6 @@
        </list>
       </model_object>
       <model_object id='93' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 44</str>
        <list label="targets">
@@ -1050,8 +895,8 @@
      </list>
     </model_object>
     <model_object id='94' class='Frame'>
-     <str label="name">Frame</str>
-     <bool label="visible">True</bool>
+     <float label="axis_length">1.0</float>
+     <float label="axis_thickness">0.08</float>
      <transformation label="transformation">
       <array label="translation_vector">
        <shape>3 </shape>
@@ -1062,13 +907,9 @@
        <cells>0.777362665192 -0.527322991009 0.342983600072 0.588539170477 0.802188277273 -0.100576401905 -0.222101174197 0.280043623314 0.933941452909 </cells>
       </array>
      </transformation>
-     <float label="axis_length">1.0</float>
-     <float label="axis_thickness">0.08</float>
-     <bool label="axes_visible">True</bool>
      <list label="children">
       <model_object id='95' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1080,7 +921,6 @@
       </model_object>
       <model_object id='96' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1092,7 +932,6 @@
       </model_object>
       <model_object id='97' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1104,7 +943,6 @@
       </model_object>
       <model_object id='98' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1116,7 +954,6 @@
       </model_object>
       <model_object id='99' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1128,7 +965,6 @@
       </model_object>
       <model_object id='100' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1140,7 +976,6 @@
       </model_object>
       <model_object id='101' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1152,7 +987,6 @@
       </model_object>
       <model_object id='102' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1164,7 +998,6 @@
       </model_object>
       <model_object id='103' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1176,7 +1009,6 @@
       </model_object>
       <model_object id='104' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1188,7 +1020,6 @@
       </model_object>
       <model_object id='105' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1200,7 +1031,6 @@
       </model_object>
       <model_object id='106' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1212,7 +1042,6 @@
       </model_object>
       <model_object id='107' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1224,7 +1053,6 @@
       </model_object>
       <model_object id='108' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1236,7 +1064,6 @@
       </model_object>
       <model_object id='109' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1248,7 +1075,6 @@
       </model_object>
       <model_object id='110' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1260,7 +1086,6 @@
       </model_object>
       <model_object id='111' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1272,7 +1097,6 @@
       </model_object>
       <model_object id='112' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1284,7 +1108,6 @@
       </model_object>
       <model_object id='113' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1296,7 +1119,6 @@
       </model_object>
       <model_object id='114' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1308,7 +1130,6 @@
       </model_object>
       <model_object id='115' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1320,7 +1141,6 @@
       </model_object>
       <model_object id='116' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1332,7 +1152,6 @@
       </model_object>
       <model_object id='117' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1344,7 +1163,6 @@
       </model_object>
       <model_object id='118' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1356,7 +1174,6 @@
       </model_object>
       <model_object id='119' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1368,7 +1185,6 @@
       </model_object>
       <model_object id='120' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1380,7 +1196,6 @@
       </model_object>
       <model_object id='121' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1392,7 +1207,6 @@
       </model_object>
       <model_object id='122' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1404,7 +1218,6 @@
       </model_object>
       <model_object id='123' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1416,7 +1229,6 @@
       </model_object>
       <model_object id='124' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1428,7 +1240,6 @@
       </model_object>
       <model_object id='125' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1440,7 +1251,6 @@
       </model_object>
       <model_object id='126' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1452,7 +1262,6 @@
       </model_object>
       <model_object id='127' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1464,7 +1273,6 @@
       </model_object>
       <model_object id='128' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1476,7 +1284,6 @@
       </model_object>
       <model_object id='129' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1488,7 +1295,6 @@
       </model_object>
       <model_object id='130' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1500,7 +1306,6 @@
       </model_object>
       <model_object id='131' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1512,7 +1317,6 @@
       </model_object>
       <model_object id='132' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1524,7 +1328,6 @@
       </model_object>
       <model_object id='133' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1536,7 +1339,6 @@
       </model_object>
       <model_object id='134' class='Atom'>
        <int label="number">14</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1548,7 +1350,6 @@
       </model_object>
       <model_object id='135' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1560,7 +1361,6 @@
       </model_object>
       <model_object id='136' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1572,7 +1372,6 @@
       </model_object>
       <model_object id='137' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1584,7 +1383,6 @@
       </model_object>
       <model_object id='138' class='Atom'>
        <int label="number">8</int>
-       <bool label="visible">True</bool>
        <int label="quality">50</int>
        <translation label="transformation">
         <array label="translation_vector">
@@ -1595,8 +1393,6 @@
        <str label="name">Single O</str>
       </model_object>
       <model_object id='139' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 1</str>
        <list label="targets">
@@ -1605,8 +1401,6 @@
        </list>
       </model_object>
       <model_object id='140' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 2</str>
        <list label="targets">
@@ -1615,8 +1409,6 @@
        </list>
       </model_object>
       <model_object id='141' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 3</str>
        <list label="targets">
@@ -1625,8 +1417,6 @@
        </list>
       </model_object>
       <model_object id='142' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 4</str>
        <list label="targets">
@@ -1635,8 +1425,6 @@
        </list>
       </model_object>
       <model_object id='143' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 1</str>
        <list label="targets">
@@ -1645,8 +1433,6 @@
        </list>
       </model_object>
       <model_object id='144' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 2</str>
        <list label="targets">
@@ -1655,8 +1441,6 @@
        </list>
       </model_object>
       <model_object id='145' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 3</str>
        <list label="targets">
@@ -1665,8 +1449,6 @@
        </list>
       </model_object>
       <model_object id='146' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 4</str>
        <list label="targets">
@@ -1675,8 +1457,6 @@
        </list>
       </model_object>
       <model_object id='147' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 5</str>
        <list label="targets">
@@ -1685,8 +1465,6 @@
        </list>
       </model_object>
       <model_object id='148' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 6</str>
        <list label="targets">
@@ -1695,8 +1473,6 @@
        </list>
       </model_object>
       <model_object id='149' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 7</str>
        <list label="targets">
@@ -1705,8 +1481,6 @@
        </list>
       </model_object>
       <model_object id='150' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 8</str>
        <list label="targets">
@@ -1715,8 +1489,6 @@
        </list>
       </model_object>
       <model_object id='151' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 9</str>
        <list label="targets">
@@ -1725,8 +1497,6 @@
        </list>
       </model_object>
       <model_object id='152' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 10</str>
        <list label="targets">
@@ -1735,8 +1505,6 @@
        </list>
       </model_object>
       <model_object id='153' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 11</str>
        <list label="targets">
@@ -1745,8 +1513,6 @@
        </list>
       </model_object>
       <model_object id='154' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 12</str>
        <list label="targets">
@@ -1755,8 +1521,6 @@
        </list>
       </model_object>
       <model_object id='155' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 13</str>
        <list label="targets">
@@ -1765,8 +1529,6 @@
        </list>
       </model_object>
       <model_object id='156' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 14</str>
        <list label="targets">
@@ -1775,8 +1537,6 @@
        </list>
       </model_object>
       <model_object id='157' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 15</str>
        <list label="targets">
@@ -1785,8 +1545,6 @@
        </list>
       </model_object>
       <model_object id='158' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 16</str>
        <list label="targets">
@@ -1795,8 +1553,6 @@
        </list>
       </model_object>
       <model_object id='159' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 17</str>
        <list label="targets">
@@ -1805,8 +1561,6 @@
        </list>
       </model_object>
       <model_object id='160' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 18</str>
        <list label="targets">
@@ -1815,8 +1569,6 @@
        </list>
       </model_object>
       <model_object id='161' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 19</str>
        <list label="targets">
@@ -1825,8 +1577,6 @@
        </list>
       </model_object>
       <model_object id='162' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 20</str>
        <list label="targets">
@@ -1835,8 +1585,6 @@
        </list>
       </model_object>
       <model_object id='163' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 21</str>
        <list label="targets">
@@ -1845,8 +1593,6 @@
        </list>
       </model_object>
       <model_object id='164' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 22</str>
        <list label="targets">
@@ -1855,8 +1601,6 @@
        </list>
       </model_object>
       <model_object id='165' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 23</str>
        <list label="targets">
@@ -1865,8 +1609,6 @@
        </list>
       </model_object>
       <model_object id='166' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 24</str>
        <list label="targets">
@@ -1875,8 +1617,6 @@
        </list>
       </model_object>
       <model_object id='167' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 25</str>
        <list label="targets">
@@ -1885,8 +1625,6 @@
        </list>
       </model_object>
       <model_object id='168' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 26</str>
        <list label="targets">
@@ -1895,8 +1633,6 @@
        </list>
       </model_object>
       <model_object id='169' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 27</str>
        <list label="targets">
@@ -1905,8 +1641,6 @@
        </list>
       </model_object>
       <model_object id='170' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 28</str>
        <list label="targets">
@@ -1915,8 +1649,6 @@
        </list>
       </model_object>
       <model_object id='171' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 29</str>
        <list label="targets">
@@ -1925,8 +1657,6 @@
        </list>
       </model_object>
       <model_object id='172' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 30</str>
        <list label="targets">
@@ -1935,8 +1665,6 @@
        </list>
       </model_object>
       <model_object id='173' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 31</str>
        <list label="targets">
@@ -1945,8 +1673,6 @@
        </list>
       </model_object>
       <model_object id='174' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 32</str>
        <list label="targets">
@@ -1955,8 +1681,6 @@
        </list>
       </model_object>
       <model_object id='175' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 33</str>
        <list label="targets">
@@ -1965,8 +1689,6 @@
        </list>
       </model_object>
       <model_object id='176' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 34</str>
        <list label="targets">
@@ -1975,8 +1697,6 @@
        </list>
       </model_object>
       <model_object id='177' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 35</str>
        <list label="targets">
@@ -1985,8 +1705,6 @@
        </list>
       </model_object>
       <model_object id='178' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 36</str>
        <list label="targets">
@@ -1995,8 +1713,6 @@
        </list>
       </model_object>
       <model_object id='179' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 37</str>
        <list label="targets">
@@ -2005,8 +1721,6 @@
        </list>
       </model_object>
       <model_object id='180' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 38</str>
        <list label="targets">
@@ -2015,8 +1729,6 @@
        </list>
       </model_object>
       <model_object id='181' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 39</str>
        <list label="targets">
@@ -2025,8 +1737,6 @@
        </list>
       </model_object>
       <model_object id='182' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 40</str>
        <list label="targets">
@@ -2035,8 +1745,6 @@
        </list>
       </model_object>
       <model_object id='183' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 41</str>
        <list label="targets">
@@ -2045,8 +1753,6 @@
        </list>
       </model_object>
       <model_object id='184' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 42</str>
        <list label="targets">
@@ -2055,8 +1761,6 @@
        </list>
       </model_object>
       <model_object id='185' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 43</str>
        <list label="targets">
@@ -2065,8 +1769,6 @@
        </list>
       </model_object>
       <model_object id='186' class='Bond'>
-       <bool label="visible">True</bool>
-       <int label="bond_type">1</int>
        <int label="quality">50</int>
        <str label="name">Bond 44</str>
        <list label="targets">
@@ -2078,29 +1780,14 @@
     </model_object>
     <model_object id='187' class='Spring'>
      <str label="name">Spring 1</str>
-     <array label="color">
-      <shape>4 </shape>
-      <cells>0.7 0.7 0.7 1.0 </cells>
-     </array>
-     <bool label="visible">True</bool>
-     <float label="rest_length">0.0</float>
-     <float label="radius">0.5</float>
-     <int label="quality">15</int>
      <list label="targets">
       <reference to='20' />
       <reference to='113' />
      </list>
     </model_object>
     <model_object id='188' class='Spring'>
-     <str label="name">Spring 2</str>
-     <array label="color">
-      <shape>4 </shape>
-      <cells>0.7 0.7 0.7 1.0 </cells>
-     </array>
-     <bool label="visible">True</bool>
      <float label="rest_length">3.7794522498</float>
-     <float label="radius">0.5</float>
-     <int label="quality">15</int>
+     <str label="name">Spring 2</str>
      <list label="targets">
       <reference to='23' />
       <reference to='116' />
@@ -2108,40 +1795,47 @@
     </model_object>
     <model_object id='189' class='Spring'>
      <str label="name">Spring 3</str>
-     <array label="color">
-      <shape>4 </shape>
-      <cells>0.7 0.7 0.7 1.0 </cells>
-     </array>
-     <bool label="visible">True</bool>
-     <float label="rest_length">0.0</float>
-     <float label="radius">0.5</float>
-     <int label="quality">15</int>
      <list label="targets">
       <reference to='102' />
       <reference to='9' />
      </list>
     </model_object>
     <model_object id='190' class='Spring'>
-     <str label="name">Spring</str>
-     <array label="color">
-      <shape>4 </shape>
-      <cells>0.7 0.7 0.7 1.0 </cells>
-     </array>
-     <bool label="visible">True</bool>
      <float label="rest_length">3.7794522498</float>
-     <float label="radius">0.5</float>
-     <int label="quality">15</int>
      <list label="targets">
       <reference to='15' />
       <reference to='108' />
      </list>
     </model_object>
+    <model_object id='191' class='Box'>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.56683815697 -6.45656429089 0.0 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <shape>3 3 </shape>
+       <cells>1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 </cells>
+      </array>
+     </transformation>
+    </model_object>
+    <model_object id='192' class='Spring'>
+     <float label="rest_length">7.55890453568</float>
+     <list label="targets">
+      <reference to='14' />
+      <reference to='191' />
+     </list>
+    </model_object>
+    <model_object id='193' class='Spring'>
+     <float label="rest_length">7.55890453568</float>
+     <list label="targets">
+      <reference to='191' />
+      <reference to='105' />
+     </list>
+    </model_object>
    </list>
   </model_object>
-  <model_object id='191' class='Folder'>
-   <str label="name">Folder</str>
-   <list label="children">
-   </list>
+  <model_object id='194' class='Folder'>
   </model_object>
  </list>
 </zml_file>
