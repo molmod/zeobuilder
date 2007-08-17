@@ -192,13 +192,13 @@ class AutoConnectSprings(AutoConnectMixin, Immediate):
                    (referent.children[1].target == atom1):
                     return None
 
-        if 0.5*(periodic[atom1.number].radius + periodic[atom2.number].radius) >= distance:
+        if (periodic[atom1.number].radius + periodic[atom2.number].radius) >= distance:
             return Spring(targets=[atom1, atom2])
         else:
             return None
 
     def do(self):
-        AutoConnectMixin.do(self, periodic.max_radius)
+        AutoConnectMixin.do(self, 2*periodic.max_radius)
 
 
 class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
