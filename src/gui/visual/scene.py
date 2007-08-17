@@ -116,3 +116,4 @@ class Scene(object):
 
         for plane_i in xrange(len(self.clip_planes)):
             vb.unset_clip_plane(plane_i)
+

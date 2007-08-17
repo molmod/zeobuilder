@@ -121,3 +121,4 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
             result[0] += 0.5*w
             result[1] += 0.5*h
         return result.astype(int)
+
