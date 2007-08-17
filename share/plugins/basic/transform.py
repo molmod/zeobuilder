@@ -709,7 +709,9 @@ class RotateWorldBase(Interactive):
         Interactive.interactive_init(self)
         drawing_area = context.application.main.drawing_area
         camera = context.application.camera
-        self.screen_rotation_center = drawing_area.camera_to_screen(camera.model_to_camera(camera.rotation_center.t))
+        scene = context.application.scene
+        center = camera.rotation_center.t + scene.model_center.t
+        self.screen_rotation_center = drawing_area.camera_to_screen(camera.model_to_camera(center))
 
     def do_rotation(self, drawing_area, rotation_angle, rotation_axis):
         camera = context.application.camera

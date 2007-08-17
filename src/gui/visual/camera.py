@@ -195,20 +195,20 @@ class Camera(object):
 
     def model_to_eye(self, vector_m):
         scene = context.application.scene
-        tmp = self.rotation_center.vector_apply_inverse(vector_m)
+        tmp = scene.model_center.vector_apply_inverse(vector_m)
+        tmp = self.rotation_center.vector_apply_inverse(tmp)
         tmp = self.rotation.vector_apply_inverse(tmp)
         tmp[2] -= self.znear
         tmp = self.eye.vector_apply_inverse(tmp)
-        tmp = scene.model_center.vector_apply_inverse(tmp)
         return tmp
 
     def eye_to_model(self, vector_e):
         scene = context.application.scene
-        tmp = scene.model_center.vector_apply(vector_e)
-        tmp = self.eye.vector_apply(tmp)
+        tmp = self.eye.vector_apply(vector_e)
         tmp[2] += self.znear
         tmp = self.rotation.vector_apply(tmp)
         tmp = self.rotation_center.vector_apply(tmp)
+        tmp = scene.model_center.vector_apply(tmp)
         return tmp
 
     def model_to_camera(self, vector_m):
