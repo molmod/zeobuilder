@@ -80,8 +80,8 @@ class CoordinationDialog(object):
 
 
 class TetraCoordination(Immediate):
-    description = "T-site coordination"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_T-site coordination", order=(0, 4, 1, 5, 2, 1))
+    description = "T-atom coordination"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_T-atom coordination", order=(0, 4, 1, 5, 2, 1))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
