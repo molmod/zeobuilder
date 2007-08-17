@@ -428,7 +428,7 @@ class OptimizeSprings(ImmediateWithMemory):
         minimize = iterative.alg.DefaultMinimize(
             cost_function,
             numpy.array(max_step, float),
-            iterative.stop.NoIncrease()
+            iterative.stop.LowGradient()
         )
 
         result = self.report_dialog.run(
