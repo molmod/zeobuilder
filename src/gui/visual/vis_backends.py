@@ -358,7 +358,7 @@ class VisBackendOpenGL(VisBackend):
     def draw_polygon(self, *data):
         glBegin(GL_POLYGON)
         for normal, vectors in data:
-            glNormal(normal)
+            glNormal3fv(normal)
             for vector in vectors:
                 glVertex(vector)
         glEnd()
@@ -366,7 +366,7 @@ class VisBackendOpenGL(VisBackend):
     def draw_quads(self, *data):
         glBegin(GL_QUADS)
         for normal, vectors in data:
-            glNormal(normal)
+            glNormal3fv(normal)
             for vector in vectors:
                 glVertex(vector)
         glEnd()
@@ -374,7 +374,7 @@ class VisBackendOpenGL(VisBackend):
     def draw_quad_strip(self, *data):
         glBegin(GL_QUAD_STRIP)
         for normal, vectors in data:
-            glNormal(normal)
+            glNormal3fv(normal)
             for vector in vectors:
                 glVertex(vector)
         glEnd()
