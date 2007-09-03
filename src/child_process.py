@@ -33,14 +33,17 @@ import os, socket, signal
 __all__ = ["ComThread", "ChildProcessDialog"]
 
 
+#class ComThread(comthread.VerboseComThread, gobject.GObject):
 class ComThread(comthread.ComThread, gobject.GObject):
     def __init__(self, conn):
-        comthread.ComThread.__init__(self, conn)#, "ZEOBUILDER")
+        #comthread.VerboseComThread.__init__(self, conn, "ZEOBUILDER")
+        comthread.ComThread.__init__(self, conn)
         gobject.GObject.__init__(self)
         self.stack = []
 
     def run(self):
         try:
+            #comthread.VerboseComThread.run(self)
             comthread.ComThread.run(self)
         except comthread.ProtocolError:
             gobject.idle_add(self.emit, "on-protocol-error")
