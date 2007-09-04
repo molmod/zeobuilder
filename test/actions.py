@@ -546,16 +546,16 @@ class CoreActions(ApplicationTestCase):
         self.run_test_application(fn)
 
 
-    def test_mirror_dialog(self):
+    def test_reflection_dialog(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
             parameters = Parameters()
             parameters.center = numpy.array([1.0, 0.2, -0.9], float)
             parameters.normal = numpy.array([2.0, 4.1, -1.0], float)
-            MirrorDialog = context.application.plugins.get_action("MirrorDialog")
-            self.assert_(MirrorDialog.analyze_selection(parameters))
-            MirrorDialog(parameters)
+            ReflectionDialog = context.application.plugins.get_action("ReflectionDialog")
+            self.assert_(ReflectionDialog.analyze_selection(parameters))
+            ReflectionDialog(parameters)
         self.run_test_application(fn)
 
     def test_unit_cell_to_cluster(self):

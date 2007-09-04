@@ -301,20 +301,20 @@ class TranslateDialog(ImmediateWithMemory):
             primitive.Transform(victim, self.parameters.translation)
 
 
-class MirrorDialog(ImmediateWithMemory):
-    description = "Apply mirror transformation"
-    menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Mirror", order=(0, 4, 1, 2, 1, 3))
+class ReflectionDialog(ImmediateWithMemory):
+    description = "Apply reflection transformation"
+    menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Reflection", order=(0, 4, 1, 2, 1, 3))
     authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
-        "Mirror transformation",
+        "Reflection transformation",
         fields.group.Table(fields=[
             fields.composed.ComposedArray(
                 FieldClass=fields.faulty.Length,
                 array_name="c.%s",
                 suffices=["x", "y", "z"],
                 attribute_name="center",
-                label_text="Point on the mirror plane.",
+                label_text="Point on the reflection plane.",
                 scientific=False,
             ),
             fields.composed.ComposedArray(
@@ -322,7 +322,7 @@ class MirrorDialog(ImmediateWithMemory):
                 array_name="n.%s",
                 suffices=["x", "y", "z"],
                 attribute_name="normal",
-                label_text="Normal of the mirror plane.",
+                label_text="Normal of the reflection plane.",
                 scientific=False,
             ),
         ]),
@@ -1033,7 +1033,7 @@ actions = {
     "RotateDialog": RotateDialog,
     "RotateAroundCenterDialog": RotateAroundCenterDialog,
     "TranslateDialog": TranslateDialog,
-    "MirrorDialog": MirrorDialog,
+    "ReflectionDialog": ReflectionDialog,
     "RoundRotation": RoundRotation,
     "RotateObjectMouse": RotateObjectMouse,
     "RotateObjectKeyboard": RotateObjectKeyboard,
