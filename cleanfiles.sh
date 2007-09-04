@@ -6,6 +6,8 @@ rm -v test/*.so
 rm -v test/zeobuilder_script.py
 rm -v test/ZEOBUILDER-DIALOG-*
 
+rm -v profile/zeobuilder
+
 rm -v debug/zeobuilder
 rm -vr debug/output
 rm -v debug/*.so
