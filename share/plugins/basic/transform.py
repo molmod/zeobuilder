@@ -253,7 +253,7 @@ parent_of_translated_nodes.authors=[authors.toon_verstraelen]
 
 class TranslateDialog(ImmediateWithMemory):
     description = "Apply translation"
-    menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate objects", order=(0, 4, 1, 2, 1, 2))
+    menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "_Translate", order=(0, 4, 1, 2, 1, 2))
     authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
@@ -292,7 +292,7 @@ class TranslateDialog(ImmediateWithMemory):
             if (b is not None) and (e is not None):
                 self.parameters.translation.t = e - b
         else:
-            self.use_last_parameters()
+            self.parameters = self.last_parameters()
         if self.parameters_dialog.run(self.parameters.translation) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
@@ -364,7 +364,7 @@ class MirrorDialog(ImmediateWithMemory):
             #if (b is not None) and (e is not None):
             #    self.parameters.translation.t = e - b
         else:
-            self.use_last_parameters()
+            self.parameters = self.last_parameters()
         if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
