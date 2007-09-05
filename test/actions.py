@@ -1000,7 +1000,10 @@ class BuilderActions(ApplicationTestCase):
     def test_optimize_springs(self):
         def fn():
             context.application.model.file_open("input/springs.zml")
-            context.application.main.select_nodes(context.application.model.universe.children[2:])
+            context.application.main.select_nodes(
+                context.application.model.universe.children[2:6] +
+                context.application.model.universe.children[7:9]
+            )
 
             parameters = Parameters()
             parameters.allow_rotation = True
