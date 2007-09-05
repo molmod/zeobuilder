@@ -483,13 +483,13 @@ class MergeAtomsConnectedWithSpring(Immediate):
                     atom1.get_frame_relative_to(spring.parent).t +
                     atom2.get_frame_relative_to(spring.parent).t
                 )
-            primitive.Add(replacement, spring.parent, spring.get_index())
-            for atom in [atom1, atom2]:
-                while len(atom.references) > 0:
-                    primitive.SetTarget(atom.references[0], replacement)
-            primitive.Delete(spring)
-            primitive.Delete(atom1)
-            primitive.Delete(atom2)
+                primitive.Add(replacement, spring.parent, spring.get_index())
+                for atom in [atom1, atom2]:
+                    while len(atom.references) > 0:
+                        primitive.SetTarget(atom.references[0], replacement)
+                primitive.Delete(spring)
+                primitive.Delete(atom1)
+                primitive.Delete(atom2)
 
 
 nodes = {

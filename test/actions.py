@@ -1050,7 +1050,10 @@ class BuilderActions(ApplicationTestCase):
     def test_merge_atoms_connected_with_spring(self):
         def fn():
             context.application.model.file_open("input/springs.zml")
-            context.application.main.select_nodes(context.application.model.universe.children[2:])
+            context.application.main.select_nodes(
+                context.application.model.universe.children[2:6] +
+                context.application.model.universe.children[7:9]
+            )
 
             MergeAtomsConnectedWithSpring = context.application.plugins.get_action("MergeAtomsConnectedWithSpring")
             self.assert_(MergeAtomsConnectedWithSpring.analyze_selection())
