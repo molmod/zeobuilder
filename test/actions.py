@@ -1045,7 +1045,7 @@ class BuilderActions(ApplicationTestCase):
             OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
             self.assert_(OptimizeSprings.analyze_selection(parameters))
             OptimizeSprings(parameters)
-        self.run_test_application(fn, quit=False)
+        self.run_test_application(fn)
 
     def test_merge_atoms_connected_with_spring(self):
         def fn():
