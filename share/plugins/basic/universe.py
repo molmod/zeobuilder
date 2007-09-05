@@ -494,7 +494,7 @@ class UnitCellToCluster(ImmediateWithMemory):
                 )
                 for ridge in ["a", "b", "c"]
             ],
-            label_text="The cutoff region in fractional coordinates:"
+            label_text="The retained region in fractional coordinates:"
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
