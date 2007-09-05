@@ -492,7 +492,7 @@ class UnitCellToCluster(ImmediateWithMemory):
                         short=False,
                     )
                 )
-                for ridge in ["A", "B", "C"]
+                for ridge in ["a", "b", "c"]
             ],
             label_text="The cutoff region in fractional coordinates:"
         ),
@@ -657,7 +657,7 @@ class SuperCell(ImmediateWithMemory):
                     label_text=ridge,
                     minimum=1,
                 )
-                for ridge in ["A", "B", "C"]
+                for ridge in ["a", "b", "c"]
             ],
             label_text="The number of repetitions along each active axis."
         ),
