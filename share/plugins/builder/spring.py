@@ -1,21 +1,20 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2005 Toon Verstraelen
+# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
 # Zeobuilder is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
+# as published by the Free Software Foundation; either version 3
 # of the License, or (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# Zeobuilder is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
 
@@ -425,10 +424,11 @@ class OptimizeSprings(ImmediateWithMemory):
                         target.get_frame_up_to(frame).t
                     )
 
+        max_step = numpy.array(max_step, float)
         minimize = iterative.alg.DefaultMinimize(
             cost_function,
-            numpy.array(max_step, float),
-            iterative.stop.LowGradient()
+            max_step,
+            max_step*1e-8,
         )
 
         result = self.report_dialog.run(
@@ -507,3 +507,4 @@ actions = {
 cache_plugins = {
     "spring_problem": get_spring_problem,
 }
+

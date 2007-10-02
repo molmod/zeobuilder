@@ -1,22 +1,21 @@
 #!/usr/bin/env python
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2005 Toon Verstraelen
+# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
 # Zeobuilder is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
-# as published by the Free Software Foundation; either version 2
+# as published by the Free Software Foundation; either version 3
 # of the License, or (at your option) any later version.
 #
-# This program is distributed in the hope that it will be useful,
+# Zeobuilder is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 # GNU General Public License for more details.
 #
 # You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+# along with this program; if not, see <http://www.gnu.org/licenses/>
 #
 # --
 
@@ -40,7 +39,7 @@ setup(
     description='Zeobuilder is a extensible GUI application for molecular model building.',
     author='Toon Verstraelen',
     author_email='Toon.Verstraelen@UGent.be',
-    url='http://molmod.ugent.be/zeobuilder/',
+    url='https://molmod.ugent.be/zeobuilder/',
     package_dir = {'zeobuilder': 'src'},
     data_files=[
         ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),
@@ -77,3 +76,4 @@ setup(
         'Programming Language :: Python'
     ]
 )
+
