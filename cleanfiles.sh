@@ -21,10 +21,6 @@ rm -v debug/*.so
 rm -v debug/zeobuilder_script.py
 rm -v debug/ZEOBUILDER-DIALOG-*
 
-rm -vr extensions/build
-rm -v extensions/*.so
-rm -v extensions/*.c
-
 rm -v MANIFEST
 rm -vr dist
 rm -vr build

@@ -34,7 +34,7 @@ class Scene(object):
         config = context.application.configuration
         config.register_setting(
             "background_color",
-            numpy.array([1, 1, 1, 0], float),
+            numpy.array([0, 0, 0, 0], float),
             None,
         )
         config.register_setting(

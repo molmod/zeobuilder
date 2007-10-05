@@ -134,7 +134,7 @@ class Camera(object):
         )
         config.register_setting(
             "window_size",
-            5*angstrom,
+            25*angstrom,
             DialogFieldInfo("Default Viewer", (1, 2), fields.faulty.Length(
                 label_text="Window size",
                 attribute_name="window_size",

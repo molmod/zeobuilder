@@ -1,11 +1,13 @@
 Zeobuilder 0.001 README
-=================
+=======================
 
 Contents of this README File:
  * Short description
+ * Software dependencies
  * How to install
  * How to get technical support
  * Become a registered user
+ * Authors
 
 
 Short description
@@ -19,7 +21,7 @@ while from the developers point-of-view, we try to make it easy to extend
 Zeobuilder with new features.
 
 More information about Zeobuilder can be found on the Zeobuilder website:
-http://molmod.UGent.be/zeobuilder
+https://molmod.UGent.be/zeobuilder
 
 
 License
@@ -30,26 +32,43 @@ license version 3.  Read the file COPYING for more details, or visit
 http://www.gnu.org/licenses/
 
 
+Software dependencies
+---------------------
+
+The following software has to be installed on your system before you can use
+Zeobuilder:
+  1) Python (>=2.4, <3.0): see http://www.python.org/
+  2) Numpy (>=1.0.1): see http://www.scipy.org/
+  3) PyGTK (>=2.8): see http://www.pygtk.org
+     GTK (>=2.8): see http://www.gtk.org
+  4) PyOpenGL (>=2.0): see http://pyopengl.sf.net/
+     Any OpenGL implementation (this is installed by default on most machines)
+  5) PyGTKGLExt and GTKGLExt: http://www.k-3d.org/gtkglext/Main_Page
+
+You can get these dependencies from the Zeobuilder site: https://molmod.UGent.be/zeobuilder/
+  6) MolMod (>= 0.001)
+  7) CCIO (>= 0.001)
+  8) ComThread (>= 0.001)
+  9) ConScan (>= 0.001)
+ 10) Iterative (>= 0.001)
+
+We strongly recommend the installation of Zeobuilder on an operating system that
+has a software management system that automatically installs all these
+dependencies, such as Debian Linux.
+
+
 How to install
 --------------
 
 There are several ways to install Zeobuilder, which are all documented
-at the homepage: http://molmod.UGent.be/zeobuilder
-
-To perform a standard installation from source, use the following
-command:
-
-python setup.py install
-
-For more information on the installation script, see:
-http://docs.python.org/dist/dist.html
+at the homepage: https://molmod.UGent.be/zeobuilder
 
 
 How to get technical support
 ----------------------------
 
 Technical support is availlable for all registered Zeobuilder users. All
-information can be found at: http://molmod.UGent.be/zeobuilder
+information can be found at: https://molmod.UGent.be/zeobuilder
 
 
 Become a registered user
@@ -74,6 +93,28 @@ There are 5 good reasons to become a registered user:
 
 
 If you think this software is useful, consider to register as a Zeobuilder user:
-http://molmod.UGent.be/zeobuilder/registration/
+https://molmod.UGent.be/zeobuilder/registration/
 
 
+Authors
+-------
+
+* Lead Developer *
+
+Toon Verstraelen <Toon.Verstraelen@UGent.be>
+Center for Molecular Modeling
+Ghent University
+Proeftuinstraat 86
+9000 Gent, Belgium
+Tel: +32 (0)9 264 65 56
+
+* Contributors *
+
+Bartek Szyja <B.M.Szyja@tue.nl>
+Eindhoven University of Technology
+Chemical Engineering and Chemistry
+Molecular Heterogeneous Catalysis
+PO Box 513, STW 4.22
+5600 MB Eindhoven, The Netherlands
+Tel: +31 40 247 2124
+Fax: +31 40 245 5054

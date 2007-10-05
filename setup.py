@@ -34,8 +34,8 @@ from distutils.core import setup
 #)
 
 setup(
-    name='zeobuilder',
-    version='0.1.0',
+    name='Zeobuilder',
+    version='0.001',
     description='Zeobuilder is a extensible GUI application for molecular model building.',
     author='Toon Verstraelen',
     author_email='Toon.Verstraelen@UGent.be',
