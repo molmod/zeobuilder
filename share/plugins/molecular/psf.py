@@ -21,14 +21,12 @@
 
 import numpy
 
+from ccio.psf import PSFFile
+
 from zeobuilder import context
 from zeobuilder.filters import DumpFilter, FilterError
-from zeobuilder.moltools import create_graph_bonds
+from zeobuilder.moltools import create_molecular_graph
 import zeobuilder.authors as authors
-
-from molmod.data import periodic
-from molmod.units import unified
-
 
 class DumpPSF(DumpFilter):
     authors = [authors.toon_verstraelen]
@@ -41,68 +39,10 @@ class DumpPSF(DumpFilter):
         if nodes is None:
             nodes = [universe]
 
-        graph, bonds = create_graph_bonds([universe])
-
-        indices = dict((atom,index) for index,atom in enumerate(graph.nodes))
-
-        def print_section(count, name):
-            print >> f
-            print >> f, "% 7i !N%s" % (count, name)
-
-        print >> f, "PSF"
-        print_section(1, "TITLE")
-        print >> f, universe.name
-
-        print_section(len(graph.nodes), "ATOM")
-        for index, atom in enumerate(graph.nodes):
-            atom_info = periodic[atom.number]
-            print >> f, "% 7i NAME 1 NAME % 5s % 5s 0.0 %12.6f 0" % (index+1,atom_info.symbol,atom_info.symbol,atom_info.mass/unified)
-
-        print_section(len(graph.pairs), "BOND")
-        if len(graph.pairs) > 0:
-            for counter, (atom1, atom2) in enumerate(graph.pairs):
-                print >> f, "% 7i" % (indices[atom1]+1),
-                print >> f, "% 7i" % (indices[atom2]+1),
-                if (counter) % 4 == 3:
-                    print >> f
-            if (counter) % 4 != 3:
-                print >> f
-        else:
-            print >> f
-
-
-        # collect all angles
-        angles = []
-        graph.init_neighbors()
-        for atom in graph.nodes:
-            neighbors = list(graph.neighbors[atom])
-            for index1, neighbor1 in enumerate(neighbors):
-                for neighbor2 in neighbors[:index1]:
-                    angles.append((
-                        indices[neighbor1],
-                        indices[atom],
-                        indices[neighbor2]
-                    ))
-
-        if len(angles) > 0:
-            print_section(len(angles), "THETA")
-            for counter, (index1, index2, index3) in enumerate(angles):
-                print >> f, "% 7i% 7i% 7i" % (index1+1, index2+1, index3+1),
-                if counter % 3 == 2:
-                    print >> f
-            if counter % 3 != 2:
-                print >> f
-        else:
-            print >> f
-
-        print_section(0, "PHI")
-        print_section(0, "IMPHI")
-        print_section(0, "DON")
-        print_section(0, "ACC")
-        print_section(0, "NB")
-        print_section(0, "GRP")
-        print >> f
-        print >> f
+        graph = create_molecular_graph([universe])
+        psf_file = PSFFile()
+        psf_file.add_molecular_graph(graph)
+        psf_file.dump(f)
 
 
 dump_filters = {

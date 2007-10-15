@@ -19,11 +19,15 @@
 # --
 
 
+import numpy
+
 from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 
 from molmod.data import periodic
 from molmod.graphs import Graph
+from molmod.molecules import Molecule
+from molmod.molecular_graphs import MolecularGraph
 
 
 def yield_atoms(nodes):
@@ -65,6 +69,42 @@ def chemical_formula(atoms, markup=False):
             formula += "%s%i " % (periodic[atom_number].symbol, count)
         total += count
     return total, formula
+
+
+def create_molecule(selected_nodes):
+    numbers = []
+    coordinates = []
+    for atom in yield_atoms(selected_nodes):
+        numbers.append(atom.number)
+        coordinates.append(atom.get_absolute_frame().t)
+    result = Molecule()
+    result.numbers = numpy.array(numbers)
+    result.coordinates = numpy.array(coordinates)
+    return result
+
+
+def create_molecular_graph(selected_nodes):
+    numbers = []
+    coordinates = []
+    atoms = []
+    for atom in yield_atoms(selected_nodes):
+        numbers.append(atom.number)
+        coordinates.append(atom.get_absolute_frame().t)
+        atoms.append(atom)
+    molecule = Molecule()
+    molecule.numbers = numpy.array(numbers)
+    molecule.coordinates = numpy.array(coordinates)
+
+    bonds = list(
+        frozenset([atoms.index(bond.children[0].target), atoms.index(bond.children[1].target)])
+        for bond in yield_bonds(selected_nodes)
+        if bond.children[0].target in atoms and
+            bond.children[1].target in atoms
+    )
+    graph = MolecularGraph(molecule, pairs=bonds)
+    graph.molecule = molecule
+
+    return graph
 
 
 def create_graph_bonds(selected_nodes):
