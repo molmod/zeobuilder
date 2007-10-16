@@ -40,8 +40,9 @@ class DumpPSF(DumpFilter):
             nodes = [universe]
 
         graph = create_molecular_graph([universe])
+        symbols = [atom.name for atom in graph.molecule.atoms]
         psf_file = PSFFile()
-        psf_file.add_molecular_graph(graph)
+        psf_file.add_molecular_graph(graph, symbols=symbols)
         psf_file.dump(f)
 
 
