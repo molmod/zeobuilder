@@ -18,11 +18,12 @@
 #
 # --
 
-import os.path
-if not os.path.exists("init_files.py"):
-    os.symlink("../debug/init_files.py", "init_files.py")
-from init_files import init_files
-init_files()
+
+import sys, os
+sys.path.insert(0, "../lib")
+
+if not os.path.exists("output"):
+    os.mkdir("output")
 
 from zeobuilder import context
 context.share_dirs = ["../share"]

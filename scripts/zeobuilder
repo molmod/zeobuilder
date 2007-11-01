@@ -31,7 +31,7 @@ def init_fn_new():
 class InitFnOpen:
     def __init__(self, filename):
         self.filename = filename
-        
+
     def __call__(self):
         from zeobuilder import context
         from zeobuilder.models import FilenameError
@@ -40,7 +40,7 @@ class InitFnOpen:
         try:
             context.application.model.file_open(self.filename)
         except (FilenameError, FilterError), e:
-            print str(e)    
+            print str(e)
             gtk.main_quit()
             sys.exit(2)
 

@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
 # Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
@@ -18,13 +19,58 @@
 #
 # --
 
-from init_files import init_files
-init_files()
-
-import zeobuilder_script
+import pygtk, sys, os, optparse
+pygtk.require('2.0')
+sys.path.insert(0, "../lib")
 
 from zeobuilder import context
 context.share_dirs = ["../share"]
 
-zeobuilder_script.run()
+
+def init_fn_new():
+    from zeobuilder import context
+    FileNew = context.application.plugins.get_action("FileNew")
+    FileNew()
+
+class InitFnOpen:
+    def __init__(self, filename):
+        self.filename = filename
+
+    def __call__(self):
+        from zeobuilder import context
+        from zeobuilder.models import FilenameError
+        from zeobuilder.filters import FilterError
+        import gtk
+        try:
+            context.application.model.file_open(self.filename)
+        except (FilenameError, FilterError), e:
+            print str(e)
+            gtk.main_quit()
+            sys.exit(2)
+
+
+
+usage="""Usage: zeobuilder [filename]
+Zeobuilder is an extensible GUI-toolkit for molecular model construction.
+The filename argument is optional."""
+
+parser = optparse.OptionParser(usage)
+(options, args) = parser.parse_args()
+
+
+if len(args) == 0:
+    init_fn = init_fn_new
+elif len(args) == 1:
+    filename = args[0]
+    if os.path.isfile(filename):
+        init_fn = InitFnOpen(filename)
+    else:
+        parser.error("File %s does not exist." % filename)
+else:
+    parser.error("Expecting at most one argument.")
+
+from zeobuilder.application import Application
+Application(init_fn)
+
+
 

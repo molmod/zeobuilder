@@ -28,7 +28,7 @@ class InitFnConvert:
         self.input_filename = input_filename
         self.output_filename = output_filename
         self.bonds = bonds
-        
+
     def __call__(self):
         from zeobuilder import context
         from zeobuilder.models import FilenameError
@@ -44,7 +44,7 @@ class InitFnConvert:
             context.application.model.file_save(self.output_filename)
             gtk.main_quit()
         except (FilenameError, FilterError), e:
-            print str(e)    
+            print str(e)
             gtk.main_quit()
             sys.exit(2)
 
@@ -57,7 +57,7 @@ output file.
 
 parser = optparse.OptionParser(usage)
 parser.add_option(
-    "-b", "--add-bonds", 
+    "-b", "--add-bonds",
     help="Add bonds to the model, based on a database of bond lengths and vdw"
          " radii. [default=%default]",
     default=False, action="store_true",
