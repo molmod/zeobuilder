@@ -40,7 +40,7 @@ setup(
     author='Toon Verstraelen',
     author_email='Toon.Verstraelen@UGent.be',
     url='https://molmod.ugent.be/zeobuilder/',
-    package_dir = {'zeobuilder': 'src'},
+    package_dir = {'zeobuilder': 'lib/zeobuilder'},
     data_files=[
         ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),
         ('share/applications/', ["share/desktop/zeobuilder.desktop"]),
