@@ -269,7 +269,6 @@ class DistributionBondLengths(ImmediateWithMemory):
         match_definition = SubgraphMatchDefinition(
             subgraph=bond_graph,
             criteria_sets=[CriteriaSet(
-                tag=None,
                 thing_criteria={
                     1: self.parameters.filter_atom1,
                     2: self.parameters.filter_atom2,
@@ -390,7 +389,6 @@ class DistributionBendingAngles(ImmediateWithMemory):
         match_definition = SubgraphMatchDefinition(
             subgraph=angle_graph,
             criteria_sets=[CriteriaSet(
-                tag=None,
                 thing_criteria={
                     1: self.parameters.filter_atom1,
                     2: self.parameters.filter_atom2,
@@ -538,7 +536,6 @@ class DistributionDihedralAngles(ImmediateWithMemory):
         match_definition = SubgraphMatchDefinition(
             subgraph=angle_graph,
             criteria_sets=[CriteriaSet(
-                tag=None,
                 thing_criteria={
                     1: self.parameters.filter_atom1,
                     2: self.parameters.filter_atom2,
