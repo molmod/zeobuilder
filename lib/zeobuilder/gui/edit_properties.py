@@ -20,7 +20,7 @@
 
 
 from fields_dialogs import FieldsDialogMultiplex
-from molmod.data import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+from molmod.data.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 
 import gtk
 

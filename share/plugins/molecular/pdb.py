@@ -30,7 +30,7 @@ from zeobuilder.filters import LoadFilter, DumpFilter, FilterError
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
-from molmod.data import periodic
+from molmod.data.periodic import periodic
 from molmod.units import angstrom, angstrom
 
 

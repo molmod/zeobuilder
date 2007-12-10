@@ -28,6 +28,7 @@ from zeobuilder.filters import DumpFilter, FilterError
 from zeobuilder.moltools import create_molecular_graph
 import zeobuilder.authors as authors
 
+
 class DumpPSF(DumpFilter):
     authors = [authors.toon_verstraelen]
 

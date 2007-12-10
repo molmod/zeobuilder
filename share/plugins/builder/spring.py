@@ -36,7 +36,7 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.data import periodic
+from molmod.data.periodic import periodic
 from molmod.transformations import Complete, Translation
 
 import iterative

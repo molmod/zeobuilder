@@ -22,7 +22,8 @@
 from zeobuilder import context
 
 
-from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+from molmod.data.periodic import periodic
+from molmod.data.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 import molmod.units
 
 

@@ -28,7 +28,7 @@ from zeobuilder.expressions import Expression
 import zeobuilder.actions.primitive as primitive
 
 from molmod.transformations import Rotation, Translation, Complete
-from molmod.data import BOND_SINGLE
+from molmod.data.bonds import BOND_SINGLE
 from molmod.units import angstrom
 
 import gtk, numpy

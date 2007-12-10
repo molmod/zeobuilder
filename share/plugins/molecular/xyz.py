@@ -28,7 +28,7 @@ import zeobuilder.authors as authors
 
 
 from ccio.xyz import XYZReader
-from molmod.data import periodic
+from molmod.data.periodic import periodic
 from molmod.units import angstrom
 
 

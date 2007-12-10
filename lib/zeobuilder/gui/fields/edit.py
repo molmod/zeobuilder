@@ -21,7 +21,7 @@
 
 from elementary import Edit
 from mixin import ambiguous, TextViewMixin
-from molmod.data import periodic
+from molmod.data.periodic import periodic
 from zeobuilder.conversion import express_measure
 import popups
 

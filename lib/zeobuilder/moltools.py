@@ -24,7 +24,7 @@ import numpy
 from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 
-from molmod.data import periodic
+from molmod.data.periodic import periodic
 from molmod.graphs import Graph
 from molmod.molecules import Molecule
 from molmod.molecular_graphs import MolecularGraph
@@ -88,15 +88,17 @@ def create_molecule(selected_nodes):
 def create_molecular_graph(selected_nodes):
     molecule = create_molecule(selected_nodes)
 
-    bonds = list(
+    pairs = set(
         frozenset([
             molecule.atoms.index(bond.children[0].target),
-            molecule.atoms.index(bond.children[1].target)
+            molecule.atoms.index(bond.children[1].target),
         ]) for bond in yield_bonds(selected_nodes)
         if bond.children[0].target in molecule.atoms and
             bond.children[1].target in molecule.atoms
     )
-    graph = MolecularGraph(molecule, pairs=bonds)
+    graph = MolecularGraph(pairs, molecule.numbers)
+    graph.init_nodes()
+    graph.molecule = molecule
     return graph
 
 

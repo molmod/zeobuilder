@@ -35,7 +35,8 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.data import periodic, bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+from molmod.data.periodic import periodic
+from molmod.data.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
 from molmod.graphs import MatchDefinitionError, ExactMatchDefinition, RingMatchDefinition, MatchGenerator
 from molmod.vectors import random_orthonormal

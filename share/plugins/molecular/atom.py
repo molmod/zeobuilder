@@ -36,7 +36,7 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 
-from molmod.data import periodic
+from molmod.data.periodic import periodic
 from molmod.unit_cell import UnitCell
 from molmod.binning import PositionedObject, SparseBinnedObjects, IntraAnalyseNeighboringObjects
 from molmod.clusters import Cluster, ClusterFactory
