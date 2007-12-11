@@ -23,6 +23,8 @@ from tools import Tool
 
 from zeobuilder import context
 
+from molmod.transformations import Rotation
+
 from OpenGL.GLUT import glutInit
 from OpenGL.GLU import *
 from OpenGL.GL import *
@@ -163,6 +165,13 @@ class VisBackend(object):
 glutInit([]) # FIXME, due to unittests
 
 
+def gl_apply(transformation):
+    glMultMatrixf(numpy.array(transformation.get_matrix(), order='FORTRAN'))
+
+def gl_apply_inverse(transformation):
+    glMultMatrixf(numpy.array(transformation.get_inverse_matrix(), order='FORTRAN'))
+
+
 class VisBackendOpenGL(VisBackend):
     select_buffer_size = 4096
 
@@ -233,7 +242,8 @@ class VisBackendOpenGL(VisBackend):
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
         # Move to eye position (reverse)
-        camera.eye.gl_apply_inverse()
+        #camera.eye.gl_apply_inverse()
+        glTranslate(*(-camera.eye.t))
         glTranslatef(0.0, 0.0, -znear)
         # Draw the rotation center, only when realy drawing objects:
         if selection_box is None:
@@ -241,10 +251,12 @@ class VisBackendOpenGL(VisBackend):
             glShadeModel(GL_SMOOTH)
             self.call_list(scene.rotation_center_list)
         # Now rotate to the model frame and move back to the model center (reverse)
-        camera.rotation.gl_apply_inverse()
+        gl_apply_inverse(camera.rotation)
         # Then bring the rotation center at the right place (reverse)
-        camera.rotation_center.gl_apply_inverse()
-        scene.model_center.gl_apply_inverse()
+        #camera.rotation_center.gl_apply_inverse()
+        glTranslate(*(-camera.rotation_center.t))
+        #scene.model_center.gl_apply_inverse()
+        glTranslate(*(-scene.model_center.t))
 
         scene.draw()
 
@@ -313,7 +325,11 @@ class VisBackendOpenGL(VisBackend):
         glRotate(angle, x, y, z)
 
     def transform(self, transformation):
-        transformation.gl_apply()
+        if not isinstance(transformation, Rotation):
+            glTranslate(*transformation.t)
+        else:
+            gl_apply(transformation)
+            #glMultMatrixf(numpy.array(transformation.get_matrix(), order='FORTRAN'))
 
     def pop_matrix(self):
         glPopMatrix()
