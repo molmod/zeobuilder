@@ -23,8 +23,9 @@ from tools import Tool
 
 from zeobuilder import context
 
-from molmod.transformations import Rotation
+from molmod.transformations import Translation, Rotation
 
+import OpenGL
 from OpenGL.GLUT import glutInit
 from OpenGL.GLU import *
 from OpenGL.GL import *
@@ -166,10 +167,25 @@ glutInit([]) # FIXME, due to unittests
 
 
 def gl_apply(transformation):
-    glMultMatrixf(numpy.array(transformation.get_matrix(), order='FORTRAN'))
+    # OpenGL uses an algebra with row vectors instead of column vectors.
+    a = numpy.zeros((4,4), float)
+    if isinstance(transformation, Translation):
+        a[3,:3] = transformation.t
+    if isinstance(transformation, Rotation):
+        a[:3,:3] = transformation.r.transpose()
+    a[3,3] = 1
+    glMultMatrixf(a)
+
 
 def gl_apply_inverse(transformation):
-    glMultMatrixf(numpy.array(transformation.get_inverse_matrix(), order='FORTRAN'))
+    # OpenGL uses an algebra with row vectors instead of column vectors.
+    a = numpy.zeros((4,4), float)
+    if isinstance(transformation, Translation):
+        a[3,:3] = numpy.dot(-transformation.t, transformation.r)
+    if isinstance(transformation, Rotation):
+        a[:3,:3] = transformation.r
+    a[3,3] = 1
+    glMultMatrixf(a)
 
 
 class VisBackendOpenGL(VisBackend):
