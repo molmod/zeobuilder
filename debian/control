@@ -9,7 +9,7 @@ Standards-Version: 3.7.2
 Package: python-zeobuilder
 Architecture: all
 Depends: ${python:Depends}, ${shlibs:Depends}, 
- python-molmod (>= 0.001), python-ccio (>= 0.001), python-comthread (>= 0.001),
+ python-molmod (>= 0.001), python-comthread (>= 0.001),
  python-iterative (>= 0.001), python-conscan (>= 0.001), 
  python-gtk2 (>= 2.8.6), python-opengl (>= 2.0.1), python-numpy (>= 1.0.1),
  python-gtkglext1 (>= 1.1.0)

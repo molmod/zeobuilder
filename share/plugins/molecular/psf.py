@@ -21,7 +21,7 @@
 
 import numpy
 
-from ccio.psf import PSFFile
+from molmod.io.psf import PSFFile
 
 from zeobuilder import context
 from zeobuilder.filters import DumpFilter, FilterError
