@@ -22,44 +22,68 @@
 from zeobuilder import context
 from zeobuilder.gui.simple import ok_error
 
-import comthread
-
-import gobject, gtk
-
-import os, socket, signal
+import gobject, gtk, os, subprocess, cPickle, threading
 
 
-__all__ = ["ComThread", "ChildProcessDialog"]
+__all__ = ["ChildProcessDialog"]
 
 
-#class ComThread(comthread.VerboseComThread, gobject.GObject):
-class ComThread(comthread.ComThread, gobject.GObject):
-    def __init__(self, conn):
-        #comthread.VerboseComThread.__init__(self, conn, "ZEOBUILDER")
-        comthread.ComThread.__init__(self, conn)
-        gobject.GObject.__init__(self)
-        self.stack = []
+
+
+class BaseListenThread(threading.Thread):
+    def __init__(self, f, pickle=False):
+        self.f = f
+        self.pickle = pickle
+        threading.Thread.__init__(self)
+        self.error = None
+    
+    def on_receive(self):
+        raise NotImplementedError
+    
+    def on_done(self):
+        raise NotImplementedError
 
     def run(self):
-        try:
-            #comthread.VerboseComThread.run(self)
-            comthread.ComThread.run(self)
-        except comthread.ProtocolError:
-            gobject.idle_add(self.emit, "on-protocol-error")
+        if self.pickle:
+            unpickler = cPickle.Unpickler(self.f)
+            while True:
+                try:
+                    self.on_receive(unpickler.load())
+                except EOFError:
+                    break
+                except cPickle.UnpicklingError, error:
+                    self.error = error
+        else:
+            while True:
+                line = self.f.readline()
+                if len(line) == 0:
+                    break
+                self.on_receive(line)
+        self.on_done()
 
-    def on_received(self, instance):
-        self.stack.append(instance)
-        gobject.idle_add(self.emit, "on-received")
+
+class CustomListenThread(BaseListenThread):
+    def __init__(self, f, pickle, on_receive, on_done=None):
+        self.on_receive = on_receive
+        if on_done is not None:
+            self.on_done = on_done
+        BaseListenThread.__init__(self, f, pickle)
+    
+    def on_done(self):
+        pass
 
 
-    def on_finished(self, instance):
-        self.stack.append(instance)
-        gobject.idle_add(self.emit, "on-finished")
-
-
-gobject.signal_new("on-received", ComThread, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
-gobject.signal_new("on-finished", ComThread, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
-gobject.signal_new("on-protocol-error", ComThread, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+class ErrorListenThread(BaseListenThread):
+    def __init__(self, f):
+        BaseListenThread.__init__(self, f)
+        self.lines = []
+    
+    def on_receive(self, data):
+        print "CHILD STDERR:", data[:-1]
+        self.lines.append(data)
+    
+    def on_done(self):
+        pass
 
 
 class ChildProcessDialog(object):
@@ -69,91 +93,38 @@ class ChildProcessDialog(object):
         self.buttons = buttons
         self.response_active = False
 
-    def cleanup(self, kill=False, response=gtk.RESPONSE_DELETE_EVENT):
-        if not self.ended:
-            self.ended = True
-            if kill:
-                #print "ZEOBUILDER, kill child process"
-                os.kill(self.pid, signal.SIGKILL)
-            else:
-                #print "ZEOBUILDER, wait for child process"
-                os.waitpid(self.pid, 0)
-            self.response_active = True
-            self.dialog.response(response)
-            self.dialog.hide()
-            if self.connection is not None:
-                self.connection.close()
-            self.socket.close()
-            if os.path.exists(self.socket_name):
-                os.remove(self.socket_name)
-            for handler in self.handlers:
-                self.com_thread.disconnect(handler)
-            #print "ZEOBUILDER, end of cleanup"
-            del self.socket_name
-            del self.pid
-            del self.socket
-            del self.connection
-
-
-    def run(self, executable, input_instance, auto_close):
+    def run(self, args, input_data, auto_close, pickle=False):
         self.response_active = False
         self.auto_close = auto_close
+        self.error_lines = []
 
         for button in self.buttons:
             button.set_sensitive(False)
 
-        class AcceptTimeOut(Exception):
-            pass
-
-        def sigalrm_handler(signal, frame):
-            raise AcceptTimeOut
-
-        self.socket_name = "ZEOBUILDER-DIALOG-%i" % os.getpid()
-        self.socket = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        self.socket.bind(self.socket_name)
-        self.socket.listen(1)
-        self.connection = None
-        result = None
-
-
         #print "ZEOBUILDER, spawn process"
-        self.pid = os.spawnv(os.P_NOWAIT, executable, [executable, self.socket_name])
-        self.ended = False
-        #print "ZEOBUILDER, wait 5 seconds for connection"
-        #signal.signal(signal.SIGALRM, sigalrm_handler)
-        #signal.alarm(5)
-        try:
-            self.connection, addr = self.socket.accept()
-        except AcceptTimeOut:
-            #print "ZEOBUILDER, no connection from child in five seconds."
-            ok_error("<b><big>The child process did not connect to Zeobuilder within 5 seconds.</big></b>\n\nInform the authors of zeobuilder if you did not expect this to happen.")
-            self.cleanup(kill=True)
-            return None
-        #print "ZEOBUILDER, child connected"
-        #signal.alarm(0)
-        #signal.signal(signal.SIGALRM, signal.SIG_IGN)
-
-        #print "ZEOBUILDER, creating comthread"
-        self.com_thread = ComThread(self.connection)
-        #print "ZEOBUILDER, connecting signal handlers"
-        self.handlers = []
-        self.handlers.append(self.com_thread.connect("on-received", self.on_received))
-        self.handlers.append(self.com_thread.connect("on-finished", self.on_finished))
-        self.handlers.append(self.com_thread.connect("on-protocol-error", self.on_protocol_error))
-
-        self.com_thread.start()
-        #print "ZEOBUILDER, send the input to the child process"
-        self.com_thread.send(input_instance)
+        self.process = subprocess.Popen(
+            args, bufsize=0, stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        if pickle:
+            cPickle.dump(input_data, self.process.stdin, -1)
+        else:
+            self.process.stdin.write(input_data)
+        self.process.stdin.close()
+        
+        #print "ZEOBUILDER, fire communication thread"
+        self.out_listen_thread = CustomListenThread(self.process.stdout, pickle, self.on_receive, self.on_done)
+        self.out_listen_thread.start()
+        self.err_listen_thread = ErrorListenThread(self.process.stderr)
+        self.err_listen_thread.start()
 
         #print "ZEOBUILDER, run the dialog"
         self.dialog.set_transient_for(context.parent_window)
         result = self.response_loop()
         self.dialog.hide()
 
-        #print "ZEOBUILDER, join the thread"
-        self.com_thread.join()
-        self.cleanup(kill=False)
-        del self.ended
+        #print "ZEOBUILDER, wait for output thread to finnish"
+        self.out_listen_thread.join()
 
         return result
 
@@ -163,37 +134,32 @@ class ChildProcessDialog(object):
             response = self.dialog.run()
         return response
 
-    def on_received(self, com_thread):
-        self.handle_message(com_thread.stack.pop(0))
-
-    def on_finished(self, com_thread):
-        instance = com_thread.stack.pop(0)
+    def on_receive(self, data):
+        raise NotImplementedError
+        
+    def on_done(self):
+        #print "ZEOBUILDER, close stuff down"
         self.response_active = True
         for button in self.buttons:
             button.set_sensitive(True)
-        if isinstance(instance, comthread.Failure):
-            self.cleanup(kill=False)
+        
+        self.process.stdout.close()
+        #print "ZEOBUILDER, wait for error thread to finnish"
+        self.err_listen_thread.join()
+        self.process.stderr.close()
+        retcode = self.process.wait()
+        if retcode != 0:
             ok_error(
-                "An exception occured in the child process.",
-                instance.message,
-                line_wrap=False
+                "An error occured in the child process.", 
+                "".join(self.err_listen_thread.lines)
             )
-        else:
-            self.handle_done(instance)
-            if self.auto_close:
-                self.cleanup(kill=False, response=gtk.RESPONSE_OK)
-
-
-    def on_protocol_error(self, com_thread):
-        self.cleanup(kill=True)
-        ok_error(
-            "Invalid data was received from the client process.",
-            "Inform the authors of zeobuilder if you did not expect this to happen."
-        )
-
-    def handle_message(self, message):
-        pass
-
-    def handle_done(self, message):
-        pass
+        if self.out_listen_thread.error is not None:
+            ok_error(
+                "An error occured in the communication with the child process.",
+                str(self.out_listen_thread.error)
+            )
+    
+        if self.auto_close:
+            self.dialog.response(gtk.RESPONSE_OK)
+        return True
 

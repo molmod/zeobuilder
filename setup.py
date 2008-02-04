@@ -55,7 +55,7 @@ setup(
             glob.glob('share/plugins/%s/*.glade' % plugin)
         ) for plugin
         in ["basic", "molecular", "builder", "sbart"]
-    ],
+    ] + glob.glob("share/helpers/*"),
     packages=[
         'zeobuilder',
         'zeobuilder.actions',

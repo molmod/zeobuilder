@@ -223,7 +223,10 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
         self.last_step = 0
         self.status = None
 
-        result = ChildProcessDialog.run(self, "/usr/bin/iterative", self.minimize, auto_close)
+        result = ChildProcessDialog.run(self, 
+            [context.get_share_file("helpers/iterative")], 
+            self.minimize, auto_close, pickle=True
+        )
 
         # just to avoid confusion
         del self.minimize
@@ -267,14 +270,15 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
                 frame.invalidate_transformation_list()
             context.application.main.drawing_area.queue_draw()
 
-    def handle_message(self, instance):
+    def on_receive(self, instance):
         if isinstance(instance, iterative.alg.Status):
             self.status = instance
             self.conditional_update_gui()
         else:
             self.state_indices = instance
 
-    def handle_done(self, instance):
+    def on_done(self):
+        ChildProcessDialog.on_done(self)
         self.update_gui()
 
 
@@ -371,7 +375,6 @@ class OptimizeSprings(ImmediateWithMemory):
             return
 
         self.parameters.auto_close_report_dialog = False
-
 
     def do(self):
         cache = context.application.cache

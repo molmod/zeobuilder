@@ -361,21 +361,27 @@ class ConscanReportDialog(ChildProcessDialog):
     def run(self, inp, auto_close):
         self.clear_gui()
         self.connections = []
-        if ChildProcessDialog.run(self, "/usr/bin/conscan", inp, auto_close) == gtk.RESPONSE_OK:
+        response = ChildProcessDialog.run(self, 
+            [context.get_share_file("helpers/conscan")], 
+            inp, auto_close, pickle=True
+        )
+        if response == gtk.RESPONSE_OK:
             result = self.connections
             del self.connections
             return result
 
-    def handle_message(self, instance):
+    def on_receive(self, instance):
         if isinstance(instance, ProgressMessage):
             pb = self.progress_bars[instance.label]
             if instance.maximum > 0:
+                #print instance.label, "%i / %i" % (instance.progress, instance.maximum)
                 pb.set_text("%i / %i" % (instance.progress, instance.maximum))
                 fraction = float(instance.progress)/instance.maximum
                 if fraction > 1: fraction = 1
                 elif fraction < 0: fraction = 0
                 pb.set_fraction(float(instance.progress)/instance.maximum)
             else:
+                #print instance.label, "- / -"
                 pb.set_text("- / -")
                 pb.set_fraction(0.0)
         elif isinstance(instance, Connection):
