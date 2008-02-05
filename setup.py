@@ -48,6 +48,7 @@ setup(
             "share/zeobuilder.glade", "share/zeobuilder.svg",
             "share/no_action.svg", "share/reference.svg"
         ]),
+        ('share/zeobuilder/helpers', glob.glob("share/helpers/*")),
     ] + [
         ('share/zeobuilder/plugins/%s' % plugin,
             glob.glob('share/plugins/%s/*.py' % plugin) +
@@ -55,7 +56,7 @@ setup(
             glob.glob('share/plugins/%s/*.glade' % plugin)
         ) for plugin
         in ["basic", "molecular", "builder", "sbart"]
-    ] + glob.glob("share/helpers/*"),
+    ],
     packages=[
         'zeobuilder',
         'zeobuilder.actions',
