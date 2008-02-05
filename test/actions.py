@@ -544,7 +544,6 @@ class CoreActions(ApplicationTestCase):
             TranslateDialog(parameters)
         self.run_test_application(fn)
 
-
     def test_reflection_dialog(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
@@ -763,7 +762,8 @@ class MolecularActions(ApplicationTestCase):
     def test_auto_connect_parameters_tpa(self):
         def fn():
             context.application.model.file_open("input/tpa.zml")
-            context.application.main.select_nodes([context.application.model.universe])
+            universe = context.application.model.universe
+            context.application.main.select_nodes([universe])
             parameters = Parameters()
             parameters.number1 = 6
             parameters.number2 = 6
@@ -772,6 +772,29 @@ class MolecularActions(ApplicationTestCase):
             AutoConnectParameters = context.application.plugins.get_action("AutoConnectParameters")
             self.assert_(AutoConnectParameters.analyze_selection(parameters))
             AutoConnectParameters(parameters)
+
+            Bond = context.application.plugins.get_node("Bond")
+            num_bonds = sum(isinstance(node,Bond) for node in universe.children)
+            self.assertEqual(num_bonds,2*4)
+        self.run_test_application(fn)
+
+    def test_auto_connect_parameters_tpa2(self):
+        def fn():
+            context.application.model.file_open("input/tpa.zml")
+            universe = context.application.model.universe
+            context.application.main.select_nodes([universe] + universe.children)
+            parameters = Parameters()
+            parameters.number1 = 6
+            parameters.number2 = 6
+            parameters.distance = 3.0
+            parameters.bond_type = BOND_SINGLE
+            AutoConnectParameters = context.application.plugins.get_action("AutoConnectParameters")
+            self.assert_(AutoConnectParameters.analyze_selection(parameters))
+            AutoConnectParameters(parameters)
+
+            Bond = context.application.plugins.get_node("Bond")
+            num_bonds = sum(isinstance(node,Bond) for node in universe.children)
+            self.assertEqual(num_bonds,2*4)
         self.run_test_application(fn)
 
     def test_auto_connect_parameters_lau(self):

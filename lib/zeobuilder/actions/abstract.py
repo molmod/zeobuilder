@@ -120,6 +120,7 @@ class AutoConnectMixin(object):
     def do(self, grid_size):
         cache = context.application.cache
         parent = cache.common_root
+        nodes = cache.nodes_without_indirect_children
 
         unit_cell = None
         if isinstance(parent, UnitCell):
@@ -127,7 +128,7 @@ class AutoConnectMixin(object):
 
         binned_nodes = SparseBinnedObjects(
             YieldPositionedChildren(
-                cache.nodes, parent, True,
+                nodes, parent, True,
                 lambda node: self.allow_node(node)
             )(),
             grid_size
