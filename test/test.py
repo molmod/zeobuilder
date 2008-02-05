@@ -19,10 +19,12 @@
 # --
 
 
-import sys, os
-sys.path.insert(0, "../lib")
+import sys, glob, os
+retcode = os.system("(cd ..; python setup.py build)")
+if retcode != 0: sys.exit(retcode)
+sys.path.insert(0, glob.glob("../build/lib*")[0])
 
-if not os.path.exists("output"):
+if not os.path.isdir("output"):
     os.mkdir("output")
 
 from zeobuilder import context
