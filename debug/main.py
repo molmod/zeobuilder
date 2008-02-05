@@ -19,12 +19,15 @@
 #
 # --
 
-import pygtk, sys, os, optparse
-pygtk.require('2.0')
-sys.path.insert(0, "../lib")
+import sys, glob, os
+retcode = os.system("(cd ..; python setup.py build)")
+if retcode != 0: sys.exit(retcode)
+sys.path.insert(0, glob.glob("../build/lib*")[0])
 
 from zeobuilder import context
 context.share_dirs = ["../share"]
+
+import pygtk, optparse
 
 
 def init_fn_new():
