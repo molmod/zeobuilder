@@ -104,7 +104,7 @@ class TetraCoordination(Immediate):
                         yield tetra
 
         coordinated_tetra = [[] for i in xrange(5)]
-        for tetra in yield_all_tetra(context.application.cache.nodes_without_indirect_children):
+        for tetra in yield_all_tetra(context.application.cache.nodes_without_children):
             coordination = 0
             for bridging in tetra.yield_neighbours():
                 if bridging.number > 6:

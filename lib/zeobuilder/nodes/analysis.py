@@ -74,7 +74,7 @@ def list_parents(nodes):
             result.append(node.parent)
     return result
 
-def list_without_indirect_children(nodes_by_parent, traces_by_parent):
+def list_without_children(nodes_by_parent, traces_by_parent):
     for parent, trace in traces_by_parent.iteritems():
         for other_parent in nodes_by_parent.keys():
             if other_parent != parent and (other_parent in trace):

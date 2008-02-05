@@ -120,7 +120,7 @@ class AutoConnectMixin(object):
     def do(self, grid_size):
         cache = context.application.cache
         parent = cache.common_root
-        nodes = cache.nodes_without_indirect_children
+        nodes = cache.nodes_without_children
 
         unit_cell = None
         if isinstance(parent, UnitCell):

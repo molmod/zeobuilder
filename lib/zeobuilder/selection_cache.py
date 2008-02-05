@@ -215,14 +215,14 @@ class SelectionCache(gobject.GObject):
     def get_nodes_by_parent(self):
         return analysis.list_by_parent(self.nodes)
 
-    def get_nodes_without_indirect_children(self):
+    def get_nodes_without_children(self):
         #print "DEBUG self.nodes_by_parent:", self.nodes_by_parent
         #print "DEBUG self.traces_by_parent:", self.traces_by_parent
-        return analysis.list_without_indirect_children(self.nodes_by_parent, self.traces_by_parent)
+        return analysis.list_without_children(self.nodes_by_parent, self.traces_by_parent)
 
-    def get_some_nodes_without_indirect_children_fixed(self):
-        #print "DEBUG self.nodes_without_indirect_children:", self.nodes_without_indirect_children
-        return analysis.some_fixed(self.nodes_without_indirect_children)
+    def get_some_nodes_without_children_fixed(self):
+        #print "DEBUG self.nodes_without_children:", self.nodes_without_children
+        return analysis.some_fixed(self.nodes_without_children)
 
     def get_common_parent(self):
         return analysis.common_parent(self.parents)

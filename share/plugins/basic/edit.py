@@ -164,12 +164,12 @@ class Cut(Immediate):
         # B) validating
         cache = context.application.cache
         if len(cache.nodes) == 0: return False
-        if cache.some_nodes_without_indirect_children_fixed: return False
+        if cache.some_nodes_without_children_fixed: return False
         # C) passed all tests:
         return True
 
     def do(self):
-        source = copy.copy(context.application.cache.nodes_without_indirect_children)
+        source = copy.copy(context.application.cache.nodes_without_children)
         copy_to_clipboard(source)
         delete(source)
 
@@ -187,12 +187,12 @@ class Copy(Immediate):
         # B) validating
         cache = context.application.cache
         if len(cache.nodes) == 0: return False
-        if cache.some_nodes_without_indirect_children_fixed: return False
+        if cache.some_nodes_without_children_fixed: return False
         # C) passed all tests:
         return True
 
     def do(self):
-        source = copy.copy(context.application.cache.nodes_without_indirect_children)
+        source = copy.copy(context.application.cache.nodes_without_children)
         copy_to_clipboard(source)
 
 
@@ -238,12 +238,12 @@ class Delete(Immediate):
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
         if len(context.application.cache.nodes) == 0: return False
-        if context.application.cache.some_nodes_without_indirect_children_fixed: return False
+        if context.application.cache.some_nodes_without_children_fixed: return False
         # C) passed all tests:
         return True
 
     def do(self):
-        dupes = copy.copy(context.application.cache.nodes_without_indirect_children)
+        dupes = copy.copy(context.application.cache.nodes_without_children)
         delete(dupes)
 
 
