@@ -75,7 +75,7 @@ class FileSaveAs(Immediate):
 
 class FileImport(Immediate):
     description = "Import a file in the current model"
-    menu_info = MenuInfo("default/_File:impexp", "_Import", ord("i"), order=(0, 0, 1, 0))
+    menu_info = MenuInfo("default/_File:impexp", "_Import", order=(0, 0, 1, 0))
     repeatable = False
     authors = [authors.toon_verstraelen]
 
@@ -112,7 +112,7 @@ class FileImport(Immediate):
 
 class FileExport(Immediate):
     description = "Export the selection to a file"
-    menu_info = MenuInfo("default/_File:impexp", "_Export", ord("e"), order=(0, 0, 1, 1))
+    menu_info = MenuInfo("default/_File:impexp", "_Export", order=(0, 0, 1, 1))
     repeatable = False
     authors = [authors.toon_verstraelen]
 
