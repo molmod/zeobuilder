@@ -36,10 +36,10 @@ class BaseListenThread(threading.Thread):
         self.pickle = pickle
         threading.Thread.__init__(self)
         self.error = None
-    
+
     def on_receive(self):
         raise NotImplementedError
-    
+
     def on_done(self):
         raise NotImplementedError
 
@@ -48,18 +48,27 @@ class BaseListenThread(threading.Thread):
             unpickler = cPickle.Unpickler(self.f)
             while True:
                 try:
-                    self.on_receive(unpickler.load())
+                    obj = unpickler.load()
                 except EOFError:
                     break
-                except cPickle.UnpicklingError, error:
+                except Exception, error:
                     self.error = error
+                    break
+                gtk.gdk.threads_enter()
+                self.on_receive(obj)
+                gtk.gdk.threads_leave()
         else:
             while True:
                 line = self.f.readline()
                 if len(line) == 0:
                     break
+                gtk.gdk.threads_enter()
                 self.on_receive(line)
+                gtk.gdk.threads_leave()
+        gtk.gdk.threads_enter()
         self.on_done()
+        gtk.gdk.threads_leave()
+        print "END THREAD", self
 
 
 class CustomListenThread(BaseListenThread):
@@ -68,7 +77,7 @@ class CustomListenThread(BaseListenThread):
         if on_done is not None:
             self.on_done = on_done
         BaseListenThread.__init__(self, f, pickle)
-    
+
     def on_done(self):
         pass
 
@@ -77,11 +86,11 @@ class ErrorListenThread(BaseListenThread):
     def __init__(self, f):
         BaseListenThread.__init__(self, f)
         self.lines = []
-    
+
     def on_receive(self, data):
         print "CHILD STDERR:", data[:-1]
         self.lines.append(data)
-    
+
     def on_done(self):
         pass
 
@@ -101,7 +110,7 @@ class ChildProcessDialog(object):
         for button in self.buttons:
             button.set_sensitive(False)
 
-        #print "ZEOBUILDER, spawn process"
+        print "ZEOBUILDER, spawn process"
         self.process = subprocess.Popen(
             args, bufsize=0, stdin=subprocess.PIPE,
             stdout=subprocess.PIPE, stderr=subprocess.PIPE
@@ -111,20 +120,23 @@ class ChildProcessDialog(object):
         else:
             self.process.stdin.write(input_data)
         self.process.stdin.close()
-        
-        #print "ZEOBUILDER, fire communication thread"
+
+        print "ZEOBUILDER, fire communication thread"
         self.out_listen_thread = CustomListenThread(self.process.stdout, pickle, self.on_receive, self.on_done)
         self.out_listen_thread.start()
         self.err_listen_thread = ErrorListenThread(self.process.stderr)
         self.err_listen_thread.start()
 
-        #print "ZEOBUILDER, run the dialog"
+        print "ZEOBUILDER, run the dialog"
         self.dialog.set_transient_for(context.parent_window)
         result = self.response_loop()
         self.dialog.hide()
 
-        #print "ZEOBUILDER, wait for output thread to finnish"
+        print "ZEOBUILDER, wait for threads to finnish"
         self.out_listen_thread.join()
+        self.err_listen_thread.join()
+        print "THREADS ENDED"
+        print "result", result
 
         return result
 
@@ -132,34 +144,35 @@ class ChildProcessDialog(object):
         response = self.dialog.run()
         while not self.response_active:
             response = self.dialog.run()
+            print "DIALOG CLOSED", response
         return response
 
     def on_receive(self, data):
         raise NotImplementedError
-        
+
     def on_done(self):
-        #print "ZEOBUILDER, close stuff down"
+        print "ZEOBUILDER, close stuff down"
         self.response_active = True
         for button in self.buttons:
             button.set_sensitive(True)
-        
+
+        os.kill(self.process.pid, 9)
         self.process.stdout.close()
         #print "ZEOBUILDER, wait for error thread to finnish"
-        self.err_listen_thread.join()
         self.process.stderr.close()
         retcode = self.process.wait()
-        if retcode != 0:
-            ok_error(
-                "An error occured in the child process.", 
-                "".join(self.err_listen_thread.lines)
-            )
         if self.out_listen_thread.error is not None:
             ok_error(
                 "An error occured in the communication with the child process.",
                 str(self.out_listen_thread.error)
             )
-    
+        elif retcode != 0:
+            ok_error(
+                "An error occured in the child process.",
+                "".join(self.err_listen_thread.lines)
+            )
+
         if self.auto_close:
+            print "ZEOBUILDER, auto_close dialog"
             self.dialog.response(gtk.RESPONSE_OK)
-        return True
 

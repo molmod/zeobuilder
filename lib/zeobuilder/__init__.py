@@ -33,7 +33,7 @@ class Context(object):
             self.user_dir
         ]
         self.config_filename = os.path.join(self.user_dir, "settings")
-    
+
     def get_share_file(self, filename):
         for dir in self.share_dirs:
             result = os.path.join(dir, filename)
