@@ -527,9 +527,9 @@ class CoreActions(ApplicationTestCase):
             parameters.complete.set_rotation_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False)
             parameters.complete = Translation()
             parameters.complete.t = numpy.array([2.0, 4.1, -1.0], float)
-            RotateAroundCenterDialog = context.application.plugins.get_action("RotateAroundCenterDialog")
-            self.assert_(RotateAroundCenterDialog.analyze_selection(parameters))
-            RotateAroundCenterDialog(parameters)
+            RotateAboutAxisDialog = context.application.plugins.get_action("RotateAboutAxisDialog")
+            self.assert_(RotateAboutAxisDialog.analyze_selection(parameters))
+            RotateAboutAxisDialog(parameters)
         self.run_test_application(fn)
 
     def test_translate_dialog(self):

@@ -153,19 +153,19 @@ class RotateDialog(ImmediateWithMemory):
         primitive.Transform(context.application.cache.node, self.parameters.rotation, after=False)
 
 
-class RotateAroundCenterDialog(ImmediateWithMemory):
+class RotateAboutAxisDialog(ImmediateWithMemory):
     description = "Apply rotation"
-    menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "Rotate objects around c_enter", order=(0, 4, 1, 2, 1, 1))
+    menu_info = MenuInfo("default/_Object:tools/_Transform:dialogs", "Rotate objects about axis", order=(0, 4, 1, 2, 1, 1))
     authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
-        "Rotation around Center",
+        "Rotation about axis",
         fields.group.Notebook([
             ("Center", fields.composed.Translation(
                 label_text="Rotation center t",
             )),
             ("Rotation", fields.composed.Rotation(
-                label_text="Rotate around axis n",
+                label_text="Rotation axis n",
             ))
         ]),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
@@ -1030,7 +1030,7 @@ actions = {
     "TransformationReset": TransformationReset,
     "TransformationInvert": TransformationInvert,
     "RotateDialog": RotateDialog,
-    "RotateAroundCenterDialog": RotateAroundCenterDialog,
+    "RotateAboutAxisDialog": RotateAboutAxisDialog,
     "TranslateDialog": TranslateDialog,
     "ReflectionDialog": ReflectionDialog,
     "RoundRotation": RoundRotation,
