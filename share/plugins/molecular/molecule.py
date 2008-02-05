@@ -738,12 +738,7 @@ class FrameMolecules(Immediate):
         return True
 
     def calc_new_positions(self, atoms, graph, parent):
-
         positions = dict((atom, atom.get_frame_up_to(parent).t) for atom in atoms)
-
-        Universe = context.application.plugins.get_node("Universe")
-        if not isinstance(parent, Universe): positions
-        if (parent.cell_active == False).all(): positions
 
         # find the atom that is the closest to the origin
         closest = atoms[0]

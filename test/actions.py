@@ -958,6 +958,29 @@ class MolecularActions(ApplicationTestCase):
                         self.assert_(bond.length < 2*angstrom)
         self.run_test_application(fn)
 
+    def test_frame_molecules2(self):
+        def fn():
+            context.application.model.file_open("input/ethane-ethane-pos.xyz")
+            universe = context.application.model.universe
+
+            context.application.action_manager.record_primitives = False
+            context.application.main.select_nodes(universe.children)
+
+            Frame = context.application.plugins.get_action("Frame")
+            self.assert_(Frame.analyze_selection())
+            Frame()
+
+            context.application.main.select_nodes(universe.children)
+            AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
+            self.assert_(AutoConnectPhysical.analyze_selection())
+            AutoConnectPhysical()
+
+            context.application.main.select_nodes(universe.children)
+            FrameMolecules = context.application.plugins.get_action("FrameMolecules")
+            self.assert_(FrameMolecules.analyze_selection())
+            FrameMolecules()
+        self.run_test_application(fn)
+
     def test_select_bonded_neighbors(self):
         def fn():
             context.application.model.file_open("input/springs.zml")
