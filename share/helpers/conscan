@@ -26,11 +26,13 @@ from conscan import TriangleScanner, PairScanner
 
 
 inp = cPickle.load(sys.stdin)
-pickler = cPickle.Pickler(sys.stdout,-1)
+
+def send(obj):
+    cPickle.dump(obj,sys.stdout,-1)
 
 if inp["allow_rotations"]:
     scanner = TriangleScanner(
-        pickler.dump,
+        send,
         inp["geometry1"],
         inp["geometry2"],
         inp["action_radius"],
@@ -39,7 +41,7 @@ if inp["allow_rotations"]:
     )
 else:
     scanner = PairScanner(
-        pickler.dump,
+        send,
         inp["geometry1"],
         inp["geometry2"],
         inp["action_radius"],

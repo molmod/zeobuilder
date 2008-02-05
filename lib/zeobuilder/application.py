@@ -46,8 +46,8 @@ class Application(object):
 
         self.main.window.show_all()
         import gtk, gobject
+        #gobject.threads_init()
         gobject.idle_add(self.after_gui)
-        gtk.gdk.threads_init()
         gtk.main()
 
         self.configuration.save_to_file()

@@ -41,7 +41,7 @@ from molmod.transformations import Complete, Translation
 
 import iterative
 
-import numpy, gtk
+import numpy, gtk, sys
 
 import math, copy, time
 
@@ -273,7 +273,10 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
     def on_receive(self, instance):
         if isinstance(instance, iterative.alg.Status):
             self.status = instance
-            self.conditional_update_gui()
+            if self.status.progress < 1:
+                self.conditional_update_gui()
+            else:
+                self.update_gui()
         else:
             self.state_indices = instance
 

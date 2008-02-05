@@ -24,13 +24,12 @@ import sys, cPickle
 
 algo = cPickle.load(sys.stdin)
 algo.root_expression.parse_input()
-print "qsmkfjq"
-pickler = cPickle.Pickler(sys.stdout, -1)
-pickler.dump(algo.root_expression.get_state_indices().tolist())
 
+msg = tuple(algo.root_expression.get_state_indices().tolist())
+cPickle.dump(msg,sys.stdout,-1)
 
-def debug(msg):
-    pickler.clear_memo()
-    pickler.dump(msg)
-algo.run(debug)
+def send(msg):
+    cPickle.dump(msg,sys.stdout,-1)
+
+algo.run(send)
 
