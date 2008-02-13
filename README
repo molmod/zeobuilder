@@ -7,7 +7,7 @@ Contents of this README File:
  * How to install
  * How to get technical support
  * Become a registered user
- * Authors
+ * Contact information
 
 
 Short description
@@ -20,8 +20,8 @@ From the users point-of-view, we focus and user-friendly and efficient program,
 while from the developers point-of-view, we try to make it easy to extend
 Zeobuilder with new features.
 
-More information about Zeobuilder can be found on the Zeobuilder website:
-https://molmod.UGent.be/zeobuilder
+More information about Zeobuilder can be found on the CMM Code website:
+https://molmod.UGent.be/code/
 
 
 License
@@ -61,14 +61,14 @@ How to install
 --------------
 
 There are several ways to install Zeobuilder, which are all documented
-at the homepage: https://molmod.UGent.be/zeobuilder
+at the homepage: https://molmod.UGent.be/code/
 
 
 How to get technical support
 ----------------------------
 
-Technical support is availlable for all registered Zeobuilder users. All
-information can be found at: https://molmod.UGent.be/zeobuilder
+Technical support is availlable for all registered CMM Code users. All
+information can be found at: https://molmod.UGent.be/code/
 
 
 Become a registered user
@@ -77,29 +77,44 @@ Become a registered user
 There are 5 good reasons to become a registered user:
 
  1.  Through your registration, we can prove that people are really using
- Zeobuilder and the related packages for their scientific work. This facilitates
- the fund-raising process and guarantees the continuity of this project.
+ softwarde developed at the Center for Molecular Modeling for their 
+ scientific work. This facilitates the fund-raising process and guarantees 
+ the continuity of these projects.
 
- 2. It blocks spammers from unauthorized access to all online Zeobuilder
+ 2. It blocks spammers from unauthorized access to all online CMM Code
  services.
  
- 3. A registered user can subscribe to the Zeobuilder mailing lists.
+ 3. A registered user can subscribe to the CMM Code mailing lists.
  
  4. A registered user is allowed to edit the wiki pages to increase the
- visibility of his/her Zeobuilder-related work.
+ visibility of his/her related work.
  
  5. Registered users are allowed to submit bugs. If time permits, we will fix
  your problems in the next bug-fix release of Zeobuilder.
 
 
-If you think this software is useful, consider to register as a Zeobuilder user:
-https://molmod.UGent.be/zeobuilder/registration/
+If you think this software is useful, consider to register as a CMM Code user:
+https://molmod.UGent.be/code/registration/
 
 
-Authors
--------
+Contact information
+-------------------
 
-* Lead Developer *
+Supervisors:
+
+Prof. Dr. Michel Waroquier and Prof. Dr. Ir. Veronique Van Speybroeck
+
+Center for Molecular Modeling
+Ghent University
+Proeftuinstraat 86, B-9000 GENT - BELGIUM
+Tel: +32 9 264 65 59
+Fax: +32 9 264 65 60
+Email: Michel.Waroquier@UGent.be
+Email: Veronique.VanSpeybroeck@UGent.be 
+
+Authors:
+
+- Lead Developer -
 
 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 Center for Molecular Modeling
@@ -108,7 +123,7 @@ Proeftuinstraat 86
 9000 Gent, Belgium
 Tel: +32 (0)9 264 65 56
 
-* Contributors *
+- Contributors -
 
 Bartek Szyja <B.M.Szyja@tue.nl>
 Eindhoven University of Technology

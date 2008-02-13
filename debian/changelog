@@ -1,5 +1,5 @@
-python-zeobuilder (0.001) unstable; urgency=low
+python-zeobuilder (0.001) stable; urgency=low
 
   * Initial Release.
 
- -- Toon Verstraelen <Toon.Verstraelen@UGent.be>  Tue, 2 Oct 2007 21:22:55 +0200
+ -- Toon Verstraelen <Toon.Verstraelen@UGent.be>  Wed, 13 Feb 2008 21:22:55 +0200

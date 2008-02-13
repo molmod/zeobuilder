@@ -16,29 +16,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
-# Contact information:
-#
-# Supervisors
-#
-# Prof. Dr. Michel Waroquier and Prof. Dr. Ir. Veronique Van Speybroeck
-#
-# Center for Molecular Modeling
-# Ghent University
-# Proeftuinstraat 86, B-9000 GENT - BELGIUM
-# Tel: +32 9 264 65 59
-# Fax: +32 9 264 65 60
-# Email: Michel.Waroquier@UGent.be
-# Email: Veronique.VanSpeybroeck@UGent.be
-#
-# Author
-#
-# Ir. Toon Verstraelen
-# Center for Molecular Modeling
-# Ghent University
-# Proeftuinstraat 86, B-9000 GENT - BELGIUM
-# Tel: +32 9 264 65 56
-# Email: Toon.Verstraelen@UGent.be
-#
 # --
 
 
@@ -214,5 +191,6 @@ gobject.signal_new("model-changed", ActionManager, gobject.SIGNAL_RUN_LAST, gobj
 gobject.signal_new("action-started", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 gobject.signal_new("action-ends", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 gobject.signal_new("action-cancels", ActionManager, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+
 
 
