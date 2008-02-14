@@ -601,48 +601,6 @@ class CoreActions(ApplicationTestCase):
             CalculateAverage()
         self.run_test_application(fn)
 
-
-    # The database tests assume that there is a user zbtester that has
-    # full priviliges on the database zbunittest without password on the
-    # localhost, and that the server can be accessed through sockets.
-    def test_database_core(self):
-        def fn():
-            FileNew = context.application.plugins.get_action("FileNew")
-            FileNew()
-
-            parameters = Parameters()
-            parameters.host = ""
-            parameters.port = 0
-            parameters.user = "zbtester"
-            parameters.name = "zbunittest"
-            parameters.password = ""
-
-            NewDatabase = context.application.plugins.get_action("NewDatabase")
-            self.assert_(NewDatabase.analyze_selection(parameters))
-            NewDatabase(parameters)
-
-            ShowDatabaseWindow = context.application.plugins.get_action("ShowDatabaseWindow")
-            self.assert_(ShowDatabaseWindow.analyze_selection())
-            ShowDatabaseWindow()
-
-            DisconnectFromDatabase = context.application.plugins.get_action("DisconnectFromDatabase")
-            self.assert_(DisconnectFromDatabase.analyze_selection())
-            DisconnectFromDatabase()
-
-            ConnectToDatabase = context.application.plugins.get_action("ConnectToDatabase")
-            self.assert_(ConnectToDatabase.analyze_selection(parameters))
-            ConnectToDatabase(parameters)
-
-            database = context.application.model.folder.children[0]
-            c = database.connection.cursor()
-
-            c.execute("DROP DATABASE zbunittest")
-
-            DisconnectFromDatabase = context.application.plugins.get_action("DisconnectFromDatabase")
-            self.assert_(DisconnectFromDatabase.analyze_selection())
-            DisconnectFromDatabase()
-        self.run_test_application(fn)
-
     def test_view_plugins(self):
         def fn():
             ViewPlugins = context.application.plugins.get_action("ViewPlugins")
