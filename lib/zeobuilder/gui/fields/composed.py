@@ -26,6 +26,7 @@ from mixin import InvalidField, EditMixin, FaultyMixin, TableMixin
 import popups
 
 from zeobuilder.conversion import measures, units_by_measure
+from zeobuilder.undefined import Undefined
 
 from molmod.transformations import Translation as MathTranslation, Rotation as MathRotation
 from molmod.unit_cell import check_cell, UnitCell
@@ -189,7 +190,8 @@ class Rotation(ComposedInTable):
         return self.attribute.get_rotation_properties()
 
     def write_to_attribute(self, value):
-        self.attribute.set_rotation_properties(*value)
+        if not isinstance(value, Undefined):
+            self.attribute.set_rotation_properties(*value)
 
 
 class Parameters(object):
