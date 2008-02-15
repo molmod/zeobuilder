@@ -56,7 +56,7 @@ class ChildProcessDialog(object):
         self.process.stdin.close()
 
         #print >> sys.stderr, "ZEOBUILDER, add io_watch"
-        event_sources = [
+        self.event_sources = [
             gobject.io_add_watch(self.process.stdout, gobject.IO_IN, self._on_receive_out, priority=200),
             gobject.io_add_watch(self.process.stdout, gobject.IO_HUP, self._on_done, priority=200),
             gobject.io_add_watch(self.process.stderr, gobject.IO_IN, self._on_receive_err, priority=200),
@@ -65,10 +65,6 @@ class ChildProcessDialog(object):
         self.dialog.set_transient_for(context.parent_window)
         result = self.response_loop()
         self.dialog.hide()
-
-        #print >> sys.stderr, "ZEOBUILDER, release io_watch"
-        for source in event_sources:
-            gobject.source_remove(source)
 
         #print >> sys.stderr, "result", result
         return result
@@ -96,7 +92,7 @@ class ChildProcessDialog(object):
         return True
 
     def _on_done(self, source, condition):
-        #print >> sys.stderr, "ZEOBUILDER, close stuff down"
+        #print >> sys.stderr, "ZEOBUILDER, _on_done"
         self.response_active = True
         for button in self.buttons:
             button.set_sensitive(True)
@@ -111,6 +107,10 @@ class ChildProcessDialog(object):
         if self.auto_close:
             #print >> sys.stderr, "ZEOBUILDER, auto_close dialog"
             self.dialog.response(gtk.RESPONSE_OK)
+
+        #print >> sys.stderr, "ZEOBUILDER, release io_watch"
+        for source in self.event_sources:
+            gobject.source_remove(source)
 
         return False
 
