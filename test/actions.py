@@ -1077,13 +1077,14 @@ class BuilderActions(ApplicationTestCase):
             parameters = Parameters()
             parameters.connect_description1 = (
                 Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
-                Expression("node.get_radius()*0.3"),
+                Expression("node.get_radius()"),
             )
             parameters.repulse_description1 = (
                 Expression("isinstance(node, Atom) and (node.number == 8 or node.number == 14)"),
-                Expression("node.get_radius()"),
+                Expression("node.get_radius()*1.5"),
             )
             parameters.action_radius = 4*angstrom
+            parameters.hit_tolerance = 0.1*angstrom
             parameters.allow_inversions = True
             parameters.minimum_triangle_size = 0.1*angstrom
             parameters.rotation2 = Undefined()
@@ -1110,13 +1111,14 @@ class BuilderActions(ApplicationTestCase):
             parameters = Parameters()
             parameters.connect_description1 = (
                 Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
-                Expression("node.get_radius()*0.3"),
+                Expression("node.get_radius()"),
             )
             parameters.repulse_description1 = (
                 Expression("isinstance(node, Atom) and (node.number == 8 or node.number == 14)"),
-                Expression("node.get_radius()"),
+                Expression("node.get_radius()*1.5"),
             )
             parameters.action_radius = 4*angstrom
+            parameters.hit_tolerance = 0.1*angstrom
             parameters.allow_inversions = Undefined()
             parameters.minimum_triangle_size = Undefined()
             parameters.rotation2 = rotation2

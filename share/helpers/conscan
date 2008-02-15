@@ -36,6 +36,7 @@ if inp["allow_rotations"]:
         inp["geometry1"],
         inp["geometry2"],
         inp["action_radius"],
+        inp["hit_tolerance"],
         inp["allow_inversions"],
         inp["minimum_triangle_area"],
     )
@@ -45,6 +46,7 @@ else:
         inp["geometry1"],
         inp["geometry2"],
         inp["action_radius"],
+        inp["hit_tolerance"],
         inp["rotation2"],
     )
 scanner.run()

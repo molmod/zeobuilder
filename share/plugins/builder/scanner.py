@@ -480,6 +480,12 @@ class ScanForConnections(ImmediateWithMemory):
                                 low=0.0,
                                 low_inclusive=False,
                             ),
+                            fields.faulty.Length(
+                                label_text="Distance tolerance",
+                                attribute_name="hit_tolerance",
+                                low=0.0,
+                                low_inclusive=False,
+                            ),
                         ], label_text="Allow free rotations")),
                         fields.optional.RadioOptional(slave=fields.group.Table(fields=[
                             fields.composed.Rotation(
@@ -537,7 +543,7 @@ class ScanForConnections(ImmediateWithMemory):
         result.connect_description2 = (Expression("True"), Expression("node.get_radius()"))
         result.repulse_description2 = (Expression("True"), Expression("node.get_radius()"))
         result.action_radius = 7*angstrom
-        result.overlap_tolerance = 0.1*angstrom
+        result.hit_tolerance = 0.1*angstrom
         result.allow_inversions = True
         result.triangle_side_tolerance = 0.1*angstrom
         result.minimum_triangle_size = 0.1*angstrom
@@ -622,6 +628,7 @@ class ScanForConnections(ImmediateWithMemory):
         else:
             inp["geometry2"] = None
         inp["action_radius"] = self.parameters.action_radius
+        inp["hit_tolerance"] = self.parameters.hit_tolerance
         if not isinstance(self.parameters.allow_inversions, Undefined):
             inp["allow_rotations"] = True
             inp["allow_inversions"] = self.parameters.allow_inversions
