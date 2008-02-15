@@ -405,12 +405,7 @@ class ConnectionPointDescription(fields.composed.ComposedInTable):
                     history_name="radius",
                     width=250,
                     height=60,
-                ), fields.faulty.Expression(
-                    label_text="Quality expression",
-                    history_name="quality",
-                    width=250,
-                    height=60,
-                )
+                ),
             ],
             label_text=label_text,
             attribute_name=attribute_name,
@@ -422,10 +417,9 @@ class ConnectionPointDescription(fields.composed.ComposedInTable):
     def applicable_attribute(self):
         return (
             isinstance(self.attribute, tuple) and
-            len(self.attribute) == 3 and
+            len(self.attribute) == 2 and
             isinstance(self.attribute[0], Expression) and
-            isinstance(self.attribute[1], Expression) and
-            isinstance(self.attribute[2], Expression)
+            isinstance(self.attribute[1], Expression)
         )
 
 
@@ -538,10 +532,10 @@ class ScanForConnections(ImmediateWithMemory):
         rotation2.set_rotation_properties(0.0, [1, 0, 0], False)
 
         result = Parameters()
-        result.connect_description1 = (Expression("True"), Expression("node.get_radius()"), Expression("0.5"))
-        result.repulse_description1 = (Expression("True"), Expression("node.get_radius()"), Expression("-1"))
-        result.connect_description2 = (Expression("True"), Expression("node.get_radius()"), Expression("0.5"))
-        result.repulse_description2 = (Expression("True"), Expression("node.get_radius()"), Expression("-1"))
+        result.connect_description1 = (Expression("True"), Expression("node.get_radius()"))
+        result.repulse_description1 = (Expression("True"), Expression("node.get_radius()"))
+        result.connect_description2 = (Expression("True"), Expression("node.get_radius()"))
+        result.repulse_description2 = (Expression("True"), Expression("node.get_radius()"))
         result.action_radius = 7*angstrom
         result.overlap_tolerance = 0.1*angstrom
         result.allow_inversions = True
@@ -575,35 +569,30 @@ class ScanForConnections(ImmediateWithMemory):
 
         geometry_nodes = [[], []]
 
-        def get_parameters(node, point_type, geometry_index, filter_expression, radius_expression, quality_expression):
+        def get_parameters(node, point_type, geometry_index, filter_expression, radius_expression):
             template = "An exception occured in the %%s expression\nfor the %s points of geometry %i." % (point_type, geometry_index+1)
             try:
-                is_connect = filter_expression(node)
+                is_type = filter_expression(node)
             except Exception:
                 raise UserError(template % "filter")
-            if is_connect:
+            if is_type:
                 try:
                     radius = radius_expression(node)
                 except Exception:
                     raise UserError(template % "radius")
-                try:
-                    amplitude = quality_expression(node)
-                except Exception:
-                    raise UserError(template % "quality")
                 geometry_nodes[geometry_index].append(node)
-                return True, radius, amplitude
+                return True, radius
             else:
-                return False, None, None
+                return False, None
 
         def read_geometry(frame, geometry_index, connect_description, repulse_description):
             coordinates = []
             connect_masks = []
             radii = []
-            amplitudes = []
             for child in frame.children:
                 if isinstance(child, GLTransformationMixin) and \
                    isinstance(child.transformation, Translation):
-                    is_connect, radius, amplitude = get_parameters(
+                    is_connect, radius = get_parameters(
                         child, "connecting", geometry_index,
                         *connect_description
                     )
@@ -611,9 +600,8 @@ class ScanForConnections(ImmediateWithMemory):
                         coordinates.append(child.transformation.t)
                         connect_masks.append(True)
                         radii.append(radius)
-                        amplitudes.append(amplitude)
                     else:
-                        is_repulse, radius, amplitude = get_parameters(
+                        is_repulse, radius = get_parameters(
                             child, "repulsive", geometry_index,
                             *repulse_description
                         )
@@ -621,12 +609,10 @@ class ScanForConnections(ImmediateWithMemory):
                             coordinates.append(child.transformation.t)
                             connect_masks.append(False)
                             radii.append(radius)
-                            amplitudes.append(amplitude)
             return Geometry(
                 numpy.array(coordinates, float),
                 numpy.array(connect_masks, bool),
                 numpy.array(radii, float),
-                numpy.array(amplitudes, float)
             )
 
         inp = {}

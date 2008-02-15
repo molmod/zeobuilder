@@ -1078,12 +1078,10 @@ class BuilderActions(ApplicationTestCase):
             parameters.connect_description1 = (
                 Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
                 Expression("node.get_radius()*0.3"),
-                Expression("1"),
             )
             parameters.repulse_description1 = (
                 Expression("isinstance(node, Atom) and (node.number == 8 or node.number == 14)"),
                 Expression("node.get_radius()"),
-                Expression("-1"),
             )
             parameters.action_radius = 4*angstrom
             parameters.allow_inversions = True
@@ -1113,12 +1111,10 @@ class BuilderActions(ApplicationTestCase):
             parameters.connect_description1 = (
                 Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
                 Expression("node.get_radius()*0.3"),
-                Expression("1"),
             )
             parameters.repulse_description1 = (
                 Expression("isinstance(node, Atom) and (node.number == 8 or node.number == 14)"),
                 Expression("node.get_radius()"),
-                Expression("-1"),
             )
             parameters.action_radius = 4*angstrom
             parameters.allow_inversions = Undefined()
