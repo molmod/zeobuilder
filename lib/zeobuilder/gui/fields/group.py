@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -73,6 +73,7 @@ class Notebook(Group):
     def show(self, field):
         Group.show(self, field)
         self.data_widget.set_current_page(self.data_widget.page_num(field.container))
+
 
 
 

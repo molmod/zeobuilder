@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -246,6 +246,7 @@ class Menu(object):
         if not self.all_menu_items_sensitive:
             set_all_sensitive(self.menubar)
             self.all_menu_items_sensitive = True
+
 
 
 

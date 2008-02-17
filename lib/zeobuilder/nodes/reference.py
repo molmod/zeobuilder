@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -175,6 +175,7 @@ class SpatialReference(Reference):
             return self.target.get_frame_relative_to(other).t
         else:
             return None
+
 
 
 

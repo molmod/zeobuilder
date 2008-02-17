@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -115,6 +115,7 @@ class Scene(object):
 
         for plane_i in xrange(len(self.clip_planes)):
             vb.unset_clip_plane(plane_i)
+
 
 
 

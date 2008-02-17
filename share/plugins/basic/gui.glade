@@ -62,7 +62,7 @@
               <widget class="GtkLabel" id="label16">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">&lt;span size="small"&gt;Copyright (C) 2005 Toon Verstraelen&lt;/span&gt;</property>
+                <property name="label" translatable="yes">&lt;span size="small"&gt;Copyright (C) 2007 - 2008 Toon Verstraelen&lt;/span&gt;</property>
                 <property name="use_markup">True</property>
                 <property name="justify">GTK_JUSTIFY_CENTER</property>
                 <property name="selectable">True</property>

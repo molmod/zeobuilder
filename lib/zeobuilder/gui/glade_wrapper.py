@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -79,6 +79,7 @@ class GladeWrapper(object):
                 raise GladeWrapperError, "The widget (" + widget_name + ") in the widgets_list parameter does not exist."
             else:
                 self.__dict__[widget_name] = self.widgets.get_widget(widget_name)
+
 
 
 

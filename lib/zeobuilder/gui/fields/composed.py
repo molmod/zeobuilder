@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -372,6 +372,7 @@ class Units(ComposedInTable):
     def write_to_attribute(self, value):
         for index, measure in enumerate(measures):
             self.attribute[measure] = value[index]
+
 
 
 

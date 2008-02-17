@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -95,6 +95,7 @@ def express_data_size(val):
         return str(val/1024) + " Kb"
     else:# val < 1024 * 1024 * 1024:
         return str(val/(1024*1024)) + " Mb"
+
 
 
 

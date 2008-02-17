@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -43,6 +43,7 @@ def init_nodes(nodes):
 
     main_field = create_tabbed_main_field(dialog_fields)
     context.application.edit_properties = EditProperties(main_field)
+
 
 
 

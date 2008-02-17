@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -196,6 +196,7 @@ def run_file_dialog(file_dialog, file_function, *args):
             ok_error(str(e))
     file_dialog.hide()
     return success
+
 
 
 

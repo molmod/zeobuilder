@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -119,6 +119,7 @@ def create_graph_bonds(selected_nodes):
 
     graph = Graph(bonds_by_pair.keys(), nodes)
     return graph, bonds_by_pair
+
 
 
 

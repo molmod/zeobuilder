@@ -1,5 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 Toon Verstraelen <Toon.Verstraelen@UGent.be>
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -182,6 +182,7 @@ gobject.signal_new("file-opening", Model, gobject.SIGNAL_RUN_LAST, gobject.TYPE_
 gobject.signal_new("file-closed", Model, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 gobject.signal_new("file-saved", Model, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 gobject.signal_new("file-saving", Model, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
+
 
 
 
