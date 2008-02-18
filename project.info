@@ -4,7 +4,8 @@ Priority: extra
 PurePython: 1
 Depends: python-molmod (>= 0.001), python-iterative (>= 0.001), 
  python-conscan (>= 0.001), python-gtk2 (>= 2.8.6), python-opengl (>= 2.0.1), 
- python-numpy (>= 1.0.1), python-gtkglext1 (>= 1.1.0), librsvg2-2 (>= 2.14)
+ python-numpy (>= 1.0.1), python-gtkglext1 (>= 1.1.0), 
+ librsvg2-common (>= 2.14), python-glade2 (>= 2.8.6)
 Suggests: python-matplotlib (>= 0.87), python-mysqldb (>= 1.2.1)
 ShortDescription: Zeobuilder is an extensible GUI-toolkit for molecular model construction. 
 LongDescription: 
