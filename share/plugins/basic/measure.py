@@ -210,7 +210,7 @@ class MeasurementsWindow(GladeWrapper):
         for index, point in enumerate(self.points[:num]):
             glPushMatrix()
             glTranslate(point[0], point[1], 0.0)
-            glScale(font_scale, font_scale, 1)
+            glScaled(font_scale, font_scale, 1)
             glRectf(-10, -20, 114, 130)
             glPopMatrix()
 
@@ -219,7 +219,7 @@ class MeasurementsWindow(GladeWrapper):
         for index, point in enumerate(self.points[:num]):
             glPushMatrix()
             glTranslate(point[0], point[1], 0.0)
-            glScale(font_scale, font_scale, 1)
+            glScaled(font_scale, font_scale, 1)
             glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, ord(str(index+1)))
             glPopMatrix()
 
