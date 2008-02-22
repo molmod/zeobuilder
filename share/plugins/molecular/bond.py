@@ -233,7 +233,7 @@ class ConnectTripleBond(ConnectBond):
 
 class AutoConnectPhysical(AutoConnectMixin, Immediate):
     description = "Add bonds (database)"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (database)", order=(0, 4, 1, 5, 1, 0))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add bonds (database)", ord("b"), order=(0, 4, 1, 5, 1, 0))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

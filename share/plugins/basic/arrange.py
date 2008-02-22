@@ -77,7 +77,7 @@ class GroupInFolder(GroupBase):
 
 class Frame(GroupBase):
     description = "Frame"
-    menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Frame", order=(0, 4, 1, 1, 0, 2))
+    menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Frame", ord("f"), order=(0, 4, 1, 1, 0, 2))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
@@ -158,7 +158,7 @@ class UnframeRelative(UngroupBase):
 
 class UnframeAbsolute(UnframeRelative):
     description = "Unframe (absolute)"
-    menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Unframe absolute", order=(0, 4, 1, 1, 0, 4))
+    menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Unframe absolute", ord("f"), accel_shift=True, order=(0, 4, 1, 1, 0, 4))
     authors = [authors.toon_verstraelen]
 
     def do(self):
