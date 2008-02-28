@@ -97,6 +97,13 @@ class ChildProcessDialog(object):
         for button in self.buttons:
             button.set_sensitive(True)
 
+        # make sure there is not output is left unnoticed.
+        while True:
+            try:
+                self._on_receive_out(0, 0)
+            except EOFError:
+                break
+
         retcode = self.process.wait()
         if retcode != 0:
             ok_error(

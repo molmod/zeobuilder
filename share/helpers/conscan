@@ -29,6 +29,7 @@ inp = cPickle.load(sys.stdin)
 
 def send(obj):
     cPickle.dump(obj,sys.stdout,-1)
+    sys.stdout.flush()
 
 if inp["allow_rotations"]:
     scanner = TriangleScanner(

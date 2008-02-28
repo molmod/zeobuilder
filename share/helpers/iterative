@@ -30,6 +30,7 @@ cPickle.dump(msg,sys.stdout,-1)
 
 def send(msg):
     cPickle.dump(msg,sys.stdout,-1)
+    sys.stdout.flush()
 
 algo.run(send)
 
