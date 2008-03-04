@@ -108,7 +108,7 @@ class ChildProcessDialog(object):
         if retcode != 0:
             ok_error(
                 "An error occured in the child process.",
-                "".join(self.error_lines)
+                "\n".join(self.error_lines)
             )
 
         if self.auto_close:
