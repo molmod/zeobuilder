@@ -468,6 +468,12 @@ class ScanForConnections(ImmediateWithMemory):
                         low=0.0,
                         low_inclusive=False,
                     ),
+                    fields.faulty.Length(
+                        label_text="Distance tolerance",
+                        attribute_name="hit_tolerance",
+                        low=0.0,
+                        low_inclusive=False,
+                    ),
                     fields.group.Table(fields=[
                         fields.optional.RadioOptional(slave=fields.group.Table(fields=[
                             fields.edit.CheckButton(
@@ -477,12 +483,6 @@ class ScanForConnections(ImmediateWithMemory):
                             fields.faulty.Length(
                                 label_text="Minimum triangle size",
                                 attribute_name="minimum_triangle_size",
-                                low=0.0,
-                                low_inclusive=False,
-                            ),
-                            fields.faulty.Length(
-                                label_text="Distance tolerance",
-                                attribute_name="hit_tolerance",
                                 low=0.0,
                                 low_inclusive=False,
                             ),
@@ -543,13 +543,12 @@ class ScanForConnections(ImmediateWithMemory):
         result.connect_description2 = (Expression("True"), Expression("node.get_radius()"))
         result.repulse_description2 = (Expression("True"), Expression("node.get_radius()"))
         result.action_radius = 7*angstrom
+        result.distance_tolerance = 0.1*angstrom
         result.hit_tolerance = 0.1*angstrom
         result.allow_inversions = True
-        result.triangle_side_tolerance = 0.1*angstrom
         result.minimum_triangle_size = 0.1*angstrom
         result.rotation_tolerance = 0.05
         result.rotation2 = Undefined(rotation2)
-        result.distance_tolerance = Undefined(0.1*angstrom)
         return result
 
     def ask_parameters(self):
@@ -563,6 +562,12 @@ class ScanForConnections(ImmediateWithMemory):
                 self.parameters.connect_description2 = self.parameters.connect_description2.value
             if isinstance(self.parameters.repulse_description2, Undefined):
                 self.parameters.repulse_description2 = self.parameters.repulse_description2.value
+            node1, node2 = context.application.cache.nodes
+            relative_rotation = node2.get_frame_relative_to(node1.parent)
+            if isinstance(self.parameters.rotation2, Undefined):
+                self.parameters.rotation2 = Undefined(relative_rotation)
+            else:
+                self.parameters.rotation2 = relative_rotation
 
         if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
@@ -635,7 +640,10 @@ class ScanForConnections(ImmediateWithMemory):
             inp["minimum_triangle_area"] = self.parameters.minimum_triangle_size**2
         else:
             inp["allow_rotations"] = False
-            inp["rotation2"] = self.parameters.rotation2
+            if isinstance(self.parameters.rotation2, Undefined):
+                inp["rotation2"] = Rotation()
+            else:
+                inp["rotation2"] = self.parameters.rotation2
 
         if inp["allow_rotations"]:
             connections = self.triangle_report_dialog.run(inp, self.parameters.auto_close_report_dialog)
