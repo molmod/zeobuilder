@@ -135,7 +135,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
     SELECT_RECURSIVE_IF_MATCH = 2
 
     parameters_dialog = FieldsDialogSimple(
-        "Selection rules",
+        "Select children by expression",
         fields.group.Table(
             fields=[
                 fields.edit.ComboBox(
@@ -144,7 +144,7 @@ class SelectChildrenByExpression(ImmediateWithMemory):
                         (SELECT_RECURSIVE, "Yes"),
                         (SELECT_RECURSIVE_IF_MATCH, "Yes if match")
                     ],
-                    label_text="Select matching children of an node",
+                    label_text="Recursive",
                     attribute_name="recursive",
                     show_popup=False
                 ),

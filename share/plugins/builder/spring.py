@@ -321,8 +321,8 @@ get_spring_problem.authors=[authors.toon_verstraelen]
 
 
 class OptimizeSprings(ImmediateWithMemory):
-    description = "Optimize the springs"
-    menu_info = MenuInfo("default/_Object:tools/_Builder:spring", "_Optimize the selected springs", order=(0, 4, 1, 6, 0, 1))
+    description = "Optimize springs"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:spring", "_Optimize springs", order=(0, 4, 1, 6, 0, 1))
     authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
@@ -458,8 +458,8 @@ class OptimizeSprings(ImmediateWithMemory):
 
 
 class MergeAtomsConnectedWithSpring(Immediate):
-    description = "Merge atoms connected by spring"
-    menu_info = MenuInfo("default/_Object:tools/_Builder:spring", "_Merge atoms connected by spring", order=(0, 4, 1, 6, 0, 2))
+    description = "Merge atoms connected by springs"
+    menu_info = MenuInfo("default/_Object:tools/_Builder:spring", "_Merge atoms connected by springs", order=(0, 4, 1, 6, 0, 2))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

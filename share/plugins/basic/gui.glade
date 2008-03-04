@@ -31,7 +31,7 @@
               <widget class="GtkLabel" id="label14">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="label" translatable="yes">&lt;span size="xx-large" weight="bold"&gt;Zeobuilder 0.1.0&lt;/span&gt;</property>
+                <property name="label" translatable="yes">&lt;span size="xx-large" weight="bold"&gt;Zeobuilder 0.002&lt;/span&gt;</property>
                 <property name="use_markup">True</property>
                 <property name="selectable">True</property>
               </widget>
