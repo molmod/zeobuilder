@@ -117,7 +117,7 @@ class ConscanResultsWindow(GladeWrapper):
         self.init_callbacks(ConscanResultsWindow)
         self.init_proxies([
             "tv_results", "cb_auto_apply", "bu_apply", "bu_apply_opt",
-            "bu_apply_opt_round", "cb_inverse",
+            "cb_inverse",
         ])
         self.window.hide()
 
@@ -171,7 +171,6 @@ class ConscanResultsWindow(GladeWrapper):
         if iter is None:
             self.bu_apply.set_sensitive(False)
             self.bu_apply_opt.set_sensitive(False)
-            self.bu_apply_opt_round.set_sensitive(False)
         else:
             self.bu_apply.set_sensitive(not self.cb_auto_apply.get_active())
             incomplete = False
@@ -183,7 +182,6 @@ class ConscanResultsWindow(GladeWrapper):
                     incomplete = True
                     break
             self.bu_apply_opt.set_sensitive(not incomplete)
-            self.bu_apply_opt_round.set_sensitive(not incomplete)
 
     def apply_normal(self):
         model, iter = self.tree_selection.get_selected()
@@ -227,16 +225,6 @@ class ConscanResultsWindow(GladeWrapper):
         parameters.auto_close_report_dialog = True
         OptimizeSprings(parameters)
 
-    def translate_optimize(self, springs):
-        context.application.main.select_nodes(springs)
-        OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
-        parameters = Parameters()
-        parameters.allow_rotation = False
-        parameters.update_interval = 0.4
-        parameters.update_steps = 1
-        parameters.auto_close_report_dialog = True
-        OptimizeSprings(parameters)
-
     def round_rotation(self):
         context.application.main.select_nodes([self.frame1, self.frame2])
         RoundRotation = context.application.plugins.get_action("RoundRotation")
@@ -249,16 +237,6 @@ class ConscanResultsWindow(GladeWrapper):
     def optimize(self):
         springs = self.connect_springs()
         self.free_optimize(springs)
-        self.clean_springs(springs)
-
-    def optimize_and_round(self):
-        springs = self.connect_springs()
-        self.free_optimize(springs)
-        try:
-            self.round_rotation()
-            self.translate_optimize(springs)
-        except UserError, CancelException:
-            pass
         self.clean_springs(springs)
 
     def auto_apply(self):
@@ -291,14 +269,6 @@ class ConscanResultsWindow(GladeWrapper):
         old_selection = copy.copy(context.application.cache.nodes)
         self.apply_normal()
         self.optimize()
-        context.application.main.select_nodes(old_selection)
-        action.finish()
-
-    def on_bu_apply_opt_round_clicked(self, button):
-        action = CustomAction("Apply connection, optimize and round rotation")
-        old_selection = copy.copy(context.application.cache.nodes)
-        self.apply_normal()
-        self.optimize_and_round()
         context.application.main.select_nodes(old_selection)
         action.finish()
 

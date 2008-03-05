@@ -345,24 +345,6 @@
 	  <property name="fill">False</property>
 	</packing>
       </child>
-
-      <child>
-	<widget class="GtkButton" id="bu_apply_opt_round">
-	  <property name="visible">True</property>
-	  <property name="sensitive">False</property>
-	  <property name="can_focus">True</property>
-	  <property name="label" translatable="yes">Apply, optimize and round</property>
-	  <property name="use_underline">True</property>
-	  <property name="relief">GTK_RELIEF_NORMAL</property>
-	  <property name="focus_on_click">True</property>
-	  <signal name="clicked" handler="on_bu_apply_opt_round_clicked" last_modification_time="Sun, 13 Aug 2006 16:25:01 GMT"/>
-	</widget>
-	<packing>
-	  <property name="padding">0</property>
-	  <property name="expand">False</property>
-	  <property name="fill">False</property>
-	</packing>
-      </child>
     </widget>
   </child>
 </widget>
