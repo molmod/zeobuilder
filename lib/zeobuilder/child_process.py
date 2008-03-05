@@ -81,12 +81,18 @@ class ChildProcessDialog(object):
             data = cPickle.load(self.process.stdout)
         else:
             data = self.process.stdout.readline()
+            if len(data) == 0:
+                raise EOFError
+            data = data[:-1]
         #print >> sys.stderr, "CHILD STDOUT:", data
         self.on_receive(data)
         return True
 
     def _on_receive_err(self, source, condition):
-        line = self.process.stderr.readline()[:-1]
+        line = self.process.stderr.readline()
+        if len(line) == 0:
+            raise EOFError
+        line = line[:-1]
         #print >> sys.stderr, "CHILD STDERR:", line
         self.error_lines.append(line)
         return True
@@ -98,11 +104,15 @@ class ChildProcessDialog(object):
             button.set_sensitive(True)
 
         # make sure there is not output is left unnoticed.
-        while True:
-            try:
-                self._on_receive_out(0, 0)
-            except EOFError:
-                break
+        try:
+            while True: self._on_receive_out(0, 0)
+        except EOFError:
+            pass
+
+        try:
+            while True: self._on_receive_err(0, 0)
+        except EOFError:
+            pass
 
         retcode = self.process.wait()
         if retcode != 0:
