@@ -1094,10 +1094,17 @@ class BuilderActions(ApplicationTestCase):
             self.assert_(ScanForConnections.analyze_selection(parameters))
             ScanForConnections(parameters)
 
+            # Try to save the result to file an open it again.
             context.application.model.file_save("output/tmp.zml")
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
             context.application.model.file_open("output/tmp.zml")
+
+            # Do some consistency tests on the connection scanner results:
+            for quality, transformation, pairs, inverse_pairs in context.application.model.folder.children[0].get_connections():
+                self.assert_(len(pairs)>=3)
+                if len(inverse_pairs) > 0:
+                    self.assert_(len(pairs)==len(inverse_pairs))
         self.run_test_application(fn)
 
     def test_pair_conscan(self):
@@ -1106,7 +1113,7 @@ class BuilderActions(ApplicationTestCase):
             context.application.main.select_nodes(context.application.model.universe.children)
 
             rotation2 = Rotation()
-            rotation2.set_rotation_properties(0.5*math.pi, [1, 0, 0], True)
+            rotation2.set_rotation_properties(1*math.pi, [0, 1, 0], False)
 
             parameters = Parameters()
             parameters.connect_description1 = (
@@ -1128,10 +1135,19 @@ class BuilderActions(ApplicationTestCase):
             self.assert_(ScanForConnections.analyze_selection(parameters))
             ScanForConnections(parameters)
 
+            # Try to save the result to file an open it again.
             context.application.model.file_save("output/tmp.zml")
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
             context.application.model.file_open("output/tmp.zml")
+
+            # Do some consistency tests on the connection scanner results:
+            for quality, transformation, pairs, inverse_pairs in context.application.model.folder.children[0].get_connections():
+                self.assertArraysAlmostEqual(transformation.r, rotation2.r)
+                self.assert_(len(pairs)>=2)
+                if len(inverse_pairs) > 0:
+                    self.assert_(len(pairs)==len(inverse_pairs))
+
         self.run_test_application(fn)
 
     def test_create_tube(self):

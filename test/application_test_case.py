@@ -22,7 +22,7 @@
 from zeobuilder import context
 from zeobuilder.application import TestApplication
 
-import gtk
+import gtk, numpy
 
 import unittest
 
@@ -45,6 +45,36 @@ class ApplicationTestCase(unittest.TestCase):
                 )
             )
 
-
+    def assertArraysAlmostEqual(self, a, b, err_threshold=1e-5, do_abserr=False, verbose=False):
+        def log(s):
+            if verbose: print s
+        if a.shape != b.shape:
+            self.fail("Array shapes do not match: %s!=%s" % (a.shape, b.shape))
+        if do_abserr:
+            abserr = abs(a-b).max()
+            log("both")
+            log(numpy.hstack([a,b]))
+            log("difference")
+            log(a-b)
+            log("abserr: %s" % abserr)
+            if abserr > err_threshold:
+                self.fail("The absolute error is too large: %.3e > %.3e" % (abserr, err_threshold))
+        else:
+            relerr = abs(a-b).max()*2/(abs(a).max()+abs(b).max())
+            log("both")
+            log(numpy.hstack([a,b]))
+            #log(a)
+            #log(b)
+            log("difference")
+            log(a-b)
+            log("relerr: %s" % relerr)
+            if relerr > err_threshold:
+                self.fail("The relative error is too large: %.3e > %.3e" % (relerr, err_threshold))
+            if numpy.isnan(relerr):
+                self.fail("The relative error is nan.")
+        if numpy.isnan(a).any():
+            self.fail("The first argument contains nan's.")
+        if numpy.isnan(b).any():
+            self.fail("The second argument contains nan's.")
 
 
