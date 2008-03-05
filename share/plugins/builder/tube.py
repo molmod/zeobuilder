@@ -48,7 +48,7 @@ class CreateTube(ImmediateWithMemory):
         return True
 
     parameters_dialog = FieldsDialogSimple(
-        "Connection scanner parameters",
+        "Tube parameters",
         fields.group.Table(fields=[
             fields.faulty.Int(
                 label_text="n",
