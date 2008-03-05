@@ -32,7 +32,7 @@ class CoordinationDialog(object):
     def __init__(self, coordinated_tetra):
         total = sum([len(tetras) for tetras in coordinated_tetra])
         # create the dialog window
-        self.dialog = gtk.Dialog("Si Coordination of selected objects", None, gtk.DIALOG_MODAL, (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
+        self.dialog = gtk.Dialog("T-atom Coordination", None, gtk.DIALOG_MODAL, (gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE))
         #self.dialog.connect("response", self.on_dialog_response)
         self.dialog.set_resizable(False)
         # create the table
@@ -41,7 +41,7 @@ class CoordinationDialog(object):
         table.set_col_spacings(5)
         table.set_row_spacings(5)
         # add the table heading
-        for index, label in enumerate(["Coord.", "Count", "%"]):
+        for index, label in enumerate(["Type", "Count", "%"]):
             label = gtk.Label("<b>%s</b>" % label)
             label.set_alignment(1, 0.5)
             label.set_use_markup(True)
@@ -50,7 +50,7 @@ class CoordinationDialog(object):
         table.attach(gtk.HSeparator(), 0, 4, 1, 2, xoptions=gtk.FILL, yoptions=gtk.FILL)
         # add the rows
         for row, tetras in enumerate(coordinated_tetra):
-            coordination = gtk.Label("%s" % row)
+            coordination = gtk.Label("Q%s" % row)
             coordination.set_alignment(1, 0.5)
             table.attach(coordination, 0, 1, row+2, row+3, xoptions=gtk.FILL, yoptions=gtk.FILL)
             count = gtk.Label("%s" % len(tetras))
