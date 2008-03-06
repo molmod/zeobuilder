@@ -39,7 +39,7 @@ setup(
     description='Zeobuilder is a extensible GUI application for molecular model building.',
     author='Toon Verstraelen',
     author_email='Toon.Verstraelen@UGent.be',
-    url='https://molmod.ugent.be/zeobuilder/',
+    url='http://molmod.ugent.be/code/',
     package_dir = {'zeobuilder': 'lib/zeobuilder'},
     data_files=[
         ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),

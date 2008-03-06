@@ -1,4 +1,4 @@
-Zeobuilder 0.001 README
+Zeobuilder 0.002 README
 =======================
 
 Contents of this README File:
@@ -21,7 +21,7 @@ while from the developers point-of-view, we try to make it easy to extend
 Zeobuilder with new features.
 
 More information about Zeobuilder can be found on the CMM Code website:
-https://molmod.UGent.be/code/
+http://molmod.ugent.be/code/
 
 
 License
@@ -45,11 +45,9 @@ Zeobuilder:
      Any OpenGL implementation (this is installed by default on most machines)
   5) PyGTKGLExt and GTKGLExt: http://www.k-3d.org/gtkglext/Main_Page
 
-You can get these dependencies from the Zeobuilder site: https://molmod.UGent.be/zeobuilder/
+You can get these dependencies from the Zeobuilder site: http://molmod.ugent.be/code/
   6) MolMod (>= 0.001)
-  7) CCIO (>= 0.001)
-  8) ComThread (>= 0.001)
-  9) ConScan (>= 0.001)
+  9) ConScan (>= 0.002)
  10) Iterative (>= 0.001)
 
 We strongly recommend the installation of Zeobuilder on an operating system that
@@ -61,14 +59,14 @@ How to install
 --------------
 
 There are several ways to install Zeobuilder, which are all documented
-at the homepage: https://molmod.UGent.be/code/
+at the homepage: http://molmod.ugent.be/code/
 
 
 How to get technical support
 ----------------------------
 
 Technical support is availlable for all registered CMM Code users. All
-information can be found at: https://molmod.UGent.be/code/
+information can be found at: http://molmod.ugent.be/code/
 
 
 Become a registered user
@@ -94,7 +92,7 @@ There are 5 good reasons to become a registered user:
 
 
 If you think this software is useful, consider to register as a CMM Code user:
-https://molmod.UGent.be/code/registration/
+https://molmod.ugent.be/code/registration/
 
 
 Contact information
