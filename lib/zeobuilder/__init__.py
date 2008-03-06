@@ -24,7 +24,6 @@ import os, sys
 class Context(object):
     def __init__(self):
         self.title = "Zeobuilder"
-        self.version = "0.1.0"
         self.user_dir = os.path.expanduser("~/.zeobuilder")
         if not os.path.isdir(self.user_dir):
             os.mkdir(self.user_dir)
