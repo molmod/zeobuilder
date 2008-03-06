@@ -402,7 +402,7 @@ actions = {
 interactive_groups = {
     "selection": InteractiveGroup(
         image_name="plugins/basic/selection_picker.svg",
-        description="Selection Picker",
+        description="Selection picker",
         initial_mask=0,
         order=0,
         authors=[authors.toon_verstraelen],
