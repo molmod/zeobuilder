@@ -106,9 +106,9 @@ class TetraCoordination(Immediate):
         coordinated_tetra = [[] for i in xrange(5)]
         for tetra in yield_all_tetra(context.application.cache.nodes_without_children):
             coordination = 0
-            for bridging in tetra.yield_neighbours():
+            for bridging in tetra.yield_neighbors():
                 if bridging.number > 6:
-                    num_t = len([t for t in bridging.yield_neighbours() if t.number > 12])
+                    num_t = len([t for t in bridging.yield_neighbors() if t.number > 12])
                     if num_t > 2:
                         raise UserError("Invalid zeolite structure.")
                     if num_t == 2:

@@ -50,7 +50,7 @@ class DefineOrigin(CenterAlignBase):
         node = cache.node
         if not isinstance(node, GLTransformationMixin): return False
         if not isinstance(node.transformation, Translation): return False
-        if cache.some_neighbours_fixed: return False
+        if cache.some_neighbors_fixed: return False
         # C) passed all tests:
         return True
 
@@ -58,7 +58,7 @@ class DefineOrigin(CenterAlignBase):
         cache = context.application.cache
         translation = Translation()
         translation.t = copy.deepcopy(cache.node.transformation.t)
-        CenterAlignBase.do(self, cache.parent, cache.translated_neighbours, translation)
+        CenterAlignBase.do(self, cache.parent, cache.translated_neighbors, translation)
 
 
 class Align(CenterAlignBase):
@@ -75,7 +75,7 @@ class Align(CenterAlignBase):
         node = cache.node
         if not isinstance(node, GLTransformationMixin): return False
         if not isinstance(node.transformation, Rotation): return False
-        if cache.some_neighbours_fixed: return False
+        if cache.some_neighbors_fixed: return False
         # C) passed all tests:
         return True
 
@@ -83,7 +83,7 @@ class Align(CenterAlignBase):
         cache = context.application.cache
         rotation = Rotation()
         rotation.r = copy.deepcopy(cache.node.transformation.r)
-        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbours, rotation)
+        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbors, rotation)
 
 
 class DefineOriginAndAlign(CenterAlignBase):
@@ -100,13 +100,13 @@ class DefineOriginAndAlign(CenterAlignBase):
         node = cache.node
         if not isinstance(node, GLTransformationMixin): return False
         if not isinstance(node.transformation, Complete): return False
-        if cache.some_neighbours_fixed: return False
+        if cache.some_neighbors_fixed: return False
         # C) passed all tests:
         return True
 
     def do(self):
         cache = context.application.cache
-        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbours, copy.deepcopy(cache.node.transformation))
+        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbors, copy.deepcopy(cache.node.transformation))
 
 
 class CenterToChildren(CenterAlignBase):

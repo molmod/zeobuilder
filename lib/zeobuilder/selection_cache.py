@@ -134,12 +134,12 @@ class SelectionCache(gobject.GObject):
     def get_child_classes(self):
         return analysis.list_classes(self.children)
 
-    # neighbours (the children of the parents of the selected nodes)
-    def get_neighbours(self):
+    # neighbors (the children of the parents of the selected nodes)
+    def get_neighbors(self):
         return analysis.list_children(self.parents)
 
-    def get_some_neighbours_fixed(self):
-        return analysis.some_fixed(self.neighbours)
+    def get_some_neighbors_fixed(self):
+        return analysis.some_fixed(self.neighbors)
 
 
     #
@@ -172,18 +172,18 @@ class SelectionCache(gobject.GObject):
     def get_child_translations(self):
         return [child.transformation for child in self.translated_children]
 
-    # neighbours
-    def get_transformed_neighbours(self):
-        return [neighbour for neighbour in self.neighbours if isinstance(neighbour, GLTransformationMixin)]
+    # neighbors
+    def get_transformed_neighbors(self):
+        return [neighbor for neighbor in self.neighbors if isinstance(neighbor, GLTransformationMixin)]
 
-    def get_translated_neighbours(self):
-        return [neighbour for neighbour in self.transformed_neighbours if isinstance(neighbour.transformation, Translation)]
+    def get_translated_neighbors(self):
+        return [neighbor for neighbor in self.transformed_neighbors if isinstance(neighbor.transformation, Translation)]
 
-    def get_rotated_neighbours(self):
-        return [neighbour for neighbour in self.transformed_neighbours if isinstance(neighbour.transformation, Rotation)]
+    def get_rotated_neighbors(self):
+        return [neighbor for neighbor in self.transformed_neighbors if isinstance(neighbor.transformation, Rotation)]
 
-    def get_neighbour_translations(self):
-        return [neighbour.transformation for neighbour in self.translated_neighbours]
+    def get_neighbor_translations(self):
+        return [neighbor.transformation for neighbor in self.translated_neighbors]
 
     #
     # Drag related

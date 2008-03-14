@@ -158,15 +158,15 @@ class Atom(GLGeometricBase, UserColorMixin):
             if isinstance(referent, Bond):
                 yield referent
 
-    def yield_neighbours(self):
+    def yield_neighbors(self):
         for bond in self.yield_bonds():
             first = bond.children[0].target
             if first == self:
-                neighbour = bond.children[1].target
+                neighbor = bond.children[1].target
             else:
-                neighbour = first
-            if isinstance(neighbour, Atom):
-                yield neighbour
+                neighbor = first
+            if isinstance(neighbor, Atom):
+                yield neighbor
 
 
 class AddAtom(AddBase):
