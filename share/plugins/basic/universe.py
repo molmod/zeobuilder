@@ -53,17 +53,6 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     __metaclass__ = NodeClass
 
     #
-    # State
-    #
-
-    def initstate(self, **initstate):
-        GLContainerBase.initstate(self, **initstate)
-        self.child_connections = {}
-        for child in self.children:
-            if isinstance(child, GLTransformationMixin):
-                self.child_connections[child] = child.connect("on-transformation-list-invalidated", self.on_child_transformation_changed)
-
-    #
     # Properties
     #
 
@@ -75,14 +64,12 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
 
     def set_cell(self, cell):
         UnitCell.set_cell(self, cell)
-        self.update_child_positions()
         self.invalidate_boundingbox_list()
         self.invalidate_draw_list()
         self.update_vectors()
 
     def set_cell_active(self, cell_active):
         UnitCell.set_cell_active(self, cell_active)
-        self.update_child_positions()
         self.invalidate_draw_list()
         self.invalidate_boundingbox_list()
         self.update_vectors()
@@ -115,38 +102,6 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     ])
 
     #
-    # Tree
-    #
-
-    def add(self, modelobject, index=-1):
-        GLContainerBase.add(self, modelobject, index)
-        if isinstance(modelobject, GLTransformationMixin):
-            #print "ADD to universe", modelobject.name
-            self.child_connections[modelobject] = modelobject.connect("on-transformation-list-invalidated", self.on_child_transformation_changed)
-            self.on_child_transformation_changed(modelobject)
-
-    def add_many(self, modelobjects, index=-1):
-        GLContainerBase.add_many(self, modelobjects, index)
-        for modelobject in modelobjects:
-            if isinstance(modelobject, GLTransformationMixin):
-                #print "ADD MANY to universe", modelobject.name
-                self.child_connections[modelobject] = modelobject.connect("on-transformation-list-invalidated", self.on_child_transformation_changed)
-                self.on_child_transformation_changed(modelobject)
-
-    def remove(self, modelobject):
-        GLContainerBase.remove(self, modelobject)
-        if isinstance(modelobject, GLTransformationMixin):
-            #print "REMOVE from universe", modelobject.name
-            modelobject.disconnect(self.child_connections[modelobject])
-
-    #
-    # Invalidate
-    #
-
-    def on_child_transformation_changed(self, child):
-        self.wrap(child)
-
-    #
     # Wrapping
     #
 
@@ -156,12 +111,6 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
             new_transformation = copy.deepcopy(child.transformation)
             new_transformation.t -= numpy.dot(self.cell, cell_index)
             primitive.SetProperty(child, "transformation", new_transformation)
-
-    def update_child_positions(self):
-        if not self.cell_active.any(): return
-        for child in self.children:
-            if isinstance(child, GLTransformationMixin):
-                self.wrap(child)
 
     def shortest_vector(self, delta):
         return UnitCell.shortest_vector(self, delta)
