@@ -96,7 +96,7 @@ def create_molecular_graph(selected_nodes):
         if bond.children[0].target in molecule.atoms and
             bond.children[1].target in molecule.atoms
     )
-    graph = MolecularGraph(pairs, molecule.numbers)
+    graph = MolecularGraph(pairs, molecule.numbers, range(len(molecule.atoms)))
     graph.init_nodes()
     graph.molecule = molecule
     return graph
