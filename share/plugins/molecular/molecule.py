@@ -512,7 +512,7 @@ first.authors=[authors.toon_verstraelen]
 
 
 class CloneOrder(Immediate):
-    description = "Apply the order of the first selection to the second."
+    description = "Apply the order of the first selection to all the other."
     menu_info = MenuInfo("default/_Object:tools/_Molecular:rearrange", "_Clone order", order=(0, 4, 1, 5, 0, 3))
     authors = [authors.toon_verstraelen]
 
@@ -520,38 +520,47 @@ class CloneOrder(Immediate):
     def analyze_selection():
         if not Immediate.analyze_selection(): return False
         cache = context.application.cache
-        if len(cache.nodes) != 2: return False
+        if len(cache.nodes) < 2: return False
         Frame = context.application.plugins.get_node("Frame")
         for cls in cache.classes:
             if not issubclass(cls, Frame): return False
         return True
 
     def do(self):
-        frame1, frame2 = context.application.cache.nodes
-
-        graph1, foo = create_graph_bonds([frame1])
-        graph2, foo = create_graph_bonds([frame2])
+        frame_ref = context.application.cache.nodes[0]
+        graph_ref, foo = create_graph_bonds([frame_ref])
         del foo
-
         try:
-            match_generator = MatchGenerator(ExactMatchDefinition(graph1))
+            match_generator = MatchGenerator(ExactMatchDefinition(graph_ref))
         except MatchDefinitionError, e:
-            raise UserError("Can not apply the order of the first selection to the second.")
+            raise UserError("Could not setup a graph match definition to clone the order.")
 
-        try:
-            match = match_generator(graph2).next()
-        except StopIteration:
-            raise UserError("The connectivity of the two selections differs.")
+        some_failed = False
+        all_failed = True
+        for frame_other in context.application.cache.nodes[1:]:
+            graph_other, foo = create_graph_bonds([frame_other])
+            del foo
 
-        moves = [
-            (graph1.index[atom1], atom2)
-            for atom1, atom2
-            in match.forward.iteritems()
-        ]
-        moves.sort()
+            try:
+                match = match_generator(graph_other).next()
+                all_failed = False
+            except (StopIteration, MatchDefinitionError):
+                some_failed = True
+                continue
 
-        for new_index, atom2 in moves:
-            primitive.Move(atom2, frame2, new_index)
+            moves = [
+                (graph_ref.index[atom1], atom2)
+                for atom1, atom2
+                in match.forward.iteritems()
+            ]
+            moves.sort()
+
+            for new_index, atom2 in moves:
+                primitive.Move(atom2, frame_other, new_index)
+        if all_failed:
+            raise UserError("None of the atom orders could be cloned.")
+        elif some_failed:
+            ok_error("Some molecules/frames did not match the first frame, so they are not reordered.")
 
 
 class RingDistributionWindow(GladeWrapper):

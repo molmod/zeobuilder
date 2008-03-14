@@ -1,0 +1,1234 @@
+<?xml version='1.0'?>
+<zml_file version='0.1'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <list label="children">
+    <model_object id='1' class='Frame'>
+     <list label="children">
+      <model_object id='2' class='Atom'>
+       <int label="number">3</int>
+       <str label="name">Li</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.73399900035 -4.18152740763 -5.09866252303 </cells>
+        </array>
+       </translation>
+      </model_object>
+     </list>
+     <str label="name">Li1 </str>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <shape>3 3 </shape>
+       <cells>1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 </cells>
+      </array>
+     </transformation>
+    </model_object>
+    <model_object id='3' class='Frame'>
+     <list label="children">
+      <model_object id='4' class='Atom'>
+       <int label="number">7</int>
+       <str label="name">NC2</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.75706460391 -0.737250194984 -6.54033081114 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='5' class='Atom'>
+       <str label="name">CNT2</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.3643632146 0.273101331148 -5.99605189005 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='6' class='Atom'>
+       <str label="name">CT3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>12.9370216491 -1.70931209019 -4.4255401844 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='7' class='Atom'>
+       <str label="name">CE2</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.8650345002 0.0832292081163 -9.01005169009 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='8' class='Atom'>
+       <str label="name">CA</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.98276971389 2.38121366574 -10.2029450916 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='9' class='Atom'>
+       <str label="name">CA</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.5118812994 2.10736589276 -12.3968642207 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='10' class='Atom'>
+       <str label="name">CA</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.9412100695 4.15902454883 -14.0419615272 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='11' class='Atom'>
+       <str label="name">CA</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.99097073168 6.6501220098 -13.4188810263 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='12' class='Atom'>
+       <str label="name">CA</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.6996358267 6.82956095485 -11.1881462526 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='13' class='Atom'>
+       <str label="name">CA</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.13836448821 4.77603146991 -9.57859658447 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='14' class='Atom'>
+       <str label="name">CE1</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>5.79686908636 -0.78331604895 -10.1272502216 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='15' class='Atom'>
+       <int label="number">17</int>
+       <str label="name">CLA</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.93984844264 -3.56723224355 -8.75872378346 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='16' class='Atom'>
+       <str label="name">CT3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.15420574719 0.115021960593 -12.3052673053 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='17' class='Atom'>
+       <str label="name">CT3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.3397778776 2.62338584925 -4.22818096643 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='18' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.22510898057 5.41782214924 -7.81133415265 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='19' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.85752283882 8.59016777121 -10.504791047 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='20' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.9472027847 8.24909866021 -14.7048831241 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='21' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>12.002185469 4.27855350625 -15.8431464328 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='22' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.2807296051 0.262188162725 -12.858546992 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='23' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA1</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>12.6350830972 0.69603148855 -7.62543423396 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='24' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.8439133464 -1.71586755015 -2.61539608716 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='25' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>12.773923166 -3.68325953845 -5.15069991158 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='26' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.9724135426 -1.3487712411 -3.91747975439 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='27' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.75661445546 2.42802029235 -2.87661859983 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='28' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>12.9964686538 2.90787278036 -2.94356403785 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='29' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.9416806113 4.28685318343 -5.38394313911 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='30' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.62777300607 2.4513943149 -12.4191006281 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='31' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>2.18036790304 0.333820121557 -11.8868649317 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='32' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HA3</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.62463417096 -0.880041681115 -14.1655269396 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='33' class='Bond'>
+       <str label="name">Bond 797</str>
+       <list label="targets">
+        <reference to='4' />
+        <reference to='7' />
+       </list>
+      </model_object>
+      <model_object id='34' class='Bond'>
+       <str label="name">Bond 798</str>
+       <list label="targets">
+        <reference to='4' />
+        <reference to='5' />
+       </list>
+      </model_object>
+      <model_object id='35' class='Bond'>
+       <str label="name">Bond 523</str>
+       <list label="targets">
+        <reference to='5' />
+        <reference to='23' />
+       </list>
+      </model_object>
+      <model_object id='36' class='Bond'>
+       <str label="name">Bond 524</str>
+       <list label="targets">
+        <reference to='5' />
+        <reference to='17' />
+       </list>
+      </model_object>
+      <model_object id='37' class='Bond'>
+       <str label="name">Bond 640</str>
+       <list label="targets">
+        <reference to='6' />
+        <reference to='5' />
+       </list>
+      </model_object>
+      <model_object id='38' class='Bond'>
+       <str label="name">Bond 637</str>
+       <list label="targets">
+        <reference to='6' />
+        <reference to='24' />
+       </list>
+      </model_object>
+      <model_object id='39' class='Bond'>
+       <str label="name">Bond 638</str>
+       <list label="targets">
+        <reference to='6' />
+        <reference to='26' />
+       </list>
+      </model_object>
+      <model_object id='40' class='Bond'>
+       <str label="name">Bond 639</str>
+       <list label="targets">
+        <reference to='6' />
+        <reference to='25' />
+       </list>
+      </model_object>
+      <model_object id='41' class='Bond'>
+       <str label="name">Bond 41</str>
+       <list label="targets">
+        <reference to='7' />
+        <reference to='8' />
+       </list>
+      </model_object>
+      <model_object id='42' class='Bond'>
+       <int label="bond_type">2</int>
+       <str label="name">Bond 799</str>
+       <list label="targets">
+        <reference to='14' />
+        <reference to='7' />
+       </list>
+      </model_object>
+      <model_object id='43' class='Bond'>
+       <int label="bond_type">2</int>
+       <str label="name">Bond 42</str>
+       <list label="targets">
+        <reference to='8' />
+        <reference to='13' />
+       </list>
+      </model_object>
+      <model_object id='44' class='Bond'>
+       <int label="bond_type">2</int>
+       <str label="name">Bond 303</str>
+       <list label="targets">
+        <reference to='9' />
+        <reference to='8' />
+       </list>
+      </model_object>
+      <model_object id='45' class='Bond'>
+       <int label="bond_type">2</int>
+       <str label="name">Bond 301</str>
+       <list label="targets">
+        <reference to='9' />
+        <reference to='10' />
+       </list>
+      </model_object>
+      <model_object id='46' class='Bond'>
+       <str label="name">Bond 302</str>
+       <list label="targets">
+        <reference to='9' />
+        <reference to='22' />
+       </list>
+      </model_object>
+      <model_object id='47' class='Bond'>
+       <str label="name">Bond 10</str>
+       <list label="targets">
+        <reference to='11' />
+        <reference to='10' />
+       </list>
+      </model_object>
+      <model_object id='48' class='Bond'>
+       <str label="name">Bond 25</str>
+       <list label="targets">
+        <reference to='21' />
+        <reference to='10' />
+       </list>
+      </model_object>
+      <model_object id='49' class='Bond'>
+       <int label="bond_type">2</int>
+       <str label="name">Bond 8</str>
+       <list label="targets">
+        <reference to='11' />
+        <reference to='12' />
+       </list>
+      </model_object>
+      <model_object id='50' class='Bond'>
+       <str label="name">Bond 9</str>
+       <list label="targets">
+        <reference to='11' />
+        <reference to='20' />
+       </list>
+      </model_object>
+      <model_object id='51' class='Bond'>
+       <str label="name">Bond 11</str>
+       <list label="targets">
+        <reference to='12' />
+        <reference to='19' />
+       </list>
+      </model_object>
+      <model_object id='52' class='Bond'>
+       <int label="bond_type">2</int>
+       <str label="name">Bond 44</str>
+       <list label="targets">
+        <reference to='13' />
+        <reference to='12' />
+       </list>
+      </model_object>
+      <model_object id='53' class='Bond'>
+       <str label="name">Bond 43</str>
+       <list label="targets">
+        <reference to='13' />
+        <reference to='18' />
+       </list>
+      </model_object>
+      <model_object id='54' class='Bond'>
+       <str label="name">Bond 245</str>
+       <list label="targets">
+        <reference to='15' />
+        <reference to='14' />
+       </list>
+      </model_object>
+      <model_object id='55' class='Bond'>
+       <str label="name">Bond 492</str>
+       <list label="targets">
+        <reference to='16' />
+        <reference to='14' />
+       </list>
+      </model_object>
+      <model_object id='56' class='Bond'>
+       <str label="name">Bond 62</str>
+       <list label="targets">
+        <reference to='32' />
+        <reference to='16' />
+       </list>
+      </model_object>
+      <model_object id='57' class='Bond'>
+       <str label="name">Bond 490</str>
+       <list label="targets">
+        <reference to='16' />
+        <reference to='30' />
+       </list>
+      </model_object>
+      <model_object id='58' class='Bond'>
+       <str label="name">Bond 491</str>
+       <list label="targets">
+        <reference to='16' />
+        <reference to='31' />
+       </list>
+      </model_object>
+      <model_object id='59' class='Bond'>
+       <str label="name">Bond 221</str>
+       <list label="targets">
+        <reference to='27' />
+        <reference to='17' />
+       </list>
+      </model_object>
+      <model_object id='60' class='Bond'>
+       <str label="name">Bond 526</str>
+       <list label="targets">
+        <reference to='29' />
+        <reference to='17' />
+       </list>
+      </model_object>
+      <model_object id='61' class='Bond'>
+       <str label="name">Bond 818</str>
+       <list label="targets">
+        <reference to='17' />
+        <reference to='28' />
+       </list>
+      </model_object>
+     </list>
+     <str label="name">Cl1 N1 C12 H15 </str>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <shape>3 3 </shape>
+       <cells>1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 </cells>
+      </array>
+     </transformation>
+    </model_object>
+    <model_object id='62' class='Frame'>
+     <list label="children">
+      <model_object id='63' class='Atom'>
+       <str label="name">CCF2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-2.16795996125 8.50129584086 -25.3214892664 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='64' class='Atom'>
+       <str label="name">CCF2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-0.239441529251 10.6748909654 -25.0117801606 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='65' class='Atom'>
+       <int label="number">8</int>
+       <str label="name">OCP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-1.38659977885 12.4994385553 -23.3499077553 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='66' class='Atom'>
+       <str label="name">CCF2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.853117572 11.7796494298 -22.422987638 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='67' class='Atom'>
+       <str label="name">CCF2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.254383909 8.96772371442 -23.4172783817 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='68' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>1.56765632946 10.0908578757 -24.1465047995 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='69' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>0.52963543328 11.5370955216 -26.706014126 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='70' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.9297006133 11.8700312513 -20.3443153468 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='71' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-5.23363810187 13.2179369978 -23.085053189 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='72' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-6.13429858483 8.56057088051 -24.1528712868 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='73' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.19620113106 7.79663019361 -21.7814350641 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='74' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-2.90365680135 8.37838994284 -27.2832574297 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='75' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-1.31658920504 6.57164735264 -25.1619264608 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='76' class='Bond'>
+       <str label="name">Bond 469</str>
+       <list label="targets">
+        <reference to='63' />
+        <reference to='67' />
+       </list>
+      </model_object>
+      <model_object id='77' class='Bond'>
+       <str label="name">Bond 470</str>
+       <list label="targets">
+        <reference to='63' />
+        <reference to='75' />
+       </list>
+      </model_object>
+      <model_object id='78' class='Bond'>
+       <str label="name">Bond 471</str>
+       <list label="targets">
+        <reference to='63' />
+        <reference to='64' />
+       </list>
+      </model_object>
+      <model_object id='79' class='Bond'>
+       <str label="name">Bond 623</str>
+       <list label="targets">
+        <reference to='74' />
+        <reference to='63' />
+       </list>
+      </model_object>
+      <model_object id='80' class='Bond'>
+       <str label="name">Bond 142</str>
+       <list label="targets">
+        <reference to='64' />
+        <reference to='65' />
+       </list>
+      </model_object>
+      <model_object id='81' class='Bond'>
+       <str label="name">Bond 143</str>
+       <list label="targets">
+        <reference to='64' />
+        <reference to='68' />
+       </list>
+      </model_object>
+      <model_object id='82' class='Bond'>
+       <str label="name">Bond 662</str>
+       <list label="targets">
+        <reference to='69' />
+        <reference to='64' />
+       </list>
+      </model_object>
+      <model_object id='83' class='Bond'>
+       <str label="name">Bond 144</str>
+       <list label="targets">
+        <reference to='65' />
+        <reference to='66' />
+       </list>
+      </model_object>
+      <model_object id='84' class='Bond'>
+       <str label="name">Bond 145</str>
+       <list label="targets">
+        <reference to='66' />
+        <reference to='71' />
+       </list>
+      </model_object>
+      <model_object id='85' class='Bond'>
+       <str label="name">Bond 146</str>
+       <list label="targets">
+        <reference to='66' />
+        <reference to='70' />
+       </list>
+      </model_object>
+      <model_object id='86' class='Bond'>
+       <str label="name">Bond 473</str>
+       <list label="targets">
+        <reference to='67' />
+        <reference to='66' />
+       </list>
+      </model_object>
+      <model_object id='87' class='Bond'>
+       <str label="name">Bond 472</str>
+       <list label="targets">
+        <reference to='67' />
+        <reference to='73' />
+       </list>
+      </model_object>
+      <model_object id='88' class='Bond'>
+       <str label="name">Bond 749</str>
+       <list label="targets">
+        <reference to='72' />
+        <reference to='67' />
+       </list>
+      </model_object>
+     </list>
+     <str label="name">O1 C4 H8 </str>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <shape>3 3 </shape>
+       <cells>1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 </cells>
+      </array>
+     </transformation>
+    </model_object>
+    <model_object id='89' class='Frame'>
+     <list label="children">
+      <model_object id='90' class='Atom'>
+       <int label="number">8</int>
+       <str label="name">OCP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.13818504265 3.44297708107 0.03304753063 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='91' class='Atom'>
+       <str label="name">CCF2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.96100203698 4.63062838226 -2.3237829988 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='92' class='Atom'>
+       <str label="name">CCF2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.02846565359 2.6757558296 -4.38509815541 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='93' class='Atom'>
+       <str label="name">CCF2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>0.980155592238 0.889023549429 -3.15803850542 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='94' class='Atom'>
+       <str label="name">CCF2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>1.08759786131 1.84367539776 -0.30586918231 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='95' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-0.610751927579 2.77308239468 0.188524748298 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='96' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>1.28591894988 0.227732786125 1.10920121047 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='97' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.02660994253 6.45675011397 -2.7938296979 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='98' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>5.98373654484 5.06602884242 -2.08174309612 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='99' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.65384366782 1.58864173818 -5.09707515308 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='100' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>2.06752290696 3.67111993776 -5.97818452946 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='101' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>1.78167159358 -1.02421266732 -3.19948208926 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='102' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-1.01959228693 0.903638691349 -3.92988391673 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='103' class='Bond'>
+       <str label="name">Bond 377</str>
+       <list label="targets">
+        <reference to='91' />
+        <reference to='90' />
+       </list>
+      </model_object>
+      <model_object id='104' class='Bond'>
+       <str label="name">Bond 380</str>
+       <list label="targets">
+        <reference to='94' />
+        <reference to='90' />
+       </list>
+      </model_object>
+      <model_object id='105' class='Bond'>
+       <str label="name">Bond 374</str>
+       <list label="targets">
+        <reference to='91' />
+        <reference to='92' />
+       </list>
+      </model_object>
+      <model_object id='106' class='Bond'>
+       <str label="name">Bond 375</str>
+       <list label="targets">
+        <reference to='91' />
+        <reference to='98' />
+       </list>
+      </model_object>
+      <model_object id='107' class='Bond'>
+       <str label="name">Bond 376</str>
+       <list label="targets">
+        <reference to='91' />
+        <reference to='97' />
+       </list>
+      </model_object>
+      <model_object id='108' class='Bond'>
+       <str label="name">Bond 33</str>
+       <list label="targets">
+        <reference to='100' />
+        <reference to='92' />
+       </list>
+      </model_object>
+      <model_object id='109' class='Bond'>
+       <str label="name">Bond 378</str>
+       <list label="targets">
+        <reference to='92' />
+        <reference to='93' />
+       </list>
+      </model_object>
+      <model_object id='110' class='Bond'>
+       <str label="name">Bond 379</str>
+       <list label="targets">
+        <reference to='92' />
+        <reference to='99' />
+       </list>
+      </model_object>
+      <model_object id='111' class='Bond'>
+       <str label="name">Bond 255</str>
+       <list label="targets">
+        <reference to='101' />
+        <reference to='93' />
+       </list>
+      </model_object>
+      <model_object id='112' class='Bond'>
+       <str label="name">Bond 383</str>
+       <list label="targets">
+        <reference to='93' />
+        <reference to='94' />
+       </list>
+      </model_object>
+      <model_object id='113' class='Bond'>
+       <str label="name">Bond 801</str>
+       <list label="targets">
+        <reference to='102' />
+        <reference to='93' />
+       </list>
+      </model_object>
+      <model_object id='114' class='Bond'>
+       <str label="name">Bond 381</str>
+       <list label="targets">
+        <reference to='94' />
+        <reference to='96' />
+       </list>
+      </model_object>
+      <model_object id='115' class='Bond'>
+       <str label="name">Bond 382</str>
+       <list label="targets">
+        <reference to='94' />
+        <reference to='95' />
+       </list>
+      </model_object>
+     </list>
+     <str label="name">O1 C4 H8 </str>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <shape>3 3 </shape>
+       <cells>1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 </cells>
+      </array>
+     </transformation>
+    </model_object>
+    <model_object id='116' class='Frame'>
+     <list label="children">
+      <model_object id='117' class='Atom'>
+       <int label="number">8</int>
+       <str label="name">OCP</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.0962511541 2.11586210146 4.71945684891 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='118' class='Atom'>
+       <str label="name">CCF2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.8680455428 -0.368815959831 5.57020210577 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='119' class='Atom'>
+       <str label="name">CCF2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.69886481844 -2.37734350661 4.6820648379 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='120' class='Atom'>
+       <str label="name">CCF2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>6.76237363188 -0.662672153108 3.31452105739 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='121' class='Atom'>
+       <str label="name">CCF2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.43120440246 2.07413694843 3.85718426264 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='122' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.29201662407 3.41078559638 2.25933577873 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='123' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>6.2469035857 2.73231155334 5.41070355089 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='124' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>12.736999807 -0.785534587431 4.68735607108 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='125' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2a</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.0597355823 -0.207595864442 7.63808217097 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='126' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.86788798666 -3.41184762246 6.26926660477 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='127' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.5687359935 -3.77953352607 3.352578252 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='128' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.79836047391 -1.06333188802 3.6889684011 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='129' class='Atom'>
+       <int label="number">1</int>
+       <str label="name">HCP2b</str>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>6.94355490442 -1.07361388792 1.28281412985 </cells>
+        </array>
+       </translation>
+      </model_object>
+      <model_object id='130' class='Bond'>
+       <str label="name">Bond 105</str>
+       <list label="targets">
+        <reference to='117' />
+        <reference to='121' />
+       </list>
+      </model_object>
+      <model_object id='131' class='Bond'>
+       <str label="name">Bond 106</str>
+       <list label="targets">
+        <reference to='117' />
+        <reference to='118' />
+       </list>
+      </model_object>
+      <model_object id='132' class='Bond'>
+       <str label="name">Bond 57</str>
+       <list label="targets">
+        <reference to='124' />
+        <reference to='118' />
+       </list>
+      </model_object>
+      <model_object id='133' class='Bond'>
+       <str label="name">Bond 402</str>
+       <list label="targets">
+        <reference to='118' />
+        <reference to='125' />
+       </list>
+      </model_object>
+      <model_object id='134' class='Bond'>
+       <str label="name">Bond 424</str>
+       <list label="targets">
+        <reference to='119' />
+        <reference to='118' />
+       </list>
+      </model_object>
+      <model_object id='135' class='Bond'>
+       <str label="name">Bond 421</str>
+       <list label="targets">
+        <reference to='119' />
+        <reference to='120' />
+       </list>
+      </model_object>
+      <model_object id='136' class='Bond'>
+       <str label="name">Bond 422</str>
+       <list label="targets">
+        <reference to='119' />
+        <reference to='127' />
+       </list>
+      </model_object>
+      <model_object id='137' class='Bond'>
+       <str label="name">Bond 423</str>
+       <list label="targets">
+        <reference to='119' />
+        <reference to='126' />
+       </list>
+      </model_object>
+      <model_object id='138' class='Bond'>
+       <str label="name">Bond 425</str>
+       <list label="targets">
+        <reference to='120' />
+        <reference to='129' />
+       </list>
+      </model_object>
+      <model_object id='139' class='Bond'>
+       <str label="name">Bond 426</str>
+       <list label="targets">
+        <reference to='120' />
+        <reference to='121' />
+       </list>
+      </model_object>
+      <model_object id='140' class='Bond'>
+       <str label="name">Bond 462</str>
+       <list label="targets">
+        <reference to='128' />
+        <reference to='120' />
+       </list>
+      </model_object>
+      <model_object id='141' class='Bond'>
+       <str label="name">Bond 107</str>
+       <list label="targets">
+        <reference to='121' />
+        <reference to='122' />
+       </list>
+      </model_object>
+      <model_object id='142' class='Bond'>
+       <str label="name">Bond 108</str>
+       <list label="targets">
+        <reference to='121' />
+        <reference to='123' />
+       </list>
+      </model_object>
+     </list>
+     <str label="name">O1 C4 H8 </str>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <shape>3 3 </shape>
+       <cells>1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 </cells>
+      </array>
+     </transformation>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='143' class='Folder'>
+  </model_object>
+ </list>
+</zml_file>

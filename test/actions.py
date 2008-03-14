@@ -902,6 +902,15 @@ class MolecularActions(ApplicationTestCase):
             CloneOrder()
         self.run_test_application(fn)
 
+    def test_clone_order2(self):
+        def fn():
+            context.application.model.file_open("input/azaallyl_thf_mm.zml")
+            context.application.main.select_nodes(context.application.model.universe.children[2:])
+            CloneOrder = context.application.plugins.get_action("CloneOrder")
+            self.assert_(CloneOrder.analyze_selection())
+            CloneOrder()
+        self.run_test_application(fn)
+
     def test_strong_ring_distribution(self):
         def fn():
             context.application.model.file_open("input/springs.zml")
