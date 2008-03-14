@@ -127,33 +127,6 @@ class Point(GLGeometricBase, ColorMixin):
             vb.rotate(180, 0.0, 1.0, 0.0)
         vb.pop_matrix()
 
-    def write_pov(self, indenter):
-        def write_spike(signs):
-            indenter.write_line("triangle {", 1)
-            indenter.write_line("< %f,  %f,  %f>," % (signs[0]*self.spike_length, signs[1]*self.spike_length, signs[2]*self.spike_length))
-            indenter.write_line("< %f, 0.0, 0.0>," % (signs[0]*self.spike_thickness))
-            indenter.write_line("<0.0,  %f, 0.0>" % (signs[1]*self.spike_thickness))
-            indenter.write_line("}", -1)
-            indenter.write_line("triangle {", 1)
-            indenter.write_line("< %f,  %f,  %f>," % (signs[0]*self.spike_length, signs[1]*self.spike_length, signs[2]*self.spike_length))
-            indenter.write_line("<0.0,  %f, 0.0>," % (signs[1]*self.spike_thickness))
-            indenter.write_line("<0.0, 0.0,  %f>" % (signs[2]*self.spike_thickness))
-            indenter.write_line("}", -1)
-            indenter.write_line("triangle {", 1)
-            indenter.write_line("< %f,  %f,  %f>," % (signs[0]*self.spike_length, signs[1]*self.spike_length, signs[2]*self.spike_length))
-            indenter.write_line("<0.0, 0.0,  %f>," % (signs[2]*self.spike_thickness))
-            indenter.write_line("< %f, 0.0, 0.0>" % (signs[0]*self.spike_thickness))
-            indenter.write_line("}", -1)
-
-        signslist = [((i/4 % 2) * 2 - 1, (i/2 % 2) * 2 - 1, (i % 2) * 2 - 1) for i in range(8)]
-        indenter.write_line("mesh {", 1)
-        for signs in signslist:
-            write_spike(signs)
-        indenter.write_line("inside_vector <0.0, 0.0, 0.0>")
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-        GLGeometricBase.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

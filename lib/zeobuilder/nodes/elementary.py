@@ -137,11 +137,6 @@ class GLContainerBase(ModelObject, GLMixin, GLContainerMixin):
         GLMixin.draw(self)
 
 
-    def write_pov(self, indenter):
-        GLContainerMixin.write_pov(self, indenter)
-        GLMixin.write_pov(self, indenter)
-
-
 class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
 
     #
@@ -186,11 +181,6 @@ class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
     def draw(self):
         GLContainerMixin.draw(self)
         GLTransformationMixin.draw(self)
-
-
-    def write_pov(self, indenter):
-        GLContainerMixin.write_pov(self, indenter)
-        GLTransformationMixin.write_pov(self, indenter)
 
 
 class GLReferentBase(ReferentBase, GLMixin):

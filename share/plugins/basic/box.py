@@ -94,13 +94,6 @@ class Box(GLGeometricBase, ColorMixin):
             ) for a,b,c,normal in sides
         ])
 
-    def write_pov(self, indenter):
-        indenter.write_line("box {", 1)
-        indenter.write_line("<%f, %f, %f>, <%f, %f, %f>" % (tuple(-self.size*0.5) + tuple(self.size*0.5)))
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-        GLGeometricBase.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

@@ -58,9 +58,6 @@ class DumpFilters(ApplicationTestCase):
     def test_zml(self):
         self.helper_file_save("core_objects.zml", "test.zml")
 
-    def test_pov(self):
-        self.helper_file_save("core_objects.zml", "test.pov")
-
     def test_xyz(self):
         self.helper_file_save("tpa.zml", "test.xyz")
 

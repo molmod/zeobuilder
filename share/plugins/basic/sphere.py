@@ -88,13 +88,6 @@ class Sphere(GLGeometricBase, ColorMixin):
         vb = context.application.vis_backend
         vb.draw_sphere(self.radius, self.quality)
 
-    def write_pov(self, indenter):
-        indenter.write_line("sphere {", 1)
-        indenter.write_line("<0.0, 0.0, 0.0>, %f" % (self.radius))
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-        GLGeometricBase.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

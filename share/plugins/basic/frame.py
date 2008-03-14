@@ -56,12 +56,6 @@ class Frame(GLFrameBase, FrameAxes):
         FrameAxes.draw(self, self.selected)
         GLFrameBase.draw(self)
 
-    def write_pov(self, indenter):
-        indenter.write_line("union {", 1)
-        FrameAxes.write_pov(self, indenter)
-        GLFrameBase.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

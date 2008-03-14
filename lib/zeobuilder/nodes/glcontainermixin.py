@@ -67,9 +67,6 @@ class GLContainerMixin(ContainerMixin):
         for child in self.children:
             child.call_list()
 
-    def write_pov(self, indenter):
-        for child in self.children:
-            if child.visible: child.write_pov(indenter)
 
     #
     # Revalidation

@@ -398,25 +398,6 @@ class Universe(GLPeriodicContainer, FrameAxes):
         FrameAxes.draw(self, self.selected)
         GLPeriodicContainer.draw(self)
 
-    def write_pov(self, indenter):
-        indenter.write_line("union {", 1)
-        FrameAxes.write_pov(self, indenter)
-        if self.box_visible and sum(self.cell_active) > 0:
-            color = numpy.zeros(3, float)
-            def draw_line(begin, end):
-                indenter.write_line("cylinder {", 1)
-                indenter.write_line("<%f, %f, %f>, <%f, %f, %f>, 0.05" % (tuple(begin) + tuple(end)))
-                indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(color))
-                indenter.write_line("}", -1)
-
-            def set_color(r, g, b):
-                color[0] = r
-                color[1] = g
-                color[2] = b
-
-            self.draw_box_helper(True, draw_line, set_color)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

@@ -70,10 +70,6 @@ class Vector(GLReferentBase):
         self.calc_vector_dimensions()
         context.application.vis_backend.transform(self.orientation)
 
-    def write_pov(self, indenter):
-        GLReferentBase.write_pov(self, indenter)
-        indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f>" % (tuple(numpy.ravel(numpy.transpose(self.orientation.r))) + tuple(self.orientation.t)))
-
     #
     # Revalidation
     #

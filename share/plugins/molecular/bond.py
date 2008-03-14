@@ -138,29 +138,6 @@ class Bond(Vector):
         vb.set_color(*end.get_color())
         vb.draw_cone(half_radius, self.end_radius, half_length, self.quality)
 
-    def write_pov(self, indenter):
-        self.calc_vector_dimensions()
-        if self.length <= 0: return
-        half_length = 0.5 * (self.end_position - self.begin_position)
-        if half_length <= 0: return
-        half_position = half_length + self.begin_position
-        half_radius = 0.5 * (self.begin_radius + self.end_radius)
-        begin = self.children[0].target
-        end = self.children[1].target
-        indenter.write_line("union {", 1)
-        indenter.write_line("cone {", 1)
-        indenter.write_line("<0.0, 0.0, %f>, %f, <0.0, 0.0, %f>, %f" % (self.begin_position, self.begin_radius, half_position, half_radius))
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(begin.get_color()[0:3]))
-        indenter.write_line("finish { my_finish }")
-        indenter.write_line("}", -1)
-        indenter.write_line("cone {", 1)
-        indenter.write_line("<0.0, 0.0, %f>, %f, <0.0, 0.0, %f>, %f" % (half_position, half_radius, self.end_position, self.end_radius))
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(end.get_color()[0:3]))
-        indenter.write_line("finish { my_finish }")
-        indenter.write_line("}", -1)
-        Vector.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

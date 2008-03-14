@@ -150,40 +150,6 @@ class FrameAxes(object):
             draw_axis_spike(self.axis_thickness, self.axis_length)
             vb.pop_matrix()
 
-    def write_pov(self, indenter):
-        if not self.axes_visible: return
-        def write_axis(color, povrot=None):
-            indenter.write_line("mesh {", 1)
-            indenter.write_line("triangle {", 1)
-            indenter.write_line("<%f, %f, %f>," % (self.axis_thickness,  self.axis_thickness,  self.axis_thickness))
-            indenter.write_line("<%f, 0.0, 0.0>," % self.axis_length)
-            indenter.write_line("<%f, %f, %f>" % (self.axis_thickness,  self.axis_thickness, -self.axis_thickness))
-            indenter.write_line("}", -1)
-            indenter.write_line("triangle {", 1)
-            indenter.write_line("<%f, %f, %f>," % (self.axis_thickness,  self.axis_thickness, -self.axis_thickness))
-            indenter.write_line("<%f, 0.0, 0.0>," % self.axis_length)
-            indenter.write_line("<%f, %f, %f>" % (-self.axis_thickness, -self.axis_thickness, -self.axis_thickness))
-            indenter.write_line("}", -1)
-            indenter.write_line("triangle {", 1)
-            indenter.write_line("<%f, %f, %f>," % (-self.axis_thickness, -self.axis_thickness, -self.axis_thickness))
-            indenter.write_line("<%f, 0.0, 0.0>," % self.axis_length)
-            indenter.write_line("<%f, %f, %f>" % (self.axis_thickness, -self.axis_thickness,  self.axis_thickness))
-            indenter.write_line("}", -1)
-            indenter.write_line("triangle {", 1)
-            indenter.write_line("<%f, %f, %f>," % (self.axis_thickness, -self.axis_thickness,  self.axis_thickness))
-            indenter.write_line("<%f, 0.0, 0.0>," % self.axis_length)
-            indenter.write_line("<%f, %f, %f>" % (self.axis_thickness, self.axis_thickness, self.axis_thickness))
-            indenter.write_line("}", -1)
-            indenter.write_line("inside_vector <0.0, 0.0, 0.0>")
-            indenter.write_line("pigment { color %s }" % color)
-            indenter.write_line("finish { my_finish }")
-            if povrot is not None: indenter.write_line(povrot)
-            indenter.write_line("}", -1)
-
-        write_axis("Red")
-        write_axis("Green", "matrix <0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0>")
-        write_axis("Blue", "matrix <0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0>")
-
     #
     # Revalidation
     #

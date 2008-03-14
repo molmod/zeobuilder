@@ -131,22 +131,6 @@ class Spring(Vector, ColorMixin):
             if l_cone > 0:
                 vb.draw_cone(self.radius, 0.0, l_cone, self.quality)
 
-    def write_pov(self, indenter):
-        if self.length <= 0: return
-        indenter.write_line("union {", 1)
-        indenter.write_line("cone {", 1)
-        indenter.write_line("<0.0, 0.0, 0.0>, %f, <0.0, 0.0, %f>, 0.0" % (self.radius, 0.5*self.radius))
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-        indenter.write_line("finish { my_finish }")
-        indenter.write_line("}", -1)
-        indenter.write_line("cone {", 1)
-        indenter.write_line("<0.0, 0.0, %f>, 0.0, <0.0, 0.0, %f>, %f" % (0.5*self.radius, self.length, self.radius))
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-        indenter.write_line("finish { my_finish }")
-        indenter.write_line("}", -1)
-        Vector.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

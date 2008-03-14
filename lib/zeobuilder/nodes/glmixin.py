@@ -226,9 +226,6 @@ class GLMixin(gobject.GObject):
     def finish_draw(self):
         pass
 
-    def write_pov(self, indenter):
-        indenter.write_line("finish { my_finish }")
-
     #
     # Frame
     #
@@ -356,19 +353,6 @@ class GLTransformationMixin(GLMixin):
     def invalidate_all_lists(self):
         self.invalidate_transformation_list()
         GLMixin.invalidate_all_lists(self)
-
-    #
-    # Draw
-    #
-
-    def write_pov(self, indenter):
-        GLMixin.write_pov(self, indenter)
-        if self.Transformation == Translation:
-            indenter.write_line("translate <%f, %f, %f>" % tuple(self.transformation.t))
-        elif self.Transformation == Rotation:
-            indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, 0.0, 0.0, 0.0>" % tuple(numpy.ravel(numpy.transpose(self.transformation.r))))
-        else:
-            indenter.write_line("matrix <%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f>" % (tuple(numpy.ravel(numpy.transpose(self.transformation.r))) + tuple(self.transformation.t)))
 
     #
     # Revalidation

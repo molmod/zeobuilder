@@ -154,40 +154,6 @@ class Arrow(Vector, ColorMixin):
             vb.pop_matrix()
         vb.set_quadric_outside()
 
-    def write_pov(self, indenter):
-        self.calc_vector_dimensions()
-        if self.length == 0.0: return
-        # usefull variable
-        if self.arrow_radius <= 0:
-            arrowtop_length = self.arrow_length
-        else:
-            arrowtop_length = self.arrow_length/self.arrow_radius*self.radius
-        # group all
-        indenter.write_line("union {", 1)
-        # stick and bottom
-        if (self.length - arrowtop_length > 0) and (self.radius > 0):
-            indenter.write_line("cylinder {", 1)
-            indenter.write_line("<0.0, 0.0, 0.0>, <0.0, 0.0, %f>, %f" % (self.length - arrowtop_length, self.radius))
-            indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-            indenter.write_line("finish { my_finish }")
-            indenter.write_line("}", -1)
-        # arrowtop
-        if (self.radius > 0) and (arrowtop_length > 0):
-            indenter.write_line("cone {", 1)
-            indenter.write_line("<0.0, 0.0, %f>, %f, <0.0, 0.0, %f>, 0.0" % (self.length - arrowtop_length, self.radius, self.length))
-            indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-            indenter.write_line("finish { my_finish }")
-            indenter.write_line("}", -1)
-        # arrow
-        if (self.arrow_radius - self.radius > 0) and (self.arrow_length - arrowtop_length) > 0:
-            indenter.write_line("cone {", 1)
-            indenter.write_line("<0.0, 0.0, %f>, %f, <0.0, 0.0, %f>, %f" % ((self.length - self.arrow_length)*self.arrow_position, self.arrow_radius, (self.length - self.arrow_length)*self.arrow_position + self.arrow_length - arrowtop_length, self.radius))
-            indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.color[0:3]))
-            indenter.write_line("finish { my_finish }")
-            indenter.write_line("}", -1)
-        Vector.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #

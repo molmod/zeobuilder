@@ -128,13 +128,6 @@ class Atom(GLGeometricBase, UserColorMixin):
         vb = context.application.vis_backend
         vb.draw_sphere(self.get_radius(), self.quality)
 
-    def write_pov(self, indenter):
-        indenter.write_line("sphere {", 1)
-        indenter.write_line("<0.0, 0.0, 0.0>, %f" % (self.get_radius()))
-        indenter.write_line("pigment { rgb <%f, %f, %f> }" % tuple(self.get_color()[0:3]))
-        GLGeometricBase.write_pov(self, indenter)
-        indenter.write_line("}", -1)
-
     #
     # Revalidation
     #
