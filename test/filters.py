@@ -56,16 +56,17 @@ class DumpFilters(ApplicationTestCase):
         self.run_test_application(fn)
 
     def test_zml(self):
-        self.helper_file_save("core_objects.zml", "test.zml")
+        self.helper_file_save("core_objects.zml", "core_objects.zml")
 
     def test_xyz(self):
-        self.helper_file_save("tpa.zml", "test.xyz")
+        self.helper_file_save("tpa.zml", "tpa.xyz")
 
     def test_psf(self):
-        self.helper_file_save("precursor.zml", "test.psf")
+        self.helper_file_save("precursor.zml", "precursor.psf")
+        self.helper_file_save("azaallyl_thf_mm.zml", "azaallyl_thf_mm.psf")
 
     def test_pdb(self):
-        self.helper_file_save("lau.zml", "test.pdb")
+        self.helper_file_save("lau.zml", "lau.pdb")
 
 
 
