@@ -105,13 +105,6 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     # Wrapping
     #
 
-    def wrap(self, child):
-        cell_index = self.to_index(child.transformation.t)
-        if cell_index.any():
-            new_transformation = copy.deepcopy(child.transformation)
-            new_transformation.t -= numpy.dot(self.cell, cell_index)
-            primitive.SetProperty(child, "transformation", new_transformation)
-
     def shortest_vector(self, delta):
         return UnitCell.shortest_vector(self, delta)
 
@@ -775,6 +768,34 @@ class DefineUnitCellVectors(Immediate):
         primitive.SetProperty(universe, "cell_active", new_unit_cell.cell_active)
 
 
+class WrapCellContents(Immediate):
+    description = "Wrap the unit cell contents"
+    menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Wrap cell contents", ord("w"), order=(0, 4, 1, 4, 0, 3))
+    repeatable = False
+    authors = [authors.toon_verstraelen]
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        universe = context.application.model.universe
+        if sum(universe.cell_active) == 0: return False
+        if len(universe.children) == 0: return False
+        # C) passed all tests:
+        return True
+
+    def do(self):
+        universe = context.application.model.universe
+        for child in universe.children:
+            if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
+                cell_index = universe.to_index(child.transformation.t)
+                if cell_index.any():
+                    new_transformation = copy.deepcopy(child.transformation)
+                    new_transformation.t -= numpy.dot(universe.cell, cell_index)
+                    primitive.SetProperty(child, "transformation", new_transformation)
+
+
 
 nodes = {
     "Universe": Universe
@@ -784,6 +805,7 @@ actions = {
     "UnitCellToCluster": UnitCellToCluster,
     "SuperCell": SuperCell,
     "DefineUnitCellVectors": DefineUnitCellVectors,
+    "WrapCellContents": WrapCellContents,
 }
 
 

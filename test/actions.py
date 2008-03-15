@@ -592,6 +592,18 @@ class CoreActions(ApplicationTestCase):
             DefineUnitCellVectors()
         self.run_test_application(fn)
 
+    def test_wrap_cell_contents(self):
+        def fn():
+            context.application.model.file_open("input/core_objects.zml")
+            context.application.model.universe.cell_active[:] = True
+            WrapCellContents = context.application.plugins.get_action("WrapCellContents")
+            self.assert_(WrapCellContents.analyze_selection())
+            WrapCellContents()
+            self.assertEqual(len(context.application.action_manager.undo_stack), 1)
+            WrapCellContents() # This should not result in an effective thing to happen:
+            self.assertEqual(len(context.application.action_manager.undo_stack), 1)
+        self.run_test_application(fn)
+
     def test_calculate_average(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
