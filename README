@@ -1,4 +1,4 @@
-Zeobuilder 0.002 README
+Zeobuilder 0.003 README
 =======================
 
 Contents of this README File:
@@ -46,9 +46,9 @@ Zeobuilder:
   5) PyGTKGLExt and GTKGLExt: http://www.k-3d.org/gtkglext/Main_Page
 
 You can get these dependencies from the Zeobuilder site: http://molmod.ugent.be/code/
-  6) MolMod (>= 0.001)
+  6) MolMod (>= 0.002)
   9) ConScan (>= 0.002)
- 10) Iterative (>= 0.001)
+ 10) Iterative (>= 0.002)
 
 We strongly recommend the installation of Zeobuilder on an operating system that
 has a software management system that automatically installs all these
