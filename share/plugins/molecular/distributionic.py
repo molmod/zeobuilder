@@ -263,6 +263,9 @@ class DistributionBondLengths(ImmediateWithMemory):
                 val.variables = (key[7:11],)
 
         bonds = search_bonds(context.application.cache.nodes)
+        parent = context.application.cache.common_parent
+        if parent is None:
+            parent = context.application.model.universe
         lengths = []
 
         bond_graph = Graph([frozenset([1, 2])])
@@ -284,7 +287,8 @@ class DistributionBondLengths(ImmediateWithMemory):
             for match in match_generator(graph):
                 point1 = match.forward[1].get_absolute_frame().t
                 point2 = match.forward[2].get_absolute_frame().t
-                lengths.append(numpy.linalg.norm(point1 - point2))
+                delta = parent.shortest_vector(point1 - point2)
+                lengths.append(numpy.linalg.norm(delta))
         except:
             raise UserError(
                 "An error occured while sampling the bond lengths.",
@@ -380,6 +384,9 @@ class DistributionBendingAngles(ImmediateWithMemory):
                 val.variables = (key[7:11],)
 
         bonds = search_bonds(context.application.cache.nodes)
+        parent = context.application.cache.common_parent
+        if parent is None:
+            parent = context.application.model.universe
         angles = []
 
         angle_graph = Graph([
@@ -407,8 +414,8 @@ class DistributionBendingAngles(ImmediateWithMemory):
                 point1 = match.forward[1].get_absolute_frame().t
                 point2 = match.forward[2].get_absolute_frame().t
                 point3 = match.forward[3].get_absolute_frame().t
-                delta1 = point2 - point1
-                delta2 = point2 - point3
+                delta1 = parent.shortest_vector(point2 - point1)
+                delta2 = parent.shortest_vector(point2 - point3)
                 if numpy.linalg.norm(delta1) > 1e-8 and \
                     numpy.linalg.norm(delta2) > 1e-8:
                     angles.append(angle(delta1, delta2))
@@ -525,6 +532,9 @@ class DistributionDihedralAngles(ImmediateWithMemory):
                 val.variables = (key[7:11],)
 
         bonds = search_bonds(context.application.cache.nodes)
+        parent = context.application.cache.common_parent
+        if parent is None:
+            parent = context.application.model.universe
         angles = []
 
         angle_graph = Graph([
@@ -557,9 +567,8 @@ class DistributionDihedralAngles(ImmediateWithMemory):
                 point2 = match.forward[2].get_absolute_frame().t
                 point3 = match.forward[3].get_absolute_frame().t
                 point4 = match.forward[4].get_absolute_frame().t
-
-                normal1 = numpy.cross(point2-point1, point2-point3)
-                normal2 = numpy.cross(point3-point4, point3-point2)
+                normal1 = numpy.cross(parent.shortest_vector(point2-point1), parent.shortest_vector(point2-point3))
+                normal2 = numpy.cross(parent.shortest_vector(point3-point4), parent.shortest_vector(point3-point2))
                 if numpy.linalg.norm(normal1) > 1e-8 and \
                     numpy.linalg.norm(normal2) > 1e-8:
                     angles.append(angle(normal1, normal2))
