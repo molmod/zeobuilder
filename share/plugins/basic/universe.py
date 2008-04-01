@@ -44,7 +44,7 @@ from molmod.units import angstrom
 
 import numpy, gtk
 
-import math, copy, StringIO
+import copy, StringIO
 
 
 class GLPeriodicContainer(GLContainerBase, UnitCell):
@@ -448,97 +448,91 @@ class UnitCellToCluster(ImmediateWithMemory):
 
     def do(self):
         universe = context.application.model.universe
+
+        def vector_acceptable(vector, cell_vector):
+            return abs(numpy.dot(vector, cell_vector)/numpy.dot(cell_vector,cell_vector)) < 0.5
+
+
         def extend_to_cluster(axis, interval):
             if (interval is None) or isinstance(interval, Undefined): return
             assert universe.cell_active[axis]
             interval.sort()
-            index_min = int(math.floor(interval[0]))
-            index_max = int(math.ceil(interval[1]))
+            index_min = int(numpy.floor(interval[0]))
+            index_max = int(numpy.ceil(interval[1]))
 
-            positioned = [
-                node
-                for node
-                in universe.children
-                if (
+            original_points = [
+                node for node in universe.children if (
                     isinstance(node, GLTransformationMixin) and
                     isinstance(node.transformation, Translation)
                 )
             ]
-            if len(positioned) == 0: return
+            if len(original_points) == 0: return
 
-            serialized = StringIO.StringIO()
-            dump_to_file(serialized, positioned)
+            original_connections = [
+                node for node in universe.children if (
+                    isinstance(node, ReferentMixin) and
+                    reduce(
+                        (lambda x,y: x and y),
+                        (isinstance(child, SpatialReference) for child in node.children),
+                        True,
+                    )
+                )
+            ]
 
-            # replication the positioned objects
-            new_children = {}
-            for cell_index in xrange(index_min, index_max+1):
-                serialized.seek(0)
-                nodes = load_from_file(serialized)
-                new_children[cell_index] = {}
-                for node_index, node in enumerate(nodes):
-                    position = node.transformation.t + universe.cell[:,axis]*cell_index
-                    fractional = universe.to_fractional(position)
-                    if (fractional[axis] < interval[0]) or (fractional[axis] > interval[1]):
+            # replication of the points
+            new_points = {}
+            for old_point in original_points:
+                orig_position = old_point.transformation.t
+                orig_position -= universe.cell[:,axis]*universe.to_index(orig_position)[axis]
+                fractional = universe.to_fractional(orig_position)
+                for cell_index in xrange(index_min, index_max):
+                    position = orig_position + universe.cell[:,axis]*cell_index
+                    if (fractional[axis]+cell_index < interval[0]) or (fractional[axis]+cell_index > interval[1]):
                         continue
-                    node.transformation.t = position
-                    new_children[cell_index][node_index] = node
+                    state = old_point.__getstate__()
+                    state["transformation"] = copy.deepcopy(old_point.transformation)
+                    state["transformation"].t[:] = position
+                    new_point = old_point.__class__(**state)
+                    new_points[(old_point, cell_index)] = new_point
 
-            new_connectors = []
-            # replicate the objects that connect these positioned objects
-            for cell_index in xrange(index_min, index_max+1):
-                for connector in universe.children:
-                    if not isinstance(connector, ReferentMixin): continue
-                    skip = False
-                    for reference in connector.children:
-                        if not isinstance(reference, SpatialReference):
-                            skip = True
-                            break
-                    if skip: continue
+            new_connections = []
+            # replication of the connections
+            for cell_index in xrange(index_min-1, index_max+1):
+                for connection in original_connections:
+                    old_target0 = connection.children[0].target
+                    new_target0 = new_points.get((old_target0, cell_index))
+                    if new_target0 is None: continue
 
-                    first_target_orig = connector.children[0].target
-                    first_target_index = positioned.index(first_target_orig)
-                    first_target = new_children[cell_index].get(first_target_index)
-                    if first_target is None:
-                        continue
-                    new_targets = [first_target]
+                    new_targets = [new_target0]
 
-                    skip = False
-                    for reference in connector.children[1:]:
-                        other_target_orig = reference.target
-                        shortest_vector = universe.shortest_vector((
-                            other_target_orig.transformation.t
-                           -first_target_orig.transformation.t
-                        ))
-                        translation = first_target.transformation.t + shortest_vector
-                        other_cell_index = universe.to_index(translation)
-                        other_target_index = positioned.index(other_target_orig)
-                        other_cell_children = new_children.get(other_cell_index[axis])
-                        if other_cell_children is None:
-                            skip = True
-                            break
-                        other_target = other_cell_children.get(other_target_index)
-                        if other_target is None:
-                            skip = True
-                            break
-                        new_targets.append(other_target)
-                    if skip:
+                    for reference in connection.children[1:]:
+                        abort = True
+                        old_target1 = reference.target
+                        for offset in 0,1,-1:
+                            new_target1 = new_points.get((old_target1, cell_index+offset))
+                            if new_target1 is not None:
+                                delta = new_target0.transformation.t - new_target1.transformation.t
+                                if vector_acceptable(delta, universe.cell[:,axis]):
+                                    new_targets.append(new_target1)
+                                    abort = False
+                                    break
+                        if abort: break
+                    if abort:
                         del new_targets
                         continue
 
-                    state = connector.__getstate__()
+                    state = connection.__getstate__()
                     state["targets"] = new_targets
-                    new_connectors.append(connector.__class__(**state))
+                    new_connections.append(connection.__class__(**state))
 
-            # forget about the others
+            # remove the existing points and connections
 
-            serialized.close()
-            del serialized
-
-            # remove the existing nodes
-
-            while len(universe.children) > 0:
-                primitive.Delete(universe.children[0])
-            del positioned
+            for node in original_connections:
+                primitive.Delete(node)
+            del original_connections
+            for node in original_points:
+                primitive.Delete(node)
+            del original_points
 
             # remove the periodicity
 
@@ -548,12 +542,11 @@ class UnitCellToCluster(ImmediateWithMemory):
 
             # add the new nodes
 
-            for nodes in new_children.itervalues():
-                for node in nodes.itervalues():
-                    primitive.Add(node, universe)
+            for node in new_points.itervalues():
+                primitive.Add(node, universe)
 
-            for connector in new_connectors:
-                primitive.Add(connector, universe)
+            for connection in new_connections:
+                primitive.Add(connection, universe)
 
 
         if hasattr(self.parameters, "interval_a"):

@@ -558,13 +558,22 @@ class CoreActions(ApplicationTestCase):
 
     def test_unit_cell_to_cluster(self):
         def fn():
-            context.application.model.file_open("input/periodic.zml")
+            context.application.model.file_open("input/sod.zml")
             parameters = Parameters()
-            parameters.interval_b = numpy.array([0.0, 2.0], float)
-            parameters.interval_c = numpy.array([0.0, 2.0], float)
+            parameters.interval_b = numpy.array([-0.5, 2.5], float)
+            parameters.interval_c = numpy.array([-1.5, 1.5], float)
             UnitCellToCluster = context.application.plugins.get_action("UnitCellToCluster")
             self.assert_(UnitCellToCluster.analyze_selection(parameters))
             UnitCellToCluster(parameters)
+            # check the bond lengths
+            Bond = context.application.plugins.get_node("Bond")
+            universe = context.application.model.universe
+            for bond in context.application.model.universe.children:
+                if isinstance(bond, Bond):
+                    delta = bond.children[0].target.transformation.t - bond.children[1].target.transformation.t
+                    delta = universe.shortest_vector(delta)
+                    distance = numpy.linalg.norm(delta)
+                    self.assert_(distance < 4.0, "Incorrect bonds detected.")
         self.run_test_application(fn)
 
     def test_super_cell(self):
