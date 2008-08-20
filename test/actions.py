@@ -1099,6 +1099,37 @@ class BuilderActions(ApplicationTestCase):
             MergeAtomsConnectedWithSpring()
         self.run_test_application(fn)
 
+    def test_merge_atoms_connected_with_spring2(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            AddAtom = context.application.plugins.get_action("AddAtom")
+            ConnectSpring = context.application.plugins.get_action("ConnectSpring")
+            for i in xrange(3):
+                context.application.main.select_nodes([context.application.model.universe])
+                self.assert_(AddAtom.analyze_selection())
+                AddAtom()
+            atoms = list(context.application.model.universe.children)
+            context.application.main.select_nodes([atoms[0], atoms[1]])
+            self.assert_(ConnectSpring.analyze_selection())
+            ConnectSpring()
+            context.application.main.select_nodes([atoms[1], atoms[2]])
+            self.assert_(ConnectSpring.analyze_selection())
+            ConnectSpring()
+            context.application.main.select_nodes([atoms[2], atoms[0]])
+            self.assert_(ConnectSpring.analyze_selection())
+            ConnectSpring()
+
+            nodes = list(context.application.model.universe.children)
+            springs = [node for node in nodes if node not in atoms]
+            context.application.main.select_nodes(springs)
+            MergeAtomsConnectedWithSpring = context.application.plugins.get_action("MergeAtomsConnectedWithSpring")
+            self.assert_(MergeAtomsConnectedWithSpring.analyze_selection())
+            MergeAtomsConnectedWithSpring()
+
+            self.assertEqual(len(context.application.model.universe.children), 1)
+        self.run_test_application(fn)
+
     def test_triangle_conscan(self):
         def fn():
             context.application.model.file_open("input/precursor.zml")
