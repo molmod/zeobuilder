@@ -811,7 +811,7 @@ class FrameMolecules(Immediate):
 
 class SelectBondedNeighbors(Immediate):
     description = "Select bonded neighbors"
-    menu_info = MenuInfo("default/_Select:default", "_Bonded neighbors", order=(0, 3, 0, 5))
+    menu_info = MenuInfo("default/_Select:default", "_Bonded neighbors", ord("n"), False, order=(0, 3, 0, 5))
     authors = [authors.bartek_szyja]
 
     @staticmethod
