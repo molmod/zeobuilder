@@ -161,7 +161,7 @@ class Bond(Vector):
             self.begin_position = 0
             self.end_position = 0
         else:
-            scale = 0.5
+            scale = 0.4
             s = math.sqrt(1 - c**2)
             self.begin_radius = scale * begin.get_radius() * s
             self.end_radius = scale * end.get_radius() * s

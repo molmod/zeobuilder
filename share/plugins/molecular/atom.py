@@ -73,7 +73,10 @@ class Atom(GLGeometricBase, UserColorMixin):
     def set_number(self, number):
         self.number = number
         atom_info = periodic[number]
-        self.default_radius = atom_info.radius
+        if atom_info.vdw_radius is not None:
+            self.default_radius = atom_info.vdw_radius*0.25
+        else:
+            self.default_radius = 1.0
         color = [atom_info.red, atom_info.green, atom_info.blue, 1.0]
         if None in color:
             self.default_color = numpy.array([0.7, 0.7, 0.7, 1.0], float)
