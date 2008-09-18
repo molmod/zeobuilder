@@ -22,7 +22,7 @@
 import numpy
 
 from zeobuilder import context
-from zeobuilder.filters import LoadFilter, DumpFilter, FilterError
+from zeobuilder.filters import LoadFilter, DumpFilter
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
@@ -47,6 +47,7 @@ class LoadXYZ(LoadFilter):
         Folder = context.application.plugins.get_node("Folder")
         folder = Folder()
 
+        molecule.title = molecule.title.strip()
         if len(molecule.title) > 0:
             universe.name = molecule.title
 
@@ -128,12 +129,10 @@ class DumpXYZ(DumpFilter):
 
 load_filters = {
     "xyz": LoadXYZ(),
-    "geom": LoadXYZ(),
 }
 
 dump_filters = {
     "xyz": DumpXYZ(),
-    "geom": DumpXYZ(),
 }
 
 
