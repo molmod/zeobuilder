@@ -32,7 +32,7 @@ import copy
 
 class EditProperties(Immediate):
     description = "Edit Properties"
-    menu_info = MenuInfo("default/_Object:basic", "_Properties", ord("e"), image_name=gtk.STOCK_PROPERTIES, order=(0, 4, 0, 2))
+    menu_info = MenuInfo("default/_Object:basic", "_Properties", ord("e"), image_name=gtk.STOCK_PROPERTIES, order=(0, 4, 0, 1))
     repeatable = False
     authors = [authors.toon_verstraelen]
 
