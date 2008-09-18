@@ -214,14 +214,14 @@ class MergeOverlappingAtoms(Immediate):
                 if isinstance(child, Atom):
                     yield PositionedObject(child, child.transformation.t)
 
-        binned_atoms = SparseBinnedObjects(yield_positioned_atoms(), periodic.max_radius)
+        binned_atoms = SparseBinnedObjects(yield_positioned_atoms(), periodic.max_radius*0.4)
 
         def overlap(positioned1, positioned2):
             number = positioned1.id.number
             if number != positioned2.id.number: return
             delta = parent.shortest_vector(positioned2.coordinate - positioned1.coordinate)
             distance = math.sqrt(numpy.dot(delta, delta))
-            if distance < periodic[number].radius:
+            if distance < periodic[number].vdw_radius*0.4:
                 return True
 
         cf = ClusterFactory()
