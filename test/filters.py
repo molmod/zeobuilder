@@ -43,6 +43,9 @@ class LoadFilters(ApplicationTestCase):
         self.helper_file_open("tpa.xyz")
         self.helper_file_open("ethane-ethane-pos.xyz")
 
+    def test_g03xyz(self):
+        self.helper_file_open("oniom.g03xyz")
+
     def test_pdb(self):
         self.helper_file_open("lau.pdb")
         self.helper_file_open("pept.pdb")
@@ -60,6 +63,9 @@ class DumpFilters(ApplicationTestCase):
 
     def test_xyz(self):
         self.helper_file_save("tpa.zml", "tpa.xyz")
+
+    def test_g03xyz(self):
+        self.helper_file_save("oniom.zml", "oniom.g03xyz")
 
     def test_psf(self):
         self.helper_file_save("precursor.zml", "precursor.psf")
