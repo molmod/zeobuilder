@@ -58,11 +58,12 @@ class LoadXYZ(LoadFilter):
         Atom = context.application.plugins.get_node("Atom")
         Point = context.application.plugins.get_node("Point")
 
-        for number, symbol, coordinate in zip(molecule.numbers, xyz_reader.symbols, molecule.coordinates):
+        for index, number, symbol, coordinate in zip(xrange(molecule.size), molecule.numbers, xyz_reader.symbols, molecule.coordinates):
+            extra = {"order": index}
             if number == 0:
-                atom = Point(name=symbol)
+                atom = Point(name=symbol, extra=extra)
             else:
-                atom = Atom(name=symbol, number=number)
+                atom = Atom(name=symbol, number=number, extra=extra)
             atom.transformation.t = coordinate
             universe.add(atom)
 

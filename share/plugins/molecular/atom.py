@@ -283,27 +283,24 @@ class RearrangeAtoms(Immediate):
 
     def do(self):
         cache = context.application.cache
-        sorted = {}
+        l = []
         Atom = context.application.plugins.get_node("Atom")
+        Point = context.application.plugins.get_node("Point")
         for child in cache.children:
             if isinstance(child, Atom):
-                if child.number in sorted:
-                    sorted[child.number].append(child)
-                else:
-                    sorted[child.number] = [child]
+                l.append((-child.extra.get("order", -1), child.number, child))
+            elif isinstance(child, Point):
+                l.append((-child.extra.get("order", -1), 0, child))
 
-        numbers = sorted.keys()
-        numbers.sort()
-        numbers.reverse()
+        l.sort()
+        l.reverse()
 
         counter = 0
         parent = cache.node
-        for number in numbers:
-            atoms = sorted[number]
-            for atom in atoms:
-                atom.name = "%s" % periodic[number].symbol
-                primitive.Move(atom, parent, new_index=counter)
-                counter += 1
+        for order, number, child in l:
+            child.name = "%s" % periodic[number].symbol
+            primitive.Move(child, parent, new_index=counter)
+            counter += 1
 
 
 class MoldenLabels(Immediate):

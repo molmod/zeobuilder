@@ -48,12 +48,14 @@ class LoadPDB(LoadFilter):
 
         Atom = context.application.plugins.get_node("Atom")
         counter = 1
+        atom_index =  0
         for line in f:
             #if len(line) != 81:
             #    raise FilterError("Each line in a PDB file must count 80 characters, error at line %i, len=%i" % (counter, len(line)-1))
             if line.startswith("ATOM"):
+                extra = {"order": atom_index}
                 atom_info = periodic[line[76:78].strip()]
-                atom = Atom(name=line[12:16].strip(), number=atom_info.number)
+                atom = Atom(name=line[12:16].strip(), number=atom_info.number, extra=extra)
                 try:
                     atom.transformation.t = numpy.array([
                             float(line[30:38].strip()),
@@ -63,6 +65,7 @@ class LoadPDB(LoadFilter):
                 except ValueError:
                     raise FilterError("Error while reading PDB file: could not read coordinates at line %i." % counter)
                 universe.add(atom)
+                atom_index += 1
             elif line.startswith("CRYST1"):
                 space_group = line[55:66].strip().upper()
                 if space_group != "P 1":

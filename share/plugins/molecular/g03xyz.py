@@ -47,6 +47,7 @@ class LoadG03XYZ(LoadFilter):
         Atom = context.application.plugins.get_node("Atom")
         Point = context.application.plugins.get_node("Point")
 
+        counter = 0
         for line in f:
             line = line.strip()
             if len(line) == 0:
@@ -72,6 +73,7 @@ class LoadG03XYZ(LoadFilter):
                     extra["oniom"] = " ".join(words[4:])
             except ValueError:
                 raise FilterError("Could not read coordinates. Incorrect floating point format.")
+            extra["order"] = counter
             atom_record = periodic[symbol]
             if atom_record is None:
                 atom = Point(name=symbol, extra=extra)
@@ -80,6 +82,7 @@ class LoadG03XYZ(LoadFilter):
             atom.transformation.t[:] = xyz
             atom.transformation.t *= angstrom
             universe.add(atom)
+            counter += 1
 
         return [universe, folder]
 
