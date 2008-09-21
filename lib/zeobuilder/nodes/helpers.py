@@ -155,9 +155,8 @@ class FrameAxes(object):
     #
 
     def extend_bounding_box(self, bounding_box):
-        if self.axes_visible:
-            bounding_box.extend_with_corners([numpy.array([-self.axis_thickness, -self.axis_thickness, -self.axis_thickness]),
-                                              numpy.array([ self.axis_length,     self.axis_length,     self.axis_length   ])])
+        bounding_box.extend_with_corners([numpy.array([-self.axis_thickness, -self.axis_thickness, -self.axis_thickness]),
+                                          numpy.array([ self.axis_length,     self.axis_length,     self.axis_length   ])])
 
 
 class BoundingBox(object):

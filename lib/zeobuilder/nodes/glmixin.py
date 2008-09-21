@@ -137,6 +137,7 @@ class GLMixin(gobject.GObject):
 
 
     def invalidate_boundingbox_list(self):
+        ##print "TRY: %s: on-boundingbox-list-invalidated"  % self.get_name()
         if self.gl_active and self.boundingbox_list_valid:
             self.boundingbox_list_valid = False
             context.application.main.drawing_area.queue_draw()

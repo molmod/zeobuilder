@@ -74,10 +74,9 @@ class GLContainerMixin(ContainerMixin):
 
     def revalidate_bounding_box(self):
         for child in self.children:
-            if child.visible:
-                child_bounding_box = child.get_bounding_box_in_parent_frame()
-                if child_bounding_box.corners is not None:
-                    self.bounding_box.extend_with_corners(child_bounding_box.corners)
+            child_bounding_box = child.get_bounding_box_in_parent_frame()
+            if child_bounding_box.corners is not None:
+                self.bounding_box.extend_with_corners(child_bounding_box.corners)
 
     #
     # Geometrix
