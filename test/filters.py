@@ -50,6 +50,9 @@ class LoadFilters(ApplicationTestCase):
         self.helper_file_open("lau.pdb")
         self.helper_file_open("pept.pdb")
 
+    def test_zmat(self):
+        self.helper_file_open("1LJL_Cys10.zmat")
+
 
 class DumpFilters(ApplicationTestCase):
     def helper_file_save(self, in_filename, out_filename):
