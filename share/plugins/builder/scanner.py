@@ -56,11 +56,12 @@ class ConscanResults(ReferentBase):
     # State
     #
 
-    def create_references(self):
-        return [
+    def initnonstate(self):
+        ReferentBase.initnonstate(self)
+        self.set_children([
             Reference(prefix="First"),
             Reference(prefix="Second")
-        ]
+        ])
 
     #
     # Properties

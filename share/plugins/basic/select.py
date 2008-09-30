@@ -218,24 +218,9 @@ class SavedSelection(ReferentBase):
     info = ModelObjectInfo("plugins/basic/saved_selection.svg", "RestoreSavedSelection")
     authors = [authors.toon_verstraelen]
 
-    def create_references(self):
-        return []
-
-    def set_targets(self, targets):
-        for child in self.children:
-            child.set_target(None)
-            child.parent = None
-            if child.model is not None:
-                child.unset_model()
-        self.children = []
-        for target in targets:
-            child = Reference("Selected")
-            child.parent = self
-            child.set_target(target)
-            self.children.append(child)
-        if self.model is not None:
-            for child in self.children:
-                child.set_model(self.model)
+    def set_targets(self, targets, init=False):
+        self.set_children([Reference(prefix="Selected") for target in targets])
+        ReferentBase.set_targets(self, targets, init)
 
 
 class SaveSelection(Immediate):

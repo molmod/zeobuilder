@@ -52,14 +52,6 @@ class ContainerBase(ModelObject, ContainerMixin):
 class ReferentBase(ModelObject, ReferentMixin):
 
     #
-    # state
-    #
-
-    def initnonstate(self):
-        ReferentMixin.initnonstate(self)
-        ModelObject.initnonstate(self)
-
-    #
     # Tree
     #
 

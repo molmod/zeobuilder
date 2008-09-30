@@ -45,12 +45,10 @@ class Vector(GLReferentBase):
     def initnonstate(self):
         GLReferentBase.initnonstate(self)
         self.orientation = Complete()
-
-    def create_references(self):
-        return [
+        self.set_children([
             SpatialReference(prefix="Begin"),
             SpatialReference(prefix="End")
-        ]
+        ])
 
     #
     # Dialog fields (see action EditProperties)

@@ -75,13 +75,10 @@ class ModelObject(Node):
 
     def initstate(self, **initstate):
         for p in self.properties:
-            if p.name not in self.__dict__:
+            if p.name in initstate:
+                p.set(self, initstate[p.name], init=True)
+            else:
                 p.set(self, p.default(self), init=True)
-        for p in self.properties:
-            value = initstate.get(p.name)
-            if value is None:
-                value = p.default(self)
-            p.set(self, value, init=True)
 
     def initnonstate(self):
         self.references = []

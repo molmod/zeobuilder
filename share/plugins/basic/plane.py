@@ -45,12 +45,9 @@ class Plane(GLReferentBase, ColorMixin):
     # State
     #
 
-    def create_references(self):
-        return []
-
-    def set_targets(self, targets):
-        self.children = [SpatialReference("Point") for target in targets]
-        ReferentBase.set_targets(targets, init)
+    def set_targets(self, targets, init=False):
+        self.set_children([SpatialReference("Point") for target in targets])
+        GLReferentBase.set_targets(self, targets, init)
 
     #
     # Properties

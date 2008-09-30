@@ -46,15 +46,13 @@ class Trajectory(ReferentBase):
     # State
     #
 
-    def create_references(self):
-        return []
-
     def set_targets(self, targets, init=False):
-        for target in self.targets:
-            if not isnstance(target, Atom):
+        Atom = context.application.plugins.get_node("Atom")
+        for target in targets:
+            if not isinstance(target, Atom):
                 raise TrajectoryError("References of the trajectory object can only point to atoms")
-        self.children = [Reference(prefix="Track") for target in targets]
-        ReferentBase.set_targets(targets, init)
+        self.set_children([Reference(prefix="Track") for target in targets])
+        ReferentBase.set_targets(self, targets, init)
 
     #
     # Properties

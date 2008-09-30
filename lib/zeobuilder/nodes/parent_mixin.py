@@ -61,6 +61,12 @@ class ContainerMixin(ParentMixin):
 
     def set_children(self, children, init=False):
         self.children = children
+        if not init:
+            for child in self.children:
+                child.parent = self
+            if self.model is not None:
+                for child in self.children:
+                    child.set_model(self.model)
 
     properties = [
         Property("children", [], lambda self: self.children, set_children),
@@ -113,34 +119,34 @@ class ReferentMixinError(Exception):
 
 class ReferentMixin(ParentMixin):
 
-    #
-    # State
-    #
-
-    def initnonstate(self):
-        self.children = self.create_references()
+    def set_children(self, children):
+        self.children = children
         for child in self.children:
             child.parent = self
         if self.model is not None:
             for child in self.children:
                 child.set_model(self.model)
 
-    def create_references(self):
-        raise NotImplementedError
-
     #
     # Properties
     #
 
     def default_targets(self):
-        return [None for child in self.children]
+        return []
 
     def get_targets(self):
         return [child.target for child in self.children]
 
     def set_targets(self, targets, init=False):
+        #print self
+        #print targets
+        #print self.children
         if len(targets) != len(self.children):
-            raise ReferentMixinError("The number of targets should match the number of references.")
+            if init and len(targets) == 0:
+                for child in self.children:
+                    child.set_target(None)
+            else:
+                raise ReferentMixinError("The number of targets should match the number of references.")
         for child, target in zip(self.children, targets):
             child.set_target(target)
 
