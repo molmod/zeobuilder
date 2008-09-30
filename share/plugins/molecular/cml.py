@@ -51,12 +51,12 @@ class LoadCML(LoadFilter):
         molecules = load_cml(f)
 
         if len(molecules) == 1:
-            name, molecule = molecules.items()[0]
-            universe.name = name
+            molecule = molecules[0]
+            universe.name = molecule.title
             self.load_molecule(universe, molecule)
         else:
-            for name, molecule in molecules.iteritems():
-                parent = Frame(name=name)
+            for molecule in molecules:
+                parent = Frame(name=molecule.title)
                 universe.add(parent)
                 self.load_molecule(parent, molecule)
 
@@ -144,20 +144,13 @@ class DumpCML(DumpFilter):
             else:
                 molecule.graph = None
 
-            result = {molecule.title: molecule}
+            result = [molecule]
         else:
-            result = {}
+            result = []
 
         for child in parent.children:
             if isinstance(child, Frame):
-                molecules = self.collect_molecules(child, universe)
-                for name, molecule in molecules.iteritems():
-                    if name in result:
-                        counter = 0
-                        while name + str(counter) in result:
-                            counter += 1
-                        name += str(counter)
-                    result[name] = molecule
+                result.extend(self.collect_molecules(child, universe))
 
         return result
 
