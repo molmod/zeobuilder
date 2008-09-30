@@ -50,8 +50,11 @@ class LoadFilters(ApplicationTestCase):
         self.helper_file_open("lau.pdb")
         self.helper_file_open("pept.pdb")
 
-    def test_zmat(self):
-        self.helper_file_open("1LJL_Cys10.zmat")
+    def test_g03zmat(self):
+        self.helper_file_open("1LJL_Cys10.g03zmat")
+
+    def test_cml(self):
+        self.helper_file_open("diethylene_glycol.cml")
 
 
 class DumpFilters(ApplicationTestCase):
@@ -76,6 +79,9 @@ class DumpFilters(ApplicationTestCase):
 
     def test_pdb(self):
         self.helper_file_save("lau.zml", "lau.pdb")
+
+    def test_cml(self):
+        self.helper_file_save("precursor.zml", "precursor.cml")
 
 
 
