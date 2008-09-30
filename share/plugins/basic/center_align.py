@@ -120,17 +120,28 @@ class CenterToChildren(CenterAlignBase):
         if not CenterAlignBase.analyze_selection(): return False
         # B) validating
         cache = context.application.cache
-        if not isinstance(cache.node, ContainerMixin): return False
-        if len(cache.translated_children) == 0: return False
-        if cache.some_children_fixed: return False
+        if len(cache.nodes) == 0: return False
+        for node in cache.nodes:
+            if not isinstance(node, ContainerMixin): return False
         # C) passed all tests:
         return True
 
     def do(self):
         cache = context.application.cache
-        translation = Translation()
-        translation.t = calculate_center(cache.child_translations)
-        CenterAlignBase.do(self, cache.node, cache.translated_children, translation)
+        for node in cache.nodes:
+            translation = Translation()
+            child_translations = []
+            translated_children = []
+            for child in node.children:
+                if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
+                    if child.get_fixed():
+                        translated_children = []
+                        break
+                    translated_children.append(child)
+                    child_translations.append(child.transformation)
+            if len(translated_children) > 0:
+                translation.t = calculate_center(child_translations)
+                CenterAlignBase.do(self, node, translated_children, translation)
 
 
 class AlignUnitCell(Immediate):

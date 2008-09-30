@@ -25,6 +25,7 @@ from zeobuilder.actions.abstract import CenterAlignBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.conversion import express_measure
 from zeobuilder.nodes.parent_mixin import ContainerMixin
+from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.gui.simple import ok_information, ok_error, ask_save_filename
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
@@ -122,21 +123,32 @@ class CenterOfMass(CenterAlignBase):
         if not CenterAlignBase.analyze_selection(): return False
         # B) validating
         cache = context.application.cache
-        if not isinstance(cache.node, ContainerMixin): return False
-        if len(cache.translated_children) == 0: return False
-        if cache.some_children_fixed: return False
+        for node in cache.nodes:
+            if not isinstance(node, ContainerMixin): return False
         # C) passed all tests:
         return True
 
     def do(self):
         cache = context.application.cache
-        node = cache.node
-        translation = Translation()
-        mass, com = calculate_center_of_mass(yield_particles(node))
-        if mass == 0.0:
-            raise UserError("No particles (atoms) found.")
-        translation.t = com
-        CenterAlignBase.do(self, node, cache.translated_children, translation)
+        for node in cache.nodes:
+            translation = Translation()
+
+            translated_children = []
+            for child in node.children:
+                if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
+                    if child.get_fixed():
+                        translated_children = []
+                        break
+                    translated_children.append(child)
+            if len(translated_children) == 0:
+                continue
+
+            mass, com = calculate_center_of_mass(yield_particles(node))
+            if mass == 0.0:
+                continue
+
+            translation.t = com
+            CenterAlignBase.do(self, node, translated_children, translation)
 
 
 class CenterOfMassAndPrincipalAxes(CenterOfMass):
@@ -150,25 +162,34 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
         if not CenterOfMass.analyze_selection(): return False
         # B) validating
         cache = context.application.cache
-        if not isinstance(cache.node, ContainerMixin): return False
-        if len(cache.transformed_children) == 0: return False
-        if cache.some_children_fixed: return False
+        for node in cache.nodes:
+            if not isinstance(node, ContainerMixin): return False
         # C) passed all tests:
         return True
 
     def do(self):
         cache = context.application.cache
-        node = cache.node
-        transformation = Complete()
+        for node in cache.nodes:
+            transformation = Complete()
 
-        mass, com = calculate_center_of_mass(yield_particles(node))
-        if mass == 0.0:
-            raise UserError("No particles (atoms) found.")
-        transformation.t = com
+            translated_children = []
+            for child in node.children:
+                if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
+                    if child.get_fixed():
+                        translated_children = []
+                        break
+                    translated_children.append(child)
+            if len(translated_children) == 0:
+                continue
 
-        tensor = calculate_inertia_tensor(yield_particles(node), com)
-        transformation.r = default_rotation_matrix(tensor)
-        CenterAlignBase.do(self, node, cache.translated_children, transformation)
+            mass, com = calculate_center_of_mass(yield_particles(node))
+            if mass == 0.0:
+                continue
+
+            transformation.t = com
+            tensor = calculate_inertia_tensor(yield_particles(node), com)
+            transformation.r = default_rotation_matrix(tensor)
+            CenterAlignBase.do(self, node, translated_children, transformation)
 
 
 class SaturateWithHydrogens(Immediate):

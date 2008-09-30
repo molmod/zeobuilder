@@ -60,8 +60,6 @@ class CenterAlignBase(Immediate):
     def analyze_selection():
         # A) calling ancestor
         if not Immediate.analyze_selection(): return False
-        # B) validating
-        if not isinstance(context.application.cache.node, GLMixin): return False
         # C) passed all tests:
         return True
 
