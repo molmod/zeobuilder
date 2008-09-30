@@ -1,0 +1,1901 @@
+<?xml version='1.0'?>
+<zml_file version='0.1'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <list label="children">
+    <model_object id='1' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-8.35761618345 -2.30397299974 0.561343148081 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='2' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-8.4926938075 6.49744536626 0.558559581486 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='3' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.69696044655 1.02357205016 7.72576735331 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='4' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.05302484963 2.21712118662 4.11765655403 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='5' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.66517525298 -4.90232753662 7.8145844816 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='6' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.0776290839 -6.51558673715 4.34147571733 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='7' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.93684228199 2.12460019511 8.26929038395 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='8' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">13</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.29630819212 1.04237293547 4.55972018854 </cells>
+      </array>
+     </translation>
+     <str label="name">Al</str>
+    </model_object>
+    <model_object id='9' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>16.2210878801 1.02357205016 4.46391107355 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='10' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.8650234771 2.21712118662 8.07202187283 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='11' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.9266188636 -6.4866739273 8.04673733716 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='12' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.27285669079 -4.89457965947 4.4631551831 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='13' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>16.2528730737 -4.90232753662 4.37509394525 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='14' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.8404192428 -6.51558673715 7.84820270953 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='15' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>10.5604321432 -2.30397299974 11.6283352788 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='16' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.62168430847 -2.36828038008 11.7421421455 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='17' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>10.4253545192 6.49744536626 11.6311188454 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='18' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.56227131882 6.50916166829 11.6639944109 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='19' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.93684228199 -2.12460019511 -8.26929038395 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='20' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.29630819212 -1.04237293547 -4.55972018854 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='21' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.9266188636 6.4866739273 -8.04673733716 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='22' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.27285669079 4.89457965947 -4.4631551831 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='23' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.62168430847 2.36828038008 -11.7421421455 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='24' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.56227131882 -6.50916166829 -11.6639944109 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='25' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>8.35761618345 2.30397299974 -0.561343148081 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='26' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>14.2963640182 2.36828038008 -0.447536281392 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='27' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>8.4926938075 -6.49744536626 -0.558559581486 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='28' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>14.3557770079 -6.50916166829 -0.525684015934 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='29' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.9812060447 -2.12460019511 -3.92038804291 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='30' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.6217401346 -1.04237293547 -7.62995823832 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='31' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.69696044655 -1.02357205016 -7.72576735331 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='32' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.05302484963 -2.21712118662 -4.11765655403 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='33' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.9914294631 6.4866739273 -4.1429410897 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='34' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.6451916359 4.89457965947 -7.72652324376 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='35' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.66517525298 4.90232753662 -7.8145844816 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='36' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">14</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.0776290839 6.51558673715 -4.34147571733 </cells>
+      </array>
+     </translation>
+     <str label="name">Si</str>
+    </model_object>
+    <model_object id='37' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.34737166287 2.03436577221 5.42971230607 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='38' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.42303629727 -5.93392903313 5.60420961728 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='39' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.90581297887 -1.95170915111 7.94346380394 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='40' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.13588934061 4.88095473404 2.71606557776 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='41' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.34020653021 0.0263219953194 2.09392993995 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='42' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.38181829968 -4.85470643804 1.82078892456 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='43' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.151367063327 1.59815461954 7.16206204756 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='44' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.151367063327 -5.7459012828 7.16206204756 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='45' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.82031342241 2.00804188717 5.94810197913 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='46' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.24940518947 2.20733240525 1.76764982567 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='47' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.2517339625 2.29758572541 1.93715825988 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='48' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>14.5706766638 2.03436577221 6.75996612079 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='49' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>9.70495312241 2.07947353503 5.99364437896 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='50' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.75978549434 -5.86986731719 5.77103464038 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='51' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.24560683994 -5.83604121939 1.61344817314 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='52' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.4749673107 -6.06923342431 1.73741609725 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='53' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>14.4950120294 -5.93392903313 6.58546880958 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='54' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>9.65576355115 -5.99402232418 5.89764629135 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='55' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.38939610147 -1.9176940807 4.4915010751 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='56' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>16.0122353478 -1.95170915111 4.24621462292 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='57' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.17445644607 4.7982225239 9.62535785765 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='58' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.45821772234 -0.0638727433265 10.2323189946 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='59' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.70794503093 -4.94106692236 10.4927988449 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='60' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.7821589861 4.88095473404 9.4736128491 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='61' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.5778417965 0.0263219953194 10.0957484869 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='62' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.536230027 -4.85470643804 10.3688895023 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='63' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.59371329107 -2.22613518028 11.6865029389 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='64' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.49155469627 5.84360012392 11.6890332822 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='65' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.82031342241 -2.00804188717 -5.94810197913 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='66' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.24940518947 -2.20733240525 -1.76764982567 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='67' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.75978549434 5.86986731719 -5.77103464038 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='68' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.24560683994 5.83604121939 -1.61344817314 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='69' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.38939610147 1.9176940807 -4.4915010751 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='70' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.17445644607 -4.7982225239 -9.62535785765 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='71' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.45821772234 0.0638727433265 -10.2323189946 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='72' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.70794503093 4.94106692236 -10.4927988449 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='73' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.3243350356 2.22613518028 -0.503175487953 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='74' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.4264936304 -5.84360012392 -0.50064514466 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='75' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>14.0977349043 -2.00804188717 -6.24157644773 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='76' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.34737166287 -2.03436577221 -5.42971230607 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='77' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>9.21309520427 -2.07947353503 -6.1960340479 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='78' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>14.1582628323 5.86986731719 -6.41864378648 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='79' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.42303629727 5.93392903313 -5.60420961728 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='80' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>9.26228477554 5.99402232418 -6.2920321355 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='81' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.5286522252 1.9176940807 -7.69817735176 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='82' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.90581297887 1.95170915111 -7.94346380394 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='83' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.7435918806 -4.7982225239 -2.56432056921 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='84' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.4598306043 0.0638727433265 -1.95735943225 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='85' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.2101032958 4.94106692236 -1.69687958195 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='86' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.13588934061 -4.88095473404 -2.71606557776 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='87' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.34020653021 -0.0263219953194 -2.09392993995 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='88' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.38181829968 4.85470643804 -1.82078892456 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='89' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.151367063327 -1.59815461954 -7.16206204756 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='90' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">0</int>
+      <str label="oniom">L</str>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-0.151367063327 5.7459012828 -7.16206204756 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='91' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-11.1215995468 -2.19364511886 0.148681762491 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='92' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-8.21986459692 9.25958057744 0.90240658991 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='93' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-11.1961549119 5.86163567015 0.22824868136 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='94' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.57653725503 2.25961734792 10.0753621214 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='95' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-9.11815536331 1.96045858311 5.98619129909 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='96' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.41538141033 -5.88858883399 10.3218825647 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='97' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.21798849249 -9.23494043838 3.70313756765 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='98' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-9.11617304059 -5.87514154283 6.14597709234 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='99' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>18.9064491877 1.67907647205 4.88959645165 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='100' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.07678406111 -9.19855376167 8.71398451724 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='101' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>18.9032820067 -5.62030630449 4.90603706902 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='102' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.6780142891 -9.22393278365 8.52683548956 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='103' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.497513318 -2.16670896255 14.2598941936 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='104' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.77514369226 -2.24885724732 14.4050667346 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='105' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.5608966222 5.88315587136 14.1120968229 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='106' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>10.7569598817 9.22392522475 11.1034808526 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='107' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.22162550647 9.20626762375 11.0069989951 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='108' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.47053495728 6.02037644485 14.1920889301 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='109' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-9.59255788114 -1.82621999746 -5.95072113955 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='110' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.07678406111 9.19855376167 -8.71398451724 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='111' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-9.49700765863 5.86739933486 -5.85198105933 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='112' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.76657756369 2.26312467963 -14.4029294544 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='113' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.41331247542 2.22323445067 -11.6536481603 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='114' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.42460138414 -9.06410919588 -11.6668214412 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='115' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-7.27909278704 -6.69910182146 -11.0277009449 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='116' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.276257489 -5.35849041781 -14.1970192256 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='117' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>8.18003861864 -9.27586245781 -0.627188765492 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='118' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>14.7688938175 -9.26448630649 -0.769774271474 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='119' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>18.5756488485 -1.7627063021 -4.90016191047 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='120' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.6464275168 -1.96058897422 -10.2716101804 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='121' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.57653725503 -2.25961734792 -10.0753621214 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='122' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>15.8623781757 9.22362664802 -3.58214029302 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='123' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>18.6059184817 5.80539364095 -4.86569141606 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='124' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">0</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>11.632114731 5.76047296102 -10.3858686916 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='125' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">1</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>3.41538141033 5.88858883399 -10.3218825647 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='126' class='Atom'>
+     <dict label="extra">
+      <int label="ghost">1</int>
+      <int label="fixed">1</int>
+      <str label="oniom">L H</str>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>7.24003403757 9.22393278365 -3.6628429373 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='127' class='Folder'>
+  </model_object>
+ </list>
+</zml_file>
