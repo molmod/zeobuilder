@@ -63,9 +63,11 @@ class LoadCML(LoadFilter):
         return [universe, folder]
 
     def load_molecule(self, parent, molecule):
+        parent.extra.update(molecule.extra)
         Atom = context.application.plugins.get_node("Atom")
         for counter, number, coordinate in zip(xrange(molecule.size), molecule.numbers, molecule.coordinates):
-            extra = {"order": counter}
+            extra = molecule.atoms_extra.get(counter, {})
+            extra["order"] = counter
             atom_record = periodic[number]
             atom = Atom(name=atom_record.symbol, number=number, extra=extra)
             atom.transformation.t[:] = coordinate
@@ -73,9 +75,11 @@ class LoadCML(LoadFilter):
             counter += 1
         if molecule.graph is not None:
             Bond = context.application.plugins.get_node("Bond")
-            for counter, (i,j) in enumerate(molecule.graph.pairs):
+            for counter, pair in enumerate(molecule.graph.pairs):
+                extra = molecule.bonds_extra.get(pair, {})
                 name = "Bond %i" % counter
-                bond = Bond(name=name, targets=[parent.children[i],parent.children[j]])
+                i,j = pair
+                bond = Bond(name=name, targets=[parent.children[i],parent.children[j]], extra=extra)
                 parent.add(bond)
 
 
@@ -105,29 +109,36 @@ class DumpCML(DumpFilter):
             universe = parent
 
         atom_to_index = {}
+        atoms_extra = {}
         counter = 0
         numbers = []
         coordinates = []
         for child in parent.children:
             if isinstance(child, Atom):
                 atom_to_index[child] = counter
+                if len(child.extra) > 0:
+                    atoms_extra[counter] = child.extra
                 counter += 1
                 numbers.append(child.number)
                 coordinates.append(child.get_frame_relative_to(universe).t)
+
         if len(numbers) > 0:
             molecule = Molecule()
             molecule.title = parent.name
             molecule.numbers = numpy.array(numbers)
             molecule.coordinates = numpy.array(coordinates)
+            molecule.extra = parent.extra
+            molecule.atoms_extra = atoms_extra
+            molecule.bonds_extra = {}
 
             pairs = set([])
             for child in parent.children:
                 if isinstance(child, Bond):
                     atoms = child.get_targets()
-                    pairs.add(frozenset([
-                        atom_to_index[atoms[0]],
-                        atom_to_index[atoms[1]]
-                    ]))
+                    pair = frozenset([atom_to_index[atoms[0]], atom_to_index[atoms[1]]])
+                    if len(child.extra) > 0:
+                        molecule.bonds_extra[pair] = child.extra
+                    pairs.add(pair)
             if len(pairs) > 0:
                 molecule.graph = MolecularGraph(pairs, molecule.numbers)
             else:
