@@ -59,7 +59,7 @@ class LoadXYZ(LoadFilter):
         Point = context.application.plugins.get_node("Point")
 
         for index, number, symbol, coordinate in zip(xrange(molecule.size), molecule.numbers, xyz_reader.symbols, molecule.coordinates):
-            extra = {"order": index}
+            extra = {"index": index}
             if number == 0:
                 atom = Point(name=symbol, extra=extra)
             else:

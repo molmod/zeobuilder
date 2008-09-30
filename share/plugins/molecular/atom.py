@@ -291,9 +291,9 @@ class RearrangeAtoms(Immediate):
         Point = context.application.plugins.get_node("Point")
         for child in cache.children:
             if isinstance(child, Atom):
-                l.append((-child.extra.get("order", -1), child.number, child))
+                l.append((-child.extra.get("index", -1), child.number, child))
             elif isinstance(child, Point):
-                l.append((-child.extra.get("order", -1), 0, child))
+                l.append((-child.extra.get("index", -1), 0, child))
 
         l.sort()
         l.reverse()

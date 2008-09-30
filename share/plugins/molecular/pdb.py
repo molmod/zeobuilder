@@ -53,7 +53,7 @@ class LoadPDB(LoadFilter):
             #if len(line) != 81:
             #    raise FilterError("Each line in a PDB file must count 80 characters, error at line %i, len=%i" % (counter, len(line)-1))
             if line.startswith("ATOM"):
-                extra = {"order": atom_index}
+                extra = {"index": atom_index}
                 atom_info = periodic[line[76:78].strip()]
                 atom = Atom(name=line[12:16].strip(), number=atom_info.number, extra=extra)
                 try:

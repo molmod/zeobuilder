@@ -67,7 +67,7 @@ class LoadCML(LoadFilter):
         Atom = context.application.plugins.get_node("Atom")
         for counter, number, coordinate in zip(xrange(molecule.size), molecule.numbers, molecule.coordinates):
             extra = molecule.atoms_extra.get(counter, {})
-            extra["order"] = counter
+            extra["index"] = counter
             atom_record = periodic[number]
             atom = Atom(name=atom_record.symbol, number=number, extra=extra)
             atom.transformation.t[:] = coordinate

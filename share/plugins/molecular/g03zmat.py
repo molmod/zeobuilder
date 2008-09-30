@@ -121,7 +121,7 @@ class LoadG03ZMAT(LoadFilter):
             coordinates[i] = x*tmp_x + y*tmp_y + z*tmp_z + coordinates[irow[0]]
 
         for i, symbol, coordinate in zip(xrange(len(symbols)), symbols, coordinates):
-            extra = {"order": i}
+            extra = {"index": i}
             atom_record = periodic[symbol]
             if atom_record is None:
                 atom = Point(name=symbol, extra=extra)

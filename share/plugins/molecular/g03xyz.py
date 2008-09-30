@@ -73,7 +73,7 @@ class LoadG03XYZ(LoadFilter):
                     extra["oniom"] = " ".join(words[4:])
             except ValueError:
                 raise FilterError("Could not read coordinates. Incorrect floating point format.")
-            extra["order"] = counter
+            extra["index"] = counter
             atom_record = periodic[symbol]
             if atom_record is None:
                 atom = Point(name=symbol, extra=extra)
