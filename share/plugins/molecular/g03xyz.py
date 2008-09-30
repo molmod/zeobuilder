@@ -66,10 +66,10 @@ class LoadG03XYZ(LoadFilter):
             extra["fixed"] = int(words[1] == "-1")
             try:
                 if extra["fixed"]:
-                    xyz = [float(words[2]), float(words[3]), float(words[4])]
+                    coordinate = [float(words[2]), float(words[3]), float(words[4])]
                     extra["oniom"] = " ".join(words[5:])
                 else:
-                    xyz = [float(words[1]), float(words[2]), float(words[3])]
+                    coordinate = [float(words[1]), float(words[2]), float(words[3])]
                     extra["oniom"] = " ".join(words[4:])
             except ValueError:
                 raise FilterError("Could not read coordinates. Incorrect floating point format.")
@@ -79,7 +79,7 @@ class LoadG03XYZ(LoadFilter):
                 atom = Point(name=symbol, extra=extra)
             else:
                 atom = Atom(name=symbol, number=atom_record.number, extra=extra)
-            atom.transformation.t[:] = xyz
+            atom.transformation.t[:] = coordinate
             atom.transformation.t *= angstrom
             universe.add(atom)
             counter += 1
