@@ -52,22 +52,26 @@ def yield_bonds(nodes):
 
 def chemical_formula(atoms, markup=False):
     atom_counts = {}
+    total = 0
     for atom in atoms:
         if atom.number in atom_counts:
             atom_counts[atom.number] += 1
         else:
             atom_counts[atom.number] = 1
-    total = 0
-    formula = ""
+        total += 1
     items = atom_counts.items()
     items.sort()
     items.reverse()
-    for atom_number, count in items:
-        if markup:
-            formula += "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
-        else:
-            formula += "%s%i " % (periodic[atom_number].symbol, count)
-        total += count
+    if markup:
+        formula = "".join(
+            "%s<sub>%i</sub>" % (periodic[atom_number].symbol, count)
+            for atom_number, count in items
+        )
+    else:
+        formula = " ".join(
+            "%s%i" % (periodic[atom_number].symbol, count)
+            for atom_number, count in items
+        )
     return total, formula
 
 
