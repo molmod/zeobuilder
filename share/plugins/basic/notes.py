@@ -38,7 +38,7 @@ class Notes(ModelObject):
     # Properties
     #
 
-    def set_notes(self, notes):
+    def set_notes(self, notes, init=False):
         self.notes = notes
 
     properties = [

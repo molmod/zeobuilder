@@ -53,6 +53,15 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     __metaclass__ = NodeClass
 
     #
+    # State
+    #
+
+    def initnonstate(self):
+        GLContainerBase.initnonstate(self)
+        self.cell_active = numpy.zeros(3, bool)
+        self.cell = numpy.identity(3, float)
+
+    #
     # Properties
     #
 
@@ -62,17 +71,19 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
                 node.invalidate_draw_list()
                 node.invalidate_boundingbox_list()
 
-    def set_cell(self, cell):
+    def set_cell(self, cell, init=False):
         UnitCell.set_cell(self, cell)
-        self.invalidate_boundingbox_list()
-        self.invalidate_draw_list()
-        self.update_vectors()
+        if not init:
+            self.invalidate_boundingbox_list()
+            self.invalidate_draw_list()
+            self.update_vectors()
 
-    def set_cell_active(self, cell_active):
+    def set_cell_active(self, cell_active, init=False):
         UnitCell.set_cell_active(self, cell_active)
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
-        self.update_vectors()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
+            self.update_vectors()
 
     #
     # Properties
@@ -135,36 +146,41 @@ class Universe(GLPeriodicContainer, FrameAxes):
     # Properties
     #
 
-    def set_cell(self, cell):
-        GLPeriodicContainer.set_cell(self, cell)
-        self.update_clip_planes()
-        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
-        self.invalidate_total_list()
-        self.invalidate_box_list()
+    def set_cell(self, cell, init=False):
+        GLPeriodicContainer.set_cell(self, cell, init)
+        if not init:
+            self.update_clip_planes()
+            self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+            self.invalidate_total_list()
+            self.invalidate_box_list()
 
-    def set_cell_active(self, cell_active):
-        GLPeriodicContainer.set_cell_active(self, cell_active)
-        self.update_clip_planes()
-        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
-        self.invalidate_total_list()
-        self.invalidate_box_list()
+    def set_cell_active(self, cell_active, init=False):
+        GLPeriodicContainer.set_cell_active(self, cell_active, init)
+        if not init:
+            self.update_clip_planes()
+            self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+            self.invalidate_total_list()
+            self.invalidate_box_list()
 
-    def set_repetitions(self, repetitions):
+    def set_repetitions(self, repetitions, init=False):
         self.repetitions = repetitions
-        self.update_clip_planes()
-        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
-        self.invalidate_box_list()
-        self.invalidate_total_list()
+        if not init:
+            self.update_clip_planes()
+            self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+            self.invalidate_box_list()
+            self.invalidate_total_list()
 
-    def set_box_visible(self, box_visible):
+    def set_box_visible(self, box_visible, init=False):
         self.box_visible = box_visible
-        self.invalidate_total_list()
+        if not init:
+            self.invalidate_total_list()
 
-    def set_clipping(self, clipping):
+    def set_clipping(self, clipping, init=False):
         self.clipping = clipping
-        self.invalidate_total_list()
-        self.invalidate_box_list()
-        self.update_clip_planes()
+        if not init:
+            self.invalidate_total_list()
+            self.invalidate_box_list()
+            self.update_clip_planes()
 
     properties = [
         Property("repetitions", numpy.array([1, 1, 1], int), lambda self: self.repetitions, set_repetitions),

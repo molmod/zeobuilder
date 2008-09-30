@@ -83,20 +83,23 @@ class FrameAxes(object):
     # Properties
     #
 
-    def set_axis_thickness(self, axis_thickness):
+    def set_axis_thickness(self, axis_thickness, init=False):
         self.axis_thickness = axis_thickness
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_axis_length(self, axis_length):
+    def set_axis_length(self, axis_length, init=False):
         self.axis_length = axis_length
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_axes_visible(self, axes_visible):
+    def set_axes_visible(self, axes_visible, init=False):
         self.axes_visible = axes_visible
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
     properties = [
         Property("axis_thickness", 0.1*angstrom, lambda self: self.axis_thickness, set_axis_thickness),

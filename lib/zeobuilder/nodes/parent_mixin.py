@@ -59,7 +59,7 @@ class ContainerMixin(ParentMixin):
     # Properties
     #
 
-    def set_children(self, children):
+    def set_children(self, children, init=False):
         self.children = children
 
     properties = [
@@ -138,7 +138,7 @@ class ReferentMixin(ParentMixin):
     def get_targets(self):
         return [child.target for child in self.children]
 
-    def set_targets(self, targets):
+    def set_targets(self, targets, init=False):
         if len(targets) != len(self.children):
             raise ReferentMixinError("The number of targets should match the number of references.")
         for child, target in zip(self.children, targets):

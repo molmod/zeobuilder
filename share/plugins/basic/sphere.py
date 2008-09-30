@@ -46,14 +46,16 @@ class Sphere(GLGeometricBase, ColorMixin):
     # Properties
     #
 
-    def set_radius(self, radius):
+    def set_radius(self, radius, init=False):
         self.radius = radius
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_quality(self, quality):
+    def set_quality(self, quality, init=False):
         self.quality = quality
-        self.invalidate_draw_list()
+        if not init:
+            self.invalidate_draw_list()
 
     properties = [
         Property("radius", 0.5, lambda self: self.radius, set_radius),

@@ -39,9 +39,10 @@ class ColorMixin(gobject.GObject):
     # Properties
     #
 
-    def set_color(self, color):
+    def set_color(self, color, init=False):
         self.color = color
-        self.invalidate_draw_list()
+        if not init:
+            self.invalidate_draw_list()
 
     properties = [
         Property("color", numpy.array([0.7, 0.7, 0.7, 1.0]), lambda self: self.color, set_color)
@@ -74,9 +75,10 @@ class UserColorMixin(gobject.GObject):
     # Properties
     #
 
-    def set_user_color(self, user_color):
+    def set_user_color(self, user_color, init=False):
         self.user_color = user_color
-        self.invalidate_draw_list()
+        if not init:
+            self.invalidate_draw_list()
 
     properties = [
         Property("user_color", Undefined(numpy.array([0.7, 0.7, 0.7, 1.0])), lambda self: self.user_color, set_user_color, signal=True)

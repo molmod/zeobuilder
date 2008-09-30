@@ -49,15 +49,17 @@ class Point(GLGeometricBase, ColorMixin):
     # Properties
     #
 
-    def set_spike_length(self, spike_length):
+    def set_spike_length(self, spike_length, init=False):
         self.spike_length = spike_length
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_spike_thickness(self, spike_thickness):
+    def set_spike_thickness(self, spike_thickness, init=False):
         self.spike_thickness = spike_thickness
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
     properties = [
         Property("spike_length", 0.3, lambda self: self.spike_length, set_spike_length),

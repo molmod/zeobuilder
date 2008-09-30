@@ -22,7 +22,6 @@
 from zeobuilder import context
 
 from zeobuilder.nodes.node import Node, NodeInfo
-from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import bridge as tree_bridge
 from zeobuilder.gui import load_image
@@ -43,61 +42,63 @@ class Reference(Node):
 
     def __init__(self, prefix):
         Node.__init__(self)
-        self.target = None
+        self._target = None
         self.prefix = prefix
         self.icon = self.overlay_icon
 
     def set_target(self, target):
-        if self.target is None and target is not None:
+        if self._target is None and target is not None:
             self.define_target(target)
-        elif self.target is not None and target is not None:
+        elif self._target is not None and target is not None:
             self.undefine_target()
             self.define_target(target)
-        elif self.target is not None and target is None:
+        elif self._target is not None and target is None:
             self.undefine_target()
         else:
             return
+
+    target = property(lambda self: self._target, set_target)
 
     #
     # Tree
     #
 
     def get_name(self):
-        if self.target is None:
+        if self._target is None:
             return "Empty reference. This should never happen. Contact the authors."
         else:
-            return self.prefix + ": " + self.target.name
+            return self.prefix + ": " + self._target.name
 
     def set_model(self, model):
         Node.set_model(self, model)
-        if self.target is not None:
-            self.target.references.append(self)
+        if self._target is not None:
+            self._target.references.append(self)
 
     def unset_model(self):
         Node.unset_model(self)
-        if self.target is not None:
-            self.target.references.remove(self)
+        if self._target is not None:
+            self._target.references.remove(self)
 
     #
     # Targets
     #
 
     def define_target(self, new_target):
-        assert self.target is None, "Reference already has a target"
+        assert self._target is None, "Reference already has a target"
         assert new_target is not None, "Must assign a target"
         assert self.check_target(new_target), "Target %s not accepted" % new_target
-        self.target = new_target
+        self._target = new_target
         if self.model is not None:
-            self.target.references.append(self)
-        self.icon = self.target.reference_icon
+            self._target.references.append(self)
+        self.icon = self._target.reference_icon
         self.parent.define_target(self, new_target)
 
     def undefine_target(self):
-        assert self.target is not None, "Reference has no target to undefine"
-        old_target = self.target
+        assert self._target is not None, "Reference has no target to undefine"
+        old_target = self._target
         if self.model is not None:
             old_target.references.remove(self)
-        self.target = None
+        self._target = None
         self.icon = self.overlay_icon
         self.parent.define_target(self, old_target)
 
@@ -124,11 +125,11 @@ class SpatialReference(Reference):
 
     def set_model(self, model):
         Reference.set_model(self, model)
-        if self.target is not None: self.connect_bridge()
+        if self._target is not None: self.connect_bridge()
 
     def unset_model(self):
         Reference.unset_model(self)
-        if self.target is not None: self.disconnect_bridge()
+        if self._target is not None: self.disconnect_bridge()
 
     #
     # Targets
@@ -155,7 +156,7 @@ class SpatialReference(Reference):
         self.parent.target_moved(self, model_object)
 
     def connect_bridge(self):
-        bridge = tree_bridge(self, self.target)
+        bridge = tree_bridge(self, self._target)
         for model_object in bridge:
             self.bridge_handlers.append((model_object, model_object.connect("on-move", self.on_target_move)))
             if isinstance(model_object, GLTransformationMixin):
@@ -171,8 +172,8 @@ class SpatialReference(Reference):
     #
 
     def translation_relative_to(self, other):
-        if self.target is not None:
-            return self.target.get_frame_relative_to(other).t
+        if self._target is not None:
+            return self._target.get_frame_relative_to(other).t
         else:
             return None
 

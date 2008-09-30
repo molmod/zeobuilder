@@ -49,29 +49,18 @@ class Plane(GLReferentBase, ColorMixin):
         return []
 
     def set_targets(self, targets):
-        for child in self.children:
-            child.set_target(None)
-            child.parent = None
-            if child.model is not None:
-                child.unset_model()
-        self.children = []
-        for target in targets:
-            child = SpatialReference("Point")
-            child.parent = self
-            child.set_target(target)
-            self.children.append(child)
-        if self.model is not None:
-            for child in self.children:
-                child.set_model(self.model)
+        self.children = [SpatialReference("Point") for target in targets]
+        ReferentBase.set_targets(targets, init)
 
     #
     # Properties
     #
 
-    def set_margin(self, margin):
+    def set_margin(self, margin, init=False):
         self.margin = margin
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
     properties = [
         Property("margin", 1.0, lambda self: self.margin, set_margin),

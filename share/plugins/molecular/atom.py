@@ -61,16 +61,18 @@ class Atom(GLGeometricBase, UserColorMixin):
     # Properties
     #
 
-    def set_user_radius(self, user_radius):
+    def set_user_radius(self, user_radius, init=False):
         self.user_radius = user_radius
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_quality(self, quality):
+    def set_quality(self, quality, init=False):
         self.quality = quality
-        self.invalidate_draw_list()
+        if not init:
+            self.invalidate_draw_list()
 
-    def set_number(self, number):
+    def set_number(self, number, init=False):
         self.number = number
         atom_info = periodic[number]
         if atom_info.vdw_radius is not None:
@@ -82,8 +84,9 @@ class Atom(GLGeometricBase, UserColorMixin):
             self.default_color = numpy.array([0.7, 0.7, 0.7, 1.0], float)
         else:
             self.default_color = numpy.array(color, float)
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
     properties = [
         Property("user_radius", Undefined(0.5), lambda self: self.user_radius, set_user_radius, signal=True),

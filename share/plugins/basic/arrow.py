@@ -43,29 +43,34 @@ class Arrow(Vector, ColorMixin):
     # Properties
     #
 
-    def set_radius(self, radius):
+    def set_radius(self, radius, init=False):
         self.radius = radius
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_quality(self, quality):
+    def set_quality(self, quality, init=False):
         self.quality = quality
-        self.invalidate_draw_list()
+        if not init:
+            self.invalidate_draw_list()
 
-    def set_arrow_length(self, arrow_length):
+    def set_arrow_length(self, arrow_length, init=False):
         self.arrow_length = arrow_length
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_arrow_radius(self, arrow_radius):
+    def set_arrow_radius(self, arrow_radius, init=False):
         self.arrow_radius = arrow_radius
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
-    def set_arrow_position(self, arrow_position):
+    def set_arrow_position(self, arrow_position, init=False):
         self.arrow_position = arrow_position
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
     properties = [
         Property("radius", 0.15, lambda self: self.radius, set_radius),

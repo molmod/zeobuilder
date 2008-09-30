@@ -76,12 +76,12 @@ class ModelObject(Node):
     def initstate(self, **initstate):
         for p in self.properties:
             if p.name not in self.__dict__:
-                self.__dict__[p.name] = p.default(self)
+                p.set(self, p.default(self), init=True)
         for p in self.properties:
             value = initstate.get(p.name)
             if value is None:
                 value = p.default(self)
-            p.set(self, value)
+            p.set(self, value, init=True)
 
     def initnonstate(self):
         self.references = []
@@ -101,10 +101,10 @@ class ModelObject(Node):
     def get_name(self):
         return self.name
 
-    def set_name(self, name):
+    def set_name(self, name, init=False):
         self.name = name
 
-    def set_extra(self, extra):
+    def set_extra(self, extra, init=False):
         self.extra = extra
 
     properties = [

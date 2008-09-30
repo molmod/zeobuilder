@@ -127,10 +127,10 @@ class Property(object):
     def get(self, node):
         return self.fget(node)
 
-    def set(self, node, value):
-        if self.signal:
+    def set(self, node, value, init=False):
+        if self.signal and not init:
             node.emit(self.signal_name)
-        self.fset(node, value)
+        self.fset(node, value, init)
 
 
 

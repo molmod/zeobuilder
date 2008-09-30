@@ -49,20 +49,18 @@ class Trajectory(ReferentBase):
     def create_references(self):
         return []
 
-    def set_targets(self, targets):
+    def set_targets(self, targets, init=False):
         for target in self.targets:
             if not isnstance(target, Atom):
                 raise TrajectoryError("References of the trajectory object can only point to atoms")
         self.children = [Reference(prefix="Track") for target in targets]
-        for child, target in zip(self.children, targets):
-            child.parent = self
-            child.set_target(target)
+        ReferentBase.set_targets(targets, init)
 
     #
     # Properties
     #
 
-    def set_frames(self, frames):
+    def set_frames(self, frames, init=False):
         if frames.shape[1] != len(self.children) or frames.shape[2] != 3:
             raise TrajectoryError("The frames must have the right shape, i.e. (x, %s, 3). You gave %s" % (len(self.children), frames.shape))
         self.frames = frames

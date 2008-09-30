@@ -56,13 +56,15 @@ class Bond(Vector):
     # Properties
     #
 
-    def set_quality(self, quality):
+    def set_quality(self, quality, init=False):
         self.quality = quality
-        self.invalidate_draw_list()
+        if not init:
+            self.invalidate_draw_list()
 
-    def set_bond_type(self, bond_type):
+    def set_bond_type(self, bond_type, init=False):
         self.bond_type = bond_type
-        self.invalidate_draw_list()
+        if not init:
+            self.invalidate_draw_list()
 
     properties = [
         Property("quality", 15, lambda self: self.quality, set_quality),

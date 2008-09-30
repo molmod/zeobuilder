@@ -85,7 +85,7 @@ class ConscanResults(ReferentBase):
             in self.connections
         ]
 
-    def set_connections(self, connections):
+    def set_connections(self, connections, init=False):
         def get_ref(frame_index, index):
             if index is -1:
                 return None

@@ -46,10 +46,11 @@ class Box(GLGeometricBase, ColorMixin):
     # Properties
     #
 
-    def set_size(self, size):
+    def set_size(self, size, init=False):
         self.size = size
-        self.invalidate_draw_list()
-        self.invalidate_boundingbox_list()
+        if not init:
+            self.invalidate_draw_list()
+            self.invalidate_boundingbox_list()
 
     properties = [
         Property("size", numpy.array([1.0, 1.0, 1.0]), lambda self: self.size, set_size),

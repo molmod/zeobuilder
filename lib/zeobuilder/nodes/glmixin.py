@@ -58,8 +58,10 @@ class GLMixin(gobject.GObject):
     # Properties
     #
 
-    def set_visible(self, visible):
-        if self.visible != visible:
+    def set_visible(self, visible, init=False):
+        if init:
+            self.visible = visible
+        elif self.visible != visible:
             self.visible = visible
             self.invalidate_total_list()
 
@@ -293,9 +295,10 @@ class GLTransformationMixin(GLMixin):
     def default_transformation(self):
         return self.Transformation()
 
-    def set_transformation(self, transformation):
+    def set_transformation(self, transformation, init=False):
         self.transformation = transformation
-        self.invalidate_transformation_list()
+        if not init:
+            self.invalidate_transformation_list()
 
     properties = [
         Property("transformation", default_transformation, lambda self: self.transformation, set_transformation)
