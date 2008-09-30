@@ -31,11 +31,11 @@ from molmod.data.periodic import periodic
 from molmod.units import angstrom, deg
 
 
-class LoadZMAT(LoadFilter):
+class LoadG03ZMAT(LoadFilter):
     authors = [authors.toon_verstraelen]
 
     def __init__(self):
-        LoadFilter.__init__(self, "The Z-Matrix format (*.zmat)")
+        LoadFilter.__init__(self, "The Gaussian Z-Matrix format (*.g03zmat)")
 
     def __call__(self, f):
         Universe = context.application.plugins.get_node("Universe")
@@ -134,7 +134,7 @@ class LoadZMAT(LoadFilter):
 
 
 load_filters = {
-    "zmat": LoadZMAT(),
+    "g03zmat": LoadG03ZMAT(),
 }
 
 
