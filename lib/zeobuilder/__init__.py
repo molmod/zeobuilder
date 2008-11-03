@@ -27,10 +27,16 @@ class Context(object):
         self.user_dir = os.path.expanduser("~/.zeobuilder")
         if not os.path.isdir(self.user_dir):
             os.mkdir(self.user_dir)
-        self.share_dirs = [
+        candidate_share_dirs = [
             os.path.join(sys.prefix, "share/zeobuilder"),
-            self.user_dir
+            self.user_dir,
+            "/usr/share/zeobuilder/",
+            "/usr/local/share/zeobuilder/",
         ]
+        self.share_dirs = []
+        for share_dir in candidate_share_dirs:
+            if os.path.isdir(share_dir):
+                self.share_dirs.append(share_dir)
         self.config_filename = os.path.join(self.user_dir, "settings")
 
     def get_share_file(self, filename):
