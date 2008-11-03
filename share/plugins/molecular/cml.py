@@ -63,10 +63,10 @@ class LoadCML(LoadFilter):
         return [universe, folder]
 
     def load_molecule(self, parent, molecule):
-        parent.extra.update(molecule.extra)
+        parent.extra.update(self.load_extra(molecule.extra))
         Atom = context.application.plugins.get_node("Atom")
         for counter, number, coordinate in zip(xrange(molecule.size), molecule.numbers, molecule.coordinates):
-            extra = molecule.atoms_extra.get(counter, {})
+            extra = self.load_extra(molecule.atoms_extra.get(counter, {}))
             extra["index"] = counter
             atom_record = periodic[number]
             atom = Atom(name=atom_record.symbol, number=number, extra=extra)
@@ -76,11 +76,28 @@ class LoadCML(LoadFilter):
         if molecule.graph is not None:
             Bond = context.application.plugins.get_node("Bond")
             for counter, pair in enumerate(molecule.graph.pairs):
-                extra = molecule.bonds_extra.get(pair, {})
+                extra = self.load_extra(molecule.bonds_extra.get(pair, {}))
                 name = "Bond %i" % counter
                 i,j = pair
                 bond = Bond(name=name, targets=[parent.children[i],parent.children[j]], extra=extra)
                 parent.add(bond)
+
+    def load_extra(self, extra):
+        result = {}
+        for key, value in extra.iteritems():
+            value = value.strip()
+            try:
+                result[key] = int(value)
+                continue
+            except ValueError:
+                pass
+            try:
+                result[key] = float(value)
+                continue
+            except ValueError:
+                pass
+            result[key] = str(value)
+        return result
 
 
 class DumpCML(DumpFilter):

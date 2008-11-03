@@ -203,6 +203,7 @@ class ExtraDialog(object):
 
     def on_value_edited(self, cell, path, new_text):
         iter = self.list_store.get_iter_from_string(path)
+        new_text = new_text.strip()
         try:
             self.list_store.set_value(iter, 1, int(new_text))
             return
