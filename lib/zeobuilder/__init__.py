@@ -43,6 +43,8 @@ class Context(object):
             raise Error("Could not find shared files.")
         self.config_filename = os.path.join(self.user_dir, "settings")
 
+    share_dirs = property(lambda self: self._share_dirs)
+
     def get_share_filename(self, filename):
         for share_dir in self._share_dirs:
             result = os.path.join(share_dir, filename)
