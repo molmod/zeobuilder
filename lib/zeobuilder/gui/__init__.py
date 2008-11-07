@@ -28,16 +28,14 @@ class GUIError(Exception):
     pass
 
 def load_image(filename, size=None):
-    for directory in context.share_dirs:
-        filepath = os.path.join(directory, filename)
-        if os.path.isfile(filepath):
-            if size is None:
-                return gtk.gdk.pixbuf_new_from_file(filepath)
-            else:
-                return gtk.gdk.pixbuf_new_from_file_at_size(
-                    filepath, size[0], size[1]
-                )
-    raise GUIError("Image '%s' not found." % filename)
+    filename = context.get_share_filename(filename)
+    if os.path.isfile(filename):
+        if size is None:
+            return gtk.gdk.pixbuf_new_from_file(filename)
+        else:
+            return gtk.gdk.pixbuf_new_from_file_at_size(
+                filename, size[0], size[1]
+            )
 
 
 gtk.window_set_default_icon(load_image("zeobuilder.svg"))

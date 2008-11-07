@@ -27,21 +27,25 @@ class Context(object):
         self.user_dir = os.path.expanduser("~/.zeobuilder")
         if not os.path.isdir(self.user_dir):
             os.mkdir(self.user_dir)
-        candidate_share_dirs = [
+        share_dirs = set([
             os.path.join(sys.prefix, "share/zeobuilder"),
+            os.path.join(sys.prefix, "local/share/zeobuilder"),
+            os.path.join(os.getenv("HOME"), "share/zeobuilder"),
             self.user_dir,
             "/usr/share/zeobuilder/",
             "/usr/local/share/zeobuilder/",
-        ]
-        self.share_dirs = []
-        for share_dir in candidate_share_dirs:
+        ])
+        self._share_dirs = []
+        for share_dir in share_dirs:
             if os.path.isdir(share_dir):
-                self.share_dirs.append(share_dir)
+                self._share_dirs.append(share_dir)
+        if len(self._share_dirs) == 0:
+            raise Error("Could not find shared files.")
         self.config_filename = os.path.join(self.user_dir, "settings")
 
-    def get_share_file(self, filename):
-        for dir in self.share_dirs:
-            result = os.path.join(dir, filename)
+    def get_share_filename(self, filename):
+        for share_dir in self._share_dirs:
+            result = os.path.join(share_dir, filename)
             if os.path.isfile(result):
                 return result
         raise ValueError("No file '%s' found in the share directories." % filename)
