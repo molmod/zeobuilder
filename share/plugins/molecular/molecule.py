@@ -31,7 +31,7 @@ from zeobuilder.gui.simple import ok_information, ok_error, ask_save_filename
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.expressions import Expression
-from zeobuilder.moltools import yield_atoms, chemical_formula, create_graph_bonds
+from zeobuilder.moltools import yield_atoms, chemical_formula, create_molecular_graph
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
@@ -39,7 +39,7 @@ import zeobuilder.authors as authors
 from molmod.data.periodic import periodic
 from molmod.data.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs import MatchDefinitionError, ExactMatchDefinition, RingMatchDefinition, MatchGenerator
+from molmod.graphs import PatternError, EqualPattern, RingPattern, GraphSearch
 from molmod.vectors import random_orthonormal
 
 import numpy, gtk
@@ -82,7 +82,7 @@ def yield_particles(node, parent=None):
             for particle in yield_particles(child, parent):
                 yield particle
 
-def calculate_center_of_mass(particles):
+def compute_center_of_mass(particles):
     weighted_center = numpy.zeros(3, float)
     total_mass = 0.0
     for mass, coordinate in particles:
@@ -93,7 +93,7 @@ def calculate_center_of_mass(particles):
     else:
         return total_mass, weighted_center/total_mass
 
-def calculate_inertia_tensor(particles, center):
+def compute_inertia_tensor(particles, center):
     tensor = numpy.zeros((3,3), float)
     for mass, coordinate in particles:
         delta = coordinate - center
@@ -143,7 +143,7 @@ class CenterOfMass(CenterAlignBase):
             if len(translated_children) == 0:
                 continue
 
-            mass, com = calculate_center_of_mass(yield_particles(node))
+            mass, com = compute_center_of_mass(yield_particles(node))
             if mass == 0.0:
                 continue
 
@@ -182,12 +182,12 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
             if len(translated_children) == 0:
                 continue
 
-            mass, com = calculate_center_of_mass(yield_particles(node))
+            mass, com = compute_center_of_mass(yield_particles(node))
             if mass == 0.0:
                 continue
 
             transformation.t = com
-            tensor = calculate_inertia_tensor(yield_particles(node), com)
+            tensor = compute_inertia_tensor(yield_particles(node), com)
             transformation.r = default_rotation_matrix(tensor)
             CenterAlignBase.do(self, node, translated_children, transformation)
 
@@ -480,33 +480,6 @@ class NeighborShellsDialog(FieldsDialogSimple):
 neighbor_shells_dialog = NeighborShellsDialog()
 
 
-class AnalyzeNieghborShells(Immediate):
-    description = "Analyze the neighbor shells"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:info", "_Neighbor shells", order=(0, 4, 1, 5, 2, 2))
-    authors = [authors.toon_verstraelen]
-
-    @staticmethod
-    def analyze_selection():
-        if not Immediate.analyze_selection(): return False
-        if len(context.application.cache.nodes) == 0: return False
-        return True
-
-    def do(self):
-        graph, foo = create_graph_bonds(context.application.cache.nodes)
-        graph.init_distances()
-        graph.init_trees_and_shells
-        max_shell_size = graph.distances.ravel().max()
-
-        def yield_rows():
-            for index, node in enumerate(graph.nodes):
-                yield [index+1, node.number, node.name, ""] + [
-                    "%i: %s" % chemical_formula(atoms, True) for atoms in
-                    graph.shells[node][1:]
-                ]
-
-        neighbor_shells_dialog.run(max_shell_size, yield_rows(), graph)
-
-
 def combinations(items, n):
     if len(items) < n: return
     if n == 0: yield set([])
@@ -549,29 +522,27 @@ class CloneOrder(Immediate):
 
     def do(self):
         frame_ref = context.application.cache.nodes[0]
-        graph_ref, foo = create_graph_bonds([frame_ref])
-        del foo
+        graph_ref = create_molecular_graph([frame_ref])
         try:
-            match_generator = MatchGenerator(ExactMatchDefinition(graph_ref))
-        except MatchDefinitionError, e:
+            match_generator = GraphSearch(EqualPattern(graph_ref))
+        except PatternError, e:
             raise UserError("Could not setup a graph match definition to clone the order.")
 
         some_failed = False
         all_failed = True
         for frame_other in context.application.cache.nodes[1:]:
-            graph_other, foo = create_graph_bonds([frame_other])
-            del foo
+            graph_other = create_molecular_graph([frame_other])
 
             try:
                 match = match_generator(graph_other).next()
                 all_failed = False
-            except (StopIteration, MatchDefinitionError):
+            except (StopIteration, PatternError):
                 some_failed = True
                 continue
 
             moves = [
-                (graph_ref.index[atom1], atom2)
-                for atom1, atom2
+                (index1, graph_other.molecule.atoms[index2])
+                for index1, index2
                 in match.forward.iteritems()
             ]
             moves.sort()
@@ -599,7 +570,7 @@ class RingDistributionWindow(GladeWrapper):
         #self.mpl_widget.set_border_width(6) TODO
         self.al_image.add(self.mpl_widget)
 
-        self.filter_store = gtk.ListStore(str, object)
+        self.filter_store = gtk.ListStore(str, int)
         self.cb_filter.set_model(self.filter_store)
         cell_renderer = gtk.CellRendererText()
         self.cb_filter.pack_start(cell_renderer)
@@ -616,65 +587,72 @@ class RingDistributionWindow(GladeWrapper):
 
         context.application.action_manager.connect("model-changed", self.on_model_changed)
 
-    def show(self, rings, graph, bonds_by_pair):
+    def show(self, rings, graph):
         self.rings = rings
         self.graph = graph
+
+        # A few usefull attributes
         for ring in rings:
+            ring.atoms = [graph.molecule.atoms[node] for node in ring.ring_nodes]
             ring.bonds = [
-                bonds_by_pair[frozenset([ring.forward[index], ring.forward[(index+1)%(ring.length+1)]])]
-                for index in xrange(ring.length+1)
+                graph.bonds[graph.pair_index[frozenset([
+                    ring.ring_nodes[index],
+                    ring.ring_nodes[(index+1)%len(ring)]
+                ])]]
+                for index in xrange(len(ring))
             ]
 
-        self.fill_stores()
-        self.calculate_properties()
+        self.compute_properties()
+        self.fill_filter_store()
+        self.fill_ring_store()
         self.create_image()
         self.window.show_all()
 
-    def fill_stores(self):
-        self.filter_store.clear()
-        self.filter_store.append(["All", None])
-        for node in self.graph.nodes:
-            self.filter_store.append([node.get_name(), node])
-        self.cb_filter.set_active(0)
-
-        self.fill_ring_store()
-
-    def fill_ring_store(self):
-        self.ring_store.clear()
-        filter_node = self.filter_store.get_value(self.cb_filter.get_active_iter(), 1)
-        for ring in self.rings:
-            center = sum(
-                node.get_absolute_frame().t
-                for node in ring.forward.itervalues()
-            )/len(ring.forward)
-            radii = [
-                numpy.linalg.norm(node.get_absolute_frame().t - center)
-                for node in ring.forward.itervalues()
-            ]
-            av_radius = 2*sum(radii)/len(radii)
-            min_radius = 2*min(radii)
-            if filter_node is None or filter_node in ring.backward:
-                self.ring_store.append([
-                    len(ring),
-                    express_measure(av_radius, "Length"),
-                    express_measure(min_radius, "Length"),
-                    str([node.get_name() for index, node in sorted(ring.forward.iteritems())]),
-                    ring,
-                ])
-        self.ring_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
-
-    def calculate_properties(self):
+    def compute_properties(self):
         ring_sizes = {}
         for ring in self.rings:
-            size = ring.size
+            size = len(ring)
             if size in ring_sizes:
                 ring_sizes[size] += 1
             else:
                 ring_sizes[size] = 1
+            ring.center = sum(
+                atom.get_absolute_frame().t
+                for atom in ring.atoms
+            )/len(ring)
+            ring.radii = numpy.array([
+                numpy.linalg.norm(atom.get_absolute_frame().t - ring.center)
+                for atom in ring.atoms
+            ])
+            ring.av_diameter = 2*ring.radii.mean()
+            ring.min_diameter = 2*ring.radii.min()
+            ring.label = ", ".join(atom.get_name() for atom in ring.atoms),
+        # for the histogram
         self.max_size = max(ring_sizes.iterkeys())
         self.ring_distribution = numpy.zeros(self.max_size, int)
         for ring_size, count in ring_sizes.iteritems():
             self.ring_distribution[ring_size-1] = count
+
+    def fill_filter_store(self):
+        self.filter_store.clear()
+        self.filter_store.append(["All", -1])
+        for index, atom in enumerate(self.graph.molecule.atoms):
+            self.filter_store.append([atom.get_name(), index])
+        self.cb_filter.set_active(0)
+
+    def fill_ring_store(self):
+        self.ring_store.clear()
+        filter_index = self.filter_store.get_value(self.cb_filter.get_active_iter(), 1)
+        for ring in self.rings:
+            if filter_index == -1 or filter_index in ring.reverse:
+                self.ring_store.append([
+                    len(ring),
+                    express_measure(ring.av_diameter, "Length"),
+                    express_measure(ring.min_diameter, "Length"),
+                    ring.label,
+                    ring,
+                ])
+        self.ring_store.set_sort_column_id(0, gtk.SORT_ASCENDING)
 
     def create_image(self):
         import pylab, matplotlib
@@ -728,9 +706,7 @@ class RingDistributionWindow(GladeWrapper):
             context.application.main.select_nodes([])
         else:
             ring = model.get_value(iter, 4)
-            context.application.main.select_nodes(
-                ring.forward.values() + ring.bonds
-            )
+            context.application.main.select_nodes(ring.atoms + ring.bonds)
 
 
 class StrongRingDistribution(Immediate):
@@ -746,14 +722,12 @@ class StrongRingDistribution(Immediate):
         return True
 
     def do(self):
-        graph, bonds_by_pair = create_graph_bonds(context.application.cache.nodes)
-        match_generator = MatchGenerator(
-            RingMatchDefinition(10),
-        )
+        graph = create_molecular_graph(context.application.cache.nodes)
+        match_generator = GraphSearch(RingPattern(20))
         rings = list(match_generator(graph))
 
         ring_distribution_window = RingDistributionWindow()
-        ring_distribution_window.show(rings, graph, bonds_by_pair)
+        ring_distribution_window.show(rings, graph)
 
 
 class FrameMolecules(Immediate):
@@ -767,51 +741,53 @@ class FrameMolecules(Immediate):
         if not isinstance(context.application.cache.node, ContainerMixin): return False
         return True
 
-    def calc_new_positions(self, atoms, graph, parent):
-        positions = dict((atom, atom.get_frame_up_to(parent).t) for atom in atoms)
+    def calc_new_positions(self, group, atoms, graph, parent):
+        positions = dict((node, atom.get_frame_up_to(parent).t) for node, atom in zip(group, atoms))
 
-        # find the atom that is the closest to the origin
-        closest = atoms[0]
-        closest_distance = numpy.linalg.norm(positions[closest])
-        for atom, position in positions.iteritems():
-            distance = numpy.linalg.norm(position)
-            if distance < closest_distance:
-                closest_distance = distance
-                closest = atom
+        Universe = context.application.plugins.get_node("Universe")
+        if isinstance(parent, Universe) and parent.cell_active.any():
+            # find the atom that is the closest to the origin
+            closest = group[0]
+            closest_distance = numpy.linalg.norm(positions[closest])
+            for node, position in positions.iteritems():
+                distance = numpy.linalg.norm(position)
+                if distance < closest_distance:
+                    closest_distance = distance
+                    closest = node
 
-        #
-        result = {}
-        moved = [closest]
-        not_moved = set(atoms)
-        not_moved.discard(closest)
-        while len(moved) > 0:
-            subject = moved.pop(0)
-            for neighbor in graph.neighbors[subject]:
-                if neighbor in not_moved:
-                    not_moved.discard(neighbor)
-                    moved.append(neighbor)
-                    delta = positions[neighbor] - positions[subject]
-                    delta = parent.shortest_vector(delta)
-                    positions[neighbor] = positions[subject] + delta
+            # translate the atoms in such a way that they are not split over
+            # several periodic images
+            result = {}
+            moved = [closest]
+            not_moved = set(group)
+            not_moved.discard(closest)
+            while len(moved) > 0:
+                subject = moved.pop()
+                for neighbor in graph.neighbors[subject]:
+                    if neighbor in not_moved:
+                        not_moved.discard(neighbor)
+                        moved.append(neighbor)
+                        delta = positions[neighbor] - positions[subject]
+                        delta = parent.shortest_vector(delta)
+                        positions[neighbor] = positions[subject] + delta
+
         return positions
-
-
 
     def do(self):
         cache = context.application.cache
 
-        graph, bonds_by_pair = create_graph_bonds(cache.nodes)
-        molecules = graph.get_nodes_per_independent_graph()
+        graph = create_molecular_graph(cache.nodes)
         parent = cache.node
 
         Frame = context.application.plugins.get_node("Frame")
-        for atoms in molecules:
-            new_positions = self.calc_new_positions(atoms, graph, parent)
+        for group in graph.independent_nodes:
+            atoms = [graph.molecule.atoms[i] for i in group]
+            new_positions = self.calc_new_positions(group, atoms, graph, parent)
             frame = Frame(name=chemical_formula(atoms)[1])
             primitive.Add(frame, parent, index=0)
-            for atom in atoms:
+            for node, atom in zip(group, atoms):
                 primitive.Move(atom, frame, select=False)
-                new_position = new_positions[atom]
+                new_position = new_positions[node]
                 translation = Translation()
                 translation.t = atom.get_parentframe_up_to(parent).vector_apply_inverse(new_position)
                 primitive.SetProperty(atom, "transformation", translation)
@@ -866,7 +842,6 @@ actions = {
     "CenterOfMass": CenterOfMass,
     "CenterOfMassAndPrincipalAxes": CenterOfMassAndPrincipalAxes,
     "SaturateWithHydrogens": SaturateWithHydrogens,
-    "AnalyzeNieghborShells": AnalyzeNieghborShells,
     "CloneOrder": CloneOrder,
     "StrongRingDistribution": StrongRingDistribution,
     "FrameMolecules": FrameMolecules,

@@ -30,6 +30,12 @@ from molmod.molecules import Molecule
 from molmod.molecular_graphs import MolecularGraph
 
 
+__all__ = [
+    "yield_atoms", "yield_bonds", "chemical_formula",
+    "create_molecule", "create_molecular_graph"
+]
+
+
 def yield_atoms(nodes):
     Atom = context.application.plugins.get_node("Atom")
     for node in nodes:
@@ -92,38 +98,20 @@ def create_molecule(selected_nodes):
 def create_molecular_graph(selected_nodes):
     molecule = create_molecule(selected_nodes)
 
-    pairs = set(
-        frozenset([
-            molecule.atoms.index(bond.children[0].target),
-            molecule.atoms.index(bond.children[1].target),
-        ]) for bond in yield_bonds(selected_nodes)
-        if bond.children[0].target in molecule.atoms and
-            bond.children[1].target in molecule.atoms
+    atom_indexes = dict((atom,i) for i,atom in enumerate(molecule.atoms))
+    bonds = list(
+        bond for bond in yield_bonds(selected_nodes)
+        if bond.children[0].target in atom_indexes and
+           bond.children[1].target in atom_indexes
     )
-    graph = MolecularGraph(pairs, molecule.numbers, range(len(molecule.atoms)))
-    graph.init_nodes()
+    pairs = [(
+        atom_indexes[bond.children[0].target],
+        atom_indexes[bond.children[1].target],
+    ) for bond in bonds]
+
+    graph = MolecularGraph(pairs, molecule.numbers)
+    graph.bonds = bonds
     graph.molecule = molecule
     return graph
-
-
-def create_graph_bonds(selected_nodes):
-    nodes = list(yield_atoms(selected_nodes))
-    bonds_by_pair = dict(
-        (frozenset([bond.children[0].target, bond.children[1].target]), bond)
-        for bond in yield_bonds(selected_nodes)
-        if bond.children[0].target in nodes and
-            bond.children[1].target in nodes
-    )
-    # uncommented these lines to make sure that the order of the list nodes
-    # is respected.
-    #tmp = set([])
-    #for a, b in bonds_by_pair.iterkeys():
-    #    tmp.add(a), tmp.add(b)
-    #nodes = [node for node in nodes if node in tmp]
-
-    graph = Graph(bonds_by_pair.keys(), nodes)
-    return graph, bonds_by_pair
-
-
 
 

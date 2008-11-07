@@ -211,7 +211,7 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
         self.status = None
 
         result = ChildProcessDialog.run(self,
-            [context.get_share_file("helpers/iterative")],
+            [context.get_share_filename("helpers/iterative")],
             self.minimize, auto_close, pickle=True
         )
 

@@ -22,6 +22,7 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import ImmediateWithMemory, Parameters, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.moltools import create_molecular_graph
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.gui.glade_wrapper import GladeWrapper
@@ -32,7 +33,8 @@ from zeobuilder.conversion import express_measure, to_unit
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.graphs import Graph, SubgraphMatchDefinition, MatchGenerator, CriteriaSet
+from molmod.graphs import Graph, GraphSearch, CriteriaSet
+from molmod.molecular_graphs import BondPattern, BendingAnglePattern, DihedralAnglePattern
 from molmod.vectors import angle
 
 import gtk, numpy
@@ -187,21 +189,20 @@ class DistributionDialog(GladeWrapper):
             self.mpl_widget.print_figure("%s.png" % filename, dpi=400)
 
 
-def search_bonds(selected_nodes):
-    Bond = context.application.plugins.get_node("Bond")
-    def yield_bonds(nodes):
-        for node in nodes:
-            if isinstance(node, Bond):
-                yield node
-            elif isinstance(node, ContainerMixin):
-                for result in yield_bonds(node.children):
-                    yield result
+class IndexToAtoms(object):
+    def __init__(self, fn):
+        self.fn = fn
 
-    bonds = {}
-    for bond in yield_bonds(selected_nodes):
-        key = frozenset([bond.children[0].target, bond.children[1].target])
-        bonds[key] = bond
-    return bonds
+    def __call__(self, index, graph):
+        return self.fn(graph.molecule.atoms[index])
+
+
+class IndexToBonds(object):
+    def __init__(self, fn):
+        self.fn = fn
+
+    def __call__(self, index, graph):
+        return self.fn(graph.bonds[index])
 
 
 class DistributionBondLengths(ImmediateWithMemory):
@@ -262,31 +263,29 @@ class DistributionBondLengths(ImmediateWithMemory):
                 val.compile_as("<%s>" % key)
                 val.variables = (key[7:11],)
 
-        bonds = search_bonds(context.application.cache.nodes)
         parent = context.application.cache.common_parent
         if parent is None:
             parent = context.application.model.universe
         lengths = []
+        graph = create_molecular_graph(context.application.cache.nodes)
 
-        bond_graph = Graph([frozenset([1, 2])])
-        match_definition = SubgraphMatchDefinition(
-            subgraph=bond_graph,
+        match_definition = BondPattern(
             criteria_sets=[CriteriaSet(
                 thing_criteria={
-                    1: self.parameters.filter_atom1,
-                    2: self.parameters.filter_atom2,
+                    0: IndexToAtoms(self.parameters.filter_atom1),
+                    1: IndexToAtoms(self.parameters.filter_atom2),
                 },
                 relation_criteria={
-                    frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
+                    0: IndexToBonds(self.parameters.filter_bond12),
                 },
             )],
         )
-        graph = Graph(bonds.keys())
         try:
-            match_generator = MatchGenerator(match_definition)
+            match_generator = GraphSearch(match_definition)
+            atoms = graph.molecule.atoms
             for match in match_generator(graph):
-                point1 = match.forward[1].get_absolute_frame().t
-                point2 = match.forward[2].get_absolute_frame().t
+                point1 = atoms[match.forward[0]].get_absolute_frame().t
+                point2 = atoms[match.forward[1]].get_absolute_frame().t
                 delta = parent.shortest_vector(point1 - point2)
                 lengths.append(numpy.linalg.norm(delta))
         except:
@@ -383,37 +382,32 @@ class DistributionBendingAngles(ImmediateWithMemory):
                 val.compile_as("<%s>" % key)
                 val.variables = (key[7:11],)
 
-        bonds = search_bonds(context.application.cache.nodes)
         parent = context.application.cache.common_parent
         if parent is None:
             parent = context.application.model.universe
         angles = []
+        graph = create_molecular_graph(context.application.cache.nodes)
 
-        angle_graph = Graph([
-            frozenset([1, 2]),
-            frozenset([2, 3])
-        ])
-        match_definition = SubgraphMatchDefinition(
-            subgraph=angle_graph,
+        match_definition = BendingAnglePattern(
             criteria_sets=[CriteriaSet(
                 thing_criteria={
-                    1: self.parameters.filter_atom1,
-                    2: self.parameters.filter_atom2,
-                    3: self.parameters.filter_atom3,
+                    0: IndexToAtoms(self.parameters.filter_atom1),
+                    1: IndexToAtoms(self.parameters.filter_atom2),
+                    2: IndexToAtoms(self.parameters.filter_atom3),
                 },
                 relation_criteria={
-                    frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
-                    frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
+                    0: IndexToBonds(self.parameters.filter_bond12),
+                    1: IndexToBonds(self.parameters.filter_bond23),
                 },
             )],
         )
-        graph = Graph(bonds.keys())
         try:
-            match_generator = MatchGenerator(match_definition)
+            atoms = graph.molecule.atoms
+            match_generator = GraphSearch(match_definition)
             for match in match_generator(graph):
-                point1 = match.forward[1].get_absolute_frame().t
-                point2 = match.forward[2].get_absolute_frame().t
-                point3 = match.forward[3].get_absolute_frame().t
+                point1 = atoms[match.forward[0]].get_absolute_frame().t
+                point2 = atoms[match.forward[1]].get_absolute_frame().t
+                point3 = atoms[match.forward[2]].get_absolute_frame().t
                 delta1 = parent.shortest_vector(point2 - point1)
                 delta2 = parent.shortest_vector(point2 - point3)
                 if numpy.linalg.norm(delta1) > 1e-8 and \
@@ -531,42 +525,35 @@ class DistributionDihedralAngles(ImmediateWithMemory):
                 val.compile_as("<%s>" % key)
                 val.variables = (key[7:11],)
 
-        bonds = search_bonds(context.application.cache.nodes)
         parent = context.application.cache.common_parent
         if parent is None:
             parent = context.application.model.universe
         angles = []
+        graph = create_molecular_graph(context.application.cache.nodes)
 
-        angle_graph = Graph([
-            frozenset([1, 2]),
-            frozenset([2, 3]),
-            frozenset([3, 4]),
-        ])
-        angle_graph.init_neighbors()
-        match_definition = SubgraphMatchDefinition(
-            subgraph=angle_graph,
+        match_definition = DihedralAnglePattern(
             criteria_sets=[CriteriaSet(
                 thing_criteria={
-                    1: self.parameters.filter_atom1,
-                    2: self.parameters.filter_atom2,
-                    3: self.parameters.filter_atom3,
-                    4: self.parameters.filter_atom4,
+                    0: IndexToAtoms(self.parameters.filter_atom1),
+                    1: IndexToAtoms(self.parameters.filter_atom2),
+                    2: IndexToAtoms(self.parameters.filter_atom3),
+                    3: IndexToAtoms(self.parameters.filter_atom4),
                 },
                 relation_criteria={
-                    frozenset([1,2]): lambda things: self.parameters.filter_bond12(bonds[things]),
-                    frozenset([2,3]): lambda things: self.parameters.filter_bond23(bonds[things]),
-                    frozenset([3,4]): lambda things: self.parameters.filter_bond34(bonds[things]),
+                    0: IndexToBonds(self.parameters.filter_bond12),
+                    1: IndexToBonds(self.parameters.filter_bond23),
+                    2: IndexToBonds(self.parameters.filter_bond34),
                 },
             )],
         )
-        graph = Graph(bonds.keys())
         try:
-            match_generator = MatchGenerator(match_definition)
+            atoms = graph.molecule.atoms
+            match_generator = GraphSearch(match_definition)
             for match in match_generator(graph):
-                point1 = match.forward[1].get_absolute_frame().t
-                point2 = match.forward[2].get_absolute_frame().t
-                point3 = match.forward[3].get_absolute_frame().t
-                point4 = match.forward[4].get_absolute_frame().t
+                point1 = atoms[match.forward[0]].get_absolute_frame().t
+                point2 = atoms[match.forward[1]].get_absolute_frame().t
+                point3 = atoms[match.forward[2]].get_absolute_frame().t
+                point4 = atoms[match.forward[3]].get_absolute_frame().t
                 normal1 = numpy.cross(parent.shortest_vector(point2-point1), parent.shortest_vector(point2-point3))
                 normal2 = numpy.cross(parent.shortest_vector(point3-point4), parent.shortest_vector(point3-point2))
                 if numpy.linalg.norm(normal1) > 1e-8 and \

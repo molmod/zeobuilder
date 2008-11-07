@@ -333,7 +333,7 @@ class ConscanReportDialog(ChildProcessDialog):
         self.clear_gui()
         self.connections = []
         response = ChildProcessDialog.run(self,
-            [context.get_share_file("helpers/conscan")],
+            [context.get_share_filename("helpers/conscan")],
             inp, auto_close, pickle=True
         )
         if response == gtk.RESPONSE_OK:

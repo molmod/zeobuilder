@@ -894,16 +894,6 @@ class MolecularActions(ApplicationTestCase):
             DistributionDihedralAngles(parameters)
         self.run_test_application(fn)
 
-    def test_analyze_neighbor_shells(self):
-        def fn():
-            context.application.model.file_open("input/precursor.zml")
-            context.application.main.select_nodes([context.application.model.universe])
-
-            AnalyzeNieghborShells = context.application.plugins.get_action("AnalyzeNieghborShells")
-            self.assert_(AnalyzeNieghborShells.analyze_selection())
-            AnalyzeNieghborShells()
-        self.run_test_application(fn)
-
     def test_molden_labels(self):
         def fn():
             context.application.model.file_open("input/precursor.zml")
