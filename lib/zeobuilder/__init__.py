@@ -30,10 +30,10 @@ class Context(object):
         share_dirs = set([
             os.path.join(sys.prefix, "share/zeobuilder"),
             os.path.join(sys.prefix, "local/share/zeobuilder"),
-            os.path.join(os.getenv("HOME"), "share/zeobuilder"),
+            os.path.join(str(os.getenv("HOME")), "share/zeobuilder"),
             self.user_dir,
-            "/usr/share/zeobuilder/",
-            "/usr/local/share/zeobuilder/",
+            "/usr/share/zeobuilder",
+            "/usr/local/share/zeobuilder",
         ])
         self._share_dirs = []
         for share_dir in share_dirs:
