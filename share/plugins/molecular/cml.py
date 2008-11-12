@@ -140,10 +140,7 @@ class DumpCML(DumpFilter):
                 coordinates.append(child.get_frame_relative_to(universe).t)
 
         if len(numbers) > 0:
-            molecule = Molecule()
-            molecule.title = parent.name
-            molecule.numbers = numpy.array(numbers)
-            molecule.coordinates = numpy.array(coordinates)
+            molecule = Molecule(numbers, coordinates, parent.name)
             molecule.extra = parent.extra
             molecule.atoms_extra = atoms_extra
             molecule.bonds_extra = {}

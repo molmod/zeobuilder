@@ -88,10 +88,8 @@ def create_molecule(selected_nodes):
     for atom in atoms:
         numbers.append(atom.number)
         coordinates.append(atom.get_absolute_frame().t)
-    result = Molecule()
+    result = Molecule(numbers, coordinates)
     result.atoms = atoms
-    result.numbers = numpy.array(numbers)
-    result.coordinates = numpy.array(coordinates)
     return result
 
 
