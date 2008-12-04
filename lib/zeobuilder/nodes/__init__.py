@@ -29,6 +29,7 @@ def init_nodes(nodes):
     from reference import Reference, SpatialReference
     from zeobuilder.gui.edit_properties import EditProperties
     from zeobuilder.gui.fields_dialogs import create_tabbed_main_field
+    from zeobuilder.gui.fields.mixin import ReadMixin
 
     dialog_fields = []
 
@@ -42,7 +43,11 @@ def init_nodes(nodes):
         dialog_fields.extend(node.dialog_fields)
 
     main_field = create_tabbed_main_field(dialog_fields)
-    context.application.edit_properties = EditProperties(main_field)
+    attribute_names = set([
+        dfi.field.attribute_name for dfi in dialog_fields
+        if isinstance(dfi.field, ReadMixin)
+    ])
+    context.application.edit_properties = EditProperties(main_field, attribute_names)
 
 
 

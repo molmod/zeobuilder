@@ -488,6 +488,15 @@ class CoreActions(ApplicationTestCase):
             Duplicate()
         self.run_test_application(fn)
 
+    def test_edit_properties(self):
+        def fn():
+            context.application.model.file_open("input/core_objects.zml")
+            context.application.main.toggle_selection(context.application.model.universe, on=True)
+            EditProperties = context.application.plugins.get_action("EditProperties")
+            self.assert_(EditProperties.analyze_selection())
+            EditProperties()
+        self.run_test_application(fn)
+
     def test_transformation_reset(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")

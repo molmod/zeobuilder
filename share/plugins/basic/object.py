@@ -50,10 +50,19 @@ class EditProperties(Immediate):
 
     def do(self):
         victims = context.application.cache.nodes
-        # Define the old copy of the state
-        old_states = dict((victim, copy.deepcopy(victim.__getstate__())) for victim in victims)
-        # Let the user make changes
         edit_properties = context.application.edit_properties
+        # Copy the old state, only the supported field names
+        old_states = {}
+        for victim in victims:
+            old_state = victim.__getstate__()
+            tmp = {}
+            for attribute_name in edit_properties.attribute_names:
+                value = old_state.get(attribute_name, None)
+                if value is not None:
+                    tmp[attribute_name] = value
+            old_states[victim] = tmp
+
+        # Let the user make changes
         edit_properties.run(victims)
         for changed_name in edit_properties.changed_names:
             for victim, old_state in old_states.iteritems():

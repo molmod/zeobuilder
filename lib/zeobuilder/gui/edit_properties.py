@@ -28,7 +28,7 @@ __all__ = ["EditProperties"]
 
 
 class EditProperties(FieldsDialogMultiplex):
-    def __init__(self, main_field):
+    def __init__(self, main_field, attribute_names):
         FieldsDialogMultiplex.__init__(
             self,
             "Edit properties",
@@ -39,6 +39,7 @@ class EditProperties(FieldsDialogMultiplex):
                 (gtk.STOCK_OK, gtk.RESPONSE_OK)
             ]
         )
+        self.attribute_names = attribute_names
 
     def run(self, nodes):
         self.nodes = nodes
