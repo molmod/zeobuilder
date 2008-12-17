@@ -57,7 +57,7 @@ class GroupBase(Immediate):
         nodes = copy.copy(cache.nodes)
         primitive.Add(new_parent, old_parent, index=cache.lowest_index)
         for victim in nodes:
-            primitive.Move(victim, new_parent)
+            primitive.Move(victim, new_parent, select=False)
 
 
 class GroupInFolder(GroupBase):
