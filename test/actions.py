@@ -663,6 +663,24 @@ class CoreActions(ApplicationTestCase):
             AddPlane()
         self.run_test_application(fn)
 
+    def test_add_tetraeder(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+
+            for index in xrange(4):
+                context.application.main.select_nodes([context.application.model.universe])
+                AddPoint = context.application.plugins.get_action("AddPoint")
+                self.assert_(AddPoint.analyze_selection())
+                AddPoint()
+                context.application.model.universe.children[-1].transformation.t = numpy.random.uniform(-5, 5, 3)
+
+            context.application.main.select_nodes(context.application.model.universe.children)
+            AddTetraeder = context.application.plugins.get_action("AddTetraeder")
+            self.assert_(AddTetraeder.analyze_selection())
+            AddTetraeder()
+        self.run_test_application(fn, quit=False)
+
 
 class MolecularActions(ApplicationTestCase):
     def test_add_atom(self):

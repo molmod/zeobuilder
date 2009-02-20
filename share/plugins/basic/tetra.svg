@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   version="1.0"
+   width="18"
+   height="18"
+   id="svg548">
+  <defs
+     id="defs550">
+    <linearGradient
+       id="linearGradient566">
+      <stop
+         id="stop567"
+         style="stop-color:#007f00;stop-opacity:1"
+         offset="0" />
+      <stop
+         id="stop568"
+         style="stop-color:#00ff00;stop-opacity:1"
+         offset="1" />
+    </linearGradient>
+    <linearGradient
+       x1="207.41483"
+       y1="484.50787"
+       x2="290.21576"
+       y2="484.50787"
+       id="linearGradient569"
+       xlink:href="#linearGradient566"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(8.021703e-2,0,0,0.160549,-12.70352,-78.73066)"
+       spreadMethod="pad" />
+  </defs>
+  <path
+     d="M 2.5,13.5 L 15.5,8"
+     id="path3161"
+     style="opacity:0.73858924;fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#878787;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:1, 1;stroke-dashoffset:0;stroke-opacity:1" />
+  <path
+     d="M 9.5,1.5 L 2.5,13.5 L 15,16.5 L 9.5,1.5 z"
+     id="path2202"
+     style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#878787;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <path
+     d="M 13.5,12 A 5,2.5 0 1 1 3.5,12 A 5,2.5 0 1 1 13.5,12 z"
+     transform="matrix(0.2,0,0,0.4,0.8,8.7)"
+     id="path2196"
+     style="opacity:1;fill:#454545;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.53553391;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+  <path
+     d="M 9.5,1.5 L 15.5,8 L 15,16.5 L 9.5,1.5 z"
+     id="path3159"
+     style="fill:none;fill-opacity:0.75;fill-rule:evenodd;stroke:#878787;stroke-width:1;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+  <path
+     d="M 13.5,12 A 5,2.5 0 1 1 3.5,12 A 5,2.5 0 1 1 13.5,12 z"
+     transform="matrix(0.2,0,0,0.4,13.8,3.2)"
+     id="path2200"
+     style="opacity:1;fill:#454545;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.53553391;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+  <path
+     d="M 13.5,12 A 5,2.5 0 1 1 3.5,12 A 5,2.5 0 1 1 13.5,12 z"
+     transform="matrix(0.2,0,0,0.4,13.3,11.7)"
+     id="path2198"
+     style="opacity:1;fill:#454545;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.53553391;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+  <path
+     d="M 13.5,12 A 5,2.5 0 1 1 3.5,12 A 5,2.5 0 1 1 13.5,12 z"
+     transform="matrix(0.2,0,0,0.4,7.8,-3.3)"
+     id="path3163"
+     style="opacity:1;fill:#454545;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.53553391;stroke-linecap:round;stroke-linejoin:round;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible" />
+</svg>

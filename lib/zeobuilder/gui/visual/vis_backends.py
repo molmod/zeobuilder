@@ -394,6 +394,22 @@ class VisBackendOpenGL(VisBackend):
                 glVertex(vector)
         glEnd()
 
+    def draw_triangles(self, *data):
+        glBegin(GL_TRIANGLES)
+        for normal, vectors in data:
+            glNormal3fv(normal)
+            for vector in vectors:
+                glVertex(vector)
+        glEnd()
+
+    def draw_triangle_strip(self, *data):
+        glBegin(GL_TRIANGLE_STRIP)
+        for normal, vectors in data:
+            glNormal3fv(normal)
+            for vector in vectors:
+                glVertex(vector)
+        glEnd()
+
     def draw_quads(self, *data):
         glBegin(GL_QUADS)
         for normal, vectors in data:
