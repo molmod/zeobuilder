@@ -24,6 +24,7 @@ from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 import zeobuilder.authors as authors
+import zeobuilder.actions.primitive as primitive
 
 import gtk
 
@@ -125,8 +126,46 @@ class TetraCoordination(Immediate):
             main.select_nodes(coordinated_tetra[response])
 
 
+class AddZeoliteTetraeders(Immediate):
+    description = "Add zeolite tetraeders"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add zeolite tetraeders", image_name="plugins/basic/tetra.svg", order=(0, 4, 1, 5, 1, 3))
+    authors = [authors.toon_verstraelen]
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        if len(context.application.cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+
+    def do(self):
+        Atom = context.application.plugins.get_node("Atom")
+        Tetraeder = context.application.plugins.get_node("Tetraeder")
+
+        def yield_all_tetra(nodes):
+            for node in nodes:
+                if isinstance(node, Atom) and node.num_bonds() == 4:
+                    yield node
+                elif isinstance(node, ContainerMixin):
+                    for tetra in yield_all_tetra(node.children):
+                        yield tetra
+
+        cache = context.application.cache
+        parent = cache.common_parent
+        if parent is None:
+            parent = context.application.model.universe
+        for tetra in yield_all_tetra(cache.nodes_without_children):
+            primitive.Add(
+                Tetraeder(targets=list(tetra.yield_neighbors())),
+                parent,
+            )
+
+
 actions = {
-    "TetraCoordination": TetraCoordination
+    "TetraCoordination": TetraCoordination,
+    "AddZeoliteTetraeders": AddZeoliteTetraeders,
 }
 
 

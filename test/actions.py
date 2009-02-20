@@ -679,7 +679,7 @@ class CoreActions(ApplicationTestCase):
             AddTetraeder = context.application.plugins.get_action("AddTetraeder")
             self.assert_(AddTetraeder.analyze_selection())
             AddTetraeder()
-        self.run_test_application(fn, quit=False)
+        self.run_test_application(fn)
 
 
 class MolecularActions(ApplicationTestCase):
@@ -1016,6 +1016,15 @@ class MolecularActions(ApplicationTestCase):
             SelectBondedNeighbors = context.application.plugins.get_action("SelectBondedNeighbors")
             self.assert_(SelectBondedNeighbors.analyze_selection())
             SelectBondedNeighbors()
+        self.run_test_application(fn)
+
+    def test_add_zeolite_tetraeders(self):
+        def fn():
+            context.application.model.file_open("input/precursor.zml")
+            context.application.main.select_nodes([context.application.model.universe])
+            AddZeoliteTetraeders = context.application.plugins.get_action("AddZeoliteTetraeders")
+            self.assert_(AddZeoliteTetraeders.analyze_selection())
+            AddZeoliteTetraeders()
         self.run_test_application(fn)
 
 
