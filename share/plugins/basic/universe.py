@@ -142,6 +142,9 @@ class Universe(GLPeriodicContainer, FrameAxes):
         GLPeriodicContainer.initnonstate(self)
         self.model_center = Translation()
 
+    def update_center(self):
+        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+
     #
     # Properties
     #
@@ -150,7 +153,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
         GLPeriodicContainer.set_cell(self, cell, init)
         if not init:
             self.update_clip_planes()
-            self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+            self.update_center()
             self.invalidate_total_list()
             self.invalidate_box_list()
 
@@ -158,7 +161,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
         GLPeriodicContainer.set_cell_active(self, cell_active, init)
         if not init:
             self.update_clip_planes()
-            self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+            self.update_center()
             self.invalidate_total_list()
             self.invalidate_box_list()
 
@@ -166,7 +169,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
         self.repetitions = repetitions
         if not init:
             self.update_clip_planes()
-            self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+            self.update_center()
             self.invalidate_box_list()
             self.invalidate_total_list()
 
@@ -224,6 +227,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
     def initialize_gl(self):
         vb = context.application.vis_backend
         self.set_clip_planes()
+        self.update_center()
         self.box_list = vb.create_list()
         ##print "Created box list (%i): %s" % (self.box_list, self.get_name())
         self.box_list_valid = True
