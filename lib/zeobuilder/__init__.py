@@ -35,18 +35,16 @@ class Context(object):
             "/usr/share/zeobuilder",
             "/usr/local/share/zeobuilder",
         ])
-        self._share_dirs = []
+        self.share_dirs = []
         for share_dir in share_dirs:
             if os.path.isdir(share_dir):
-                self._share_dirs.append(share_dir)
-        if len(self._share_dirs) == 0:
+                self.share_dirs.append(share_dir)
+        if len(self.share_dirs) == 0:
             raise Error("Could not find shared files.")
         self.config_filename = os.path.join(self.user_dir, "settings")
 
-    share_dirs = property(lambda self: self._share_dirs)
-
     def get_share_filename(self, filename):
-        for share_dir in self._share_dirs:
+        for share_dir in self.share_dirs:
             result = os.path.join(share_dir, filename)
             if os.path.isfile(result):
                 return result
