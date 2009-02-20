@@ -35,7 +35,7 @@ if not os.path.isdir("output"):
     os.mkdir("output")
 
 from zeobuilder import context
-context._share_dirs = ["../share"]
+context.share_dirs = ["../share"]
 
 import unittest
 
