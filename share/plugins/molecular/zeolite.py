@@ -23,6 +23,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.parent_mixin import ContainerMixin
+from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 import zeobuilder.actions.primitive as primitive
 
@@ -153,12 +154,15 @@ class AddZeoliteTetraeders(Immediate):
                         yield tetra
 
         cache = context.application.cache
-        parent = cache.common_parent
-        if parent is None:
-            parent = context.application.model.universe
+        if isinstance(cache.node, GLContainerMixin):
+            parent = cache.node
+        else:
+            parent = cache.common_parent
+            if parent is None:
+                parent = context.application.model.universe
         for tetra in yield_all_tetra(cache.nodes_without_children):
             primitive.Add(
-                Tetraeder(targets=list(tetra.yield_neighbors())),
+                Tetraeder(targets=list(tetra.yield_neighbors()), color=tetra.get_color()),
                 parent,
             )
 
