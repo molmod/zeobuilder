@@ -76,7 +76,7 @@ class Atom(GLGeometricBase, UserColorMixin):
         self.number = number
         atom_info = periodic[number]
         if atom_info.vdw_radius is not None:
-            self.default_radius = atom_info.vdw_radius*0.25
+            self.default_radius = atom_info.vdw_radius*0.2
         else:
             self.default_radius = 1.0
         color = [atom_info.red, atom_info.green, atom_info.blue, 1.0]
