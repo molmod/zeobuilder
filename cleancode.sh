@@ -1,3 +1,4 @@
+#!/bin/bash
 echo Cleaning python code in \'`pwd`\' and subdirectories
 for file in `find * | egrep '(\.py$)|(^scripts/)'`; do
   echo $file
