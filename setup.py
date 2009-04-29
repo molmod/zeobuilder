@@ -80,7 +80,7 @@ setup(
         'zeobuilder.gui.fields',
         'zeobuilder.gui.visual',
     ],
-    scripts=['scripts/zeobuilder', 'scripts/zb-convert'],
+    scripts=['scripts/zeobuilder'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',
