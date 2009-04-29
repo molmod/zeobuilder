@@ -6,7 +6,11 @@ if [ -z $1 ] && [ "$1" = "--system" ]; then
   rm -vr /usr/share/zeobuilder
   rm -vr /usr/lib/python*/site-packages/zeobuilder
 else
+  if [ -z $PYTHONPATH ]
+    echo 'WARNING: $PYTHONPATH is not defined, defaulting to \$HOME/lib/python'
+    PYTHONPATH=$HOME/lib/python
+  fi
   rm -v $HOME/bin/zeobuilder
   rm -vr $HOME/share/zeobuilder
-  rm -vr $HOME/lib/zeobuilder
+  rm -vr $PYTHONPATH/zeobuilder
 fi
