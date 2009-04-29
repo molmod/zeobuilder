@@ -81,7 +81,7 @@ class PluginNotFoundError(Exception):
 class PluginsCollection(object):
     def __init__(self):
         self.module_descriptions = set([])
-        for directory in context.share_dirs:
+        for directory in context.share_dir, context.user_dir:
             self.find_modules(os.path.join(directory, "plugins"))
         #self.module_descriptions = list(sorted(self.module_descriptions))
         self.load_modules()

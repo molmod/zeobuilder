@@ -25,30 +25,21 @@ class Context(object):
     def __init__(self):
         self.title = "Zeobuilder"
         self.user_dir = os.path.expanduser("~/.zeobuilder")
-        if not os.path.isdir(self.user_dir):
-            os.mkdir(self.user_dir)
-        share_dirs = set([
-            os.path.join(sys.prefix, "share/zeobuilder"),
-            os.path.join(sys.prefix, "local/share/zeobuilder"),
-            os.path.join(str(os.getenv("HOME")), "share/zeobuilder"),
-            self.user_dir,
-            "/usr/share/zeobuilder",
-            "/usr/local/share/zeobuilder",
-        ])
-        self.share_dirs = []
-        for share_dir in share_dirs:
-            if os.path.isdir(share_dir):
-                self.share_dirs.append(share_dir)
-        if len(self.share_dirs) == 0:
-            raise Error("Could not find shared files.")
         self.config_filename = os.path.join(self.user_dir, "settings")
+        fn_datadir = os.path.join(os.path.dirname(__file__), "datadir.txt")
+        if os.path.isfile(fn_datadir):
+            f = file(fn_datadir)
+            datadir = f.readline().strip()
+            f.close()
+            self.share_dir = os.path.join(datadir, "share", "zeobuilder")
+        else:
+            self.share_dir = "../share" # When running from the build directory for the tests.
 
     def get_share_filename(self, filename):
-        for share_dir in self.share_dirs:
-            result = os.path.join(share_dir, filename)
-            if os.path.isfile(result):
-                return result
-        raise ValueError("No file '%s' found in the share directories." % filename)
+        result = os.path.join(self.share_dir, filename)
+        if not os.path.isfile(result):
+            raise ValueError("Data file '%s' not found." % result)
+        return result
 
 
 context = Context()

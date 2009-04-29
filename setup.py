@@ -19,27 +19,41 @@
 #
 # --
 
-import glob
+import glob, os
 from distutils.core import setup
-#from distutils.extension import Extension
-#from Pyrex.Distutils import build_ext
+from distutils.command.install_data import install_data
 
 
-#setup(
-#    name = "Marching cube module",
-#    ext_modules=[
-#        Extension("marching_cube", sources=["extensions/marching_cube.pyx", "extensions/pure_c/marching_cube.c"])
-#    ],
-#    cmdclass = {'build_ext': build_ext}
-#)
+class MyInstallData(install_data):
+    """Add a datadir.txt file that points to the root for the data files. It is
+       otherwise impossible to figure out the location of these data files at
+       runtime.
+    """
+    def run(self):
+        # Do the normal install_data
+        install_data.run(self)
+        # Create the file datadir.txt. It's exact content is only known
+        # at installation time.
+        dist = self.distribution
+        libdir = dist.command_obj["install_lib"].install_dir
+        for name in dist.packages:
+            if '.' not in name:
+                destination = os.path.join(libdir, name, "datadir.txt")
+                print "Creating %s" % destination
+                if not self.dry_run:
+                    f = file(destination, "w")
+                    print >> f, self.install_dir
+                    f.close()
+
 
 setup(
     name='Zeobuilder',
-    version='0.002',
+    version='0.003',
     description='Zeobuilder is a extensible GUI application for molecular model building.',
     author='Toon Verstraelen',
     author_email='Toon.Verstraelen@UGent.be',
     url='http://molmod.ugent.be/code/',
+    cmdclass={'install_data': MyInstallData},
     package_dir = {'zeobuilder': 'lib/zeobuilder'},
     data_files=[
         ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),
