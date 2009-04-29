@@ -192,7 +192,6 @@ class VisBackendOpenGL(VisBackend):
     select_buffer_size = 1024*64
 
     def __init__(self, scene, camera):
-        VisBackend.__init__(self, scene, camera)
         VisBackend.__init__(self)
         self.quadric = gluNewQuadric()
         gluQuadricNormals(self.quadric, GLU_SMOOTH)
