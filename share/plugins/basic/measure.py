@@ -31,7 +31,6 @@ import zeobuilder.authors as authors
 from molmod.vectors import angle
 from molmod.transformations import Translation
 
-from OpenGL.GLUT import *
 from OpenGL.GL import *
 import numpy
 
@@ -182,6 +181,7 @@ class MeasurementsWindow(GladeWrapper):
             self.update_widgets()
 
     def draw_tool_chain(self):
+        from OpenGL.GLUT import glutStrokeCharacter, GLUT_STROKE_MONO_ROMAN
         font_scale = 0.00015
         glMatrixMode(GL_MODELVIEW)
 

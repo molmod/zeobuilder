@@ -26,7 +26,6 @@ from zeobuilder import context
 from molmod.transformations import Translation, Rotation
 
 import OpenGL
-from OpenGL.GLUT import glutInit
 from OpenGL.GLU import *
 from OpenGL.GL import *
 import numpy
@@ -161,9 +160,6 @@ class VisBackend(object):
 
     def set_background_color(self, color):
         raise NotImplementedError
-
-
-glutInit([]) # FIXME, due to unittests
 
 
 def gl_apply(transformation):
