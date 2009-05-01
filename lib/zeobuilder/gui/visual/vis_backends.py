@@ -189,8 +189,6 @@ class VisBackendOpenGL(VisBackend):
 
     def __init__(self, scene, camera):
         VisBackend.__init__(self)
-        self.quadric = gluNewQuadric()
-        gluQuadricNormals(self.quadric, GLU_SMOOTH)
         #self.name_counter = 0
         #self.matrix_counter = 0
         self.names = {}
@@ -202,6 +200,8 @@ class VisBackendOpenGL(VisBackend):
     #
 
     def initialize_draw(self):
+        self.quadric = gluNewQuadric()
+        gluQuadricNormals(self.quadric, GLU_SMOOTH)
         self.set_specular(True)
         self.set_bright(False)
         glLight(GL_LIGHT0, GL_SPECULAR, [0.7, 0.7, 0.7, 1.0])
