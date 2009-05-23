@@ -61,10 +61,10 @@ class Node(gobject.GObject):
     # Tree
     #
 
-    def set_model(self, model):
+    def set_model(self, model, parent, index):
         assert model is not None
         self.model = model
-        self.model.add_node(self)
+        self.model.add_node(self, parent, index)
 
     def unset_model(self):
         assert self.model is not None

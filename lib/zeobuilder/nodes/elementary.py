@@ -48,9 +48,9 @@ class ContainerBase(ModelObject, ContainerMixin):
     # Tree
     #
 
-    def set_model(self, model):
-        ModelObject.set_model(self, model)
-        ContainerMixin.set_model(self, model)
+    def set_model(self, model, parent, index):
+        ModelObject.set_model(self, model, parent, index)
+        ContainerMixin.set_model(self, model, parent, index)
 
     def unset_model(self):
         ContainerMixin.unset_model(self)
@@ -67,9 +67,9 @@ class ReferentBase(ModelObject, ReferentMixin):
     # Tree
     #
 
-    def set_model(self, model):
-        ModelObject.set_model(self, model)
-        ReferentMixin.set_model(self, model)
+    def set_model(self, model, parent, index):
+        ModelObject.set_model(self, model, parent, index)
+        ReferentMixin.set_model(self, model, parent, index)
 
     def unset_model(self):
         ReferentMixin.unset_model(self)
@@ -108,9 +108,9 @@ class GLContainerBase(ModelObject, GLMixin, GLContainerMixin):
     # Tree
     #
 
-    def set_model(self, model):
-        ModelObject.set_model(self, model)
-        GLContainerMixin.set_model(self, model)
+    def set_model(self, model, parent, index):
+        ModelObject.set_model(self, model, parent, index)
+        GLContainerMixin.set_model(self, model, parent, index)
 
     def unset_model(self):
         GLContainerMixin.unset_model(self)
@@ -155,9 +155,9 @@ class GLFrameBase(ModelObject, GLTransformationMixin, GLContainerMixin):
     # Tree
     #
 
-    def set_model(self, model):
-        ModelObject.set_model(self, model)
-        GLContainerMixin.set_model(self, model)
+    def set_model(self, model, parent, index):
+        ModelObject.set_model(self, model, parent, index)
+        GLContainerMixin.set_model(self, model, parent, index)
 
     def unset_model(self):
         GLContainerMixin.unset_model(self)

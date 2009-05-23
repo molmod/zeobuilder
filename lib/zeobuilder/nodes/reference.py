@@ -79,8 +79,8 @@ class Reference(Node):
         else:
             return self.prefix + ": " + self.target.name
 
-    def set_model(self, model):
-        Node.set_model(self, model)
+    def set_model(self, model, parent, index):
+        Node.set_model(self, model, parent, index)
         if self.target is not None:
             self.target.references.append(self)
 
@@ -133,8 +133,8 @@ class SpatialReference(Reference):
     # Tree
     #
 
-    def set_model(self, model):
-        Reference.set_model(self, model)
+    def set_model(self, model, parent, index):
+        Reference.set_model(self, model, parent, index)
         if self.target is not None: self.connect_bridge()
 
     def unset_model(self):

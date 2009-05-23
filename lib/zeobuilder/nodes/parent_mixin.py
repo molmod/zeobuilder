@@ -44,9 +44,9 @@ class ParentMixin(object):
     # Tree
     #
 
-    def set_model(self, model):
-        for child in self.children:
-            child.set_model(model)
+    def set_model(self, model, parent, index):
+        for i, child in enumerate(self.children):
+            child.set_model(model, self, i)
 
     def unset_model(self):
         for child in self.children:
@@ -77,8 +77,8 @@ class ContainerMixin(ParentMixin):
             for child in self.children:
                 child.parent = self
             if self.model is not None:
-                for child in self.children:
-                    child.set_model(self.model)
+                for i, child in enumerate(self.children):
+                    child.set_model(self.model, self, i)
 
     properties = [
         Property("children", [], lambda self: self.children, set_children),
@@ -94,7 +94,7 @@ class ContainerMixin(ParentMixin):
         self.children.insert(index, model_object)
         model_object.parent = self
         if self.model is not None:
-            model_object.set_model(self.model)
+            model_object.set_model(self.model, self, index)
 
     def add_many(self, model_objects, index=-1):
         if index == -1: index = len(self.children)
@@ -102,9 +102,8 @@ class ContainerMixin(ParentMixin):
         for model_object in model_objects[::-1]:
             self.children.insert(index, model_object)
             model_object.parent = self
-        if self.model is not None:
-            for model_object in model_objects:
-                model_object.set_model(self.model)
+            if self.model is not None:
+                model_object.set_model(self.model, self, index)
 
     def remove(self, model_object):
         #print "REMOVE FROM " + self.name + ":", model_object.name
@@ -136,8 +135,8 @@ class ReferentMixin(ParentMixin):
         for child in self.children:
             child.parent = self
         if self.model is not None:
-            for child in self.children:
-                child.set_model(self.model)
+            for i, child in enumerate(self.children):
+                child.set_model(self.model, self, i)
 
     #
     # Properties

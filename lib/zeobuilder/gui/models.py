@@ -51,14 +51,12 @@ class Model(ModelBase, gtk.TreeStore):
         ModelBase.__init__(self)
         gtk.TreeStore.__init__(self, Node)
 
-    def add_node(self, node):
+    def add_node(self, node, parent, index):
         #print "Adding node %s (%i)" % (node.get_name(), id(node))
-        if node.parent is None:
+        if parent is None:
             parent_iter = None
-            index = self.root.index(node)
         else:
             parent_iter = node.parent.iter
-            index = node.parent.children.index(node)
         node.iter = self.insert(parent_iter, index, [node])
         if isinstance(node, GLMixin): # only the gui model requires gl
             node.initialize_gl()

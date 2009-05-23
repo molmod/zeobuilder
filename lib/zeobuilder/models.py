@@ -75,13 +75,13 @@ class Model(gobject.GObject):
     def add_to_root(self, model_object):
         assert model_object.parent is None
         self.root.append(model_object)
-        model_object.set_model(self)
+        model_object.set_model(self, None, len(self.root)-1)
 
     def remove_from_root(self, model_object):
         model_object.unset_model()
         self.root.remove(model_object)
 
-    def add_node(self, node):
+    def add_node(self, node, parent, index):
         pass
 
     def remove_node(self, node):
