@@ -99,11 +99,6 @@ class ActionManager(gobject.GObject):
             not self.active
         ), "Can only add primitives when there is a current_action."
 
-        if primitive.changes_selection and \
-           not self.current_action.primitives_change_selection:
-            self.current_action.primitives_change_selection = True
-            context.application.main.tree_selection.unselect_all()
-
         if not primitive.done:
             primitive.init()
             primitive.redo()
@@ -139,8 +134,6 @@ class ActionManager(gobject.GObject):
     def undo(self):
         assert len(self.undo_stack) > 0, "No actions available to undo."
         action = self.undo_stack.pop()
-        if action.primitives_change_selection:
-            context.application.main.tree_selection.unselect_all()
         self.record_primitives = False
         action.undo()
         self.record_primitives = True
@@ -151,8 +144,6 @@ class ActionManager(gobject.GObject):
     def redo(self):
         assert len(self.redo_stack) > 0, "No actions available to redo."
         action = self.redo_stack.pop()
-        if action.primitives_change_selection:
-            context.application.main.tree_selection.unselect_all()
         self.record_primitives = False
         action.redo()
         self.record_primitives = True

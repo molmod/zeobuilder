@@ -798,7 +798,7 @@ class FrameMolecules(Immediate):
             frame = Frame(name=chemical_formula(atoms)[1])
             primitive.Add(frame, parent, index=0)
             for node, atom in zip(group, atoms):
-                primitive.Move(atom, frame, select=False)
+                primitive.Move(atom, frame)
                 new_position = new_positions[node]
                 translation = Translation()
                 translation.t = atom.get_parentframe_up_to(parent).vector_apply_inverse(new_position)
@@ -815,7 +815,7 @@ class FrameMolecules(Immediate):
                                 has_to_move = False
                                 break
                         if has_to_move:
-                            primitive.Move(referent, frame, select=False)
+                            primitive.Move(referent, frame)
 
 
 class SelectBondedNeighbors(Immediate):

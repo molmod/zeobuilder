@@ -46,8 +46,6 @@ class PrimitiveError(Exception):
 
 
 class Primitive(object):
-    changes_selection = False # see actions.composed.Action.__init__
-
     def __init__(self, done=False):
         #print "INIT", self
         self.done = done
@@ -74,7 +72,7 @@ class Primitive(object):
 
 
 class Add(Primitive):
-    def __init__(self, victim, parent, index=-1, select=True):
+    def __init__(self, victim, parent, index=-1):
         if not isinstance(parent, ContainerMixin):
             raise PrimitiveError, "ADD: Parent must be a %s. You gave %s." % (ContainerMixin, parent)
         if not parent.check_add(victim.__class__):
@@ -82,14 +80,11 @@ class Add(Primitive):
         self.victim = victim
         self.parent = parent
         self.index = index
-        self.changes_selection = select
         Primitive.__init__(self, False)
 
     def redo(self):
         Primitive.redo(self)
         self.parent.add(self.victim, self.index)
-        if self.changes_selection:
-            context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
         Primitive.undo(self)
@@ -97,7 +92,7 @@ class Add(Primitive):
 
 
 class AddMany(Primitive):
-    def __init__(self, victims, parent, index=-1, select=True):
+    def __init__(self, victims, parent, index=-1):
         if not isinstance(parent, ContainerMixin):
             raise PrimitiveError, "ADD MANY: Parent must be a %s. You gave %s." % (ContainerMixin, parent)
         for victim in victims:
@@ -106,15 +101,11 @@ class AddMany(Primitive):
         self.victims = victims
         self.parent = parent
         self.index = index
-        self.changes_selection = select
         Primitive.__init__(self, False)
 
     def redo(self):
         Primitive.redo(self)
         self.parent.add_many(self.victims, self.index)
-        if self.changes_selection:
-            for victim in self.victims:
-                context.application.main.toggle_selection(victim, on=True)
 
     def undo(self):
         Primitive.undo(self)
@@ -172,7 +163,7 @@ class Delete(Primitive):
 
 
 class Move(Primitive):
-    def __init__(self, victim, new_parent, new_index=-1, select=True):
+    def __init__(self, victim, new_parent, new_index=-1):
         if victim.get_fixed():
             raise PrimitiveError, "MOVE: The victim is fixed."
         if not isinstance(new_parent, ContainerMixin):
@@ -184,7 +175,6 @@ class Move(Primitive):
         self.new_index = new_index
         self.old_parent = None
         self.old_index = None
-        self.changes_selection = select
         Primitive.__init__(self, False)
 
     def redo(self):
@@ -193,14 +183,10 @@ class Move(Primitive):
             self.old_parent = self.victim.parent
             self.old_index = self.victim.get_index()
         self.victim.move(self.new_parent, self.new_index)
-        if self.changes_selection:
-            context.application.main.toggle_selection(self.victim, on=True)
 
     def undo(self):
         Primitive.undo(self)
         self.victim.move(self.old_parent, self.old_index)
-        if self.changes_selection:
-            context.application.main.toggle_selection(self.victim, on=True)
 
 
 class SetProperty(Primitive):

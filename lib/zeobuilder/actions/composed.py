@@ -126,11 +126,6 @@ class Action(object):
     def __init__(self):
         #print "ACTION", self
         self.primitives = []
-        # the action manager sets this to true when a primitive changes the
-        # current selection. It will require that everything is unselected
-        # before the first change in selection happens. This is purely a matter
-        # of usability.
-        self.primitives_change_selection = False
         context.application.action_manager.begin_new_action(self)
 
     def redo(self):
