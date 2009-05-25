@@ -128,7 +128,7 @@ class SketchOptions(GladeWrapper):
             self.object_store.get_value(self.cb_object.get_active_iter(), 0)
         )()
         new.transformation.t[:] = position
-        primitive.Add(new, parent, select=False)
+        primitive.Add(new, parent)
         return new
 
     def replace(self, gl_object):
@@ -144,7 +144,7 @@ class SketchOptions(GladeWrapper):
                 if not reference.check_target(new):
                     return
             parent = gl_object.parent
-            primitive.Add(new, parent, select=False)
+            primitive.Add(new, parent)
             for reference in gl_object.references[::-1]:
                 reference.set_target(new)
             primitive.Delete(gl_object)
@@ -156,7 +156,6 @@ class SketchOptions(GladeWrapper):
         primitive.Add(
             new,
             common_parent([gl_object1.parent, gl_object2.parent]),
-            select=False
         )
 
     def erase_at(self, p, parent):
