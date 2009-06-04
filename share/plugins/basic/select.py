@@ -193,7 +193,6 @@ class SelectChildrenByExpression(ImmediateWithMemory):
         cache = context.application.cache
         parents = cache.nodes
         containers = cache.containers_with_children
-        referents = cache.referents_with_children
 
         main = context.application.main
 
@@ -212,8 +211,6 @@ class SelectChildrenByExpression(ImmediateWithMemory):
         try:
             for container in containers:
                 toggle_children(container)
-            for referent in referents:
-                toggle_references(referent)
         except Exception:
             main.tree_selection.unselect_all()
             for parent in parents:
