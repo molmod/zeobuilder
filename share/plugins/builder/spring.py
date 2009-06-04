@@ -50,6 +50,7 @@ import zeobuilder.authors as authors
 
 from molmod.data.periodic import periodic
 from molmod.transformations import Complete, Translation
+from molmod.units import angstrom
 
 import iterative
 
@@ -190,7 +191,7 @@ class AutoConnectSprings(AutoConnectMixin, Immediate):
                    (referent.children[1].target == atom1):
                     return None
 
-        if (periodic[atom1.number].radius + periodic[atom2.number].radius) >= distance:
+        if 0.5*(periodic[atom1.number].covalent_radius + periodic[atom2.number].covalent_radius) >= distance:
             return Spring(targets=[atom1, atom2])
         else:
             return None
