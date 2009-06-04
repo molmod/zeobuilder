@@ -231,7 +231,7 @@ class ExtraDialog(object):
 
 class EditExtraAttributes(Immediate):
     description = "Add bonds (parameters)"
-    menu_info = MenuInfo("default/_Object:basic", "_Extra attribates", order=(0, 4, 0, 2))
+    menu_info = MenuInfo("default/_Object:basic", "_Extra attributes", order=(0, 4, 0, 2))
     authors = [authors.toon_verstraelen]
 
     @staticmethod
