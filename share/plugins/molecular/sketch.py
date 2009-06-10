@@ -210,6 +210,7 @@ class SketchOptions(GladeWrapper):
         #if it's an 'Atom', set the atom number to the current atom number?
         if object_type == "Atom":
             new.set_number(self.atom_number)
+            new.set_name(periodic[self.atom_number].symbol)
         new.transformation.t[:] = position
         primitive.Add(new, parent)
         return new
@@ -227,7 +228,7 @@ class SketchOptions(GladeWrapper):
                 if not reference.check_target(new):
                     return
             parent = gl_object.parent
-            primitive.Add(new, parent, select=False)
+            primitive.Add(new, parent)
             for reference in gl_object.references[::-1]:
                 reference.set_target(new)
             primitive.Delete(gl_object)
