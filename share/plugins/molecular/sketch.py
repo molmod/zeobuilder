@@ -1,7 +1,5 @@
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
-# Copyright (C) 2007 - 2009 Toon Verstraelen <Toon.Verstraelen@UGent.be>, Center
-# for Molecular Modeling (CMM), Ghent University, Ghent, Belgium; all rights
-# reserved unless otherwise stated.
+# Copyright (C) 2007 - 2008 Toon Verstraelen <Toon.Verstraelen@UGent.be>
 #
 # This file is part of Zeobuilder.
 #
@@ -9,16 +7,6 @@
 # modify it under the terms of the GNU General Public License
 # as published by the Free Software Foundation; either version 3
 # of the License, or (at your option) any later version.
-#
-# In addition to the regulations of the GNU General Public License,
-# publications and communications based in parts on this program or on
-# parts of this program are required to cite the following article:
-#
-# "ZEOBUILDER: a GUI toolkit for the construction of complex molecules on the
-# nanoscale with building blocks", Toon Verstraelen, Veronique Van Speybroeck
-# and Michel Waroquier, Journal of Chemical Information and Modeling, Vol. 48
-# (7), 1530-1541, 2008
-# DOI:10.1021/ci8000748
 #
 # Zeobuilder is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,26 +25,26 @@ from zeobuilder.actions.collections.interactive import InteractiveInfo, Interact
 from zeobuilder.nodes.model_object import ModelObject
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
-from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.analysis import common_parent
+from zeobuilder.nodes.reference import TargetError
 from zeobuilder.expressions import Expression
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
+from zeobuilder.gui import fields
+from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
+from molmod.data.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
+from molmod.data.periodic import periodic
 
 import gtk, numpy
 
 
-ERASE_RECTANGLE = 0
-ERASE_ELLIPSE = 1
-ERASE_LINE = 2
-
-
 class SketchOptions(GladeWrapper):
+
     edit_erase_filter = FieldsDialogSimple(
         "Edit the Erase filter",
         fields.faulty.Expression(
@@ -69,14 +57,24 @@ class SketchOptions(GladeWrapper):
     )
 
     def __init__(self):
-        GladeWrapper.__init__(self, "plugins/basic/gui.glade", "wi_sketch", "window")
+        GladeWrapper.__init__(self, "plugins/molecular/gui.glade", "wi_sketch", "window")
         self.window.hide()
         self.init_callbacks(self.__class__)
         self.init_proxies([
-            "cb_object", "cb_vector", "cb_erase_filter", "bu_edit_erase_filter",
+            "cb_object",
+            "cb_vector",
+            "cb_erase_filter",
+            "bu_edit_erase_filter",
+            "la_current",
+            "bu_set_atom",
+            "cb_bondtype",
+            "hbox_atoms",
+            "hbox_quickpicks"
         ])
 
         self.erase_filter = Expression("True")
+        #Initialize atom number - this can be changed anytime with the edit_atom_number dialog
+        self.atom_number = 6;
 
         # Initialize the GUI
         #  1) common parts of the comboboxes
@@ -88,6 +86,7 @@ class SketchOptions(GladeWrapper):
 
         #  2) fill the objects combo box
         self.object_store = gtk.ListStore(str)
+        self.object_store.append(["Atom"])
         self.object_store.append(["Point"])
         self.object_store.append(["Sphere"])
         self.object_store.append(["Box"])
@@ -104,6 +103,7 @@ class SketchOptions(GladeWrapper):
 
         #  3) fill the vector combo box
         self.vector_store = gtk.ListStore(str)
+        self.vector_store.append(["Bond"])
         self.vector_store.append(["Arrow"])
         self.vector_store.append(["Spring"])
         self.cb_vector.set_model(self.vector_store)
@@ -117,16 +117,87 @@ class SketchOptions(GladeWrapper):
 
         self.cb_vector.set_active(0)
 
+        # 4) fill the bond type combo box
+        self.bondtype_store = gtk.ListStore(str,int)
+        self.bondtype_store.append(["Single bond",BOND_SINGLE])
+        self.bondtype_store.append(["Double bond",BOND_DOUBLE])
+        self.bondtype_store.append(["Triple bond",BOND_TRIPLE])
+        self.bondtype_store.append(["Hybrid bond",BOND_HYBRID])
+        self.bondtype_store.append(["Hydrogen bond",BOND_HYDROGEN])
+        self.cb_bondtype.set_model(self.bondtype_store)
+
+        #no icons like the others, just text here
+        renderer_text = gtk.CellRendererText()
+        self.cb_bondtype.pack_start(renderer_text, expand=True)
+        self.cb_bondtype.add_attribute(renderer_text, "text", 0)
+
+        self.cb_bondtype.set_active(0)
+
+        # register quick pick config setting
+        config = context.application.configuration
+        config.register_setting(
+            "sketch_quickpicks",
+            [6,7,8,9,10,11],
+            DialogFieldInfo("Sketch tool",(0,2),fields.faulty.Entry(
+                label_text="Quick pick atoms (applies after restart)",
+                attribute_name="sketch_quickpicks",
+            )),
+        )
+
+        # 5)create the "quick pick" atom buttons
+        self.quickpickatoms = config.sketch_quickpicks
+        for atomnumber in self.quickpickatoms:
+            atomnumber=int(atomnumber) # they are stored as strings
+            bu_element = gtk.Button("")
+            bu_element.set_label("%s" % periodic[atomnumber].symbol)
+            bu_element.connect("clicked", self.on_bu_element_clicked, atomnumber)
+            # add to hbox
+            self.hbox_quickpicks.pack_start(bu_element)
+            bu_element.show()
+
     def on_window_delete_event(self, window, event):
         return True
 
     def on_bu_edit_erase_filter_clicked(self, button):
         self.edit_erase_filter.run(self)
 
+    def on_bu_set_atom_clicked(self, button):
+        self.edit_atom_number = FieldsDialogSimple(
+            "Select atom number",
+            fields.edit.Element(attribute_name="atom_number"),
+            ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+        )
+        self.edit_atom_number.run(self)
+        atom_symbol = periodic[self.atom_number].symbol
+        self.la_current.set_label("Current: %s " % str(atom_symbol))
+
+    def on_cb_object_changed(self, combo):
+        # When the selected object is an atom, show the extra button.
+        self.hbox_atoms.hide()
+        self.la_current.hide()
+        if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Atom"):
+            self.hbox_atoms.show()
+            self.la_current.show()
+
+    def on_bu_element_clicked(self, widget, number):
+        self.atom_number = number
+        atom_symbol = periodic[self.atom_number].symbol
+        self.la_current.set_label("Current: %s" % str(atom_symbol))
+
+    def on_cb_vector_changed(self, combo):
+        # When the selected object is an atom, show the extra button.
+        if (self.vector_store.get_value(self.cb_vector.get_active_iter(),0)=="Bond"):
+            self.cb_bondtype.show()
+        else:
+            self.cb_bondtype.hide()
+
     def add_new(self, position, parent):
-        new = context.application.plugins.get_node(
-            self.object_store.get_value(self.cb_object.get_active_iter(), 0)
-        )()
+        object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
+
+        new = context.application.plugins.get_node(object_type)()
+        #if it's an 'Atom', set the atom number to the current atom number?
+        if object_type == "Atom":
+            new.set_number(self.atom_number)
         new.transformation.t[:] = position
         primitive.Add(new, parent)
         return new
@@ -144,19 +215,23 @@ class SketchOptions(GladeWrapper):
                 if not reference.check_target(new):
                     return
             parent = gl_object.parent
-            primitive.Add(new, parent)
+            primitive.Add(new, parent, select=False)
             for reference in gl_object.references[::-1]:
                 reference.set_target(new)
             primitive.Delete(gl_object)
 
     def connect(self, gl_object1, gl_object2):
-        new = context.application.plugins.get_node(
-            self.vector_store.get_value(self.cb_vector.get_active_iter(), 0)
-        )(targets=[gl_object1, gl_object2])
-        primitive.Add(
-            new,
-            common_parent([gl_object1.parent, gl_object2.parent]),
-        )
+        try:
+            new = context.application.plugins.get_node(
+                self.vector_store.get_value(self.cb_vector.get_active_iter(), 0)
+            )(targets=[gl_object1, gl_object2])
+        except TargetError:
+            return
+
+        if(self.vector_store.get_value(self.cb_vector.get_active_iter(), 0)=="Bond"):
+            new.set_bond_type(self.bondtype_store.get_value(self.cb_bondtype.get_active_iter(),1))
+
+        primitive.Add(new, common_parent([gl_object1.parent, gl_object2.parent]))
 
     def erase_at(self, p, parent):
         for node in context.application.main.drawing_area.yield_hits((p[0]-2, p[1]-2, p[0]+2, p[1]+2)):
@@ -192,7 +267,7 @@ class SketchOptions(GladeWrapper):
 
 class Sketch(Interactive):
     description = "Sketch objects and connectors"
-    interactive_info = InteractiveInfo("plugins/basic/geom_sketch.svg", mouse=True)
+    interactive_info = InteractiveInfo("plugins/molecular/sketch.svg", mouse=True)
     authors = [authors.toon_verstraelen]
 
     options = SketchOptions()
@@ -325,10 +400,10 @@ class SketchInteractiveGroup(InteractiveGroup):
 
 
 interactive_groups = {
-    "geom_sketch": SketchInteractiveGroup(
-        image_name="plugins/basic/geom_sketch.svg",
-        description="Geometric sketch tool",
-        order=6,
+    "sketch": SketchInteractiveGroup(
+        image_name="plugins/molecular/sketch.svg",
+        description="Sketch tool",
+        order=7,
         authors=[authors.toon_verstraelen],
     )
 }
