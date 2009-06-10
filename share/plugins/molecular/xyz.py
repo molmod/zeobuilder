@@ -76,7 +76,7 @@ class LoadXYZ(LoadFilter):
                 atom = Point(name=symbol, extra=extra)
             else:
                 atom = Atom(name=symbol, number=number, extra=extra)
-            atom.transformation.t = coordinate
+            atom.transformation.t = coordinate.copy()
             universe.add(atom)
 
         geometries = []
