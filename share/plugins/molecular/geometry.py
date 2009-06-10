@@ -35,20 +35,39 @@ from zeobuilder import context
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.actions.composed import Immediate, UserError
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
-from zeobuilder.moltools import create_molecular_graph
+from zeobuilder.moltools import create_molecular_graph, create_molecule
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
 from molmod.transformations import Translation, coincide
+from molmod.data.periodic import periodic
+from molmod.units import angstrom
 
-import numpy, gtk
+import numpy, gtk, tempfile, os
+
+
+def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent):
+    # Transform the guessed geometry as to overlap with the original geometry
+    transf = coincide(org_coords, opt_coords)
+    opt_coords = numpy.dot(opt_coords, transf.r.transpose()) + transf.t
+
+    # Put coordinates of guess geometry back into Zeobuilder model
+    for i in xrange(len(atoms)):
+        translation = Translation()
+        atom = atoms[i]
+        # Make sure atoms in subframes are treated properly
+        transf = atom.parent.get_frame_relative_to(parent)
+        org_pos = atom.transformation.t
+        opt_pos = transf.vector_apply_inverse(opt_coords[i])
+        translation.t = opt_pos - org_pos
+        primitive.Transform(atom, translation)
 
 
 class GuessGeometry(Immediate):
     """Guess the geometry of the selected molecule based on the molecular graph"""
     description = "Guess the molecular geometry"
     menu_info = MenuInfo("default/_Object:tools/_Molecular:geometry","_Guess geometry", ord("g"), False, order=(0, 4, 1, 5, 4, 0))
-    authors = [authors.wouter_smet]
+    authors = [authors.wouter_smet, authors.toon_verstraelen]
 
     @staticmethod
     def analyze_selection():
@@ -68,30 +87,110 @@ class GuessGeometry(Immediate):
             raise UserError("Could not get molecular graph.", "Make sure that the selected frame contains a molecule.")
 
         # Guessed and original geometry
-        opt_cor = graph.guess_geometry().coordinates
-        org_cor = graph.molecule.coordinates
+        opt_coords = graph.guess_geometry().coordinates
+        org_coords = graph.molecule.coordinates
 
-        # Transform the guessed geometry as to overlap with the original geometry
-        transf = coincide(org_cor, opt_cor)
-        print numpy.linalg.eigvalsh(transf.r)
-        opt_cor = numpy.dot(opt_cor, transf.r.transpose()) + transf.t
-        print org_cor
-        print opt_cor
+        coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent)
 
-        # Put coordinates of guess geometry back into Zeobuilder model
-        for i in xrange(graph.molecule.size):
-            translation = Translation()
-            atom = graph.molecule.atoms[i]
-            # make sure atoms in subframes are treated properly
-            transf = atom.parent.get_frame_relative_to(parent)
-            org_pos = atom.transformation.t
-            opt_pos = transf.vector_apply_inverse(opt_cor[i])
-            translation.t = opt_pos - org_pos
-            primitive.Transform(graph.molecule.atoms[i], translation)
+
+class OptimizeMopacPM3(Immediate):
+    """Plugin that calls Mopac to optimize the geometry at PM3 level"""
+    description = "Optimize geometry at PM3 level with Mopac"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:geometry","Optimize geometry (PM3, Mopac)", ord("p"), False, order=(0, 4, 1, 5, 4, 2))
+    authors = [authors.wouter_smet, authors.toon_verstraelen]
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        if not isinstance(context.application.cache.node, GLContainerMixin): return False
+        if len(context.application.cache.node.children) == 0: return False
+        # C) passed all tests:
+        return True
+
+    def write_mopac_input(self, molecule, prefix):
+        f = open('%s.dat' % prefix, 'w')
+        print >> f, 'PM3 GNORM=0.01'
+        print >> f, 'comment1'
+        print >> f, 'comment2'
+        for i in xrange(molecule.size):
+            symbol = periodic[molecule.numbers[i]].symbol
+            c = molecule.coordinates[i]/angstrom
+            print >> f, "% 2s % 8.5f 1 % 8.5f 1 % 8.5f 1" % (symbol, c[0], c[1], c[2])
+        f.close()
+
+    def read_mopac_output(self, filename, num_atoms):
+        if not os.path.isfile(filename):
+            raise UserError("Could not find Mopac output file.", "Expected location of output file: %s" % filename)
+        f = open(filename,'r')
+        coordinates = numpy.zeros((num_atoms, 3), float)
+        success = False
+        for line in f:
+            if line == "          CARTESIAN COORDINATES \n":
+                break
+        for line in f:
+            if line == "          CARTESIAN COORDINATES \n":
+                success = True
+                break
+        if success:
+            for i in xrange(3):
+                f.next()
+            i = 0
+            for line in f:
+                if i < num_atoms:
+                    words = line.split()
+                    coordinates[i,0] = float(words[2])
+                    coordinates[i,1] = float(words[3])
+                    coordinates[i,2] = float(words[4])
+                    i +=1
+                else:
+                    break
+        else:
+            raise UserError("Could not find optimal coordinates.", "Check the file %s for more details." % filename)
+
+        f.close()
+        return coordinates*angstrom
+
+    def do(self):
+        parent = context.application.cache.node
+        org_mol = create_molecule([parent], parent)
+        org_coords = org_mol.coordinates
+        if org_mol.size == 0:
+            raise UserError("Could not get molecule.", "Make sure that the selected frame contains a molecule.")
+        if org_mol.size == 3:
+            raise UserError("For the moment three atoms are not supported.")
+
+
+        # Make temp directory
+        work = tempfile.mkdtemp("_zeobuilder_mopac")
+
+        # Create mopac input file
+        self.write_mopac_input(org_mol, os.path.join(work, 'mopac'))
+
+        # Run input file through mopac and capture output in file object
+        retcode = os.system('cd %s; run_mopac7 mopac > mopac.out' % work)
+        if retcode != 0:
+            raise UserError("Failed to run Mopac.", "Check that the run_mopac7 binary is in the path. The input file can be found here: %s." % work)
+        opt_coords = self.read_mopac_output(os.path.join(work, 'mopac.out'), org_mol.size)
+
+        # clean up
+        def safe_remove(filename):
+            filename = os.path.join(work, filename)
+            if os.path.isfile(filename):
+                os.remove(filename)
+        safe_remove("mopac.dat")
+        safe_remove("mopac.log")
+        safe_remove("mopac.out")
+        safe_remove("mopac.arc")
+        os.rmdir(work)
+
+        coords_to_zeobuilder(org_coords, opt_coords, org_mol.atoms, parent)
 
 
 actions = {
     "GuessGeometry": GuessGeometry,
+    "OptimizeMopacPM3": OptimizeMopacPM3
 }
 
 
