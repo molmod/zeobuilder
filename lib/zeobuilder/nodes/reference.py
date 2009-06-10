@@ -45,7 +45,13 @@ import gtk.gdk, gobject
 import os
 
 
-__all__ = ["Reference", "SpatialReference", "GLTransformedReference"]
+__all__ = [
+    "TargetError", "Reference", "SpatialReference", "GLTransformedReference"
+]
+
+
+class TargetError(Exception):
+    pass
 
 
 class Reference(Node):
@@ -94,9 +100,12 @@ class Reference(Node):
     #
 
     def define_target(self, new_target):
-        assert self.target is None, "Reference already has a target"
-        assert new_target is not None, "Must assign a target"
-        assert self.check_target(new_target), "Target %s not accepted" % new_target
+        if self.target is not None:
+            raise TargetError("Reference already has a target.")
+        if new_target is None:
+            raise TargetError("Must assign a target.")
+        if not self.check_target(new_target):
+            raise TargetError("Target %s not accepted." % new_target)
         self.target = new_target
         if self.model is not None:
             self.target.references.append(self)
@@ -104,7 +113,8 @@ class Reference(Node):
         self.parent.define_target(self, new_target)
 
     def undefine_target(self):
-        assert self.target is not None, "Reference has no target to undefine"
+        if self.target is None:
+            raise TargetError("Reference has no target to undefine.")
         old_target = self.target
         if self.model is not None:
             old_target.references.remove(self)
