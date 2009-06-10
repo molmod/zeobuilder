@@ -87,7 +87,11 @@ class SelectionCache(gobject.GObject):
 
     # nodes
     def get_nodes(self):
-        return context.application.model.selection
+        result = context.application.model.selection
+        if len(result) == 0:
+            return [context.application.model.universe]
+        else:
+            return result
 
     def get_last(self):
         if len(self.nodes) > 0:
