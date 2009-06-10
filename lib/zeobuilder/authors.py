@@ -54,6 +54,15 @@ Tel: +32 (0)9 264 65 56
 <span foreground="#0000FF" underline="single">Toon.Verstraelen@UGent.be</span>""")
 
 
+wouter_smet = Author(
+"Wouter Smet",
+"Contributor",
+"""Center for Molecular Modeling
+Ghent University
+Proeftuinstraat 86
+9000 Gent, Belgium""")
+
+
 bartek_szyja = Author(
 "Bartek Szyja",
 "Contributor",
