@@ -93,20 +93,23 @@ def chemical_formula(atoms, markup=False):
     return total, formula
 
 
-def create_molecule(selected_nodes):
+def create_molecule(selected_nodes, parent=None):
     numbers = []
     coordinates = []
     atoms = list(yield_atoms(selected_nodes))
     for atom in atoms:
         numbers.append(atom.number)
-        coordinates.append(atom.get_absolute_frame().t)
+        if parent is None:
+            coordinates.append(atom.get_absolute_frame().t)
+        else:
+            coordinates.append(atom.get_frame_relative_to(parent).t)
     result = Molecule(numbers, coordinates)
     result.atoms = atoms
     return result
 
 
-def create_molecular_graph(selected_nodes):
-    molecule = create_molecule(selected_nodes)
+def create_molecular_graph(selected_nodes, parent=None):
+    molecule = create_molecule(selected_nodes, parent=None)
 
     atom_indexes = dict((atom,i) for i,atom in enumerate(molecule.atoms))
     bonds = list(
