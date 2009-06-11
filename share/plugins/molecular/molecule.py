@@ -260,8 +260,16 @@ class SaturateWithHydrogens(Immediate):
         def add_hydrogens(atom):
             existing_bonds = list(atom.yield_bonds())
             num_bonds = len(existing_bonds)
+            bond_length = bonds.get_length(atom.number, 1, BOND_SINGLE)
+
             if num_bonds == 0:
-                return
+                H = Atom(name="auto H", number=1)
+                H.transformation.t = atom.transformation.t + numpy.array([0,bond_length,0])
+                primitive.Add(H, atom.parent)
+                bond = Bond(name="aut H bond", targets=[atom, H])
+                primitive.Add(bond, atom.parent)
+                existing_bonds.append(bond)
+                num_bonds = 1
 
             used_valence = 0
             oposite_direction = numpy.zeros(3, float)
@@ -315,7 +323,6 @@ class SaturateWithHydrogens(Immediate):
             else:
                 return
 
-            bond_length = bonds.get_length(atom.number, 1, BOND_SINGLE)
             h_pos = bond_length*(oposite_direction*math.cos(opening_angle) + normal*math.sin(opening_angle))
 
             for i in range(num_hydrogens):
