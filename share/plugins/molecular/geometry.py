@@ -40,6 +40,7 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
 from molmod.transformations import Translation, coincide
+from molmod.toyff import guess_geometry
 from molmod.data.periodic import periodic
 from molmod.units import angstrom
 
@@ -87,7 +88,7 @@ class GuessGeometry(Immediate):
             raise UserError("Could not get molecular graph.", "Make sure that the selected frame contains a molecule.")
 
         # Guessed and original geometry
-        opt_coords = graph.guess_geometry().coordinates
+        opt_coords = guess_geometry(graph).coordinates
         org_coords = graph.molecule.coordinates
 
         coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent)
