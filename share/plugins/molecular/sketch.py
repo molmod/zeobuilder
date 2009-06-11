@@ -150,19 +150,14 @@ class SketchOptions(GladeWrapper):
         config.register_setting(
             "sketch_quickpicks",
             [6,7,8,9,10,11],
-            DialogFieldInfo("Sketch tool",(0,2),fields.faulty.Entry(
-                label_text="Quick pick atoms (applies after restart)",
-                attribute_name="sketch_quickpicks",
-            )),
         )
 
         # 5)create the "quick pick" atom buttons
-        self.quickpickatoms = config.sketch_quickpicks
-        for atomnumber in self.quickpickatoms:
-            atomnumber=int(atomnumber) # they are stored as strings
+        for index in xrange(len(config.sketch_quickpicks)):
+            atomnumber = config.sketch_quickpicks[index]
             bu_element = gtk.Button("")
             bu_element.set_label("%s" % periodic[atomnumber].symbol)
-            bu_element.connect("clicked", self.on_bu_element_clicked, atomnumber)
+            bu_element.connect("clicked", self.on_bu_element_clicked, index)
             # add to hbox
             self.hbox_quickpicks.pack_start(bu_element)
             bu_element.show()
@@ -191,8 +186,8 @@ class SketchOptions(GladeWrapper):
             self.hbox_atoms.show()
             self.la_current.show()
 
-    def on_bu_element_clicked(self, widget, number):
-        self.atom_number = number
+    def on_bu_element_clicked(self, widget, index):
+        self.atom_number = context.application.configuration.sketch_quickpicks[index]
         atom_symbol = periodic[self.atom_number].symbol
         self.la_current.set_label("Current: %s" % str(atom_symbol))
 
