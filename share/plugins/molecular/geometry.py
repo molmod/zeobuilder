@@ -40,7 +40,7 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
 from molmod.transformations import Translation, coincide
-from molmod.toyff import guess_geometry
+from molmod.toyff import guess_geometry, tune_geometry
 from molmod.data.periodic import periodic
 from molmod.units import angstrom
 
@@ -89,6 +89,36 @@ class GuessGeometry(Immediate):
 
         # Guessed and original geometry
         opt_coords = guess_geometry(graph).coordinates
+        org_coords = graph.molecule.coordinates
+
+        coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent)
+
+
+class TuneGeometry(Immediate):
+    """Tune the geometry of the selected molecule based on the molecular graph"""
+    description = "Tune the molecular geometry"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:geometry","_Tune geometry", ord("t"), False, order=(0, 4, 1, 5, 4, 1))
+    authors = [authors.wouter_smet, authors.toon_verstraelen]
+
+    @staticmethod
+    def analyze_selection():
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        if not isinstance(context.application.cache.node, GLContainerMixin): return False
+        if len(context.application.cache.node.children) == 0: return False
+        # C) passed all tests:
+        return True
+
+    def do(self):
+        # Get the molecular graph of the molecule in the selection
+        parent = context.application.cache.node
+        graph = create_molecular_graph([parent], parent)
+        if graph.molecule.size == 0:
+            raise UserError("Could not get molecular graph.", "Make sure that the selected frame contains a molecule.")
+
+        # Guessed and original geometry
+        opt_coords = tune_geometry(graph, graph.molecule).coordinates
         org_coords = graph.molecule.coordinates
 
         coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent)
@@ -191,6 +221,7 @@ class OptimizeMopacPM3(Immediate):
 
 actions = {
     "GuessGeometry": GuessGeometry,
+    "TuneGeometry": TuneGeometry,
     "OptimizeMopacPM3": OptimizeMopacPM3
 }
 
