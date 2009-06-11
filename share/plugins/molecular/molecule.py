@@ -206,7 +206,7 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
 
 class SaturateWithHydrogens(Immediate):
     description = "Saturate with hydrogens"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens", order=(0, 4, 1, 5, 1, 2))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens", ord("s"), False, order=(0, 4, 1, 5, 1, 2))
     authors = [authors.toon_verstraelen]
     opening_angles = {
         # (hybr, numsit): angle
