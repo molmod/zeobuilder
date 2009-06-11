@@ -203,7 +203,7 @@ class SketchOptions(GladeWrapper):
         else:
             self.cb_bondtype.hide()
 
-    def add_new(self, position, parent):
+    def get_new(self, state={}):
         object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
 
         new = context.application.plugins.get_node(object_type)()
@@ -211,6 +211,10 @@ class SketchOptions(GladeWrapper):
         if object_type == "Atom":
             new.set_number(self.atom_number)
             new.set_name(periodic[self.atom_number].symbol)
+        return new
+
+    def add_new(self, position, parent):
+        new = self.get_new()
         new.transformation.t[:] = position
         primitive.Add(new, parent)
         return new
@@ -220,9 +224,7 @@ class SketchOptions(GladeWrapper):
             state = gl_object.__getstate__()
             state.pop("name", None)
             state.pop("transformation", None)
-            new = context.application.plugins.get_node(
-                self.object_store.get_value(self.cb_object.get_active_iter(), 0)
-            )(**state)
+            new = self.get_new(state)
             new.transformation.t[:] = gl_object.transformation.t
             for reference in gl_object.references[::-1]:
                 if not reference.check_target(new):
