@@ -49,7 +49,7 @@ class Context(object):
 
     def get_share_filename(self, filename):
         result = os.path.join(self.share_dir, filename)
-        if not os.path.isfile(result):
+        if not os.path.exists(result):
             raise ValueError("Data file '%s' not found." % result)
         return result
 
