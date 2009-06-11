@@ -142,7 +142,7 @@ class OptimizeMopacPM3(Immediate):
 
     def write_mopac_input(self, molecule, prefix):
         f = open('%s.dat' % prefix, 'w')
-        print >> f, 'PM3 GNORM=0.01'
+        print >> f, 'PM3 GNORM=0.01 XYZ'
         print >> f, 'comment1'
         print >> f, 'comment2'
         for i in xrange(molecule.size):
