@@ -39,7 +39,7 @@ from zeobuilder.moltools import create_molecular_graph, create_molecule
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation, coincide
+from molmod.transformations import Translation, superpose
 from molmod.toyff import guess_geometry, tune_geometry
 from molmod.data.periodic import periodic
 from molmod.units import angstrom
@@ -49,7 +49,7 @@ import numpy, gtk, tempfile, os
 
 def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent):
     # Transform the guessed geometry as to overlap with the original geometry
-    transf = coincide(org_coords, opt_coords)
+    transf = superpose(org_coords, opt_coords)
     opt_coords = numpy.dot(opt_coords, transf.r.transpose()) + transf.t
 
     # Put coordinates of guess geometry back into Zeobuilder model
