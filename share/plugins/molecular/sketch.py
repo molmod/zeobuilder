@@ -150,6 +150,10 @@ class SketchOptions(GladeWrapper):
         config.register_setting(
             "sketch_quickpicks",
             [6,7,8,9,10,11],
+            DialogFieldInfo("Sketch tool", (0,2), fields.faulty.IntegerList(
+                label_text="Quick pick atoms (applies after restart)",
+                attribute_name="sketch_quickpicks",
+            )),
         )
 
         # 5)create the "quick pick" atom buttons

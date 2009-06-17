@@ -41,8 +41,8 @@ import gtk
 
 
 __all__ = [
-    "Entry", "Float", "Int", "MeasureEntry", "Length", "Name", "Password",
-    "Filter"
+    "Entry", "Float", "Int", "IntegerList", "MeasureEntry", "Length", "Name",
+    "Password", "Filter"
 ]
 
 
@@ -131,6 +131,22 @@ class Int(Entry):
         if self.maximum is not None and value > self.maximum:
             raise ValueError, "Value too high. (int <= %i)" % self.maximum
         return value
+
+
+class IntegerList(Entry):
+    Popup = popups.Default
+
+    def convert_to_representation(self, value):
+        if not hasattr(value, "__iter__"):
+            raise ValueError("The value must be iterable.")
+        return ",".join(str(item) for item in value)
+
+    def convert_to_value(self,representation):
+        Entry.convert_to_value(self,representation)
+        try:
+            return [int(item) for item in representation.split(',')]
+        except ValueError:
+            raise ValueError("All items must be integers separated by a single comma.")
 
 
 class MeasureEntry(Float):
