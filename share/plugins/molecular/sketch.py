@@ -54,6 +54,7 @@ from molmod.data.periodic import periodic
 
 import gtk, numpy
 
+import os.path
 
 class SketchOptions(GladeWrapper):
 
@@ -81,7 +82,10 @@ class SketchOptions(GladeWrapper):
             "bu_set_atom",
             "cb_bondtype",
             "hbox_atoms",
-            "hbox_quickpicks"
+            "hbox_quickpicks",
+            "hbox_fragments",
+            "la_fragment",
+            "cb_fragment"
         ])
 
         self.erase_filter = Expression("True")
@@ -91,6 +95,8 @@ class SketchOptions(GladeWrapper):
         # Initialize the GUI
         #  1) common parts of the comboboxes
         def render_icon(column, cell, model, iter):
+            if model.get_value(iter, 0) == "Fragment":
+                return
             cell.set_property(
                 "pixbuf",
                 context.application.plugins.get_node(model.get_value(iter, 0)).icon
@@ -99,6 +105,7 @@ class SketchOptions(GladeWrapper):
         #  2) fill the objects combo box
         self.object_store = gtk.ListStore(str)
         self.object_store.append(["Atom"])
+        self.object_store.append(["Fragment"])
         self.object_store.append(["Point"])
         self.object_store.append(["Sphere"])
         self.object_store.append(["Box"])
@@ -166,6 +173,21 @@ class SketchOptions(GladeWrapper):
             self.hbox_quickpicks.pack_start(bu_element)
             bu_element.show()
 
+        # 6)fill the fragment combo box with filenames from share/fragments
+        fragmentdir = context.get_share_filename('fragments')
+        self.fragment_store = gtk.ListStore(str)
+        for filename in os.listdir (fragmentdir):
+            # Ignore subfolders and files with extension other than cml
+            if os.path.isdir (os.path.join (fragmentdir, filename)) or filename[-3:] != 'cml':
+                continue
+            self.fragment_store.append([filename[:-4]])
+        self.cb_fragment.set_model(self.fragment_store)
+
+        renderer_text = gtk.CellRendererText()
+        self.cb_fragment.pack_start(renderer_text, expand=True)
+        self.cb_fragment.add_attribute(renderer_text, "text", 0)
+        self.cb_fragment.set_active(0)
+
     def on_window_delete_event(self, window, event):
         return True
 
@@ -186,9 +208,14 @@ class SketchOptions(GladeWrapper):
         # When the selected object is an atom, show the extra button.
         self.hbox_atoms.hide()
         self.la_current.hide()
+        self.hbox_fragments.hide()
+        self.doing_fragment = False
         if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Atom"):
             self.hbox_atoms.show()
             self.la_current.show()
+        if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Fragment"):
+            self.cb_fragment.show()
+            self.hbox_fragments.show()
 
     def on_bu_element_clicked(self, widget, index):
         self.atom_number = context.application.configuration.sketch_quickpicks[index]
