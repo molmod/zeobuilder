@@ -97,11 +97,15 @@ class SketchOptions(GladeWrapper):
         #  1) common parts of the comboboxes
         def render_icon(column, cell, model, iter):
             if model.get_value(iter, 0) == "Fragment":
-                return
-            cell.set_property(
+                cell.set_property(
                 "pixbuf",
-                context.application.plugins.get_node(model.get_value(iter, 0)).icon
-            )
+                context.application.plugins.get_node("Atom").icon
+                )
+            else:
+                cell.set_property(
+                    "pixbuf",
+                    context.application.plugins.get_node(model.get_value(iter, 0)).icon
+                )
 
         #  2) fill the objects combo box
         self.object_store = gtk.ListStore(str)
@@ -235,8 +239,8 @@ class SketchOptions(GladeWrapper):
         filename = fragmentdir+'/'+fragmentname+'.cml'
 
         molecules = load_cml(filename)
-        molecule = molecules[0]       
-        
+        molecule = molecules[0]
+
         Frame = context.application.plugins.get_node("Frame")
         fragment_frame = Frame(name=fragmentname)
 
@@ -247,7 +251,7 @@ class SketchOptions(GladeWrapper):
 
     def get_new(self, position):
         object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
-        
+
         if object_type == "Fragment":
             new = self.get_fragment(self.fragment_store.get_value(self.cb_fragment.get_active_iter(), 0))
         else:
