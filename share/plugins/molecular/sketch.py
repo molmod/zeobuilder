@@ -51,6 +51,7 @@ import zeobuilder.authors as authors
 from molmod.transformations import Translation
 from molmod.data.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
 from molmod.data.periodic import periodic
+from molmod.io.cml import load_cml
 
 import gtk, numpy
 
@@ -229,19 +230,38 @@ class SketchOptions(GladeWrapper):
         else:
             self.cb_bondtype.hide()
 
-    def get_new(self, state={}):
-        object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
+    def get_fragment(self, fragmentname):
+        fragmentdir = context.get_share_filename('fragments')
+        filename = fragmentdir+'/'+fragmentname+'.cml'
 
-        new = context.application.plugins.get_node(object_type)()
-        #if it's an 'Atom', set the atom number to the current atom number?
-        if object_type == "Atom":
-            new.set_number(self.atom_number)
-            new.set_name(periodic[self.atom_number].symbol)
+        molecules = load_cml(filename)
+        molecule = molecules[0]       
+        
+        Frame = context.application.plugins.get_node("Frame")
+        fragment_frame = Frame(name=fragmentname)
+
+        load_filter = context.application.plugins.get_load_filter('cml')
+        load_filter.load_molecule(fragment_frame,molecule)
+
+        return fragment_frame
+
+    def get_new(self, position):
+        object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
+        
+        if object_type == "Fragment":
+            new = self.get_fragment(self.fragment_store.get_value(self.cb_fragment.get_active_iter(), 0))
+        else:
+            new = context.application.plugins.get_node(object_type)()
+            if object_type == "Atom":
+                new.set_number(self.atom_number)
+                new.set_name(periodic[self.atom_number].symbol)
+
+        new.transformation.t[:] = position
         return new
 
     def add_new(self, position, parent):
-        new = self.get_new()
-        new.transformation.t[:] = position
+        new = self.get_new(position)
+
         primitive.Add(new, parent)
         return new
 
@@ -250,8 +270,7 @@ class SketchOptions(GladeWrapper):
             state = gl_object.__getstate__()
             state.pop("name", None)
             state.pop("transformation", None)
-            new = self.get_new(state)
-            new.transformation.t[:] = gl_object.transformation.t
+            new = self.get_new(gl_object.transformation.t)
             for reference in gl_object.references[::-1]:
                 if not reference.check_target(new):
                     return
