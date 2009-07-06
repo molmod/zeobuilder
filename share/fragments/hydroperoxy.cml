@@ -1,0 +1,16 @@
+<?xml version='1.0'?>
+<list xmlns='http://www.xml-cml.org/schema'>
+ <molecule id='Universe' >
+  <atomArray>
+   <atom id='a0' elementType='H' x3='-0.930364290072' y3='0.856672166461' z3='-0.000893696876683'  />
+   <atom id='a1' elementType='O' x3='-0.737818169213' y3='-0.0680533002833' z3='5.63016548647e-05'  />
+   <atom id='a2' elementType='O' x3='0.737818179682' y3='0.0680531867818' z3='5.63017868755e-05'  />
+   <atom id='a3' elementType='H' x3='0.930364123895' y3='-0.856670364809' z3='-0.000893698708151'  />
+  </atomArray>
+  <bondArray>
+   <bond atomRefs2='a1 a2'  />
+   <bond atomRefs2='a2 a3'  />
+   <bond atomRefs2='a0 a1'  />
+  </bondArray>
+ </molecule>
+</list>

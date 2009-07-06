@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+<list xmlns='http://www.xml-cml.org/schema'>
+ <molecule id='Universe' >
+  <atomArray>
+   <atom id='a0' elementType='H' x3='-2.22850131462' y3='1.10149715568' z3='3.43328953462e-05'  />
+   <atom id='a1' elementType='C' x3='-1.24714970744' y3='0.616402122103' z3='7.29999796525e-05'  />
+   <atom id='a2' elementType='C' x3='-0.0896953519379' y3='1.38802161047' z3='6.29306297717e-05'  />
+   <atom id='a3' elementType='C' x3='0.089746186972' y3='-1.38808674729' z3='7.29816571279e-05'  />
+   <atom id='a4' elementType='C' x3='1.15738900972' y3='0.771854788209' z3='-0.000142134767962'  />
+   <atom id='a5' elementType='C' x3='1.24711088867' y3='-0.616422962238' z3='6.29270495474e-05'  />
+   <atom id='a6' elementType='C' x3='-1.15738362991' y3='-0.771786039968' z3='-0.000121963712869'  />
+   <atom id='a7' elementType='H' x3='2.06804109194' y3='1.37942676756' z3='-0.00026484476927'  />
+   <atom id='a8' elementType='H' x3='-0.160393742872' y3='2.48046506818' z3='0.000201589843645'  />
+   <atom id='a9' elementType='H' x3='2.22846252037' y3='-1.10151797945' z3='0.000201594129509'  />
+   <atom id='a10' elementType='H' x3='0.160400305755' y3='-2.48061984244' z3='3.43479663209e-05'  />
+   <atom id='a11' elementType='H' x3='-2.06821615375' y3='-1.37904587074' z3='-0.000299260526448'  />
+  </atomArray>
+  <bondArray>
+   <bond atomRefs2='a2 a4'  />
+   <bond atomRefs2='a0 a1'  />
+   <bond atomRefs2='a3 a6'  />
+   <bond atomRefs2='a1 a2'  />
+   <bond atomRefs2='a10 a3'  />
+   <bond atomRefs2='a3 a5'  />
+   <bond atomRefs2='a9 a5'  />
+   <bond atomRefs2='a4 a7'  />
+   <bond atomRefs2='a8 a2'  />
+   <bond atomRefs2='a1 a6'  />
+   <bond atomRefs2='a11 a6'  />
+   <bond atomRefs2='a4 a5'  />
+  </bondArray>
+ </molecule>
+</list>
