@@ -192,6 +192,9 @@ class SketchOptions(GladeWrapper):
         self.cb_fragment.pack_start(renderer_text, expand=True)
         self.cb_fragment.add_attribute(renderer_text, "text", 0)
         self.cb_fragment.set_active(0)
+        
+        #init current object
+        self.current_object = self.object_store.get_value(self.cb_object.get_active_iter(),0);
 
     def on_window_delete_event(self, window, event):
         return True
@@ -210,15 +213,14 @@ class SketchOptions(GladeWrapper):
         self.la_current.set_label("Current: %s " % str(atom_symbol))
 
     def on_cb_object_changed(self, combo):
-        # When the selected object is an atom, show the extra button.
         self.hbox_atoms.hide()
         self.la_current.hide()
         self.hbox_fragments.hide()
-        self.doing_fragment = False
-        if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Atom"):
+        self.current_object = self.object_store.get_value(self.cb_object.get_active_iter(),0);
+        if(self.current_object=="Atom"):
             self.hbox_atoms.show()
             self.la_current.show()
-        if(self.object_store.get_value(self.cb_object.get_active_iter(),0)=="Fragment"):
+        if(self.current_object=="Fragment"):
             self.cb_fragment.show()
             self.hbox_fragments.show()
 
@@ -250,13 +252,12 @@ class SketchOptions(GladeWrapper):
         return fragment_frame
 
     def get_new(self, position):
-        object_type = self.object_store.get_value(self.cb_object.get_active_iter(), 0)
 
-        if object_type == "Fragment":
+        if self.current_object == "Fragment":
             new = self.get_fragment(self.fragment_store.get_value(self.cb_fragment.get_active_iter(), 0))
         else:
-            new = context.application.plugins.get_node(object_type)()
-            if object_type == "Atom":
+            new = context.application.plugins.get_node(self.current_object)()
+            if self.current_object == "Atom":
                 new.set_number(self.atom_number)
                 new.set_name(periodic[self.atom_number].symbol)
 
@@ -275,9 +276,13 @@ class SketchOptions(GladeWrapper):
             state.pop("name", None)
             state.pop("transformation", None)
             new = self.get_new(gl_object.transformation.t)
-            for reference in gl_object.references[::-1]:
-                if not reference.check_target(new):
-                    return
+
+            if(self.current_object == "Fragment"): #fragments are inserted at frames - have no refs
+                pass
+            else:
+                for reference in gl_object.references[::-1]:
+                    if not reference.check_target(new):
+                        return
             parent = gl_object.parent
             primitive.Add(new, parent)
             for reference in gl_object.references[::-1]:
