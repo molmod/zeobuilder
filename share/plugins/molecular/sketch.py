@@ -192,7 +192,7 @@ class SketchOptions(GladeWrapper):
         self.cb_fragment.pack_start(renderer_text, expand=True)
         self.cb_fragment.add_attribute(renderer_text, "text", 0)
         self.cb_fragment.set_active(0)
-        
+
         #init current object
         self.current_object = self.object_store.get_value(self.cb_object.get_active_iter(),0);
 
@@ -278,16 +278,19 @@ class SketchOptions(GladeWrapper):
             new = self.get_new(gl_object.transformation.t)
 
             if(self.current_object == "Fragment"): #fragments are inserted at frames - have no refs
-                pass
+                target_object = new.children[1]
             else:
+                target_object = new
                 for reference in gl_object.references[::-1]:
                     if not reference.check_target(new):
                         return
             parent = gl_object.parent
             primitive.Add(new, parent)
             for reference in gl_object.references[::-1]:
-                reference.set_target(new)
+                reference.set_target(target_object)
             primitive.Delete(gl_object)
+            if(self.current_object == "Fragment"):
+                primitive.Delete(new.children[0])
 
     def connect(self, gl_object1, gl_object2):
         try:
