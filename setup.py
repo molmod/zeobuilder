@@ -75,6 +75,7 @@ setup(
             "share/no_action.svg", "share/reference.svg"
         ]),
         ('share/zeobuilder/helpers', glob.glob("share/helpers/*")),
+        ('share/zeobuilder/fragments', glob.glob("share/fragments/*")),
     ] + [
         ('share/zeobuilder/plugins/%s' % plugin,
             glob.glob('share/plugins/%s/*.py' % plugin) +

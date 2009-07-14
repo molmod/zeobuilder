@@ -193,8 +193,9 @@ class SketchOptions(GladeWrapper):
         self.cb_fragment.add_attribute(renderer_text, "text", 0)
         self.cb_fragment.set_active(0)
 
-        #init current object
-        self.current_object = self.object_store.get_value(self.cb_object.get_active_iter(),0);
+    @property
+    def current_object(self):
+       return self.object_store.get_value(self.cb_object.get_active_iter(),0)
 
     def on_window_delete_event(self, window, event):
         return True
@@ -216,7 +217,6 @@ class SketchOptions(GladeWrapper):
         self.hbox_atoms.hide()
         self.la_current.hide()
         self.hbox_fragments.hide()
-        self.current_object = self.object_store.get_value(self.cb_object.get_active_iter(),0);
         if(self.current_object=="Atom"):
             self.hbox_atoms.show()
             self.la_current.show()
@@ -279,10 +279,11 @@ class SketchOptions(GladeWrapper):
 
             if(self.current_object == "Fragment"): #fragments are inserted at frames - have no refs
                 target_object = new.children[1]
+                print new.children[0].references
             else:
                 target_object = new
                 for reference in gl_object.references[::-1]:
-                    if not reference.check_target(new):
+                    if not reference.check_target(target_object):
                         return
             parent = gl_object.parent
             primitive.Add(new, parent)
