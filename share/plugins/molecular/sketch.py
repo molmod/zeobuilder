@@ -279,7 +279,6 @@ class SketchOptions(GladeWrapper):
 
             if(self.current_object == "Fragment"): #fragments are inserted at frames - have no refs
                 target_object = new.children[1]
-                print new.children[0].references
             else:
                 target_object = new
                 for reference in gl_object.references[::-1]:

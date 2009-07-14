@@ -189,12 +189,11 @@ class OptimizeMopacPM3(Immediate):
         parent = context.application.cache.node
         org_mol = create_molecule([parent], parent)
         org_coords = org_mol.coordinates
-        print type(org_coords)
+
         if org_mol.size == 0:
             raise UserError("Could not get molecule.", "Make sure that the selected frame contains a molecule.")
         if org_mol.size == 3:
             raise UserError("For the moment three atoms are not supported.")
-
 
         # Make temp directory
         work = tempfile.mkdtemp("_zeobuilder_mopac")
