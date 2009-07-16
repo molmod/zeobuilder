@@ -281,9 +281,9 @@ class SketchOptions(GladeWrapper):
                 target_object = new.children[1]
             else:
                 target_object = new
-                for reference in gl_object.references[::-1]:
-                    if not reference.check_target(target_object):
-                        return
+            for reference in gl_object.references[::-1]:
+                if not reference.check_target(target_object):
+                    return
             parent = gl_object.parent
             primitive.Add(new, parent)
             for reference in gl_object.references[::-1]:
