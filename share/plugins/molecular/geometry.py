@@ -47,8 +47,13 @@ from molmod.units import angstrom
 import numpy, gtk, tempfile, os
 
 
-def coords_to_zeobuilder(org_coords, opt_coords, graph, parent):
-    for group in graph.independent_nodes:
+def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent, graph = None):
+    if graph == None:
+        atomgroups = atoms
+    else:
+        atomgroups = graph.independent_nodes
+
+    for group in atomgroups:
         group_org = numpy.array([org_coords[i] for i in group])
         group_opt = numpy.array([opt_coords[i] for i in group])
         # Transform the guessed geometry as to overlap with the original geometry
@@ -94,7 +99,7 @@ class GuessGeometry(Immediate):
         opt_coords = guess_geometry(graph).coordinates
         org_coords = graph.molecule.coordinates
 
-        coords_to_zeobuilder(org_coords, opt_coords, graph, parent)
+        coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent, graph)
 
 class TuneGeometry(Immediate):
     """Tune the geometry of the selected molecule based on the molecular graph"""
