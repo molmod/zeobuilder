@@ -48,10 +48,13 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation, Rotation, Complete, rotation_around_center
+from molmod.transformations import Translation, Rotation
 from molmod.data.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
 from molmod.data.periodic import periodic
+from molmod.data.bonds import bonds
 from molmod.io.cml import load_cml
+from molmod.vectors import angle as compute_angle
+from molmod.vectors import random_orthonormal
 
 import gtk, numpy
 from math import cos,sin,sqrt,acos,pi
@@ -269,6 +272,10 @@ class SketchOptions(GladeWrapper):
         new = self.get_new(position)
 
         primitive.Add(new, parent)
+        if self.current_object == "Fragment":
+            # get rid of frame
+            UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
+            UnframeAbsolute([new])
         return new
 
     def replace(self, gl_object):
@@ -289,50 +296,48 @@ class SketchOptions(GladeWrapper):
             import copy
             primitive.Add(new, parent)
             if(self.current_object == "Fragment"):
-                print 'REMOVED FRAME ATOM RELATIVE TO FRAME CENTER:' #note that this atom of our frame, which will be removed, is still in 'new' at this point?
-                for neighbor in new.children[0].yield_neighbors():
-                    fragment_neighbor = neighbor
-                    break
-                start_vector = new.children[0].references[0].translation_relative_to(new) #removed fragment atom relative to new frame's center
-                print start_vector
-                print 'CLICKED ATOM:'
-                for neighbor in gl_object.yield_neighbors():
-                    clicked_neighbor = neighbor
-                    break
-                target_vector = gl_object.references[::-1][0].translation_relative_to(neighbor)  #removed frame atom relative to atom it was connected with?
-                print target_vector
-
-                #find rotation angle
-                rot_cos = numpy.dot(start_vector,target_vector)/(numpy.linalg.norm(start_vector)*numpy.linalg.norm(target_vector))
-                rot_angle = acos(rot_cos) - pi #why do we need negative complement?
-
-                print "rotation angle:"
-                print rot_angle*180/pi
-
-                #find axis
-                # since by default new frame is not rotated relative to universe origin,
-                # removed atom position relative to 'new' is also its direction vector in the universe
-                # so our rotation axis direction is simply the cross product of the two direction vectors in the above co's...?
-                axis_direction = numpy.cross(start_vector,target_vector)
-                print "axis:"
-                print axis_direction
-
-                #QUESTION OF THE DAY/NIGHT: HOW TO PLACE THAT ROTATION AXIS THROUGH THE CORRECT ATOM?????
-                #or: what is our 'center' to rotate about center
-
-                center = fragment_neighbor.transformation.t[:]
-                parameters = rotation_around_center(center,rot_angle, axis_direction, False) # do we use a Complete or a Rotation or rotation_around_center or... (they probably all work)?
-
-                print "Rotation center:"
-                print center
-
-                primitive.Transform(new,parameters)
+                # rotation
+                Bond = context.application.plugins.get_node("Bond")
+                if len(gl_object.references) == 1 and isinstance(gl_object.references[0].parent, Bond):
+                    bond1 = gl_object.references[0].parent
+                    direction1 = bond1.shortest_vector_relative_to(parent)
+                    if bond1.children[0].target != gl_object:
+                        direction1 *= -1
+                    bond2 = new.children[0].references[0].parent
+                    direction2 = bond2.shortest_vector_relative_to(parent)
+                    if bond2.children[0].target != target_object:
+                        direction2 *= -1
+                    axis = numpy.cross(direction2, direction1)
+                    if numpy.linalg.norm(axis) < 1e-8:
+                        axis = random_orthonormal(direction1)
+                    angle = compute_angle(direction1, direction2)
+                    rotation = Rotation()
+                    rotation.set_rotation_properties(angle,axis,False)
+                    primitive.Transform(new, rotation)
+                else:
+                    bond1 = None
+                # tranlsation
+                translation = Translation()
+                pos_old = new.children[1].get_frame_relative_to(parent).t
+                pos_new = gl_object.transformation.t
+                translation.t = pos_new - pos_old
+                primitive.Transform(new, translation)
+                if bond1 != None:
+                    # bond length
+                    old_length = numpy.linalg.norm(direction1)
+                    new_length = bonds.get_length(new.children[1].number, bond1.get_neighbor(gl_object).number)
+                    translation = Translation()
+                    translation.t = -direction1/old_length*(new_length-old_length)
+                    primitive.Transform(new, translation)
 
             for reference in gl_object.references[::-1]:
                 reference.set_target(target_object)
             primitive.Delete(gl_object)
             if(self.current_object == "Fragment"):
                 primitive.Delete(new.children[0])
+                # get rid of frame
+                UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
+                UnframeAbsolute([new])
 
     def connect(self, gl_object1, gl_object2):
         try:
