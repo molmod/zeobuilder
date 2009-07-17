@@ -123,9 +123,11 @@ class Action(object):
         return context.application.action_manager.current_action is None
 
     # --- NON STATIC ---
-    def __init__(self):
+    def __init__(self, selection=None):
         #print "ACTION", self
         self.primitives = []
+        if selection is not None:
+            context.application.cache.items = {"nodes": selection}
         context.application.action_manager.begin_new_action(self)
 
     def redo(self):
@@ -205,10 +207,11 @@ class CustomAction(Action):
 
 
 class Immediate(Action, ImmediateMixin):
-    def __init__(self):
-        Action.__init__(self)
+    def __init__(self, selection=None):
+        Action.__init__(self, selection)
         ImmediateMixin.__init__(self)
-
+        if selection is not None:
+            context.application.cache.clear()
 
 class ImmediateWithMemory(Immediate, RememberParametersMixin):
     store_last_parameters = True
@@ -218,7 +221,7 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
     def analyze_selection(parameters=None):
         return Immediate.analyze_selection()
 
-    def __init__(self, parameters=None):
+    def __init__(self, parameters=None, selection=None):
         RememberParametersMixin.__init__(self, parameters)
         if self.parameters is None:
             if self.store_last_parameters:
@@ -229,7 +232,7 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
         if not self.parameters.empty():
             if self.store_last_parameters:
                 self.store_parameters(self.parameters)
-            Immediate.__init__(self)
+            Immediate.__init__(self, selection)
 
     @classmethod
     def config_name(cls):
