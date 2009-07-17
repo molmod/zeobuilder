@@ -170,4 +170,10 @@ class Vector(GLReferentBase):
         self.invalidate_boundingbox_list()
         self.invalidate_draw_list()
 
+    def get_neighbor(self, one_target):
+        if self.children[0].target == one_target:
+            return self.children[1].target
+        else:
+            return self.children[0].target
+
 
