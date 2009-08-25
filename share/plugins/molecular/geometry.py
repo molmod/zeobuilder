@@ -47,29 +47,31 @@ from molmod.units import angstrom
 import numpy, gtk, tempfile, os
 
 
-def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent, graph = None):
+def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent, graph=None):
     if graph == None:
-        atomgroups = atoms
+        atomgroups = [numpy.arange(len(atoms))]
     else:
         atomgroups = graph.independent_nodes
 
     for group in atomgroups:
-        group_org = numpy.array([org_coords[i] for i in group])
-        group_opt = numpy.array([opt_coords[i] for i in group])
+        group_org = org_coords[group]
+        group_opt = opt_coords[group]
         # Transform the guessed geometry as to overlap with the original geometry
         transf = superpose(group_org, group_opt)
         group_opt = numpy.dot(group_opt, transf.r.transpose()) + transf.t
 
-        # Put coordinates of guess geometry back into Zeobuilder model
+        # Put coordinates of guessed geometry back into Zeobuilder model
         for i,atomindex in enumerate(group):
-            translation = Translation()
             atom = graph.molecule.atoms[atomindex]
             # Make sure atoms in subframes are treated properly
             transf = atom.parent.get_frame_relative_to(parent)
             org_pos = atom.transformation.t
-            opt_pos = transf.vector_apply_inverse(group_opt[i]) #
+            opt_pos = transf.vector_apply_inverse(group_opt[i])
+
+            translation = Translation()
             translation.t = opt_pos - org_pos
             primitive.Transform(atom, translation)
+
 
 class GuessGeometry(Immediate):
     """Guess the geometry of the selected molecule based on the molecular graph"""
@@ -95,11 +97,12 @@ class GuessGeometry(Immediate):
         if graph.molecule.size == 0:
             raise UserError("Could not get molecular graph.", "Make sure that the selected frame contains a molecule.")
 
-            # Guessed and original geometry
+        # Guessed and original geometry
         opt_coords = guess_geometry(graph).coordinates
         org_coords = graph.molecule.coordinates
 
         coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent, graph)
+
 
 class TuneGeometry(Immediate):
     """Tune the geometry of the selected molecule based on the molecular graph"""
@@ -128,7 +131,7 @@ class TuneGeometry(Immediate):
         opt_coords = tune_geometry(graph, graph.molecule).coordinates
         org_coords = graph.molecule.coordinates
 
-        coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent)
+        coords_to_zeobuilder(org_coords, opt_coords, graph.molecule.atoms, parent, graph)
 
 
 class OptimizeMopacPM3(Immediate):

@@ -109,7 +109,7 @@ def create_molecule(selected_nodes, parent=None):
 
 
 def create_molecular_graph(selected_nodes, parent=None):
-    molecule = create_molecule(selected_nodes, parent=None)
+    molecule = create_molecule(selected_nodes, parent)
 
     atom_indexes = dict((atom,i) for i,atom in enumerate(molecule.atoms))
     bonds = list(
