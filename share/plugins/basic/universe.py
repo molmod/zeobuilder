@@ -821,6 +821,50 @@ class WrapCellContents(Immediate):
                     primitive.SetProperty(child, "transformation", new_transformation)
 
 
+class ScaleUnitCell(ImmediateWithMemory):
+    description = "Scale the unit cell and its contents"
+    menu_info = MenuInfo("default/_Object:tools/_Unit Cell:default", "_Scale unit cell", order=(0, 4, 1, 4, 0, 4))
+    repeatable = False
+    authors = [authors.toon_verstraelen]
+    store_last_parameters = False
+
+    parameters_dialog = FieldsDialogSimple(
+        "Scale unit cell",
+        fields.composed.CellMatrix(
+            label_text="Cell dimensions",
+            attribute_name="cell",
+        ),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+    )
+
+    @staticmethod
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not Immediate.analyze_selection(): return False
+        # B) validating
+        universe = context.application.model.universe
+        if sum(universe.cell_active) == 0: return False
+        # C) passed all tests:
+        return True
+
+    @classmethod
+    def default_parameters(cls):
+        result = Parameters()
+        result.cell = context.application.model.universe.cell.copy()
+        return result
+
+    def do(self):
+        universe = context.application.model.universe
+        scaling = numpy.dot(self.parameters.cell, numpy.linalg.inv(universe.cell))
+        primitive.SetProperty(universe, "cell", self.parameters.cell)
+
+        for child in universe.children:
+            if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
+                 new_transformation = copy.deepcopy(child.transformation)
+                 new_transformation.t = numpy.dot(scaling, new_transformation.t)
+                 primitive.SetProperty(child, "transformation", new_transformation)
+
+
 
 nodes = {
     "Universe": Universe
@@ -831,6 +875,7 @@ actions = {
     "SuperCell": SuperCell,
     "DefineUnitCellVectors": DefineUnitCellVectors,
     "WrapCellContents": WrapCellContents,
+    "ScaleUnitCell": ScaleUnitCell,
 }
 
 

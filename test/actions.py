@@ -369,6 +369,21 @@ class CoreActions(ApplicationTestCase):
             AlignUnitCell()
         self.run_test_application(fn)
 
+    def test_scale_unit_cell(self):
+        def fn():
+            context.application.model.file_open("input/core_objects.zml")
+            context.application.main.toggle_selection(context.application.model.universe, on=True)
+            ScaleUnitCell = context.application.plugins.get_action("ScaleUnitCell")
+            self.assert_(ScaleUnitCell.analyze_selection())
+            parameters = Parameters()
+            parameters.cell = numpy.array([
+                [1.0, 0.0, 0.0],
+                [0.0, 2.0, 0.0],
+                [0.0, 0.0, 3.0],
+            ])
+            ScaleUnitCell(parameters)
+        self.run_test_application(fn)
+
     def test_move_3d_objects(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
