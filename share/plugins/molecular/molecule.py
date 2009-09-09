@@ -32,7 +32,7 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Immediate, UserError
+from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError, Parameters
 from zeobuilder.actions.abstract import CenterAlignBase
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.conversion import express_measure
@@ -53,6 +53,7 @@ from molmod.data.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
 from molmod.graphs import PatternError, EqualPattern, RingPattern, GraphSearch
 from molmod.vectors import random_orthonormal
+from molmod.units import deg
 
 import numpy, gtk
 
@@ -210,12 +211,12 @@ class SaturateWithHydrogens(Immediate):
     authors = [authors.toon_verstraelen]
     opening_angles = {
         # (hybr, numsit): angle
-          (2,    1):                  0.0,
-          (3,    1):                  0.0,
-          (4,    1):                  0.0,
-          (3,    2):      math.pi/180*60.0,
-          (4,    2):      math.pi/180*54.735610317245346,
-          (4,    3):      math.pi/180*70.528779365509308
+          (2,    1): 0.0,
+          (3,    1): 0.0,
+          (4,    1): 0.0,
+          (3,    2): 60.0*deg,
+          (4,    2): 54.74*deg,
+          (4,    3): 70.53*deg,
     }
 
     @staticmethod
@@ -341,6 +342,96 @@ class SaturateWithHydrogens(Immediate):
                     hydrogenate_unsaturated_atoms(node.children)
 
         hydrogenate_unsaturated_atoms(context.application.cache.nodes)
+
+
+class SaturateHydrogensManual(ImmediateWithMemory):
+    description = "Saturate with hydrogens (fixed number)"
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens (fixed number)", False, order=(0, 4, 1, 5, 1, 3))
+    authors = [authors.toon_verstraelen]
+
+    parameters_dialog = FieldsDialogSimple(
+        "Parameters for hydrogen saturation",
+        fields.group.Table(fields=[
+            fields.faulty.Int(
+                attribute_name="num_hydrogens",
+                label_text="Number of hydrogens per atom",
+                minimum=1,
+            ),
+            fields.faulty.MeasureEntry(
+                attribute_name="valence_angle",
+                measure="Angle",
+                label_text="Valence angle (X-Y-H)",
+                scientific=False,
+                low=0.0, high=180*deg,
+            ),
+        ]),
+        ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
+    )
+
+    @staticmethod
+    def analyze_selection(parameters=None):
+        # A) calling ancestor
+        if not ImmediateWithMemory.analyze_selection(): return False
+        # B) validating
+        if len(context.application.cache.nodes) == 0: return False
+        # C) passed all tests:
+        return True
+
+    @classmethod
+    def default_parameters(cls):
+        result = Parameters()
+        result.num_hydrogens = 2
+        result.valence_angle = 109.4*deg
+        return result
+
+    def do(self):
+        Atom = context.application.plugins.get_node("Atom")
+        Bond = context.application.plugins.get_node("Bond")
+
+        def add_hydrogens(atom):
+            existing_bonds = list(atom.yield_bonds())
+            bond_length = bonds.get_length(atom.number, 1, BOND_SINGLE)
+            num_hydrogens = self.parameters.num_hydrogens
+
+            if len(existing_bonds) == 0:
+                H = Atom(name="auto H", number=1)
+                H.transformation.t = atom.transformation.t + numpy.array([0,bond_length,0])
+                primitive.Add(H, atom.parent)
+                bond = Bond(name="aut H bond", targets=[atom, H])
+                primitive.Add(bond, atom.parent)
+                existing_bonds.append(bond)
+                num_hydrogens -= 1
+
+            main_direction = numpy.zeros(3, float)
+            for bond in existing_bonds:
+                shortest_vector = bond.shortest_vector_relative_to(atom.parent)
+                if bond.children[1].target == atom:
+                    shortest_vector *= -1
+                main_direction += shortest_vector
+
+            main_direction /= numpy.linalg.norm(main_direction)
+            normal = random_orthonormal(main_direction)
+
+            rotation = Rotation()
+            rotation.set_rotation_properties(2*math.pi / float(num_hydrogens), main_direction, False)
+
+
+            h_pos = bond_length*(
+                main_direction*math.cos(self.parameters.valence_angle) +
+                normal*math.sin(self.parameters.valence_angle)
+            )
+
+            for i in range(num_hydrogens):
+                H = Atom(name="auto H", number=1)
+                H.transformation.t = atom.transformation.t + h_pos
+                primitive.Add(H, atom.parent)
+                bond = Bond(name="aut H bond", targets=[atom, H])
+                primitive.Add(bond, atom.parent)
+                h_pos = rotation.vector_apply(h_pos)
+
+        for node in context.application.cache.nodes:
+            if isinstance(node, Atom):
+                add_hydrogens(node)
 
 
 RESPONSE_EVALUATE = 1
@@ -865,6 +956,7 @@ actions = {
     "StrongRingDistribution": StrongRingDistribution,
     "FrameMolecules": FrameMolecules,
     "SelectBondedNeighbors": SelectBondedNeighbors,
+    "SaturateHydrogensManual": SaturateHydrogensManual,
 }
 
 

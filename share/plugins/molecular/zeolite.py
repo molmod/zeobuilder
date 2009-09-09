@@ -141,7 +141,7 @@ class TetraCoordination(Immediate):
 
 class AddZeoliteTetraeders(Immediate):
     description = "Add zeolite tetraeders"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add zeolite tetraeders", image_name="plugins/basic/tetra.svg", order=(0, 4, 1, 5, 1, 3))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "_Add zeolite tetraeders", image_name="plugins/basic/tetra.svg", order=(0, 4, 1, 5, 1, 4))
     authors = [authors.toon_verstraelen]
 
     @staticmethod

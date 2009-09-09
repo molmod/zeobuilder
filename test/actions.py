@@ -897,6 +897,28 @@ class MolecularActions(ApplicationTestCase):
             SaturateWithHydrogens()
         self.run_test_application(fn)
 
+    def test_saturate_with_hydrogens_manual_tpa(self):
+        def fn():
+            context.application.model.file_open("input/tpa.xyz")
+            Atom = context.application.plugins.get_node("Atom")
+            for child in context.application.model.universe.children[::-1]:
+                if isinstance(child, Atom) and child.number == 1:
+                    context.application.model.universe.children.remove(child)
+            context.application.main.select_nodes([context.application.model.universe])
+            AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
+            self.assert_(AutoConnectPhysical.analyze_selection())
+            AutoConnectPhysical()
+
+            parameters = Parameters()
+            parameters.num_hydrogens = 2
+            parameters.opening_angle = 1.9093
+
+            context.application.main.select_nodes([context.application.model.universe.children[1]])
+            SaturateHydrogensManual = context.application.plugins.get_action("SaturateHydrogensManual")
+            self.assert_(SaturateHydrogensManual.analyze_selection(parameters))
+            SaturateHydrogensManual(parameters)
+        self.run_test_application(fn)
+
     def test_distribution_bond_lengths_precursor(self):
         def fn():
             context.application.model.file_open("input/precursor.zml")
