@@ -48,10 +48,10 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.data.periodic import periodic
-from molmod.data.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+from molmod.periodic import periodic
+from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs import PatternError, EqualPattern, RingPattern, GraphSearch
+from molmod.graphs import EqualPattern, RingPattern, GraphSearch
 from molmod.vectors import random_orthonormal
 from molmod.units import deg
 

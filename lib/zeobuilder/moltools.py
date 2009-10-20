@@ -36,7 +36,7 @@ import numpy
 from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 
-from molmod.data.periodic import periodic
+from molmod.periodic import periodic
 from molmod.graphs import Graph
 from molmod.molecules import Molecule
 from molmod.molecular_graphs import MolecularGraph

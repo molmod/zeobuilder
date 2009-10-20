@@ -38,7 +38,7 @@ from zeobuilder.nodes.parent_mixin import ParentMixin, ContainerMixin, ReferentM
 from zeobuilder.nodes.model_object import ModelObject
 from zeobuilder.expressions import Expression
 
-from molmod.transformations import Translation, Rotation, Complete
+from molmod import Translation, Rotation, Complete, UnitCell
 
 import xml.sax.handler, xml.sax.saxutils, base64, gzip, bz2, numpy, types
 import StringIO, string, gobject
@@ -140,6 +140,11 @@ def dump_to_file(f, node):
             dump_stage3(indenter, node.t, use_references, name="translation_vector")
             dump_stage3(indenter, node.r, use_references, name="rotation_matrix")
             indenter.write_line("</transformation>", -1)
+        elif cls == UnitCell:
+            indenter.write_line("<unit_cell%s>" % name_key, 1)
+            dump_stage3(indenter, node.matrix, use_references, name="matrix")
+            dump_stage3(indenter, node.active, use_references, name="active")
+            indenter.write_line("</unit_cell>", -1)
         elif cls == Expression:
             indenter.write_line("<expression%s>%s</expression>" % (name_key, xml.sax.saxutils.escape(node.code)))
         elif issubclass(cls, ModelObject):
@@ -158,7 +163,7 @@ def dump_to_file(f, node):
     dump_stage1(node)
     dump_stage2()
     indenter.write_line("<?xml version='1.0'?>")
-    indenter.write_line("<zml_file version='0.1'>", 1)
+    indenter.write_line("<zml_file version='0.2'>", 1)
     dump_stage3(indenter, node, False)
     indenter.write_line("</zml_file>", -1)
 
@@ -206,7 +211,7 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
 
     def startElement(self, name, attrs):
         if name == "zml_file":
-            if attrs.getValue("version") != "0.1": raise FilterError, "Only format 0.1 is supported in this version of Zeobuilder."
+            if attrs.getValue("version") != "0.2": raise FilterError, "Only format 0.2 is supported in this version of Zeobuilder. Use zb-convert to convert older zml files to the zml 0.2 format"
         else:
             new_tag = ZMLTag(name, dict((name, attrs.getValue(name)) for name in attrs.getNames()))
             if (len(self.hierarchy) == 0) or (self.hierarchy[-1][-1].being_processed):
@@ -254,16 +259,21 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             current_tag.content.seek(0)
             base64.decode(current_tag.content, current_tag.value)
         elif name == "translation":
-            current_tag.value = Translation()
-            current_tag.value.t = child_tags[0].value
+            current_tag.value = Translation(child_tags[0].value)
         elif name == "rotation":
-            current_tag.value = Rotation()
-            current_tag.value.r = child_tags[0].value
+            current_tag.value = Rotation(child_tags[0].value)
         elif name == "transformation":
-            current_tag.value = Complete()
             child_dict = dict((tag.label, tag.value) for tag in child_tags)
-            current_tag.value.r = child_dict["rotation_matrix"]
-            current_tag.value.t = child_dict["translation_vector"]
+            current_tag.value = Complete(
+                child_dict["rotation_matrix"],
+                child_dict["translation_vector"],
+            )
+        elif name == "unit_cell":
+            child_dict = dict((tag.label, tag.value) for tag in child_tags)
+            current_tag.value = UnitCell(
+                child_dict["matrix"],
+                child_dict["active"],
+            )
         elif name == "expression":
             current_tag.value = Expression(current_tag.content)
         elif name == "reference":

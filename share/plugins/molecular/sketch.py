@@ -49,9 +49,9 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
 from molmod.transformations import Translation, Rotation
-from molmod.data.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
-from molmod.data.periodic import periodic
-from molmod.data.bonds import bonds
+from molmod.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
+from molmod.periodic import periodic
+from molmod.bonds import bonds
 from molmod.io.cml import load_cml
 from molmod.vectors import angle as compute_angle
 from molmod.vectors import random_orthonormal

@@ -39,7 +39,7 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
 
-from molmod.data.periodic import periodic
+from molmod.periodic import periodic
 from molmod.units import angstrom, deg
 
 

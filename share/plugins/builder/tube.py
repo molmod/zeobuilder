@@ -43,7 +43,7 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Translation
 from molmod.units import angstrom
-from molmod.unit_cell import UnitCell
+from molmod.unit_cells import UnitCell
 
 import numpy, gtk, copy
 

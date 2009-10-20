@@ -41,7 +41,7 @@ import zeobuilder.authors as authors
 
 from molmod.transformations import Translation, superpose
 from molmod.toyff import guess_geometry, tune_geometry
-from molmod.data.periodic import periodic
+from molmod.periodic import periodic
 from molmod.units import angstrom
 
 import numpy, gtk, tempfile, os

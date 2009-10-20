@@ -40,8 +40,8 @@ import popups
 from zeobuilder.conversion import measures, units_by_measure
 from zeobuilder.undefined import Undefined
 
-from molmod.transformations import Translation as MathTranslation, Rotation as MathRotation
-from molmod.unit_cell import check_cell, UnitCell
+from molmod import Translation as MathTranslation, Rotation as MathRotation, \
+    UnitCell
 
 import numpy, gtk
 
@@ -49,8 +49,8 @@ import math, sys
 
 
 __all__ = [
-    "ComposedInTable", "ComposedArray", "Translation", "Rotation", "CellMatrix", "CellActive",
-    "Repetitions", "Units"
+    "ComposedInTable", "ComposedArray", "Translation", "Rotation", "CellMatrix",
+    "CellActive", "Cell", "Repetitions", "Units"
 ]
 
 
@@ -321,17 +321,39 @@ class CellParameters(ComposedInTable):
 
 class CellActive(ComposedArray):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
-        ComposedArray.__init__(
-            self,
+        ComposedArray.__init__(self,
             FieldClass=CheckButton,
-            array_name="Active in %s direction",
+            array_name="%s.active",
             suffices=("a", "b", "c"),
             label_text=label_text,
             attribute_name=attribute_name,
             show_popup=show_popup,
             history_name=history_name,
             show_field_popups=show_field_popups,
+            one_row=True,
         )
+
+
+class Cell(ComposedInTable):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
+        ComposedInTable.__init__(self,
+            fields=[
+                CellActive(),
+                CellMatrix(),
+            ],
+            label_text=label_text,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            show_field_popups=show_field_popups,
+            cols=3,
+        )
+
+    def convert_to_representation(self, value):
+        return value.active, value.matrix
+
+    def convert_to_value(self, representation):
+        return UnitCell(representation[1], representation[0])
 
 
 class Repetitions(ComposedArray):

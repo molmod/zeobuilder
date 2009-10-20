@@ -39,10 +39,9 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
 
-from molmod.io.xyz import XYZReader
-from molmod.io.xyz import Error as XYZError
-from molmod.data.periodic import periodic
-from molmod.units import angstrom
+from molmod.io import XYZReader
+from molmod.periodic import periodic
+from molmod import angstrom, Translation
 
 
 class LoadXYZ(LoadFilter):
@@ -63,20 +62,20 @@ class LoadXYZ(LoadFilter):
         Folder = context.application.plugins.get_node("Folder")
         folder = Folder()
 
-        molecule.title = molecule.title.strip()
-        if len(molecule.title) > 0:
-            universe.name = molecule.title
+        title = molecule.title.strip()
+        if len(title) > 0:
+            universe.name = title
 
         Atom = context.application.plugins.get_node("Atom")
         Point = context.application.plugins.get_node("Point")
 
         for index, number, symbol, coordinate in zip(xrange(molecule.size), molecule.numbers, xyz_reader.symbols, molecule.coordinates):
             extra = {"index": index}
+            transl = Translation(coordinate)
             if number == 0:
-                atom = Point(name=symbol, extra=extra)
+                atom = Point(name=symbol, extra=extra, transformation=transl)
             else:
-                atom = Atom(name=symbol, number=number, extra=extra)
-            atom.transformation.t = coordinate.copy()
+                atom = Atom(name=symbol, number=number, extra=extra, transformation=transl)
             universe.add(atom)
 
         geometries = []

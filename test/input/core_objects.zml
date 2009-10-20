@@ -1,11 +1,7 @@
-<?xml version='1.0'?>
-<zml_file version='0.1'>
+<?xml version="1.0" ?><zml_file version="0.2">
  <list>
-  <model_object id='0' class='Universe'>
-   <array label="cell_active">
-    <shape>3 </shape>
-    <cells>True True True </cells>
-   </array>
+  <model_object class="Universe" id="0">
+   
    <array label="repetitions">
     <shape>3 </shape>
     <cells>1 1 1 </cells>
@@ -13,16 +9,13 @@
    <str label="name">Universe</str>
    <bool label="box_visible">True</bool>
    <bool label="expanded">True</bool>
-   <array label="cell">
-    <shape>3 3 </shape>
-    <cells>13.4953438705 1.85230209988 6.35075005672 4.84638371101e-16 13.0977537563 -4.71519135226 -1.99059518868e-16 0.0 8.55192420801 </cells>
-   </array>
+   
    <bool label="visible">True</bool>
    <float label="axis_thickness">0.18897261249</float>
    <bool label="axes_visible">True</bool>
    <float label="axis_length">1.8897261249</float>
    <list label="children">
-    <model_object id='1' class='Box'>
+    <model_object class="Box" id="1">
      <array label="color">
       <shape>4 </shape>
       <cells>0.7 0.7 0.7 1.0 </cells>
@@ -44,7 +37,7 @@
      </transformation>
      <str label="name">Boxa</str>
     </model_object>
-    <model_object id='2' class='Sphere'>
+    <model_object class="Sphere" id="2">
      <str label="name">Sphere</str>
      <array label="color">
       <shape>4 </shape>
@@ -60,7 +53,7 @@
       </array>
      </translation>
     </model_object>
-    <model_object id='3' class='Arrow'>
+    <model_object class="Arrow" id="3">
      <str label="name">Arrow</str>
      <bool label="visible">True</bool>
      <array label="color">
@@ -74,11 +67,11 @@
      <float label="radius">0.15</float>
      <int label="quality">50</int>
      <list label="targets">
-      <reference to='1' />
-      <reference to='2' />
+      <reference to="1"/>
+      <reference to="2"/>
      </list>
     </model_object>
-    <model_object id='4' class='Frame'>
+    <model_object class="Frame" id="4">
      <str label="name">Frame</str>
      <bool label="visible">True</bool>
      <bool label="expanded">True</bool>
@@ -96,7 +89,7 @@
      <float label="axis_thickness">0.08</float>
      <bool label="axes_visible">True</bool>
      <list label="children">
-      <model_object id='5' class='Point'>
+      <model_object class="Point" id="5">
        <str label="name">Point</str>
        <array label="color">
         <shape>4 </shape>
@@ -112,7 +105,7 @@
        </translation>
        <float label="spike_thickness">0.1</float>
       </model_object>
-      <model_object id='6' class='Arrow'>
+      <model_object class="Arrow" id="6">
        <str label="name">Arrow</str>
        <bool label="visible">True</bool>
        <array label="color">
@@ -126,13 +119,13 @@
        <float label="radius">0.15</float>
        <int label="quality">50</int>
        <list label="targets">
-        <reference to='5' />
-        <reference to='1' />
+        <reference to="5"/>
+        <reference to="1"/>
        </list>
       </model_object>
      </list>
     </model_object>
-    <model_object id='7' class='Arrow'>
+    <model_object class="Arrow" id="7">
      <str label="name">Arrow</str>
      <bool label="visible">True</bool>
      <array label="color">
@@ -146,26 +139,32 @@
      <float label="radius">0.15</float>
      <int label="quality">50</int>
      <list label="targets">
-      <reference to='4' />
-      <reference to='1' />
+      <reference to="4"/>
+      <reference to="1"/>
      </list>
     </model_object>
    </list>
-  </model_object>
-  <model_object id='8' class='Folder'>
+  <unit_cell label="cell"><array label="cell">
+    <shape>3 3 </shape>
+    <cells>13.4953438705 1.85230209988 6.35075005672 4.84638371101e-16 13.0977537563 -4.71519135226 -1.99059518868e-16 0.0 8.55192420801 </cells>
+   </array><array label="cell_active">
+    <shape>3 </shape>
+    <cells>True True True </cells>
+   </array></unit_cell></model_object>
+  <model_object class="Folder" id="8">
    <bool label="expanded">True</bool>
    <str label="name">Root folder</str>
    <list label="children">
-    <model_object id='9' class='Notes'>
+    <model_object class="Notes" id="9">
      <binary label="notes">VGhpcyBpcyBhIHRlc3Qu
 </binary>
      <str label="name">Notes</str>
     </model_object>
-    <model_object id='10' class='Folder'>
+    <model_object class="Folder" id="10">
      <bool label="expanded">True</bool>
      <str label="name">Folder</str>
      <list label="children">
-      <model_object id='11' class='Point'>
+      <model_object class="Point" id="11">
        <str label="name">Point</str>
        <array label="color">
         <shape>4 </shape>
@@ -181,7 +180,7 @@
        </translation>
        <float label="spike_thickness">0.1</float>
       </model_object>
-      <model_object id='12' class='Sphere'>
+      <model_object class="Sphere" id="12">
        <str label="name">Sphere</str>
        <array label="color">
         <shape>4 </shape>
@@ -199,13 +198,13 @@
       </model_object>
      </list>
     </model_object>
-    <model_object id='13' class='SavedSelection'>
+    <model_object class="SavedSelection" id="13">
      <bool label="expanded">True</bool>
      <str label="name">SavedSelection</str>
      <list label="targets">
-      <reference to='4' />
-      <reference to='5' />
-      <reference to='6' />
+      <reference to="4"/>
+      <reference to="5"/>
+      <reference to="6"/>
      </list>
     </model_object>
    </list>

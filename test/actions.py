@@ -40,7 +40,7 @@ from zeobuilder.expressions import Expression
 import zeobuilder.actions.primitive as primitive
 
 from molmod.transformations import Rotation, Translation, Complete
-from molmod.data.bonds import BOND_SINGLE
+from molmod.bonds import BOND_SINGLE
 from molmod.units import angstrom
 
 import gtk, numpy
@@ -49,8 +49,7 @@ import math
 
 
 __all__ = [
-    "CoreActions", "MolecularActions", "BuilderActions", "TrajectoryActions",
-    "PrimitiveActions"
+    "CoreActions", "MolecularActions", "BuilderActions", "PrimitiveActions"
 ]
 
 
@@ -1299,19 +1298,6 @@ class BuilderActions(ApplicationTestCase):
             CreateTube = context.application.plugins.get_action("CreateTube")
             self.assert_(CreateTube.analyze_selection(parameters))
             CreateTube(parameters)
-        self.run_test_application(fn)
-
-
-class TrajectoryActions(ApplicationTestCase):
-    def test_load_frame(self):
-        def fn():
-            context.application.model.file_open("input/ethane-ethane-pos.xyz")
-            context.application.main.select_nodes(context.application.model.folder.children)
-            LoadFrame = context.application.plugins.get_action("LoadFrame")
-            parameters = Parameters()
-            parameters.frame_index = 50
-            self.assert_(LoadFrame.analyze_selection(parameters))
-            LoadFrame(parameters)
         self.run_test_application(fn)
 
 

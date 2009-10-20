@@ -46,12 +46,9 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation
-
-from molmod.data.periodic import periodic
-from molmod.unit_cell import UnitCell
-from molmod.binning import PositionedObject, SparseBinnedObjects, IntraAnalyseNeighboringObjects
-from molmod.clusters import Cluster, ClusterFactory
+from molmod import Translation, UnitCell, PairSearchIntra, Cluster, \
+    ClusterFactory
+from molmod.periodic import periodic
 
 import numpy
 

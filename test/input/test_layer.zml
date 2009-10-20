@@ -1,19 +1,11 @@
-<?xml version='1.0'?>
-<zml_file version='0.1'>
+<?xml version="1.0" ?><zml_file version="0.2">
  <list>
-  <model_object id='0' class='Universe'>
-   <array label="cell">
-    <shape>3 3 </shape>
-    <cells>5.00 2.500 0.0 0.0 4.330127 0.0 0.0 0.0 18.8972613392 </cells>
-    <!-- <cells>5.00 0.0 0.0 0.0 5.0 0.0 0.0 0.0 18.8972613392 </cells> -->
-   </array>
-   <array label="cell_active">
-    <shape>3 </shape>
-    <cells>True True False </cells>
-   </array>
+  <model_object class="Universe" id="0">
+   
+   
    <bool label="axes_visible">False</bool>
    <list label="children">
-    <model_object id='1' class='Atom'>
+    <model_object class="Atom" id="1">
      <translation label="transformation">
       <array label="translation_vector">
        <shape>3 </shape>
@@ -22,8 +14,15 @@
      </translation>
     </model_object>
    </list>
-  </model_object>
-  <model_object id='2' class='Folder'>
+  <unit_cell label="cell"><array label="cell">
+    <shape>3 3 </shape>
+    <cells>5.00 2.500 0.0 0.0 4.330127 0.0 0.0 0.0 18.8972613392 </cells>
+    <!-- <cells>5.00 0.0 0.0 0.0 5.0 0.0 0.0 0.0 18.8972613392 </cells> -->
+   </array><array label="cell_active">
+    <shape>3 </shape>
+    <cells>True True False </cells>
+   </array></unit_cell></model_object>
+  <model_object class="Folder" id="2">
   </model_object>
  </list>
 </zml_file>

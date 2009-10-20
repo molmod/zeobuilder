@@ -49,29 +49,14 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation
-
-from molmod.unit_cell import UnitCell
-from molmod.units import angstrom
+from molmod import Translation, UnitCell, angstrom
 
 import numpy, gtk
 
 import copy, StringIO
 
 
-class GLPeriodicContainer(GLContainerBase, UnitCell):
-
-
-    __metaclass__ = NodeClass
-
-    #
-    # State
-    #
-
-    def initnonstate(self):
-        GLContainerBase.initnonstate(self)
-        self.cell_active = numpy.zeros(3, bool)
-        self.cell = numpy.identity(3, float)
+class GLPeriodicContainer(GLContainerBase):
 
     #
     # Properties
@@ -84,17 +69,10 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
                 node.invalidate_boundingbox_list()
 
     def set_cell(self, cell, init=False):
-        UnitCell.set_cell(self, cell)
+        self.cell = cell
         if not init:
             self.invalidate_boundingbox_list()
             self.invalidate_draw_list()
-            self.update_vectors()
-
-    def set_cell_active(self, cell_active, init=False):
-        UnitCell.set_cell_active(self, cell_active)
-        if not init:
-            self.invalidate_draw_list()
-            self.invalidate_boundingbox_list()
             self.update_vectors()
 
     #
@@ -102,11 +80,7 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     #
 
     properties = [
-        # The columns of the cell are the vectors that correspond
-        # to the ridges of the parallellepipedum that describe the unit cell. In
-        # other words this matrix transforms a unit cube to the unit cell.
-        Property("cell", numpy.array([[10, 0.0, 0.0], [0.0, 10.0, 0.0], [0.0, 0.0, 10.0]])*angstrom, lambda self: self.cell, set_cell),
-        Property("cell_active", numpy.array([False, False, False]), lambda self: self.cell_active, set_cell_active),
+        Property("cell", UnitCell(), lambda self: self.cell, set_cell),
     ]
 
     #
@@ -114,22 +88,11 @@ class GLPeriodicContainer(GLContainerBase, UnitCell):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Unit cell", (5, 0), fields.composed.CellMatrix(
-            label_text="Cell dimensions",
+        DialogFieldInfo("Unit cell", (5, 0), fields.composed.Cell(
+            label_text="Periodic cell",
             attribute_name="cell",
         )),
-        DialogFieldInfo("Unit cell", (5, 1), fields.composed.CellActive(
-            label_text="Active directions",
-            attribute_name="cell_active",
-        )),
     ])
-
-    #
-    # Wrapping
-    #
-
-    def shortest_vector(self, delta):
-        return UnitCell.shortest_vector(self, delta)
 
 
 def yield_all_positions(l):
@@ -152,10 +115,13 @@ class Universe(GLPeriodicContainer, FrameAxes):
 
     def initnonstate(self):
         GLPeriodicContainer.initnonstate(self)
-        self.model_center = Translation()
+        self.model_center = Translation.identity()
 
     def update_center(self):
-        self.model_center.t = 0.5*numpy.dot(self.cell, self.repetitions * self.cell_active)
+        self.model_center = Translation(0.5*numpy.dot(
+            self.cell.matrix,
+            self.repetitions * self.cell.active
+        ))
 
     #
     # Properties
@@ -163,14 +129,6 @@ class Universe(GLPeriodicContainer, FrameAxes):
 
     def set_cell(self, cell, init=False):
         GLPeriodicContainer.set_cell(self, cell, init)
-        if not init:
-            self.update_clip_planes()
-            self.update_center()
-            self.invalidate_total_list()
-            self.invalidate_box_list()
-
-    def set_cell_active(self, cell_active, init=False):
-        GLPeriodicContainer.set_cell_active(self, cell_active, init)
         if not init:
             self.update_clip_planes()
             self.update_center()
@@ -270,8 +228,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
         assert len(clip_planes) == 0
         active, inactive = self.get_active_inactive()
         for index in active:
-            axis = self.cell[:,index]
-            ortho = self.cell_reciproke[index] / numpy.linalg.norm(self.cell_reciproke[index])
+            axis = self.cell.matrix[:,index]
+            ortho = self.cell.reciprocal[index] / numpy.linalg.norm(self.cell.reciprocal[index])
             length = abs(numpy.dot(ortho, axis))
             repetitions = self.repetitions[index]
             clip_planes.append(numpy.array(list(ortho) + [self.clip_margin]))
@@ -312,15 +270,15 @@ class Universe(GLPeriodicContainer, FrameAxes):
         gray = {True: 4.0, False: 2.5}[self.selected]
 
         def draw_three(origin):
-            if self.cell_active[0]:
+            if self.cell.active[0]:
                 vb.set_color(col, sat, sat)
-                vb.draw_line(origin, origin+self.cell[:,0])
-            if self.cell_active[1]:
+                vb.draw_line(origin, origin+self.cell.matrix[:,0])
+            if self.cell.active[1]:
                 vb.set_color(sat, col, sat)
-                vb.draw_line(origin, origin+self.cell[:,1])
-            if self.cell_active[2]:
+                vb.draw_line(origin, origin+self.cell.matrix[:,1])
+            if self.cell.active[2]:
                 vb.set_color(sat, sat, col)
-                vb.draw_line(origin, origin+self.cell[:,2])
+                vb.draw_line(origin, origin+self.cell.matrix[:,2])
 
         def draw_gray(origin, axis1, axis2, n1, n2, delta, nd):
             vb.set_color(gray, gray, gray)
@@ -348,22 +306,22 @@ class Universe(GLPeriodicContainer, FrameAxes):
 
         origin = numpy.zeros(3, float)
         draw_three(origin)
-        repetitions = self.repetitions*self.cell_active
+        repetitions = self.repetitions*self.cell.active
 
-        if self.cell_active[2]:
-            draw_gray(origin, self.cell[:,0], self.cell[:,1], repetitions[0], repetitions[1], self.cell[:,2], repetitions[2])
+        if self.cell.active[2]:
+            draw_gray(origin, self.cell.matrix[:,0], self.cell.matrix[:,1], repetitions[0], repetitions[1], self.cell.matrix[:,2], repetitions[2])
         else:
-            draw_ortho(origin, self.cell[:,0], self.cell[:,1], repetitions[0], repetitions[1], self.cell[:,2])
+            draw_ortho(origin, self.cell.matrix[:,0], self.cell.matrix[:,1], repetitions[0], repetitions[1], self.cell.matrix[:,2])
 
-        if self.cell_active[0]:
-            draw_gray(origin, self.cell[:,1], self.cell[:,2], repetitions[1], repetitions[2], self.cell[:,0], repetitions[0])
+        if self.cell.active[0]:
+            draw_gray(origin, self.cell.matrix[:,1], self.cell.matrix[:,2], repetitions[1], repetitions[2], self.cell.matrix[:,0], repetitions[0])
         else:
-            draw_ortho(origin, self.cell[:,1], self.cell[:,2], repetitions[1], repetitions[2], self.cell[:,0])
+            draw_ortho(origin, self.cell.matrix[:,1], self.cell.matrix[:,2], repetitions[1], repetitions[2], self.cell.matrix[:,0])
 
-        if self.cell_active[1]:
-            draw_gray(origin, self.cell[:,2], self.cell[:,0], repetitions[2], repetitions[0], self.cell[:,1], repetitions[1])
+        if self.cell.active[1]:
+            draw_gray(origin, self.cell.matrix[:,2], self.cell.matrix[:,0], repetitions[2], repetitions[0], self.cell.matrix[:,1], repetitions[1])
         else:
-            draw_ortho(origin, self.cell[:,2], self.cell[:,0], repetitions[2], repetitions[0], self.cell[:,1])
+            draw_ortho(origin, self.cell.matrix[:,2], self.cell.matrix[:,0], repetitions[2], repetitions[0], self.cell.matrix[:,1])
 
 
         vb.set_specular(True)
@@ -381,7 +339,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
             ##print "Compiling box list (%i): %s" % (self.box_list,  self.get_name())
             vb = context.application.vis_backend
             vb.begin_list(self.box_list)
-            if sum(self.cell_active) > 0:
+            if sum(self.cell.active) > 0:
                 self.draw_box()
             vb.end_list()
             self.box_list_valid = True
@@ -394,17 +352,17 @@ class Universe(GLPeriodicContainer, FrameAxes):
             if self.visible:
                 vb.push_name(self.draw_list)
                 if self.box_visible: vb.call_list(self.box_list)
-                if self.selected and sum(self.cell_active) == 0:
+                if self.selected and sum(self.cell.active) == 0:
                     vb.call_list(self.boundingbox_list)
 
                 # repeat the draw list for all the unit cell images.
                 if self.clipping:
-                    repetitions = (self.repetitions + 2) * self.cell_active + 1 - self.cell_active
+                    repetitions = (self.repetitions + 2) * self.cell.active + 1 - self.cell.active
                 else:
-                    repetitions = self.repetitions * self.cell_active + 1 - self.cell_active
+                    repetitions = self.repetitions * self.cell.active + 1 - self.cell.active
                 for position in yield_all_positions(repetitions):
                     vb.push_matrix()
-                    t = numpy.dot(self.cell, numpy.array(position) - self.cell_active * self.clipping)
+                    t = numpy.dot(self.cell, numpy.array(position) - self.cell.active * self.clipping)
                     vb.translate(*t)
                     vb.call_list(self.draw_list)
                     vb.pop_matrix()
@@ -459,10 +417,10 @@ class UnitCellToCluster(ImmediateWithMemory):
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
         universe = context.application.model.universe
-        if sum(universe.cell_active) == 0: return False
-        if hasattr(parameters, "interval_a") and not universe.cell_active[0]: return False
-        if hasattr(parameters, "interval_b") and not universe.cell_active[1]: return False
-        if hasattr(parameters, "interval_c") and not universe.cell_active[2]: return False
+        if sum(universe.cell.active) == 0: return False
+        if hasattr(parameters, "interval_a") and not universe.cell.active[0]: return False
+        if hasattr(parameters, "interval_b") and not universe.cell.active[1]: return False
+        if hasattr(parameters, "interval_c") and not universe.cell.active[2]: return False
         # C) passed all tests:
         return True
 
@@ -470,11 +428,11 @@ class UnitCellToCluster(ImmediateWithMemory):
     def default_parameters(cls):
         result = Parameters()
         universe = context.application.model.universe
-        if universe.cell_active[0]:
+        if universe.cell.active[0]:
             result.interval_a = numpy.array([0.0, universe.repetitions[0]], float)
-        if universe.cell_active[1]:
+        if universe.cell.active[1]:
             result.interval_b = numpy.array([0.0, universe.repetitions[1]], float)
-        if universe.cell_active[2]:
+        if universe.cell.active[2]:
             result.interval_c = numpy.array([0.0, universe.repetitions[2]], float)
         return result
 
@@ -487,7 +445,7 @@ class UnitCellToCluster(ImmediateWithMemory):
 
         def extend_to_cluster(axis, interval):
             if (interval is None) or isinstance(interval, Undefined): return
-            assert universe.cell_active[axis]
+            assert universe.cell.active[axis]
             interval.sort()
             index_min = int(numpy.floor(interval[0]))
             index_max = int(numpy.ceil(interval[1]))
@@ -515,10 +473,10 @@ class UnitCellToCluster(ImmediateWithMemory):
             new_points = {}
             for old_point in original_points:
                 orig_position = old_point.transformation.t
-                orig_position -= universe.cell[:,axis]*universe.to_index(orig_position)[axis]
+                orig_position -= universe.cell.matrix[:,axis]*universe.to_index(orig_position)[axis]
                 fractional = universe.to_fractional(orig_position)
                 for cell_index in xrange(index_min, index_max):
-                    position = orig_position + universe.cell[:,axis]*cell_index
+                    position = orig_position + universe.cell.matrix[:,axis]*cell_index
                     if (fractional[axis]+cell_index < interval[0]) or (fractional[axis]+cell_index > interval[1]):
                         continue
                     state = old_point.__getstate__()
@@ -544,7 +502,7 @@ class UnitCellToCluster(ImmediateWithMemory):
                             new_target1 = new_points.get((old_target1, cell_index+offset))
                             if new_target1 is not None:
                                 delta = new_target0.transformation.t - new_target1.transformation.t
-                                if vector_acceptable(delta, universe.cell[:,axis]):
+                                if vector_acceptable(delta, universe.cell.matrix[:,axis]):
                                     new_targets.append(new_target1)
                                     abort = False
                                     break
@@ -568,9 +526,9 @@ class UnitCellToCluster(ImmediateWithMemory):
 
             # remove the periodicity
 
-            tmp_active = universe.cell_active.copy()
+            tmp_active = universe.cell.active.copy()
             tmp_active[axis] = False
-            primitive.SetProperty(universe, "cell_active", tmp_active)
+            primitive.SetProperty(universe, "cell.active", tmp_active)
 
             # add the new nodes
 
@@ -617,10 +575,10 @@ class SuperCell(ImmediateWithMemory):
         if not ImmediateWithMemory.analyze_selection(parameters): return False
         # B) validating
         universe = context.application.model.universe
-        if sum(universe.cell_active) == 0: return False
-        if hasattr(parameters, "repetitions_a") and not universe.cell_active[0]: return False
-        if hasattr(parameters, "repetitions_b") and not universe.cell_active[1]: return False
-        if hasattr(parameters, "repetitions_c") and not universe.cell_active[2]: return False
+        if sum(universe.cell.active) == 0: return False
+        if hasattr(parameters, "repetitions_a") and not universe.cell.active[0]: return False
+        if hasattr(parameters, "repetitions_b") and not universe.cell.active[1]: return False
+        if hasattr(parameters, "repetitions_c") and not universe.cell.active[2]: return False
         # C) passed all tests:
         return True
 
@@ -628,11 +586,11 @@ class SuperCell(ImmediateWithMemory):
     def default_parameters(cls):
         result = Parameters()
         universe = context.application.model.universe
-        if universe.cell_active[0]:
+        if universe.cell.active[0]:
             result.repetitions_a = universe.repetitions[0]
-        if universe.cell_active[1]:
+        if universe.cell.active[1]:
             result.repetitions_b = universe.repetitions[1]
-        if universe.cell_active[2]:
+        if universe.cell.active[2]:
             result.repetitions_c = universe.repetitions[2]
         return result
 
@@ -769,7 +727,7 @@ class DefineUnitCellVectors(Immediate):
         # B) validating
         cache = context.application.cache
         if len(cache.nodes) < 1: return False
-        if len(cache.nodes) + sum(context.application.model.universe.cell_active) > 3: return False
+        if len(cache.nodes) + sum(context.application.model.universe.cell.active) > 3: return False
         for Class in cache.classes:
             if not issubclass(Class, Vector): return False
         # C) passed all tests:
@@ -779,7 +737,7 @@ class DefineUnitCellVectors(Immediate):
         vectors = context.application.cache.nodes
         universe = context.application.model.root[0]
         new_unit_cell = UnitCell()
-        new_unit_cell.cell_active = copy.deepcopy(universe.cell_active)
+        new_unit_cell.cell.active = copy.deepcopy(universe.cell.active)
         new_unit_cell.cell = copy.deepcopy(universe.cell)
         try:
             for vector in vectors:
@@ -790,7 +748,7 @@ class DefineUnitCellVectors(Immediate):
             else:
                 raise UserError("Failed to add the selected vectors as cell vectors since they would make the unit cell singular.")
         primitive.SetProperty(universe, "cell", new_unit_cell.cell)
-        primitive.SetProperty(universe, "cell_active", new_unit_cell.cell_active)
+        primitive.SetProperty(universe, "cell.active", new_unit_cell.cell.active)
 
 
 class WrapCellContents(Immediate):
@@ -805,7 +763,7 @@ class WrapCellContents(Immediate):
         if not Immediate.analyze_selection(): return False
         # B) validating
         universe = context.application.model.universe
-        if sum(universe.cell_active) == 0: return False
+        if sum(universe.cell.active) == 0: return False
         if len(universe.children) == 0: return False
         # C) passed all tests:
         return True
@@ -843,7 +801,7 @@ class ScaleUnitCell(ImmediateWithMemory):
         if not Immediate.analyze_selection(): return False
         # B) validating
         universe = context.application.model.universe
-        if sum(universe.cell_active) == 0: return False
+        if sum(universe.cell.active) == 0: return False
         # C) passed all tests:
         return True
 

@@ -34,8 +34,7 @@
 from zeobuilder import context
 from zeobuilder.undefined import Undefined
 
-from molmod.units import angstrom
-from molmod.transformations import Translation
+from molmod import angstrom, Translation
 
 import numpy
 
@@ -104,7 +103,7 @@ class Scene(object):
     def get_model_center(self):
         universe = context.application.model.universe
         if universe is None:
-            return Translation()
+            return Translation.identity()
         else:
             return universe.model_center
     model_center = property(get_model_center)

@@ -43,10 +43,9 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation, Rotation, Complete, rotation_around_center
-
-from molmod.vectors import angle
-from molmod.quaternions import quaternion_product, quaternion_from_rotation_matrix, quaternion_to_rotation_matrix
+from molmod import Translation, Rotation, Complete, rotation_about_axis, angle, \
+    quaternion_product, rotation_matrix_to_quaternion, \
+    quaternion_to_rotation_matrix
 
 import numpy, gtk
 
@@ -158,7 +157,7 @@ class RotateDialog(ImmediateWithMemory):
     @classmethod
     def default_parameters(cls):
         result = Parameters()
-        result.rotation = Rotation()
+        result.rotation = Rotation.identity()
         return result
 
     def do(self):
@@ -208,7 +207,7 @@ class RotateAboutAxisDialog(ImmediateWithMemory):
     @classmethod
     def default_parameters(cls):
         result = Parameters()
-        result.complete = Complete()
+        result.complete = Complete.identity()
         return result
 
     def ask_parameters(self):
@@ -290,7 +289,7 @@ class TranslateDialog(ImmediateWithMemory):
     @classmethod
     def default_parameters(cls):
         result = Parameters()
-        result.translation = Translation()
+        result.translation = Translation.identity()
         return result
 
     def ask_parameters(self):

@@ -32,7 +32,7 @@
 
 
 from fields_dialogs import FieldsDialogMultiplex
-from molmod.data.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
+from molmod.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 
 import gtk
 

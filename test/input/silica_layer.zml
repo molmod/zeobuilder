@@ -1,18 +1,11 @@
-<?xml version='1.0'?>
-<zml_file version='0.1'>
+<?xml version="1.0" ?><zml_file version="0.2">
  <list>
-  <model_object id='0' class='Universe'>
-   <array label="cell">
-    <shape>3 3 </shape>
-    <cells>9.4486306696 4.7243153348 0.0 0.0 8.18251415987 0.0 0.0 0.0 18.8972613392 </cells>
-   </array>
+  <model_object class="Universe" id="0">
+   
    <float label="axis_length">1.0</float>
-   <array label="cell_active">
-    <shape>3 </shape>
-    <cells>True True False </cells>
-   </array>
+   
    <list label="children">
-    <model_object id='1' class='Atom'>
+    <model_object class="Atom" id="1">
      <int label="number">14</int>
      <int label="quality">50</int>
      <translation label="transformation">
@@ -23,7 +16,7 @@
      </translation>
      <str label="name">Si3</str>
     </model_object>
-    <model_object id='2' class='Atom'>
+    <model_object class="Atom" id="2">
      <int label="number">8</int>
      <int label="quality">50</int>
      <translation label="transformation">
@@ -34,7 +27,7 @@
      </translation>
      <str label="name">O44</str>
     </model_object>
-    <model_object id='3' class='Atom'>
+    <model_object class="Atom" id="3">
      <int label="number">8</int>
      <int label="quality">50</int>
      <translation label="transformation">
@@ -45,7 +38,7 @@
      </translation>
      <str label="name">O45</str>
     </model_object>
-    <model_object id='4' class='Atom'>
+    <model_object class="Atom" id="4">
      <int label="number">8</int>
      <int label="quality">50</int>
      <translation label="transformation">
@@ -56,7 +49,7 @@
      </translation>
      <str label="name">O45</str>
     </model_object>
-    <model_object id='5' class='Atom'>
+    <model_object class="Atom" id="5">
      <int label="number">8</int>
      <int label="quality">50</int>
      <translation label="transformation">
@@ -67,7 +60,7 @@
      </translation>
      <str label="name">O50</str>
     </model_object>
-    <model_object id='6' class='Atom'>
+    <model_object class="Atom" id="6">
      <int label="number">8</int>
      <int label="quality">50</int>
      <translation label="transformation">
@@ -78,7 +71,7 @@
      </translation>
      <str label="name">O54</str>
     </model_object>
-    <model_object id='7' class='Atom'>
+    <model_object class="Atom" id="7">
      <int label="number">14</int>
      <int label="quality">50</int>
      <translation label="transformation">
@@ -91,8 +84,14 @@
     </model_object>
    </list>
    <float label="axis_thickness">0.08</float>
-  </model_object>
-  <model_object id='8' class='Folder'>
+  <unit_cell label="cell"><array label="cell">
+    <shape>3 3 </shape>
+    <cells>9.4486306696 4.7243153348 0.0 0.0 8.18251415987 0.0 0.0 0.0 18.8972613392 </cells>
+   </array><array label="cell_active">
+    <shape>3 </shape>
+    <cells>True True False </cells>
+   </array></unit_cell></model_object>
+  <model_object class="Folder" id="8">
   </model_object>
  </list>
 </zml_file>

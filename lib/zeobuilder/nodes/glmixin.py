@@ -305,7 +305,7 @@ class GLTransformationMixin(GLMixin):
     #
 
     def default_transformation(self):
-        return self.Transformation()
+        return self.Transformation.identity()
 
     def set_transformation(self, transformation, init=False):
         self.transformation = transformation

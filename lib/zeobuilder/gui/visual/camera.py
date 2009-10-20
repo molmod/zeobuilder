@@ -169,10 +169,9 @@ class Camera(object):
 
     def reset(self):
         config = context.application.configuration
-        self.rotation_center = Translation()
-        self.rotation = Rotation()
-        self.eye = Translation()
-        self.eye.t[2] = config.viewer_distance
+        self.rotation_center = Translation.identity()
+        self.rotation = Rotation.identity()
+        self.eye = Translation([0,0,config.viewer_distance])
         self.opening_angle = config.opening_angle
         self.window_size = config.window_size
         self.window_depth = config.window_depth

@@ -35,7 +35,7 @@ from zeobuilder import context
 from zeobuilder.conversion import measures, units_by_measure, express_measure
 from zeobuilder.gui.simple import ask_name
 
-from molmod.data.periodic import periodic
+from molmod.periodic import periodic
 from molmod.transformations import Translation, Rotation
 
 import gtk, numpy

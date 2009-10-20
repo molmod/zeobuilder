@@ -1,7 +1,6 @@
-<?xml version='1.0'?>
-<zml_file version='0.1'>
+<?xml version="1.0" ?><zml_file version="0.2">
  <list>
-  <model_object id='0' class='Universe'>
+  <model_object class="Universe" id="0">
    <bool label="clipping">True</bool>
    <str label="name">Universe</str>
    <bool label="box_visible">True</bool>
@@ -9,20 +8,14 @@
     <shape>3 </shape>
     <cells>1 1 1 </cells>
    </array>
-   <array label="cell_active">
-    <shape>3 </shape>
-    <cells>False False False </cells>
-   </array>
-   <array label="cell">
-    <shape>3 3 </shape>
-    <cells>18.897261249 0.0 0.0 0.0 18.897261249 0.0 0.0 0.0 18.897261249 </cells>
-   </array>
+   
+   
    <bool label="visible">True</bool>
    <float label="axis_thickness">0.08</float>
    <bool label="axes_visible">True</bool>
    <float label="axis_length">1.0</float>
    <list label="children">
-    <model_object id='1' class='Atom'>
+    <model_object class="Atom" id="1">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">7</int>
@@ -36,7 +29,7 @@
      </translation>
      <str label="name">N</str>
     </model_object>
-    <model_object id='2' class='Atom'>
+    <model_object class="Atom" id="2">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -50,7 +43,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='3' class='Atom'>
+    <model_object class="Atom" id="3">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -64,7 +57,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='4' class='Atom'>
+    <model_object class="Atom" id="4">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -78,7 +71,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='5' class='Atom'>
+    <model_object class="Atom" id="5">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -92,7 +85,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='6' class='Atom'>
+    <model_object class="Atom" id="6">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -106,7 +99,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='7' class='Atom'>
+    <model_object class="Atom" id="7">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -120,7 +113,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='8' class='Atom'>
+    <model_object class="Atom" id="8">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -134,7 +127,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='9' class='Atom'>
+    <model_object class="Atom" id="9">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -148,7 +141,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='10' class='Atom'>
+    <model_object class="Atom" id="10">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -162,7 +155,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='11' class='Atom'>
+    <model_object class="Atom" id="11">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -176,7 +169,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='12' class='Atom'>
+    <model_object class="Atom" id="12">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -190,7 +183,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='13' class='Atom'>
+    <model_object class="Atom" id="13">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">6</int>
@@ -204,7 +197,7 @@
      </translation>
      <str label="name">C</str>
     </model_object>
-    <model_object id='14' class='Atom'>
+    <model_object class="Atom" id="14">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -218,7 +211,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='15' class='Atom'>
+    <model_object class="Atom" id="15">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -232,7 +225,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='16' class='Atom'>
+    <model_object class="Atom" id="16">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -246,7 +239,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='17' class='Atom'>
+    <model_object class="Atom" id="17">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -260,7 +253,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='18' class='Atom'>
+    <model_object class="Atom" id="18">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -274,7 +267,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='19' class='Atom'>
+    <model_object class="Atom" id="19">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -288,7 +281,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='20' class='Atom'>
+    <model_object class="Atom" id="20">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -302,7 +295,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='21' class='Atom'>
+    <model_object class="Atom" id="21">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -316,7 +309,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='22' class='Atom'>
+    <model_object class="Atom" id="22">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -330,7 +323,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='23' class='Atom'>
+    <model_object class="Atom" id="23">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -344,7 +337,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='24' class='Atom'>
+    <model_object class="Atom" id="24">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -358,7 +351,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='25' class='Atom'>
+    <model_object class="Atom" id="25">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -372,7 +365,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='26' class='Atom'>
+    <model_object class="Atom" id="26">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -386,7 +379,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='27' class='Atom'>
+    <model_object class="Atom" id="27">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -400,7 +393,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='28' class='Atom'>
+    <model_object class="Atom" id="28">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -414,7 +407,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='29' class='Atom'>
+    <model_object class="Atom" id="29">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -428,7 +421,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='30' class='Atom'>
+    <model_object class="Atom" id="30">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -442,7 +435,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='31' class='Atom'>
+    <model_object class="Atom" id="31">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -456,7 +449,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='32' class='Atom'>
+    <model_object class="Atom" id="32">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -470,7 +463,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='33' class='Atom'>
+    <model_object class="Atom" id="33">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -484,7 +477,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='34' class='Atom'>
+    <model_object class="Atom" id="34">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -498,7 +491,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='35' class='Atom'>
+    <model_object class="Atom" id="35">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -512,7 +505,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='36' class='Atom'>
+    <model_object class="Atom" id="36">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -526,7 +519,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='37' class='Atom'>
+    <model_object class="Atom" id="37">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -540,7 +533,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='38' class='Atom'>
+    <model_object class="Atom" id="38">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -554,7 +547,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='39' class='Atom'>
+    <model_object class="Atom" id="39">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -568,7 +561,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='40' class='Atom'>
+    <model_object class="Atom" id="40">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -582,7 +575,7 @@
      </translation>
      <str label="name">H</str>
     </model_object>
-    <model_object id='41' class='Atom'>
+    <model_object class="Atom" id="41">
      <none label="user_color"/>
      <none label="user_radius"/>
      <int label="number">1</int>
@@ -597,8 +590,14 @@
      <str label="name">H</str>
     </model_object>
    </list>
-  </model_object>
-  <model_object id='42' class='Folder'>
+  <unit_cell label="cell"><array label="cell">
+    <shape>3 3 </shape>
+    <cells>18.897261249 0.0 0.0 0.0 18.897261249 0.0 0.0 0.0 18.897261249 </cells>
+   </array><array label="cell_active">
+    <shape>3 </shape>
+    <cells>False False False </cells>
+   </array></unit_cell></model_object>
+  <model_object class="Folder" id="42">
    <str label="name">Folder</str>
    <list label="children">
    </list>

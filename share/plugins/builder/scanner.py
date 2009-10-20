@@ -517,8 +517,7 @@ class ScanForConnections(ImmediateWithMemory):
 
     @classmethod
     def default_parameters(cls):
-        rotation2 = Rotation()
-        rotation2.set_rotation_properties(0.0, [1, 0, 0], False)
+        rotation2 = Rotation.from_properties(0.0, [1, 0, 0], False)
 
         result = Parameters()
         result.connect_description1 = (Expression("True"), Expression("node.get_radius()"))
