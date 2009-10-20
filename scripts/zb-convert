@@ -1,0 +1,74 @@
+#!/usr/bin/env python
+
+import optparse, sys, xml.dom.minidom
+
+usage="""Usage: zb-convert old.zml
+
+Converts an old zml file to the latest zml format."""
+
+parser = optparse.OptionParser(usage)
+(options, args) = parser.parse_args()
+
+
+if len(args) == 1:
+    filename, = args
+else:
+    parser.error("Expecting one file name.")
+
+
+def load_dom():
+    return xml.dom.minidom.parse(filename)
+
+def save_dom(dom):
+    f = file(filename, "w")
+    dom.writexml(f)
+    f.close()
+
+def get_version(dom):
+    if dom.documentElement.tagName != "zml_file":
+        raise FileFormatError("The given file is not a zml file.")
+    return dom.documentElement.getAttribute("version")
+
+def get_child(node, tag, attrs={}):
+    for child in node.childNodes:
+        if child.nodeType == child.ELEMENT_NODE and child.tagName == tag:
+            match = True
+            for key, val in attrs.iteritems():
+                if child.getAttribute(key) != val:
+                    match = False
+                    break
+            if match:
+                return child
+    raise KeyError("Could not find child element with tag '%s' and attributes %s" % (tag, attrs))
+
+def convert1(dom):
+    l = get_child(dom.documentElement, "list")
+    universe = get_child(l, "model_object", {"class": "Universe"})
+    try:
+        active = get_child(universe, "array", {"label": "cell_active"})
+        universe.removeChild(active)
+        matrix = get_child(universe, "array", {"label": "cell"})
+        universe.removeChild(matrix)
+        unit_cell = dom.createElement("unit_cell")
+        unit_cell.setAttribute("label", "cell")
+        unit_cell.appendChild(matrix)
+        unit_cell.appendChild(active)
+        universe.appendChild(unit_cell)
+    except KeyError:
+        pass
+    dom.documentElement.setAttribute("version", "0.2")
+
+convertors = {
+    '0.1': convert1,
+}
+
+if __name__ == "__main__":
+    dom = load_dom()
+    while True:
+        version = get_version(dom)
+        convertor = convertors.get(version)
+        if convertor is None:
+            break
+        convertor(dom)
+    save_dom(dom)
+
