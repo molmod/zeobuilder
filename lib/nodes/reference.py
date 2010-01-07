@@ -38,7 +38,7 @@ from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import bridge as tree_bridge
 from zeobuilder.gui import load_image
 
-from molmod.transformations import Translation
+from molmod import Translation
 
 import gtk.gdk, gobject
 

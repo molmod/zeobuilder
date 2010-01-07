@@ -67,15 +67,18 @@ class LoadPDB(LoadFilter):
             if line.startswith("ATOM"):
                 extra = {"index": atom_index}
                 atom_info = periodic[line[76:78].strip()]
-                atom = Atom(name=line[12:16].strip(), number=atom_info.number, extra=extra)
                 try:
-                    atom.transformation.t = numpy.array([
+                    t = numpy.array([
                             float(line[30:38].strip()),
                             float(line[38:46].strip()),
                             float(line[46:54].strip())
                     ]) * angstrom
                 except ValueError:
                     raise FilterError("Error while reading PDB file: could not read coordinates at line %i." % counter)
+                atom = Atom(
+                    name=line[12:16].strip(), number=atom_info.number,
+                    transformation=Translation(t), extra=extra
+                )
                 universe.add(atom)
                 atom_index += 1
             elif line.startswith("CRYST1"):

@@ -45,7 +45,7 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation
+from molmod import Translation
 
 import numpy
 
@@ -199,8 +199,7 @@ class CalculateAverage(Immediate):
                 vector_sum += node.get_frame_relative_to(parent).t
                 num_vectors += 1
 
-        point = Point(name="Average")
-        point.transformation.t = vector_sum / num_vectors
+        point = Point(name="Average", transformation=Translation(vector_sum / num_vectors))
         primitive.Add(point, parent)
 
 

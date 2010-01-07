@@ -260,7 +260,7 @@ class MergeOverlappingAtoms(Immediate):
             for atom in overlappers[1:]:
                 delta_to_mean += parent.shortest_vector(atom.transformation.t - first_pos)
             delta_to_mean /= float(len(overlappers))
-            single.transformation.t = first_pos + delta_to_mean
+            single.set_transformation(Translation(t))
 
         # modify the model
         for single, overlappers in singles:

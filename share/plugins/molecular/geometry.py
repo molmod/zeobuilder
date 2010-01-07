@@ -39,10 +39,9 @@ from zeobuilder.moltools import create_molecular_graph, create_molecule
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation, superpose
-from molmod.toyff import guess_geometry, tune_geometry
 from molmod.periodic import periodic
-from molmod.units import angstrom
+from molmod import Translation, superpose, guess_geometry, tune_geometry, \
+    angstrom
 
 import numpy, gtk, tempfile, os
 
@@ -66,11 +65,9 @@ def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent, graph=None):
             # Make sure atoms in subframes are treated properly
             transf = atom.parent.get_frame_relative_to(parent)
             org_pos = atom.transformation.t
-            opt_pos = transf.vector_apply_inverse(group_opt[i])
+            opt_pos = transf.inv * group_opt[i]
 
-            translation = Translation()
-            translation.t = opt_pos - org_pos
-            primitive.Transform(atom, translation)
+            primitive.Transform(atom, Translation(opt_pos - org_pos))
 
 
 class GuessGeometry(Immediate):

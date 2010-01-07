@@ -38,7 +38,7 @@ from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
-from molmod.transformations import Complete
+from molmod import Complete
 
 import numpy
 
@@ -56,7 +56,7 @@ class Vector(GLReferentBase):
 
     def initnonstate(self):
         GLReferentBase.initnonstate(self)
-        self.orientation = Complete()
+        self.orientation = Complete.identity()
         self.set_children([
             SpatialReference(prefix="Begin"),
             SpatialReference(prefix="End")
@@ -141,13 +141,14 @@ class Vector(GLReferentBase):
         else:
             self.length = math.sqrt(numpy.dot(relative_translation, relative_translation))
             if self.length > 0:
-                self.orientation.t = self.children[0].translation_relative_to(self.parent)
-                #axis = numpy.cross(relative_translation, numpy.array([1.0, 0.0, 0.0]))
+                t = self.children[0].translation_relative_to(self.parent)
                 c = relative_translation[2] / self.length
                 if c >= 1.0:
-                    self.orientation.set_rotation_properties(0, numpy.array([1.0, 0.0, 0.0]), False)
+                    self.orientation = Translation(t)
                 elif c <= -1.0:
-                    self.orientation.set_rotation_properties(math.pi, numpy.array([1.0, 0.0, 0.0]), False)
+                    alpha = math.pi
+                    axis = numpy.array([1.0, 0.0, 0.0])
+                    self.orientation = Complete.from_properties(alpha, axis, False, t)
                 else:
                     x, y = relative_translation[0], relative_translation[1]
                     if abs(x) < abs(y):
@@ -158,7 +159,9 @@ class Vector(GLReferentBase):
                         signx = {True: 1, False: -1}[x >= 0]
                         a = -signx * y / x
                         b = signx
-                    self.orientation.set_rotation_properties(math.acos(c), numpy.array([a, b, 0.0]), False)
+                    alpha = math.acos(c)
+                    axis = numpy.array([a, b, 0.0])
+                    self.orientation = Complete.from_properties(alpha, axis, False, t)
 
     def define_target(self, reference, new_target):
         GLReferentBase.define_target(self, reference, new_target)

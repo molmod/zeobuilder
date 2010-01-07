@@ -42,7 +42,7 @@ from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.transformations import Complete
+from molmod import Complete
 
 import copy, numpy
 

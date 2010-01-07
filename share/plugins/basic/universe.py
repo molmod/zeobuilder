@@ -638,7 +638,7 @@ class SuperCell(ImmediateWithMemory):
 
         # create the replica's
 
-        # replication the positioned objects
+        # replicate the positioned objects
         new_children = {}
         for cell_index in yield_all_positions(repetitions):
             cell_index = numpy.array(cell_index)
@@ -647,7 +647,9 @@ class SuperCell(ImmediateWithMemory):
             nodes = load_from_file(serialized)
             new_children[cell_hash] = nodes
             for node in nodes:
-                node.transformation.t += numpy.dot(universe.cell, cell_index - 0.5*(repetitions - 1))
+                t = node.transformation.t + numpy.dot(universe.cell, cell_index - 0.5*(repetitions - 1))
+                new_transformation = node.transformation.copy_with(t=t)
+                node.set_transformation(new_transformation)
 
         new_connectors = []
         # replicate the objects that connect these positioned objects
@@ -777,8 +779,8 @@ class WrapCellContents(Immediate):
             if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
                 cell_index = universe.to_index(child.transformation.t)
                 if cell_index.any():
-                    new_transformation = copy.deepcopy(child.transformation)
-                    new_transformation.t -= numpy.dot(universe.cell, cell_index)
+                    t = new_transformation.t - numpy.dot(universe.cell, cell_index)
+                    new_transformation = child.transformation.copy_with(t=t)
                     primitive.SetProperty(child, "transformation", new_transformation)
 
 
@@ -821,8 +823,7 @@ class ScaleUnitCell(ImmediateWithMemory):
 
         for child in universe.children:
             if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
-                 new_transformation = copy.deepcopy(child.transformation)
-                 new_transformation.t = numpy.dot(scaling, new_transformation.t)
+                 new_transformation = child.transformation.copy_with(t=numpy.dot(scaling, new_transformation.t))
                  primitive.SetProperty(child, "transformation", new_transformation)
 
 

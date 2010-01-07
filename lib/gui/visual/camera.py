@@ -109,7 +109,7 @@ from zeobuilder import context
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 
 from molmod.units import angstrom
-from molmod.transformations import Translation, Rotation
+from molmod import Translation, Rotation
 
 import numpy
 
@@ -205,20 +205,20 @@ class Camera(object):
 
     def model_to_eye(self, vector_m):
         scene = context.application.scene
-        tmp = scene.model_center.vector_apply_inverse(vector_m)
-        tmp = self.rotation_center.vector_apply_inverse(tmp)
-        tmp = self.rotation.vector_apply_inverse(tmp)
+        tmp = scene.model_center.inv * vector_m
+        tmp = self.rotation_center.inv * tmp
+        tmp = self.rotation.inv * tmp
         tmp[2] -= self.znear
-        tmp = self.eye.vector_apply_inverse(tmp)
+        tmp = self.eye.inv * tmp
         return tmp
 
     def eye_to_model(self, vector_e):
         scene = context.application.scene
-        tmp = self.eye.vector_apply(vector_e)
+        tmp = self.eye * vector_e
         tmp[2] += self.znear
-        tmp = self.rotation.vector_apply(tmp)
-        tmp = self.rotation_center.vector_apply(tmp)
-        tmp = scene.model_center.vector_apply(tmp)
+        tmp = self.rotation * tmp
+        tmp = self.rotation_center * tmp
+        tmp = scene.model_center * tmp
         return tmp
 
     def model_to_camera(self, vector_m):

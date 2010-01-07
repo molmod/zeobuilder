@@ -154,13 +154,14 @@ class Translation(ComposedArray):
         )
 
     def applicable_attribute(self):
-        return isinstance(self.attribute, MathTranslation)
+        return isinstance(self.attribute, MathTranslation) and \
+               not isinstance(self.attribute, MathComplete)
 
-    def read_from_attribute(self):
-        return self.attribute.t
+    def convert_to_representation(self, value):
+        return tuple(value.t)
 
-    def write_to_attribute(self, value):
-        self.attribute.t = value
+    def convert_to_value(self, representation):
+        return MathTranslation(representation)
 
 
 class Rotation(ComposedInTable):
@@ -196,14 +197,14 @@ class Rotation(ComposedInTable):
         )
 
     def applicable_attribute(self):
-        return isinstance(self.attribute, MathRotation)
+        return isinstance(self.attribute, MathRotation) and \
+               not isinstance(self.attribute, MathComplete)
 
-    def read_from_attribute(self):
-        return self.attribute.get_rotation_properties()
+    def convert_to_representation(self, value):
+        return value.properties
 
-    def write_to_attribute(self, value):
-        if not isinstance(value, Undefined):
-            self.attribute.set_rotation_properties(*value)
+    def convert_to_value(self, representation):
+        return MathRotation.from_properties(representation)
 
 
 class Parameters(object):

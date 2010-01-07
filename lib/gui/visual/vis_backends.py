@@ -35,7 +35,7 @@ from tools import Tool
 
 from zeobuilder import context
 
-from molmod.transformations import Translation, Rotation
+from molmod import Translation, Rotation
 
 import OpenGL
 from OpenGL.GLU import *
@@ -176,24 +176,30 @@ class VisBackend(object):
 
 def gl_apply(transformation):
     # OpenGL uses an algebra with row vectors instead of column vectors.
-    a = numpy.zeros((4,4), float)
-    if isinstance(transformation, Translation):
-        a[3,:3] = transformation.t
-    if isinstance(transformation, Rotation):
-        a[:3,:3] = transformation.r.transpose()
-    a[3,3] = 1
-    glMultMatrixf(a)
+    if not isinstance(transformation, Rotation):
+        glTranslate(*transformation.t)
+    else:
+        a = numpy.zeros((4,4), float)
+        if isinstance(transformation, Translation):
+            a[3,:3] = transformation.t
+        if isinstance(transformation, Rotation):
+            a[:3,:3] = transformation.r.transpose()
+        a[3,3] = 1
+        glMultMatrixf(a)
 
 
 def gl_apply_inverse(transformation):
     # OpenGL uses an algebra with row vectors instead of column vectors.
-    a = numpy.zeros((4,4), float)
-    if isinstance(transformation, Translation):
-        a[3,:3] = numpy.dot(-transformation.t, transformation.r)
-    if isinstance(transformation, Rotation):
-        a[:3,:3] = transformation.r
-    a[3,3] = 1
-    glMultMatrixf(a)
+    if not isinstance(transformation, Rotation):
+        glTranslate(*(-transformation.t))
+    else:
+        a = numpy.zeros((4,4), float)
+        if isinstance(transformation, Translation):
+            a[3,:3] = numpy.dot(-transformation.t, transformation.r)
+        if isinstance(transformation, Rotation):
+            a[:3,:3] = transformation.r
+        a[3,3] = 1
+        glMultMatrixf(a)
 
 
 class VisBackendOpenGL(VisBackend):
@@ -265,8 +271,7 @@ class VisBackendOpenGL(VisBackend):
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
         # Move to eye position (reverse)
-        #camera.eye.gl_apply_inverse()
-        glTranslate(*(-camera.eye.t))
+        gl_apply_inverse(camera.eye)
         glTranslatef(0.0, 0.0, -znear)
         # Draw the rotation center, only when realy drawing objects:
         if selection_box is None:
@@ -276,10 +281,8 @@ class VisBackendOpenGL(VisBackend):
         # Now rotate to the model frame and move back to the model center (reverse)
         gl_apply_inverse(camera.rotation)
         # Then bring the rotation center at the right place (reverse)
-        #camera.rotation_center.gl_apply_inverse()
-        glTranslate(*(-camera.rotation_center.t))
-        #scene.model_center.gl_apply_inverse()
-        glTranslate(*(-scene.model_center.t))
+        gl_apply_inverse(camera.rotation_center)
+        gl_apply_inverse(scene.model_center)
 
         scene.draw()
 
@@ -348,11 +351,7 @@ class VisBackendOpenGL(VisBackend):
         glRotate(angle, x, y, z)
 
     def transform(self, transformation):
-        if not isinstance(transformation, Rotation):
-            glTranslate(*transformation.t)
-        else:
-            gl_apply(transformation)
-            #glMultMatrixf(numpy.array(transformation.get_matrix(), order='FORTRAN'))
+        gl_apply(transformation)
 
     def pop_matrix(self):
         glPopMatrix()

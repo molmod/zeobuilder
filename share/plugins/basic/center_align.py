@@ -41,7 +41,7 @@ from zeobuilder.nodes.analysis import calculate_center
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation, Rotation, Complete
+from molmod import Translation, Rotation, Complete
 
 import numpy
 
@@ -68,8 +68,7 @@ class DefineOrigin(CenterAlignBase):
 
     def do(self):
         cache = context.application.cache
-        translation = Translation()
-        translation.t = copy.deepcopy(cache.node.transformation.t)
+        translation = Translation(cache.node.transformation.t)
         CenterAlignBase.do(self, cache.parent, cache.translated_neighbors, translation)
 
 
@@ -93,8 +92,7 @@ class Align(CenterAlignBase):
 
     def do(self):
         cache = context.application.cache
-        rotation = Rotation()
-        rotation.r = copy.deepcopy(cache.node.transformation.r)
+        rotation = Rotation(cache.node.transformation.r)
         CenterAlignBase.do(self, cache.parent, cache.transformed_neighbors, rotation)
 
 
@@ -118,7 +116,7 @@ class DefineOriginAndAlign(CenterAlignBase):
 
     def do(self):
         cache = context.application.cache
-        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbors, copy.deepcopy(cache.node.transformation))
+        CenterAlignBase.do(self, cache.parent, cache.transformed_neighbors, cache.node.transformation)
 
 
 class CenterToChildren(CenterAlignBase):
@@ -141,7 +139,6 @@ class CenterToChildren(CenterAlignBase):
     def do(self):
         cache = context.application.cache
         for node in cache.nodes:
-            translation = Translation()
             child_translations = []
             translated_children = []
             for child in node.children:
@@ -152,7 +149,7 @@ class CenterToChildren(CenterAlignBase):
                     translated_children.append(child)
                     child_translations.append(child.transformation)
             if len(translated_children) > 0:
-                translation.t = calculate_center(child_translations)
+                translation = Translation(calculate_center(child_translations))
                 CenterAlignBase.do(self, node, translated_children, translation)
 
 
@@ -176,23 +173,19 @@ class AlignUnitCell(Immediate):
     def do(self):
         universe = context.application.cache.node
         # first make sure the cell is right handed
-        if numpy.linalg.det(universe.cell) < 0 and universe.cell_active.sum() == 3:
-            new_cell = universe.cell.copy()
-            temp = new_cell[:,0].copy()
-            new_cell[:,0] = new_cell[:,1]
-            new_cell[:,1] = temp
+        if numpy.linalg.det(universe.cell.matrix) < 0 and universe.cell_active.sum() == 3:
+            new_matrix = universe.cell.matrix.copy()
+            temp = new_matrix[:,0].copy()
+            new_matrix[:,0] = new_matrix[:,1]
+            new_matrix[:,1] = temp
+            new_cell = UnitCell(new_matrix, universe.cell.active)
             primitive.SetProperty(universe, "cell", new_cell)
 
         # then rotate the unit cell box to the normalized frame:
-        rotation = Rotation()
-        rotation.r = numpy.array(universe.calc_align_rotation_matrix())
-        new_cell = numpy.dot(rotation.r, universe.cell)
-        old_cell_active = universe.cell_active.copy()
-        universe.cell_active = numpy.array([False, False, False])
-        primitive.SetProperty(universe, "cell", new_cell)
+        rotation = Rotation(universe.calc_align_rotation_matrix())
         for child in context.application.cache.transformed_children:
             primitive.Transform(child, rotation)
-        universe.cell_active = old_cell_active
+        new_cell = UnitCell(numpy.dot(rotation.r, universe.cell.matrix), universe.cell.active)
         primitive.SetProperty(universe, "cell", new_cell)
 
 

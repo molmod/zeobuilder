@@ -52,8 +52,7 @@ import zeobuilder.authors as authors
 
 from conscan import Geometry, ProgressMessage, Connection
 
-from molmod.transformations import Rotation, Translation
-from molmod.units import angstrom
+from molmod import Rotation, Translation, angstrom
 
 import gtk, numpy
 
@@ -202,9 +201,9 @@ class ConscanResultsWindow(GladeWrapper):
         self.frame2.transformation.clear()
         transformation = self.frame1.get_frame_relative_to(self.frame2)
         if self.cb_inverse.get_active() and len(model.get_value(iter, 3)[3]) > 0:
-            transformation.apply_inverse_before(model.get_value(iter, 3)[1])
+            transformation = model.get_value(iter, 3)[1].inv * transformation
         else:
-            transformation.apply_before(model.get_value(iter, 3)[1])
+            transformation = model.get_value(iter, 3)[1] * transformation
         self.frame2.set_transformation(transformation)
         primitive.SetProperty(self.frame2, "transformation", old_transformation, done=True)
 
@@ -623,7 +622,7 @@ class ScanForConnections(ImmediateWithMemory):
         else:
             inp["allow_rotations"] = False
             if isinstance(self.parameters.rotation2, Undefined):
-                inp["rotation2"] = Rotation()
+                inp["rotation2"] = Rotation.identity()
             else:
                 inp["rotation2"] = self.parameters.rotation2
 

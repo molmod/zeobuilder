@@ -40,8 +40,7 @@ from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.conversion import express_measure
 import zeobuilder.authors as authors
 
-from molmod.vectors import angle
-from molmod.transformations import Translation
+from molmod import angle, Translation
 
 from OpenGL.GLUT import glutInit, glutStrokeCharacter, GLUT_STROKE_MONO_ROMAN
 from OpenGL.GL import *

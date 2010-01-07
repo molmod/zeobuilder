@@ -50,10 +50,8 @@ import zeobuilder.authors as authors
 
 from molmod.periodic import periodic
 from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
-from molmod.transformations import Translation, Complete, Rotation
-from molmod.graphs import EqualPattern, RingPattern, GraphSearch
-from molmod.vectors import random_orthonormal
-from molmod.units import deg
+from molmod import Translation, Complete, Rotation, EqualPattern, RingPattern, \
+    GraphSearch, random_orthonormal, deg
 
 import numpy, gtk
 
@@ -95,6 +93,7 @@ def yield_particles(node, parent=None):
             for particle in yield_particles(child, parent):
                 yield particle
 
+
 def compute_center_of_mass(particles):
     weighted_center = numpy.zeros(3, float)
     total_mass = 0.0
@@ -106,6 +105,7 @@ def compute_center_of_mass(particles):
     else:
         return total_mass, weighted_center/total_mass
 
+
 def compute_inertia_tensor(particles, center):
     tensor = numpy.zeros((3,3), float)
     for mass, coordinate in particles:
@@ -116,7 +116,8 @@ def compute_inertia_tensor(particles, center):
         )
     return tensor
 
-def default_rotation_matrix(inertia_tensor):
+
+def align_rotation_matrix(inertia_tensor):
     if abs(inertia_tensor.ravel()).max() < 1e-6:
         return numpy.identity(3, float)
     evals, evecs = numpy.linalg.eig(inertia_tensor)
@@ -144,8 +145,6 @@ class CenterOfMass(CenterAlignBase):
     def do(self):
         cache = context.application.cache
         for node in cache.nodes:
-            translation = Translation()
-
             translated_children = []
             for child in node.children:
                 if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
@@ -160,8 +159,7 @@ class CenterOfMass(CenterAlignBase):
             if mass == 0.0:
                 continue
 
-            translation.t = com
-            CenterAlignBase.do(self, node, translated_children, translation)
+            CenterAlignBase.do(self, node, translated_children, Translation(com))
 
 
 class CenterOfMassAndPrincipalAxes(CenterOfMass):
@@ -183,8 +181,6 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
     def do(self):
         cache = context.application.cache
         for node in cache.nodes:
-            transformation = Complete()
-
             translated_children = []
             for child in node.children:
                 if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
@@ -199,9 +195,8 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
             if mass == 0.0:
                 continue
 
-            transformation.t = com
             tensor = compute_inertia_tensor(yield_particles(node), com)
-            transformation.r = default_rotation_matrix(tensor)
+            transformation = Complete(align_rotation_matrix(tensor), com)
             CenterAlignBase.do(self, node, translated_children, transformation)
 
 
@@ -264,8 +259,8 @@ class SaturateWithHydrogens(Immediate):
             bond_length = bonds.get_length(atom.number, 1, BOND_SINGLE)
 
             if num_bonds == 0:
-                H = Atom(name="auto H", number=1)
-                H.transformation.t = atom.transformation.t + numpy.array([0,bond_length,0])
+                t = atom.transformation.t + numpy.array([0,bond_length,0])
+                H = Atom(name="auto H", number=1, transformation=Translation(t))
                 primitive.Add(H, atom.parent)
                 bond = Bond(name="aut H bond", targets=[atom, H])
                 primitive.Add(bond, atom.parent)
@@ -295,8 +290,7 @@ class SaturateWithHydrogens(Immediate):
 
             hybride_count = num_hydrogens + lone_pairs(atom.number) + num_bonds - (used_valence - num_bonds)
             num_sites = num_hydrogens + lone_pairs(atom.number)
-            rotation = Rotation()
-            rotation.set_rotation_properties(2*math.pi / float(num_sites), oposite_direction, False)
+            rotation = Rotation.from_properties(2*math.pi / float(num_sites), oposite_direction, False)
             opening_key = (hybride_count, num_sites)
             opening_angle = self.opening_angles.get(opening_key)
             if opening_angle is None:
@@ -327,12 +321,12 @@ class SaturateWithHydrogens(Immediate):
             h_pos = bond_length*(oposite_direction*math.cos(opening_angle) + normal*math.sin(opening_angle))
 
             for i in range(num_hydrogens):
-                H = Atom(name="auto H", number=1)
-                H.transformation.t = atom.transformation.t + h_pos
+                t = atom.transformation.t + h_pos
+                H = Atom(name="auto H", number=1, transformation=Translation(t))
                 primitive.Add(H, atom.parent)
                 bond = Bond(name="aut H bond", targets=[atom, H])
                 primitive.Add(bond, atom.parent)
-                h_pos = rotation.vector_apply(h_pos)
+                h_pos = rotation * h_pos
 
         def hydrogenate_unsaturated_atoms(nodes):
             for node in nodes:
@@ -394,8 +388,8 @@ class SaturateHydrogensManual(ImmediateWithMemory):
             num_hydrogens = self.parameters.num_hydrogens
 
             if len(existing_bonds) == 0:
-                H = Atom(name="auto H", number=1)
-                H.transformation.t = atom.transformation.t + numpy.array([0,bond_length,0])
+                t = atom.transformation.t + numpy.array([0,bond_length,0])
+                H = Atom(name="auto H", number=1, transformation=Translation(t))
                 primitive.Add(H, atom.parent)
                 bond = Bond(name="aut H bond", targets=[atom, H])
                 primitive.Add(bond, atom.parent)
@@ -412,8 +406,7 @@ class SaturateHydrogensManual(ImmediateWithMemory):
             main_direction /= numpy.linalg.norm(main_direction)
             normal = random_orthonormal(main_direction)
 
-            rotation = Rotation()
-            rotation.set_rotation_properties(2*math.pi / float(num_hydrogens), main_direction, False)
+            rotation = Rotation.from_properties(2*math.pi / float(num_hydrogens), main_direction, False)
 
 
             h_pos = bond_length*(
@@ -422,12 +415,12 @@ class SaturateHydrogensManual(ImmediateWithMemory):
             )
 
             for i in range(num_hydrogens):
-                H = Atom(name="auto H", number=1)
-                H.transformation.t = atom.transformation.t + h_pos
+                t = atom.transformation.t + h_pos
+                H = Atom(name="auto H", number=1, transformation=Translation(t))
                 primitive.Add(H, atom.parent)
                 bond = Bond(name="aut H bond", targets=[atom, H])
                 primitive.Add(bond, atom.parent)
-                h_pos = rotation.vector_apply(h_pos)
+                h_pos = rotation * h_pos
 
         for node in context.application.cache.nodes:
             if isinstance(node, Atom):
@@ -898,8 +891,7 @@ class FrameMolecules(Immediate):
             for node, atom in zip(group, atoms):
                 primitive.Move(atom, frame)
                 new_position = new_positions[node]
-                translation = Translation()
-                translation.t = atom.get_parentframe_up_to(parent).vector_apply_inverse(new_position)
+                translation = Translation(atom.get_parentframe_up_to(parent).inv * new_position)
                 primitive.SetProperty(atom, "transformation", translation)
             for atom in atoms:
                 # take a copy of the references since they are going to be

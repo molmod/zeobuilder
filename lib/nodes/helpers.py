@@ -202,7 +202,7 @@ class BoundingBox(object):
         if self.corners is None: return result
         combinations = ((0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0), (0, 0, 1), (1, 0, 1), (0, 1, 1), (1, 1, 1))
         for c in combinations:
-            result.extend_with_point(transformation.vector_apply(numpy.array([self.corners[c[0]][0], self.corners[c[1]][1], self.corners[c[2]][2]])))
+            result.extend_with_point(transformation * numpy.array([self.corners[c[0]][0], self.corners[c[1]][1], self.corners[c[2]][2]]))
         return result
 
     #

@@ -49,8 +49,7 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
 from molmod.periodic import periodic
-from molmod.transformations import Complete, Translation
-from molmod.units import angstrom
+from molmod import Complete, Translation, angstrom
 
 import iterative
 
@@ -261,13 +260,12 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
                 if isinstance(variable, iterative.var.Frame):
-                    (
-                        frame.transformation.r,
-                        frame.transformation.t
-                    ) = variable.extract_state(state_index, self.status.state)
+                    r, t = variable.extract_state(state_index, self.status.state)
+                    frame.set_transformation(Complete(r, t))
                 elif isinstance(variable, iterative.var.Translation):
-                    frame.transformation.t = variable.extract_state(state_index, self.status.state)
-                frame.invalidate_transformation_list()
+                    t = variable.extract_state(state_index, self.status.state)
+                    new_transformation = frame.transformation.copy_with(t=t)
+                    frame.set_transformation(new_transformation)
             context.application.main.drawing_area.queue_draw()
 
     def on_receive(self, instance):
@@ -481,13 +479,14 @@ class MergeAtomsConnectedWithSpring(Immediate):
         for spring in list(cache.nodes):
             atom1, atom2 = spring.get_targets()
             if isinstance(atom1, Atom) and isinstance(atom2, Atom):
-                replacement = Atom(
-                    name="Merge of %s and %s" % (atom1.name, atom2.name),
-                    number=max([atom1.number, atom2.number])
-                )
-                replacement.transformation.t = 0.5*(
+                t = 0.5*(
                     atom1.get_frame_relative_to(spring.parent).t +
                     atom2.get_frame_relative_to(spring.parent).t
+                )
+                replacement = Atom(
+                    name="Merge of %s and %s" % (atom1.name, atom2.name),
+                    number=max([atom1.number, atom2.number]),
+                    transformation = Translation(t)
                 )
                 primitive.Add(replacement, spring.parent, spring.get_index())
                 atoms = set([atom1, atom2])

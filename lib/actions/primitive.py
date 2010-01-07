@@ -233,18 +233,16 @@ class Transform(Primitive):
     def redo(self):
         Primitive.redo(self)
         if self.after:
-            self.victim.transformation.apply_after(self.transformation)
+            self.victim.set_transformation(self.transformation * self.victim.transformation)
         else:
-            self.victim.transformation.apply_before(self.transformation)
-        self.victim.invalidate_transformation_list()
+            self.victim.set_transformation(self.victim.transformation * self.transformation)
 
     def undo(self):
         Primitive.undo(self)
         if self.after:
-            self.victim.transformation.apply_inverse_after(self.transformation)
+            self.victim.set_transformation(self.transformation.inv * self.victim.transformation)
         else:
-            self.victim.transformation.apply_inverse_before(self.transformation)
-        self.victim.invalidate_transformation_list()
+            self.victim.set_transformation(self.victim.transformation * self.transformation.inv)
 
 
 class SetTarget(Primitive):

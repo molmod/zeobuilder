@@ -38,7 +38,7 @@ from zeobuilder.nodes.reference import Reference
 from zeobuilder.nodes.elementary import GLFrameBase
 import zeobuilder.nodes.analysis as analysis
 
-from molmod.transformations import Translation, Rotation
+from molmod import Translation, Rotation
 
 import gobject
 

@@ -41,9 +41,7 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation
-from molmod.units import angstrom
-from molmod.unit_cells import UnitCell
+from molmod import Translation, angstrom, UnitCell
 
 import numpy, gtk, copy
 
@@ -156,9 +154,10 @@ class CreateTube(ImmediateWithMemory):
         def create_pattern():
             "Read the atom positions and transform them to the flat coordinates"
             active, inactive = universe.get_active_inactive()
-            tmp_cell = UnitCell()
-            tmp_cell.add_cell_vector(universe.cell[:,active[0]])
-            tmp_cell.add_cell_vector(universe.cell[:,active[1]])
+            a = universe.cell[:,active[0]]
+            b = universe.cell[:,active[1]]
+            c = numpy.cross(a,b)
+            tmp_cell = UnitCell(numpy.array([a,b,c]).transpose())
             r = tmp_cell.calc_align_rotation_matrix()
 
             return [
@@ -244,32 +243,33 @@ class CreateTube(ImmediateWithMemory):
         if self.parameters.flat:
             rot_a = numpy.dot(rotation, big_a)
             rot_b = numpy.dot(rotation, big_b)
-            big_cell = numpy.array([
+            big_matrix = numpy.array([
                 [rot_a[0], rot_b[0], 0],
                 [rot_a[1], rot_b[1], 0],
                 [0, 0, 10*angstrom],
             ], float)
+            big_cell = UnitCell(big_cell, numpy.array([True, periodic_tube, False], bool))
             primitive.SetProperty(universe, "cell", big_cell)
-            primitive.SetProperty(universe, "cell_active", numpy.array([True, periodic_tube, False], bool))
             for p in yield_translations():
                 for number, coordinate in yield_pattern():
                     coordinate[:2] += p
                     coordinate[:2] = numpy.dot(rotation, coordinate[:2])
-                    translation = Translation()
-                    translation.t[:] = coordinate
+                    translation = Translation(coordinate)
                     primitive.Add(Atom(number=number, transformation=translation), universe)
         else:
             tube_length = numpy.linalg.norm(big_b)
-            primitive.SetProperty(universe, "cell", numpy.diag([radius*2, radius*2, tube_length]))
-            primitive.SetProperty(universe, "cell_active", numpy.array([False, False, periodic_tube], bool))
+            big_matrix = numpy.diag([radius*2, radius*2, tube_length])
+            big_cell = UnitCell(big_cell, numpy.array([False, False, periodic_tube], bool))
+            primitive.SetProperty(universe, "cell", big_cell)
             for p in yield_translations():
                 for number, coordinate in yield_pattern():
                     coordinate[:2] += p
                     coordinate[:2] = numpy.dot(rotation, coordinate[:2])
-                    translation = Translation()
-                    translation.t[0] = (radius+coordinate[2])*numpy.cos(coordinate[0]/radius)
-                    translation.t[1] = (radius+coordinate[2])*numpy.sin(coordinate[0]/radius)
-                    translation.t[2] = coordinate[1]
+                    translation = Translation(numpy.array([
+                        (radius+coordinate[2])*numpy.cos(coordinate[0]/radius),
+                        (radius+coordinate[2])*numpy.sin(coordinate[0]/radius),
+                        coordinate[1],
+                    ]))
                     primitive.Add(Atom(number=number, transformation=translation), universe)
 
 

@@ -34,7 +34,7 @@ from elementary import Read
 from mixin import ambiguous
 from zeobuilder.conversion import express_measure, express_data_size
 
-from molmod.transformations import Rotation
+from molmod import Rotation
 
 import math, gtk, numpy
 

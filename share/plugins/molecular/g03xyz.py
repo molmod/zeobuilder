@@ -87,12 +87,11 @@ class LoadG03XYZ(LoadFilter):
                 raise FilterError("Could not read coordinates. Incorrect floating point format.")
             extra["index"] = counter
             atom_record = periodic[symbol]
+            transformation = Translation(coordinate*angstrom)
             if atom_record is None:
-                atom = Point(name=symbol, extra=extra)
+                atom = Point(name=symbol, transformation=translation, extra=extra)
             else:
-                atom = Atom(name=symbol, number=atom_record.number, extra=extra)
-            atom.transformation.t[:] = coordinate
-            atom.transformation.t *= angstrom
+                atom = Atom(name=symbol, number=atom_record.number, transformation=translation, extra=extra)
             universe.add(atom)
             counter += 1
 

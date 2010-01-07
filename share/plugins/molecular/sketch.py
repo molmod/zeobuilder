@@ -48,13 +48,11 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.transformations import Translation, Rotation
-from molmod.bonds import BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
+from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
 from molmod.periodic import periodic
-from molmod.bonds import bonds
-from molmod.io.cml import load_cml
+from molmod.io import load_cml
 from molmod.vectors import angle as compute_angle
-from molmod.vectors import random_orthonormal
+from molmod import Translation, Rotation, random_orthonormal
 
 import gtk, numpy
 from math import cos,sin,sqrt,acos,pi
@@ -311,23 +309,20 @@ class SketchOptions(GladeWrapper):
                     if numpy.linalg.norm(axis) < 1e-8:
                         axis = random_orthonormal(direction1)
                     angle = compute_angle(direction1, direction2)
-                    rotation = Rotation()
-                    rotation.set_rotation_properties(angle,axis,False)
+                    rotation = Rotation.from_properties(angle,axis,False)
                     primitive.Transform(new, rotation)
                 else:
                     bond1 = None
                 # tranlsation
-                translation = Translation()
                 pos_old = new.children[1].get_frame_relative_to(parent).t
                 pos_new = gl_object.transformation.t
-                translation.t = pos_new - pos_old
+                translation = Translation(pos_new - pos_old)
                 primitive.Transform(new, translation)
                 if bond1 != None:
                     # bond length
                     old_length = numpy.linalg.norm(direction1)
                     new_length = bonds.get_length(new.children[1].number, bond1.get_neighbor(gl_object).number)
-                    translation = Translation()
-                    translation.t = -direction1/old_length*(new_length-old_length)
+                    translation = Translation(-direction1/old_length*(new_length-old_length))
                     primitive.Transform(new, translation)
 
             for reference in gl_object.references[::-1]:
@@ -429,13 +424,11 @@ class Sketch(Interactive):
             self.first_added = (self.first_hit is None)
             if self.first_added:
                 self.first_hit = self.options.add_new(
-                    self.parent.get_absolute_frame().vector_apply_inverse(
-                        camera.vector_in_plane(
-                            drawing_area.screen_to_camera(
-                                numpy.array([event.x, event.y], float)
-                            ),
-                            self.origin,
-                        )
+                    self.parent.get_absolute_frame().inv *
+                    camera.vector_in_plane(
+                        drawing_area.screen_to_camera(
+                            numpy.array([event.x, event.y], float)
+                        ), self.origin,
                     ),
                     self.parent
                 )
@@ -481,13 +474,11 @@ class Sketch(Interactive):
             if self.tool == self.options.tool_draw:
                 if self.last_hit is None:
                     self.last_hit = self.options.add_new(
-                        self.parent.get_absolute_frame().vector_apply_inverse(
-                            camera.vector_in_plane(
-                                drawing_area.screen_to_camera(
-                                    numpy.array([event.x, event.y], float)
-                                ),
-                                self.origin
-                            )
+                        self.parent.get_absolute_frame().inv *
+                        camera.vector_in_plane(
+                            drawing_area.screen_to_camera(
+                                numpy.array([event.x, event.y], float)
+                            ), self.origin
                         ),
                         self.parent
                     )

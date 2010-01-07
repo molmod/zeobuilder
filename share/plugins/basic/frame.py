@@ -39,7 +39,7 @@ from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.helpers import FrameAxes
 import zeobuilder.authors as authors
 
-from molmod.transformations import Complete
+from molmod import Complete
 
 
 class Frame(GLFrameBase, FrameAxes):

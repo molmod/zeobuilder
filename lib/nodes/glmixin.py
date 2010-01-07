@@ -38,7 +38,7 @@ from zeobuilder.nodes.analysis import common_parent
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
-from molmod.transformations import Translation, Rotation, Complete
+from molmod import Complete
 
 import gobject, numpy
 
@@ -253,30 +253,28 @@ class GLMixin(gobject.GObject):
 
     def get_absolute_parentframe(self):
         if not isinstance(self.parent, GLMixin):
-            return Complete()
+            return Complete.identity()
         else:
             return self.parent.get_absolute_frame()
 
     def get_frame_up_to(self, upper_parent):
         if (upper_parent == self) or (self.parent == upper_parent):
-            return Complete()
+            return Complete.identity()
         else:
             return self.get_parentframe_up_to(upper_parent)
 
     def get_parentframe_up_to(self, upper_parent):
         if not isinstance(self.parent, GLMixin):
             assert upper_parentisNone, "upper_parent must be (an indirect) parent of self."
-            return Complete()
+            return Complete.identity()
         elif self.parent == upper_parent:
-            return Complete()
+            return Complete.identity()
         else:
             return self.parent.get_frame_up_to(upper_parent)
 
     def get_frame_relative_to(self, other):
         common = common_parent([self, other])
-        temp = self.get_frame_up_to(common)
-        temp.apply_inverse_after(other.get_frame_up_to(common))
-        return temp
+        return self.get_frame_up_to(common).inv * other.get_frame_up_to(common)
 
     #
     # Signal handlers
@@ -408,21 +406,17 @@ class GLTransformationMixin(GLMixin):
 
     def get_absolute_frame(self):
         if not isinstance(self.parent, GLMixin):
-            return copy.deepcopy(self.transformation)
+            return self.transformation
         else:
-            temp = self.get_absolute_parentframe()
-            temp.apply_before(self.transformation)
-            return temp
+            return self.get_absolute_parentframe() * self.transformation
 
     def get_frame_up_to(self, upper_parent):
         if (upper_parent == self):
-            return Complete()
+            return Complete.identity()
         elif (self.parent == upper_parent):
             return copy.deepcopy(self.transformation)
         else:
-            temp = self.get_parentframe_up_to(upper_parent)
-            temp.apply_before(self.transformation)
-            return temp
+            return self.get_parentframe_up_to(upper_parent) * self.transformation
 
 gobject.signal_new("on-transformation-list-invalidated", GLTransformationMixin, gobject.SIGNAL_RUN_LAST, gobject.TYPE_NONE, ())
 
