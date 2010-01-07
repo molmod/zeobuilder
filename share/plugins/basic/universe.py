@@ -56,6 +56,9 @@ import numpy, gtk
 import copy, StringIO
 
 
+default_unit_cell = UnitCell(numpy.identity(3, float)*10*angstrom, numpy.zeros(3, bool))
+
+
 class GLPeriodicContainer(GLContainerBase):
 
     #
@@ -80,7 +83,7 @@ class GLPeriodicContainer(GLContainerBase):
     #
 
     properties = [
-        Property("cell", UnitCell(), lambda self: self.cell, set_cell),
+        Property("cell", default_unit_cell, lambda self: self.cell, set_cell),
     ]
 
     #
@@ -362,7 +365,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
                     repetitions = self.repetitions * self.cell.active + 1 - self.cell.active
                 for position in yield_all_positions(repetitions):
                     vb.push_matrix()
-                    t = numpy.dot(self.cell, numpy.array(position) - self.cell.active * self.clipping)
+                    t = numpy.dot(self.cell.matrix, numpy.array(position) - self.cell.active * self.clipping)
                     vb.translate(*t)
                     vb.call_list(self.draw_list)
                     vb.pop_matrix()
