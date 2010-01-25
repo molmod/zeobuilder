@@ -225,34 +225,31 @@ class MergeOverlappingAtoms(Immediate):
             unit_cell = parent
 
         Atom = context.application.plugins.get_node("Atom")
-        def yield_positioned_atoms():
-            for child in parent.children:
-                if isinstance(child, Atom):
-                    yield PositionedObject(child, child.transformation.t)
-
-        binned_atoms = SparseBinnedObjects(yield_positioned_atoms(), periodic.max_radius*0.4)
-
-        def overlap(positioned1, positioned2):
-            number = positioned1.id.number
-            if number != positioned2.id.number: return
-            delta = parent.shortest_vector(positioned2.coordinate - positioned1.coordinate)
-            distance = math.sqrt(numpy.dot(delta, delta))
-            if distance < periodic[number].vdw_radius*0.4:
-                return True
+        atoms = []
+        coordinates = []
+        for child in parent.children:
+            if isinstance(child, Atom):
+                atoms.append(child)
+                coordinates.append(child.transformation.t)
+        coordinates = numpy.array(coordinates)
 
         cf = ClusterFactory()
-        for (positioned1, positioned2), foo in IntraAnalyseNeighboringObjects(binned_atoms, overlap)(unit_cell):
-            cf.add_members([positioned1.id, positioned2.id])
+        for i0, i1, delta, distance in PairSearchIntra(coordinates, periodic.max_radius*0.4, unit_cell):
+            atom0 = atoms[i0]
+            atom1 = atoms[i1]
+            if atom0.number == atom1.number:
+                if distance < periodic[atom0.number].vdw_radius*0.4:
+                    cf.add_related(atom0, atom1)
         clusters = cf.get_clusters()
         del cf
 
         # define the new singles
         singles = []
         for cluster in clusters:
-            number = cluster.members[0].number
+            number = iter(cluster.items).next().number
             single = Atom(name="Single " + periodic[number].symbol)
             single.set_number(number)
-            singles.append((single, cluster.members))
+            singles.append((single, list(cluster.items)))
 
         # calculate their positions
         for single, overlappers in singles:
@@ -264,7 +261,7 @@ class MergeOverlappingAtoms(Immediate):
             for atom in overlappers[1:]:
                 delta_to_mean += parent.shortest_vector(atom.transformation.t - first_pos)
             delta_to_mean /= float(len(overlappers))
-            single.set_transformation(Translation(t))
+            single.set_transformation(Translation(first_pos + delta_to_mean))
 
         # modify the model
         for single, overlappers in singles:
