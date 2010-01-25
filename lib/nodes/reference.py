@@ -46,7 +46,7 @@ import os
 
 
 __all__ = [
-    "TargetError", "Reference", "SpatialReference", "GLTransformedReference"
+    "TargetError", "Reference", "SpatialReference"
 ]
 
 
