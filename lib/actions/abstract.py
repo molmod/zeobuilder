@@ -75,7 +75,7 @@ class CenterAlignBase(Immediate):
         if isinstance(parent, GLTransformationMixin) and not parent.get_fixed():
             primitive.Transform(parent, transformation, after=False)
         for child in transformed_children:
-            primitive.Transform(child, transformation.inverse)
+            primitive.Transform(child, transformation.inv)
 
 
 class ConnectBase(Immediate):
