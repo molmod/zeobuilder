@@ -274,7 +274,7 @@ class GLMixin(gobject.GObject):
 
     def get_frame_relative_to(self, other):
         common = common_parent([self, other])
-        return self.get_frame_up_to(common).inv * other.get_frame_up_to(common)
+        return other.get_frame_up_to(common).inv * self.get_frame_up_to(common)
 
     #
     # Signal handlers
