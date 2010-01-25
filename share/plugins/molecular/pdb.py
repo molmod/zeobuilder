@@ -43,7 +43,7 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
 from molmod.periodic import periodic
-from molmod.units import angstrom, angstrom
+from molmod import angstrom, UnitCell, Translation
 
 
 class LoadPDB(LoadFilter):
@@ -91,7 +91,7 @@ class LoadPDB(LoadFilter):
                 alpha = float(line[33:40].strip())*numpy.pi/180
                 beta = float(line[40:47].strip())*numpy.pi/180
                 gamma = float(line[47:54].strip())*numpy.pi/180
-                universe.set_unit_cell(UnitCell.from_properties([a, b, c], [alpha, beta, gamma]))
+                universe.set_cell(UnitCell.from_parameters3([a, b, c], [alpha, beta, gamma]))
             counter += 1
 
         return [universe, folder]
@@ -109,8 +109,8 @@ class DumpPDB(DumpFilter):
             nodes = [universe]
 
         Atom = context.application.plugins.get_node("Atom")
-        if universe.cell_active.all():
-            lengths, angles = universe.get_parameters()
+        if universe.cell.active.all():
+            lengths, angles = universe.cell.parameters
             a, b, c = lengths/angstrom
             alpha, beta, gamma = angles/numpy.pi*180
             print >> f, "CRYST1% 9.3f% 9.3f% 9.3f% 7.2f% 7.2f% 7.2f P 1        1             " % (

@@ -39,11 +39,9 @@ from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
 
 
+from molmod import angstrom, Molecule, MolecularGraph, Translation
 from molmod.periodic import periodic
-from molmod.units import angstrom
 from molmod.io.cml import load_cml, dump_cml
-from molmod.molecules import Molecule
-from molmod.molecular_graphs import MolecularGraph
 
 
 class LoadCML(LoadFilter):
@@ -81,16 +79,18 @@ class LoadCML(LoadFilter):
             extra = self.load_extra(molecule.atoms_extra.get(counter, {}))
             extra["index"] = counter
             atom_record = periodic[number]
-            atom = Atom(name=atom_record.symbol, number=number, extra=extra)
-            atom.transformation.t[:] = coordinate
+            atom = Atom(
+                name=atom_record.symbol, number=number, extra=extra,
+                transformation=Translation(coordinate)
+            )
             parent.add(atom)
             counter += 1
         if molecule.graph is not None:
             Bond = context.application.plugins.get_node("Bond")
-            for counter, pair in enumerate(molecule.graph.pairs):
-                extra = self.load_extra(molecule.bonds_extra.get(pair, {}))
+            for counter, edge in enumerate(molecule.graph.edges):
+                extra = self.load_extra(molecule.bonds_extra.get(edge, {}))
                 name = "Bond %i" % counter
-                i,j = pair
+                i, j = edge
                 bond = Bond(name=name, targets=[parent.children[i],parent.children[j]], extra=extra)
                 parent.add(bond)
 

@@ -40,7 +40,7 @@ import zeobuilder.authors as authors
 
 
 from molmod.periodic import periodic
-from molmod.units import angstrom
+from molmod import angstrom, Translation
 
 
 class LoadG03XYZ(LoadFilter):
@@ -87,7 +87,7 @@ class LoadG03XYZ(LoadFilter):
                 raise FilterError("Could not read coordinates. Incorrect floating point format.")
             extra["index"] = counter
             atom_record = periodic[symbol]
-            transformation = Translation(coordinate*angstrom)
+            translation = Translation(numpy.array(coordinate)*angstrom)
             if atom_record is None:
                 atom = Point(name=symbol, transformation=translation, extra=extra)
             else:

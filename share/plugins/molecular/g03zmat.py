@@ -40,7 +40,7 @@ import zeobuilder.authors as authors
 
 
 from molmod.periodic import periodic
-from molmod.units import angstrom, deg
+from molmod import angstrom, deg, Translation
 
 
 class LoadG03ZMAT(LoadFilter):
@@ -135,11 +135,11 @@ class LoadG03ZMAT(LoadFilter):
         for i, symbol, coordinate in zip(xrange(len(symbols)), symbols, coordinates):
             extra = {"index": i}
             atom_record = periodic[symbol]
+            translation = Translation(coordinate)
             if atom_record is None:
-                atom = Point(name=symbol, extra=extra)
+                atom = Point(name=symbol, transformation=translation, extra=extra)
             else:
-                atom = Atom(name=symbol, number=atom_record.number, extra=extra)
-            atom.transformation.t[:] = coordinate
+                atom = Atom(name=symbol, number=atom_record.number, transformation=translation, extra=extra)
             universe.add(atom)
 
         return [universe, folder]
