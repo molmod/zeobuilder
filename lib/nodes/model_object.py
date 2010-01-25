@@ -38,7 +38,7 @@ import zeobuilder.actions.primitive as primitive
 
 import gobject
 
-import copy, numpy
+import numpy
 
 
 __all__ = ["ModelObject", "ModelObjectInfo"]
@@ -137,10 +137,12 @@ class ModelObject(Node):
     #
 
     def delete_referents(self):
-        for reference in copy.copy(self.references):
-            if reference.model is not None:
-                #print "Deleting Referent %s(%i)" % (reference.parent.get_name(), id(reference.parent))
-                primitive.Delete(reference.parent)
+        while len(self.references) > 0:
+            primitive.Delete(references[0].parent)
+        #for reference in copy.copy(self.references):
+        #    if reference.model is not None:
+        #        #print "Deleting Referent %s(%i)" % (reference.parent.get_name(), id(reference.parent))
+        #        primitive.Delete(reference.parent)
 
     def move(self, new_parent, index=-1):
         if (index > 0) and (self.parent == new_parent) and index > self.get_index():

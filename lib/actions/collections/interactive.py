@@ -35,7 +35,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Interactive as InteractiveAction, UserError, CancelException
 from zeobuilder.gui import load_image
 
-import gtk.gdk, copy
+import gtk.gdk
 
 
 __all__ = [

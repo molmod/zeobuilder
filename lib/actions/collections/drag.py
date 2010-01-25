@@ -36,8 +36,6 @@ from zeobuilder.actions.composed import Parameters
 
 import gtk.gdk
 
-import copy
-
 
 __all__ = ["Drag"]
 

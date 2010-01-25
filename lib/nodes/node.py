@@ -36,8 +36,6 @@ import zeobuilder.gui.fields as fields
 
 import gtk.gdk, gobject
 
-import copy
-
 
 __all__ = ["Node", "NodeInfo"]
 

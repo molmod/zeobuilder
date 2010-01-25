@@ -41,8 +41,6 @@ from molmod import UnitCell, PairSearchIntra, Translation
 
 import numpy
 
-import copy
-
 
 __all__ = ["AddBase", "CenterAlignBase", "ConnectBase", "AutoConnectMixin"]
 

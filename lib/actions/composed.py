@@ -36,7 +36,7 @@ from zeobuilder.gui.simple import ok_error
 
 import gtk
 
-import copy, time, sys
+import time, sys
 
 
 __all__ = ["init_actions", "UserError", "CancelException", "ActionError",

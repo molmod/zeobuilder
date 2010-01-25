@@ -40,8 +40,6 @@ from molmod.units import angstrom
 
 import numpy
 
-import copy
-
 
 __all__ = ["FrameAxes", "BoundingBox"]
 
@@ -183,26 +181,26 @@ class BoundingBox(object):
 
     def extend_with_point(self, point):
         if self.corners is None:
-            self.corners = [copy.deepcopy(point), copy.deepcopy(point)]
+            self.corners = numpy.array([point, point])
         else:
             for i in range(3):
-                if point[i] < self.corners[0][i]: self.corners[0][i] = point[i]
-                if point[i] > self.corners[1][i]: self.corners[1][i] = point[i]
+                if point[i] < self.corners[0,i]: self.corners[0,i] = point[i]
+                if point[i] > self.corners[1,i]: self.corners[1,i] = point[i]
 
     def extend_with_corners(self, corners):
         if self.corners is None:
-            self.corners = copy.deepcopy(corners)
+            self.corners = cornes.copy()
         else:
             for i in range(3):
-                if corners[0][i] < self.corners[0][i]: self.corners[0][i] = corners[0][i]
-                if corners[1][i] > self.corners[1][i]: self.corners[1][i] = corners[1][i]
+                if corners[0,i] < self.corners[0,i]: self.corners[0,i] = corners[0,i]
+                if corners[1,i] > self.corners[1,i]: self.corners[1,i] = corners[1,i]
 
     def transformed(self, transformation):
         result = BoundingBox()
         if self.corners is None: return result
         combinations = ((0, 0, 0), (1, 0, 0), (0, 1, 0), (1, 1, 0), (0, 0, 1), (1, 0, 1), (0, 1, 1), (1, 1, 1))
         for c in combinations:
-            result.extend_with_point(transformation * numpy.array([self.corners[c[0]][0], self.corners[c[1]][1], self.corners[c[2]][2]]))
+            result.extend_with_point(transformation * numpy.array([self.corners[c[0],0], self.corners[c[1],1], self.corners[c[2],2]]))
         return result
 
     #

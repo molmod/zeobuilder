@@ -42,8 +42,6 @@ from molmod import Complete
 
 import gobject, numpy
 
-import copy
-
 
 __all__ = ["GLMixinError", "GLMixin", "GLTransformationMixin"]
 
