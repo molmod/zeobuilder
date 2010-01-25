@@ -75,7 +75,7 @@ class TransformationReset(Immediate):
 
     def do(self):
         for node in context.application.cache.transformed_nodes:
-            primitive.SetProperty(node, "transformation", node.Transformation())
+            primitive.SetProperty(node, "transformation", node.Transformation.identity())
 
 
 class TransformationInvert(Immediate):
