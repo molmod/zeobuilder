@@ -622,14 +622,10 @@ class SuperCell(ImmediateWithMemory):
         repetitions = numpy.array(repetitions, int)
 
         # serialize the positioned children
-
         universe = context.application.model.universe
 
         positioned = [
-            node
-            for node
-            in universe.children
-            if (
+            node for node in universe.children if (
                 isinstance(node, GLTransformationMixin) and
                 isinstance(node.transformation, Translation)
             )
@@ -650,9 +646,13 @@ class SuperCell(ImmediateWithMemory):
             nodes = load_from_file(serialized)
             new_children[cell_hash] = nodes
             for node in nodes:
-                t = node.transformation.t + numpy.dot(universe.cell, cell_index - 0.5*(repetitions - 1))
+                t = node.transformation.t + numpy.dot(universe.cell.matrix, cell_index - 0.5*(repetitions - 1))
                 new_transformation = node.transformation.copy_with(t=t)
                 node.set_transformation(new_transformation)
+
+        # forget about serialized stuff
+        serialized.close()
+        del serialized
 
         new_connectors = []
         # replicate the objects that connect these positioned objects
@@ -660,13 +660,15 @@ class SuperCell(ImmediateWithMemory):
             cell_index = numpy.array(cell_index)
             cell_hash = tuple(cell_index)
             for connector in universe.children:
-                if not isinstance(connector, ReferentMixin): continue
+                if not isinstance(connector, ReferentMixin):
+                    continue
                 skip = False
                 for reference in connector.children:
                     if not isinstance(reference, SpatialReference):
                         skip = True
                         break
-                if skip: continue
+                if skip:
+                    continue
 
                 first_target_orig = connector.children[0].target
                 first_target_index = positioned.index(first_target_orig)
@@ -681,7 +683,8 @@ class SuperCell(ImmediateWithMemory):
                         -first_target_orig.transformation.t
                     ))
                     translation = first_target.transformation.t + shortest_vector
-                    other_cell_index = universe.cell.to_fractional(translation - numpy.dot(universe.cell, -0.5*(repetitions - 1)))
+                    other_target_pos = translation - numpy.dot(universe.cell.matrix, -0.5*(repetitions - 1))
+                    other_cell_index = universe.cell.to_fractional(other_target_pos).astype(int)
                     other_cell_index %= repetitions
                     other_cell_hash = tuple(other_cell_index)
                     other_target_index = positioned.index(other_target_orig)
@@ -695,25 +698,17 @@ class SuperCell(ImmediateWithMemory):
                 state["targets"] = new_targets
                 new_connectors.append(connector.__class__(**state))
 
-        # forget about the others
-
-        serialized.close()
-        del serialized
-
         # remove the existing nodes
-
         while len(universe.children) > 0:
             primitive.Delete(universe.children[0])
         del positioned
 
         # multiply the cell matrix and reset the number of repetitions
-
         new_matrix = universe.cell * repetitions
         primitive.SetProperty(universe, "cell", new_matrix)
         primitive.SetProperty(universe, "repetitions", numpy.array([1, 1, 1], int))
 
         # add the new nodes
-
         for nodes in new_children.itervalues():
             for node in nodes:
                 primitive.Add(node, universe)
