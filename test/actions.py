@@ -677,13 +677,14 @@ class CoreActions(ApplicationTestCase):
         def fn():
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
+            import zeobuilder.actions.primitive
+            from molmod import Translation
 
             for index in xrange(3):
                 context.application.main.select_nodes([context.application.model.universe])
-                AddPoint = context.application.plugins.get_action("AddPoint")
-                self.assert_(AddPoint.analyze_selection())
-                AddPoint()
-                context.application.model.universe.children[-1].transformation.t = numpy.random.uniform(-1, 1, 3)
+                Point = context.application.plugins.get_node("Point")
+                point = Point(transformation=Translation(numpy.random.uniform(-1, 1, 3)))
+                context.application.model.universe.add(point)
 
             context.application.main.select_nodes(context.application.model.universe.children)
             AddPlane = context.application.plugins.get_action("AddPlane")
