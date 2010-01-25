@@ -43,7 +43,7 @@ from zeobuilder.gui.simple import ok_information, ok_error, ask_save_filename
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.expressions import Expression
-from zeobuilder.moltools import yield_atoms, chemical_formula, create_molecular_graph
+from zeobuilder.moltools import iter_atoms, chemical_formula, create_molecular_graph
 import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
@@ -68,7 +68,7 @@ class ChemicalFormula(Immediate):
         return True
 
     def do(self):
-        total, formula = chemical_formula(yield_atoms(context.application.cache.nodes), True)
+        total, formula = chemical_formula(iter_atoms(context.application.cache.nodes), True)
         if total > 0:
             answer = "Chemical formula: %s" % formula
             answer += "\nNumber of atoms: %i" % total
@@ -77,7 +77,7 @@ class ChemicalFormula(Immediate):
         ok_information(answer, markup=True)
 
 
-def yield_particles(node, parent=None):
+def iter_particles(node, parent=None):
     if parent is None:
         parent = node
     Atom = context.application.plugins.get_node("Atom")
@@ -88,7 +88,7 @@ def yield_particles(node, parent=None):
                 child.get_frame_relative_to(parent).t
             )
         elif isinstance(child, GLContainerMixin):
-            for particle in yield_particles(child, parent):
+            for particle in iter_particles(child, parent):
                 yield particle
 
 
@@ -153,7 +153,7 @@ class CenterOfMass(CenterAlignBase):
             if len(translated_children) == 0:
                 continue
 
-            mass, com = compute_center_of_mass(yield_particles(node))
+            mass, com = compute_center_of_mass(iter_particles(node))
             if mass == 0.0:
                 continue
 
@@ -189,11 +189,11 @@ class CenterOfMassAndPrincipalAxes(CenterOfMass):
             if len(translated_children) == 0:
                 continue
 
-            mass, com = compute_center_of_mass(yield_particles(node))
+            mass, com = compute_center_of_mass(iter_particles(node))
             if mass == 0.0:
                 continue
 
-            tensor = compute_inertia_tensor(yield_particles(node), com)
+            tensor = compute_inertia_tensor(iter_particles(node), com)
             transformation = Complete(align_rotation_matrix(tensor), com)
             CenterAlignBase.do(self, node, translated_children, transformation)
 
@@ -252,7 +252,7 @@ class SaturateWithHydrogens(Immediate):
                 return 0
 
         def add_hydrogens(atom):
-            existing_bonds = list(atom.yield_bonds())
+            existing_bonds = list(atom.iter_bonds())
             num_bonds = len(existing_bonds)
             bond_length = bonds.get_length(atom.number, 1, BOND_SINGLE)
 
@@ -299,7 +299,7 @@ class SaturateWithHydrogens(Immediate):
                 other_atom = first_bond.children[0].target
                 if other_atom == atom:
                     other_atom = first_bond.children[1].target
-                other_bonds = [bond for bond in other_atom.yield_bonds() if bond != first_bond]
+                other_bonds = [bond for bond in other_atom.iter_bonds() if bond != first_bond]
                 if len(other_bonds) > 0:
                     normal = other_bonds[0].shortest_vector_relative_to(atom.parent)
                     normal -= numpy.dot(normal, oposite_direction) * oposite_direction
@@ -381,7 +381,7 @@ class SaturateHydrogensManual(ImmediateWithMemory):
         Bond = context.application.plugins.get_node("Bond")
 
         def add_hydrogens(atom):
-            existing_bonds = list(atom.yield_bonds())
+            existing_bonds = list(atom.iter_bonds())
             bond_length = bonds.get_length(atom.number, 1, BOND_SINGLE)
             num_hydrogens = self.parameters.num_hydrogens
 
@@ -929,7 +929,7 @@ class SelectBondedNeighbors(Immediate):
         for node in context.application.cache.nodes:
             if isinstance(node, Atom):
                 to_select.append(node)
-                for bond in node.yield_bonds():
+                for bond in node.iter_bonds():
                     if bond.children[0].target not in context.application.cache.nodes:
                         to_select.append(bond.children[0].target)
                     if bond.children[1].target not in context.application.cache.nodes:

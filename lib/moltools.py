@@ -41,28 +41,28 @@ from molmod import Graph, Molecule, MolecularGraph
 
 
 __all__ = [
-    "yield_atoms", "yield_bonds", "chemical_formula",
+    "iter_atoms", "iter_bonds", "chemical_formula",
     "create_molecule", "create_molecular_graph"
 ]
 
 
-def yield_atoms(nodes):
+def iter_atoms(nodes):
     Atom = context.application.plugins.get_node("Atom")
     for node in nodes:
         if isinstance(node, Atom):
             yield node
         elif isinstance(node, ContainerMixin):
-            for atom in yield_atoms(node.children):
+            for atom in iter_atoms(node.children):
                 yield atom
 
 
-def yield_bonds(nodes):
+def iter_bonds(nodes):
     Bond = context.application.plugins.get_node("Bond")
     for node in nodes:
         if isinstance(node, Bond):
             yield node
         elif isinstance(node, ContainerMixin):
-            for bond in yield_bonds(node.children):
+            for bond in iter_bonds(node.children):
                 yield bond
 
 
@@ -94,7 +94,7 @@ def chemical_formula(atoms, markup=False):
 def create_molecule(selected_nodes, parent=None):
     numbers = []
     coordinates = []
-    atoms = list(yield_atoms(selected_nodes))
+    atoms = list(iter_atoms(selected_nodes))
     for atom in atoms:
         numbers.append(atom.number)
         if parent is None:
@@ -111,7 +111,7 @@ def create_molecular_graph(selected_nodes, parent=None):
 
     atom_indexes = dict((atom,i) for i,atom in enumerate(molecule.atoms))
     bonds = list(
-        bond for bond in yield_bonds(selected_nodes)
+        bond for bond in iter_bonds(selected_nodes)
         if bond.children[0].target in atom_indexes and
            bond.children[1].target in atom_indexes
     )

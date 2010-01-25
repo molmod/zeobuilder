@@ -344,7 +344,7 @@ class SketchOptions(GladeWrapper):
         primitive.Add(new, common_parent([gl_object1.parent, gl_object2.parent]))
 
     def erase_at(self, p, parent):
-        for node in context.application.main.drawing_area.yield_hits((p[0]-2, p[1]-2, p[0]+2, p[1]+2)):
+        for node in context.application.main.drawing_area.iter_hits((p[0]-2, p[1]-2, p[0]+2, p[1]+2)):
             try:
                 match = (
                     node is not None and node != parent and

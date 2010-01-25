@@ -109,20 +109,20 @@ class TetraCoordination(Immediate):
     def do(self):
         Atom = context.application.plugins.get_node("Atom")
 
-        def yield_all_tetra(nodes):
+        def iter_all_tetra(nodes):
             for node in nodes:
                 if isinstance(node, Atom) and node.number > 12:
                     yield node
                 elif isinstance(node, ContainerMixin):
-                    for tetra in yield_all_tetra(node.children):
+                    for tetra in iter_all_tetra(node.children):
                         yield tetra
 
         coordinated_tetra = [[] for i in xrange(5)]
-        for tetra in yield_all_tetra(context.application.cache.nodes_without_children):
+        for tetra in iter_all_tetra(context.application.cache.nodes_without_children):
             coordination = 0
-            for bridging in tetra.yield_neighbors():
+            for bridging in tetra.iter_neighbors():
                 if bridging.number > 6:
-                    num_t = len([t for t in bridging.yield_neighbors() if t.number > 12])
+                    num_t = len([t for t in bridging.iter_neighbors() if t.number > 12])
                     if num_t > 2:
                         raise UserError("Invalid zeolite structure.")
                     if num_t == 2:
@@ -157,12 +157,12 @@ class AddZeoliteTetraeders(Immediate):
         Atom = context.application.plugins.get_node("Atom")
         Tetraeder = context.application.plugins.get_node("Tetraeder")
 
-        def yield_all_tetra(nodes):
+        def iter_all_tetra(nodes):
             for node in nodes:
                 if isinstance(node, Atom) and node.num_bonds() == 4:
                     yield node
                 elif isinstance(node, ContainerMixin):
-                    for tetra in yield_all_tetra(node.children):
+                    for tetra in iter_all_tetra(node.children):
                         yield tetra
 
         cache = context.application.cache
@@ -172,9 +172,9 @@ class AddZeoliteTetraeders(Immediate):
             parent = cache.common_parent
             if parent is None:
                 parent = context.application.model.universe
-        for tetra in yield_all_tetra(cache.nodes_without_children):
+        for tetra in iter_all_tetra(cache.nodes_without_children):
             primitive.Add(
-                Tetraeder(targets=list(tetra.yield_neighbors()), color=tetra.get_color()),
+                Tetraeder(targets=list(tetra.iter_neighbors()), color=tetra.get_color()),
                 parent,
             )
 

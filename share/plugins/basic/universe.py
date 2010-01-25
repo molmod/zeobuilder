@@ -98,11 +98,11 @@ class GLPeriodicContainer(GLContainerBase):
     ])
 
 
-def yield_all_positions(l):
+def iter_all_positions(l):
     if len(l) == 0:
         yield []
     else:
-        for rest in yield_all_positions(l[1:]):
+        for rest in iter_all_positions(l[1:]):
             for i in xrange(int(l[0])):
                 yield [i] + rest
 
@@ -366,7 +366,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
                     repetitions = (self.repetitions + 2) * self.cell.active + 1 - self.cell.active
                 else:
                     repetitions = self.repetitions * self.cell.active + 1 - self.cell.active
-                for position in yield_all_positions(repetitions):
+                for position in iter_all_positions(repetitions):
                     vb.push_matrix()
                     t = numpy.dot(self.cell.matrix, numpy.array(position) - self.cell.active * self.clipping)
                     vb.translate(*t)
@@ -639,7 +639,7 @@ class SuperCell(ImmediateWithMemory):
 
         # replicate the positioned objects
         new_children = {}
-        for cell_index in yield_all_positions(repetitions):
+        for cell_index in iter_all_positions(repetitions):
             cell_index = numpy.array(cell_index)
             cell_hash = tuple(cell_index)
             serialized.seek(0)
@@ -656,7 +656,7 @@ class SuperCell(ImmediateWithMemory):
 
         new_connectors = []
         # replicate the objects that connect these positioned objects
-        for cell_index in yield_all_positions(repetitions):
+        for cell_index in iter_all_positions(repetitions):
             cell_index = numpy.array(cell_index)
             cell_hash = tuple(cell_index)
             for connector in universe.children:

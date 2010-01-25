@@ -237,7 +237,7 @@ class AutoConnectPhysical(AutoConnectMixin, Immediate):
         return isinstance(node, context.application.plugins.get_node("Atom"))
 
     def get_vector(self, atom0, atom1, distance):
-        if atom0 in atom1.yield_neighbors():
+        if atom0 in atom1.iter_neighbors():
             return None
         bond_type = bonds.bonded(atom0.number, atom1.number, distance)
         if bond_type is None:
@@ -312,7 +312,7 @@ class AutoConnectParameters(AutoConnectMixin, ImmediateWithMemory):
              (atom2.number == self.parameters.number2)) or
             ((atom1.number == self.parameters.number2) and
              (atom2.number == self.parameters.number1))) and \
-           atom1 not in atom2.yield_neighbors():
+           atom1 not in atom2.iter_neighbors():
             if self.parameters.distance >= distance:
                 return Bond(bond_type=self.parameters.bond_type, targets=[atom1, atom2])
         return None

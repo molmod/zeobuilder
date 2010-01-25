@@ -76,7 +76,7 @@ class DrawingArea(gtk.gtkgl.DrawingArea):
             glFlush()
         self.get_gl_drawable().gl_end()
 
-    def yield_hits(self, selection_box):
+    def iter_hits(self, selection_box):
         if not self.get_gl_drawable().gl_begin(self.get_gl_context()): return
         vb = context.application.vis_backend
         try:

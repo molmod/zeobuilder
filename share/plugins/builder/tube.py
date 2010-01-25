@@ -34,7 +34,7 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import ImmediateWithMemory, Parameters, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.moltools import yield_atoms
+from zeobuilder.moltools import iter_atoms
 from zeobuilder.undefined import Undefined
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.actions.primitive as primitive
@@ -162,7 +162,7 @@ class CreateTube(ImmediateWithMemory):
 
             return [
                 (atom.number, rotation*atom.get_absolute_frame().t)
-                for atom in yield_atoms([universe])
+                for atom in iter_atoms([universe])
             ]
 
         pattern = create_pattern()
@@ -216,7 +216,7 @@ class CreateTube(ImmediateWithMemory):
         else:
             big_a, big_b, rotation, stack_vector, stack_size, radius = define_big_not_periodic()
 
-        def yield_translations():
+        def iter_translations():
             "Yields the indices of the periodic images that are part of the tube."
             to_fractional = numpy.linalg.inv(numpy.array([big_a, big_b]).transpose())
             col_len = int(numpy.linalg.norm(big_a + m*stack_vector)/numpy.linalg.norm(flat_a))+4
@@ -230,7 +230,7 @@ class CreateTube(ImmediateWithMemory):
                         yield p
                     #yield p, (i >= 0).all() and (i < 1).all()
 
-        def yield_pattern():
+        def iter_pattern():
             for number, coordinate in pattern:
                 yield number, coordinate.copy()
 
@@ -250,8 +250,8 @@ class CreateTube(ImmediateWithMemory):
             ], float)
             big_cell = UnitCell(big_cell, numpy.array([True, periodic_tube, False], bool))
             primitive.SetProperty(universe, "cell", big_cell)
-            for p in yield_translations():
-                for number, coordinate in yield_pattern():
+            for p in iter_translations():
+                for number, coordinate in iter_pattern():
                     coordinate[:2] += p
                     coordinate[:2] = numpy.dot(rotation, coordinate[:2])
                     translation = Translation(coordinate)
@@ -261,8 +261,8 @@ class CreateTube(ImmediateWithMemory):
             big_matrix = numpy.diag([radius*2, radius*2, tube_length])
             big_cell = UnitCell(big_matrix, numpy.array([False, False, periodic_tube], bool))
             primitive.SetProperty(universe, "cell", big_cell)
-            for p in yield_translations():
-                for number, coordinate in yield_pattern():
+            for p in iter_translations():
+                for number, coordinate in iter_pattern():
                     coordinate[:2] += p
                     coordinate[:2] = numpy.dot(rotation, coordinate[:2])
                     translation = Translation(numpy.array([

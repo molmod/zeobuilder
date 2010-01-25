@@ -161,15 +161,15 @@ class Atom(GLGeometricBase, UserColorMixin):
         Bond = context.application.plugins.get_node("Bond")
         return sum(isinstance(reference.parent, Bond) for reference in self.references)
 
-    def yield_bonds(self):
+    def iter_bonds(self):
         Bond = context.application.plugins.get_node("Bond")
         for reference in self.references:
             referent = reference.parent
             if isinstance(referent, Bond):
                 yield referent
 
-    def yield_neighbors(self):
-        for bond in self.yield_bonds():
+    def iter_neighbors(self):
+        for bond in self.iter_bonds():
             first = bond.children[0].target
             if first == self:
                 neighbor = bond.children[1].target

@@ -364,7 +364,7 @@ class PickSelection(Interactive):
                 top = self.endy
                 bottom = self.beginy
 
-            for hit in drawing_area.yield_hits((left, top, right, bottom)):
+            for hit in drawing_area.iter_hits((left, top, right, bottom)):
                 main.toggle_selection(hit, event.button!=3)
 
         else:
