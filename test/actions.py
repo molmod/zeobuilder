@@ -699,10 +699,9 @@ class CoreActions(ApplicationTestCase):
 
             for index in xrange(4):
                 context.application.main.select_nodes([context.application.model.universe])
-                AddPoint = context.application.plugins.get_action("AddPoint")
-                self.assert_(AddPoint.analyze_selection())
-                AddPoint()
-                context.application.model.universe.children[-1].transformation.t = numpy.random.uniform(-5, 5, 3)
+                Point = context.application.plugins.get_node("Point")
+                point = Point(transformation=Translation(numpy.random.uniform(-5, 5, 3)))
+                context.application.model.universe.add(point)
 
             context.application.main.select_nodes(context.application.model.universe.children)
             AddTetraeder = context.application.plugins.get_action("AddTetraeder")
