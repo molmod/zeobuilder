@@ -243,6 +243,9 @@ class Universe(GLPeriodicContainer, FrameAxes):
         context.application.scene.clip_planes = []
         context.application.main.drawing_area.queue_draw()
 
+    def shortest_vector(self, delta):
+        return self.cell.shortest_vector(delta)
+
     #
     # Invalidation
     #
