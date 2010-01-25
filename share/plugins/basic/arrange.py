@@ -42,8 +42,6 @@ from zeobuilder.nodes.vector import Vector
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-import copy
-
 
 class GroupBase(Immediate):
     @staticmethod
@@ -66,7 +64,7 @@ class GroupBase(Immediate):
         cache = context.application.cache
         old_parent = cache.parent
         new_parent = NewParentClass()
-        nodes = copy.copy(cache.nodes)
+        nodes = list(cache.nodes)
         primitive.Add(new_parent, old_parent, index=cache.lowest_index)
         for victim in nodes:
             primitive.Move(victim, new_parent)
@@ -122,7 +120,7 @@ class UngroupBase(Immediate):
     def do(self):
         cache = context.application.cache
         new_parent = cache.parent
-        old_parents = copy.copy(cache.nodes)
+        old_parents = list(cache.nodes)
         for old_parent in old_parents:
             old_parent_index = old_parent.get_index()
             while len(old_parent.children) > 0:
@@ -202,7 +200,7 @@ class OneLevelHigherBase(Immediate):
     def do(self):
         cache = context.application.cache
         new_parent = cache.parent.parent
-        nodes = copy.copy(cache.nodes)
+        nodes = list(cache.nodes)
         for node in nodes:
             primitive.Move(node, new_parent)
 

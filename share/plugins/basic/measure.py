@@ -46,8 +46,6 @@ from OpenGL.GLUT import glutInit, glutStrokeCharacter, GLUT_STROKE_MONO_ROMAN
 from OpenGL.GL import *
 import numpy
 
-import math
-
 
 class MeasurementsWindow(GladeWrapper):
     def __init__(self):
@@ -161,12 +159,12 @@ class MeasurementsWindow(GladeWrapper):
         chain_len = len(self.model_objects)
         if chain_len > 0:
             delta = vector - self.vectors[chain_len-1]
-            distance = math.sqrt(numpy.dot(delta, delta))
+            distance = numpy.sqrt(numpy.dot(delta, delta))
             if distance < 1e-6:
                 return
         if chain_len > 1:
             delta = vector - self.vectors[chain_len-2]
-            distance = math.sqrt(numpy.dot(delta, delta))
+            distance = numpy.sqrt(numpy.dot(delta, delta))
             if distance < 1e-6:
                 return
 
@@ -247,7 +245,7 @@ class MeasurementsWindow(GladeWrapper):
 
         def express_distance(index1, index2):
             delta = self.vectors[index1] - self.vectors[index2]
-            return express_measure(math.sqrt(numpy.dot(delta, delta)), measure="Length")
+            return express_measure(numpy.sqrt(numpy.dot(delta, delta)), measure="Length")
 
         def express_angle(index1, index2, index3):
             delta1 = self.vectors[index1] - self.vectors[index2]
@@ -257,9 +255,9 @@ class MeasurementsWindow(GladeWrapper):
         def express_distance_to_line(index1, index2, index3):
             delta1 = self.vectors[index1] - self.vectors[index2]
             delta2 = self.vectors[index2] - self.vectors[index3]
-            delta2 /= math.sqrt(numpy.dot(delta2, delta2))
+            delta2 /= numpy.sqrt(numpy.dot(delta2, delta2))
             normal = delta1 - delta2*numpy.dot(delta1, delta2)
-            return express_measure(math.sqrt(numpy.dot(normal, normal)), measure="Length")
+            return express_measure(numpy.sqrt(numpy.dot(normal, normal)), measure="Length")
 
         def express_dihedral_angle(index1, index2, index3, index4):
             normal1 = numpy.cross(
@@ -278,7 +276,7 @@ class MeasurementsWindow(GladeWrapper):
                 self.vectors[index4] - self.vectors[index3],
                 self.vectors[index2] - self.vectors[index3]
             )
-            return express_measure(0.5*math.pi - angle(normal, delta), measure="Angle")
+            return express_measure(0.5*numpy.pi - angle(normal, delta), measure="Angle")
 
         def express_distance_to_plane(index1, index2, index3, index4):
             delta = self.vectors[index1] - self.vectors[index2]
@@ -286,14 +284,14 @@ class MeasurementsWindow(GladeWrapper):
                 self.vectors[index2] - self.vectors[index3],
                 self.vectors[index4] - self.vectors[index3]
             )
-            normal /= math.sqrt(numpy.dot(normal, normal))
+            normal /= numpy.sqrt(numpy.dot(normal, normal))
             return express_measure(abs(numpy.dot(delta, normal)), measure="Length")
 
         def express_distance_between_lines(index1, index2, index3, index4):
             delta1 = self.vectors[index1] - self.vectors[index2]
             delta2 = self.vectors[index3] - self.vectors[index4]
             normal = numpy.cross(delta1, delta2)
-            normal /= math.sqrt(numpy.dot(normal, normal))
+            normal /= numpy.sqrt(numpy.dot(normal, normal))
             delta3 = self.vectors[index1] - self.vectors[index3]
             return express_measure(abs(numpy.dot(delta3, normal)), measure="Length")
 

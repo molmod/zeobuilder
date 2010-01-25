@@ -36,7 +36,7 @@ from zeobuilder.conversion import express_measure, express_data_size
 
 from molmod import Rotation
 
-import math, gtk, numpy
+import gtk, numpy
 
 __all__ = [
     "Label", "Handedness", "BBox", "Distance", "VectorLength", "DataSize",
@@ -116,7 +116,7 @@ class VectorLength(Distance):
     def read_from_instance(self, instance):
         attribute = Distance.read_from_instance(self, instance)
         d = attribute.shortest_vector_relative_to(attribute.parent)
-        return math.sqrt(numpy.dot(d, d))
+        return numpy.sqrt(numpy.dot(d, d))
 
     def applicable_attribute(self):
         from zeobuilder.nodes.vector import Vector

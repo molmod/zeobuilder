@@ -54,9 +54,7 @@ from conscan import Geometry, ProgressMessage, Connection
 
 from molmod import Rotation, Translation, angstrom
 
-import gtk, numpy
-
-import weakref, copy
+import gtk, numpy, weakref
 
 
 class ConscanResults(ReferentBase):
@@ -197,7 +195,7 @@ class ConscanResultsWindow(GladeWrapper):
 
     def apply_normal(self):
         model, iter = self.tree_selection.get_selected()
-        old_transformation = copy.deepcopy(self.frame2.transformation)
+        old_transformation = self.frame2.transformation
         self.frame2.transformation.clear()
         transformation = self.frame1.get_frame_relative_to(self.frame2)
         if self.cb_inverse.get_active() and len(model.get_value(iter, 3)[3]) > 0:
@@ -278,7 +276,7 @@ class ConscanResultsWindow(GladeWrapper):
 
     def on_bu_apply_opt_clicked(self, button):
         action = CustomAction("Apply connection and optimize springs")
-        old_selection = copy.copy(context.application.cache.nodes)
+        old_selection = list(context.application.cache.nodes)
         self.apply_normal()
         self.optimize()
         context.application.main.select_nodes(old_selection)

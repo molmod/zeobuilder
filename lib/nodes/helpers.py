@@ -36,7 +36,7 @@ from zeobuilder.nodes.meta import NodeClass, Property
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
-from molmod.units import angstrom
+from molmod import angstrom
 
 import numpy
 

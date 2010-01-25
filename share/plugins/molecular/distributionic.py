@@ -45,13 +45,10 @@ from zeobuilder.conversion import express_measure, to_unit
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.graphs import Graph, GraphSearch, CriteriaSet
-from molmod.molecular_graphs import BondPattern, BendingAnglePattern, DihedralAnglePattern
-from molmod.vectors import angle
+from molmod import Graph, GraphSearch, CriteriaSet, BondPattern, \
+    BendingAnglePattern, DihedralAnglePattern, angle
 
-import gtk, numpy
-
-import math, os
+import gtk, numpy, os
 
 
 class DistributionDialog(GladeWrapper):
@@ -92,8 +89,8 @@ class DistributionDialog(GladeWrapper):
     def calculate_properties(self):
         self.average = self.data.mean()
         self.median = numpy.median(self.data)
-        self.stdev = math.sqrt(sum((self.data - self.data.mean())**2) / (len(self.data) - 1))
-        request_bins = int(math.sqrt(len(self.data)))
+        self.stdev = numpy.sqrt(sum((self.data - self.data.mean())**2) / (len(self.data) - 1))
+        request_bins = int(numpy.sqrt(len(self.data)))
         num_bins = request_bins
         while True:
             probs, bins = numpy.histogram(
@@ -110,7 +107,7 @@ class DistributionDialog(GladeWrapper):
 
         self.decimals = max([
             0,
-            -int(math.floor(math.log10(
+            -int(numpy.floor(numpy.log10(
                 abs(to_unit[self.unit](self.stdev))
             )))
         ])+2

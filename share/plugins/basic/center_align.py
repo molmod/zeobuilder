@@ -45,8 +45,6 @@ from molmod import Translation, Rotation, Complete, UnitCell
 
 import numpy
 
-import copy, math
-
 
 class DefineOrigin(CenterAlignBase):
     description = "Define origin"

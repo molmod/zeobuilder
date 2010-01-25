@@ -38,7 +38,7 @@ from zeobuilder.models import Model
 from zeobuilder.filters import run_file_dialog
 import zeobuilder.authors as authors
 
-import gtk, os, copy
+import gtk, os
 
 
 class FileNew(Immediate):
@@ -99,7 +99,7 @@ class FileImport(Immediate):
             if len(tmp_model.universe.children) > 0:
                 Frame = context.application.plugins.get_node("Frame")
                 root_frame = Frame(name=os.path.basename(filename))
-                tmp = copy.copy(tmp_model.universe.children)
+                tmp = list(tmp_model.universe.children)
                 while len(tmp_model.universe.children) > 0:
                     tmp_model.universe.remove(tmp_model.universe.children[0])
                 for node in tmp:
@@ -110,7 +110,7 @@ class FileImport(Immediate):
             if len(tmp_model.folder.children) > 0:
                 Folder = context.application.plugins.get_node("Folder")
                 root_folder = Folder(name=os.path.basename(filename))
-                tmp = copy.copy(tmp_model.folder.children)
+                tmp = list(tmp_model.folder.children)
                 while len(tmp_model.folder.children) > 0:
                     tmp_model.universe.remove(tmp_model.folder.children[0])
                 for node in tmp:

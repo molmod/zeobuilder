@@ -46,7 +46,7 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-import copy, gtk, numpy
+import gtk, numpy
 
 
 #
@@ -87,7 +87,7 @@ class SelectTargets(Immediate):
         return True
 
     def do(self):
-        references = copy.copy(context.application.cache.nodes)
+        references = list(context.application.cache.nodes)
         main = context.application.main
         for reference in references:
             main.toggle_selection(reference, False)
@@ -269,7 +269,7 @@ class RestoreSavedSelection(Immediate):
         return True
 
     def do(self):
-        referents = copy.copy(context.application.cache.nodes)
+        referents = list(context.application.cache.nodes)
         main = context.application.main
         for referent in referents:
             main.toggle_selection(referent, False)

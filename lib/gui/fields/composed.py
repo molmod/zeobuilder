@@ -43,9 +43,7 @@ from zeobuilder.undefined import Undefined
 from molmod import Translation as MathTranslation, Rotation as MathRotation, \
     UnitCell
 
-import numpy, gtk
-
-import math, sys
+import numpy, gtk, sys
 
 
 __all__ = [
@@ -282,7 +280,7 @@ class CellParameters(ComposedInTable):
                     measure="Angle",
                     low=0.0,
                     low_inclusive=False,
-                    high=math.pi,
+                    high=numpy.pi,
                     high_inclusive=False,
                     scientific=False,
                     decimals=0,

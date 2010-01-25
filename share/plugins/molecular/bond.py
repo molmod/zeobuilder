@@ -49,8 +49,6 @@ from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBR
 
 import numpy, gtk
 
-import math
-
 
 class Bond(Vector):
     info = ModelObjectInfo("plugins/molecular/bond.svg")
@@ -176,7 +174,7 @@ class Bond(Vector):
             self.end_position = 0
         else:
             scale = 0.4
-            s = math.sqrt(1 - c**2)
+            s = numpy.sqrt(1 - c**2)
             self.begin_radius = scale * begin.get_radius() * s
             self.end_radius = scale * end.get_radius() * s
             self.begin_position = scale * c * begin.get_radius()

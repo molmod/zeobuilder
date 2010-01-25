@@ -42,8 +42,6 @@ from molmod import Complete, Translation
 
 import numpy
 
-import math
-
 
 __all__ = ["Vector"]
 
@@ -139,14 +137,14 @@ class Vector(GLReferentBase):
         if relative_translation is None:
             self.length = 0
         else:
-            self.length = math.sqrt(numpy.dot(relative_translation, relative_translation))
+            self.length = numpy.sqrt(numpy.dot(relative_translation, relative_translation))
             if self.length > 0:
                 t = self.children[0].translation_relative_to(self.parent)
                 c = relative_translation[2] / self.length
                 if c >= 1.0:
                     self.orientation = Translation(t)
                 elif c <= -1.0:
-                    alpha = math.pi
+                    alpha = numpy.pi
                     axis = numpy.array([1.0, 0.0, 0.0])
                     self.orientation = Complete.from_properties(alpha, axis, False, t)
                 else:
@@ -159,7 +157,7 @@ class Vector(GLReferentBase):
                         signx = {True: 1, False: -1}[x >= 0]
                         a = -signx * y / x
                         b = signx
-                    alpha = math.acos(c)
+                    alpha = numpy.arccos(c)
                     axis = numpy.array([a, b, 0.0])
                     self.orientation = Complete.from_properties(alpha, axis, False, t)
 

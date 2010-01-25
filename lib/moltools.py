@@ -37,9 +37,7 @@ from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 
 from molmod.periodic import periodic
-from molmod.graphs import Graph
-from molmod.molecules import Molecule
-from molmod.molecular_graphs import MolecularGraph
+from molmod import Graph, Molecule, MolecularGraph
 
 
 __all__ = [

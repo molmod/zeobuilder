@@ -51,13 +51,10 @@ import zeobuilder.authors as authors
 from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
 from molmod.periodic import periodic
 from molmod.io import load_cml
-from molmod.vectors import angle as compute_angle
-from molmod import Translation, Rotation, random_orthonormal
+from molmod import angle as compute_angle, Translation, Rotation, random_orthonormal
 
-import gtk, numpy
-from math import cos,sin,sqrt,acos,pi
+import gtk, numpy, os
 
-import os.path
 
 class SketchOptions(GladeWrapper):
 
@@ -291,7 +288,6 @@ class SketchOptions(GladeWrapper):
                 if not reference.check_target(target_object):
                     return
             parent = gl_object.parent
-            import copy
             primitive.Add(new, parent)
             if(self.current_object == "Fragment"):
                 # rotation

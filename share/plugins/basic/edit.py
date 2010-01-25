@@ -42,7 +42,7 @@ import zeobuilder.authors as authors
 
 import gtk
 
-import copy, StringIO
+import StringIO
 
 
 class UndoMenuInfo(MenuInfoBase):
@@ -181,7 +181,7 @@ class Cut(Immediate):
         return True
 
     def do(self):
-        source = copy.copy(context.application.cache.nodes_without_children)
+        source = list(context.application.cache.nodes_without_children)
         copy_to_clipboard(source)
         delete(source)
 
@@ -204,7 +204,7 @@ class Copy(Immediate):
         return True
 
     def do(self):
-        source = copy.copy(context.application.cache.nodes_without_children)
+        source = list(context.application.cache.nodes_without_children)
         copy_to_clipboard(source)
 
 
@@ -255,7 +255,7 @@ class Delete(Immediate):
         return True
 
     def do(self):
-        dupes = copy.copy(context.application.cache.nodes_without_children)
+        dupes = list(context.application.cache.nodes_without_children)
         delete(dupes)
 
 

@@ -49,8 +49,6 @@ from molmod import angle as compute_angle
 
 import numpy, gtk
 
-import math, copy
-
 
 #
 # Immediate transformations
@@ -229,7 +227,7 @@ class RotateAboutAxisDialog(ImmediateWithMemory):
                 b = last.children[0].translation_relative_to(parent)
                 e = last.children[1].translation_relative_to(parent)
                 if (b is not None) and (e is not None):
-                    self.parameters.complete = Complete.from_properties(math.pi*0.25, e - b, False, b)
+                    self.parameters.complete = Complete.from_properties(numpy.pi*0.25, e - b, False, b)
         elif isinstance(last, GLTransformationMixin) and isinstance(last.transformation, Translation):
             parent = last.parent
             self.parameters.complete = Complete(numpy.identity(3, float), last.get_frame_relative_to(parent).t)
@@ -371,7 +369,7 @@ class ReflectionDialog(ImmediateWithMemory):
     def do(self):
         transformation = Complete.about_axis(
             self.parameters.center,
-            math.pi,
+            numpy.pi,
             self.parameters.normal,
             True
         )
@@ -437,8 +435,8 @@ class RoundRotation(Immediate):
             for angle_index in xrange(1, 360/step):
                 angle = angle_index * step
                 name = "%s (%s)" % (axis_name, angle)
-                rad = angle*math.pi/360
-                quaternion = numpy.concatenate(([math.cos(rad)], math.sin(rad) * axis), 1)
+                rad = angle*numpy.pi/360
+                quaternion = numpy.concatenate(([numpy.cos(rad)], numpy.sin(rad) * axis), 1)
                 rounded_quaternions.append(Record(name, quaternion))
 
         new_quaternions = [Record("Identity", numpy.array([1.0, 0.0, 0.0, 0.0]))]
@@ -458,7 +456,7 @@ class RoundRotation(Immediate):
                 cosine = numpy.dot(selected_quaternion, record.quaternion)
                 if cosine > 1: cosine = 1
                 elif cosine < -1: cosine = -1
-                cost_function = int(math.acos(cosine)*180.0/math.pi)
+                cost_function = int(numpy.arccos(cosine)*180.0/numpy.pi)
                 if cost_function < 10:
                     record.cost_function = cost_function
                 else:
@@ -521,7 +519,7 @@ class RotateMouseMixin(object):
             self.former_y = event.y
         elif event.button == 3: # Z rotate
             srcx, srcy = self.screen_rotation_center
-            self.former_rotz = math.atan2(-(event.y - srcy), event.x - srcx)
+            self.former_rotz = numpy.arctan2(-(event.y - srcy), event.x - srcx)
 
     def button_motion(self, drawing_area, event, start_button):
         if start_button == 2:
@@ -530,12 +528,12 @@ class RotateMouseMixin(object):
             rotx = (event.x - self.former_x) / float(drawing_area.allocation.width) * 360
             roty = (event.y - self.former_y) / float(drawing_area.allocation.width) * 360
             rotation_axis = numpy.array([-roty, -rotx, 0.0], float)
-            rotation_angle = math.sqrt(rotx*rotx + roty*roty)/30
+            rotation_angle = numpy.sqrt(rotx*rotx + roty*roty)/30
             self.former_x = event.x
             self.former_y = event.y
         elif start_button == 3: # Z rotation
             srcx, srcy = self.screen_rotation_center
-            rotz = math.atan2(-(event.y - srcy), event.x - srcx)
+            rotz = numpy.arctan2(-(event.y - srcy), event.x - srcx)
             rotation_axis = numpy.array([0.0, 0.0, -1.0], float)
             rotation_angle = rotz - self.former_rotz
             self.former_rotz = rotz
@@ -551,7 +549,7 @@ class RotateKeyboardError(Exception):
 
 class RotateKeyboardMixin(object):
     def key_press(self, drawing_area, event):
-        rotation_angle = math.pi/36.0
+        rotation_angle = numpy.pi/36.0
         rotation_axis = numpy.zeros(3, float)
         if event.keyval == 65363:
             #print "right"
@@ -639,7 +637,7 @@ class RotateObjectBase(InteractiveWithMemory):
         camera = context.application.camera
         self.screen_rotation_center = drawing_area.camera_to_screen(camera.object_to_camera(rotation_center_object))
         self.eye_rotation = camera.object_eye_rotation(self.victim)
-        self.old_transformation = copy.deepcopy(self.victim.transformation)
+        self.old_transformation = self.victim.transformation
 
     def do_rotation(self, rotation_angle, rotation_axis):
         rotation_axis = numpy.dot(self.eye_rotation, rotation_axis)
@@ -824,7 +822,7 @@ class TranslateObjectBase(InteractiveWithMemory):
         self.eye_rotation = context.application.camera.object_eye_rotation(self.victim)
         self.changed = False
 
-        self.old_transformation = copy.deepcopy(self.victim.transformation)
+        self.old_transformation = self.victim.transformation
 
     def get_victim_depth(self, drawing_area):
         camera = context.application.camera

@@ -53,9 +53,7 @@ from molmod import Complete, Translation, angstrom
 
 import iterative
 
-import numpy, gtk, sys
-
-import math, copy, time
+import numpy, gtk, sys, time
 
 
 __all__ = ["Spring"]
@@ -255,7 +253,7 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
     def update_gui(self):
         if self.status is not None:
             self.la_num_iter.set_text("%i" % self.status.step)
-            self.la_rms_error.set_text(express_measure(math.sqrt(self.status.value/self.num_springs), "Length"))
+            self.la_rms_error.set_text(express_measure(numpy.sqrt(self.status.value/self.num_springs), "Length"))
             self.progress_bar.set_text("%i%%" % int(self.status.progress*100))
             self.progress_bar.set_fraction(self.status.progress)
             for state_index, frame, variable in zip(self.state_indices, self.involved_frames, self.minimize.root_expression.state_variables):
@@ -385,7 +383,7 @@ class OptimizeSprings(ImmediateWithMemory):
         max_step = []
 
         old_transformations = [
-            (frame, copy.deepcopy(frame.transformation))
+            (frame, frame.transformation)
             for frame in involved_frames if frame is not None
         ]
 

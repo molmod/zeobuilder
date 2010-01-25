@@ -43,7 +43,7 @@ import zeobuilder.authors as authors
 
 from molmod import Translation, angstrom, UnitCell
 
-import numpy, gtk, copy
+import numpy, gtk
 
 
 class CreateTube(ImmediateWithMemory):
@@ -235,8 +235,8 @@ class CreateTube(ImmediateWithMemory):
                 yield number, coordinate.copy()
 
         # first delete everything the universe:
-        for child in copy.copy(universe.children):
-            primitive.Delete(child)
+        while len(universe.children) > 0:
+            primitive.Delete(universe.children[0])
 
         # add the new atoms
         Atom = context.application.plugins.get_node("Atom")

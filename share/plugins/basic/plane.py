@@ -46,8 +46,6 @@ import zeobuilder.actions.primitive as primitive
 
 import numpy
 
-import math
-
 
 class Plane(GLReferentBase, ColorMixin):
     info = ModelObjectInfo("plugins/basic/plane.svg")

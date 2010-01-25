@@ -44,7 +44,7 @@ import zeobuilder.authors as authors
 
 from molmod import Complete
 
-import copy, numpy
+import numpy
 
 
 class Box(GLGeometricBase, ColorMixin):

@@ -53,9 +53,7 @@ from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod import Translation, Complete, Rotation, EqualPattern, RingPattern, \
     GraphSearch, random_orthonormal, deg
 
-import numpy, gtk
-
-import math, sys, traceback, copy
+import numpy, gtk, sys, traceback
 
 
 class ChemicalFormula(Immediate):
@@ -290,7 +288,7 @@ class SaturateWithHydrogens(Immediate):
 
             hybride_count = num_hydrogens + lone_pairs(atom.number) + num_bonds - (used_valence - num_bonds)
             num_sites = num_hydrogens + lone_pairs(atom.number)
-            rotation = Rotation.from_properties(2*math.pi / float(num_sites), oposite_direction, False)
+            rotation = Rotation.from_properties(2*numpy.pi / float(num_sites), oposite_direction, False)
             opening_key = (hybride_count, num_sites)
             opening_angle = self.opening_angles.get(opening_key)
             if opening_angle is None:
@@ -318,7 +316,7 @@ class SaturateWithHydrogens(Immediate):
             else:
                 return
 
-            h_pos = bond_length*(oposite_direction*math.cos(opening_angle) + normal*math.sin(opening_angle))
+            h_pos = bond_length*(oposite_direction*numpy.cos(opening_angle) + normal*numpy.sin(opening_angle))
 
             for i in range(num_hydrogens):
                 t = atom.transformation.t + h_pos
@@ -406,12 +404,12 @@ class SaturateHydrogensManual(ImmediateWithMemory):
             main_direction /= numpy.linalg.norm(main_direction)
             normal = random_orthonormal(main_direction)
 
-            rotation = Rotation.from_properties(2*math.pi / float(num_hydrogens), main_direction, False)
+            rotation = Rotation.from_properties(2*numpy.pi / float(num_hydrogens), main_direction, False)
 
 
             h_pos = bond_length*(
-                main_direction*math.cos(self.parameters.valence_angle) +
-                normal*math.sin(self.parameters.valence_angle)
+                main_direction*numpy.cos(self.parameters.valence_angle) +
+                normal*numpy.sin(self.parameters.valence_angle)
             )
 
             for i in range(num_hydrogens):
@@ -589,7 +587,7 @@ def combinations(items, n):
     for index in xrange(len(items)):
         selected = items[index]
         for combination in combinations(items[index+1:], n-1):
-            combination_copy = copy.copy(combination)
+            combination_copy = combination.copy()
             combination_copy.add(selected)
             yield combination_copy
 combinations.authors=[authors.toon_verstraelen]
@@ -896,7 +894,7 @@ class FrameMolecules(Immediate):
             for atom in atoms:
                 # take a copy of the references since they are going to be
                 # refreshed (changed and reverted) during the loop.
-                for reference in copy.copy(atom.references):
+                for reference in list(atom.references):
                     referent = reference.parent
                     if referent.parent != frame:
                         has_to_move = True

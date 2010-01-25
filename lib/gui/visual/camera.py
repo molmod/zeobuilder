@@ -108,8 +108,7 @@ are explained below:
 from zeobuilder import context
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 
-from molmod.units import angstrom
-from molmod import Translation, Rotation
+from molmod import Translation, Rotation, angstrom
 
 import numpy
 

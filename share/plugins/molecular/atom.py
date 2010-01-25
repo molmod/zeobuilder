@@ -52,8 +52,6 @@ from molmod.periodic import periodic
 
 import numpy
 
-import math
-
 
 class Atom(GLGeometricBase, UserColorMixin):
     info = ModelObjectInfo("plugins/molecular/atom.svg")

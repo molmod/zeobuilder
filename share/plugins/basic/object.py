@@ -39,8 +39,6 @@ import zeobuilder.authors as authors
 
 import gtk
 
-import copy
-
 
 class EditProperties(Immediate):
     description = "Edit Properties"

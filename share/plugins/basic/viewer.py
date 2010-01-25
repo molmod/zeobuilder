@@ -38,9 +38,7 @@ from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-import gtk
-
-import math
+import gtk, numpy
 
 
 class ViewReset(Immediate):
@@ -105,7 +103,7 @@ class CameraSettings(Immediate):
                     attribute_name="opening_angle",
                     low=0,
                     low_inclusive=True,
-                    high=0.5*math.pi,
+                    high=0.5*numpy.pi,
                     high_inclusive=False,
                     show_popup=False,
                 ),

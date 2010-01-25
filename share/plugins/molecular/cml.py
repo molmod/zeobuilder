@@ -41,7 +41,7 @@ import zeobuilder.authors as authors
 
 from molmod import angstrom, Molecule, MolecularGraph, Translation
 from molmod.periodic import periodic
-from molmod.io.cml import load_cml, dump_cml
+from molmod.io import load_cml, dump_cml
 
 
 class LoadCML(LoadFilter):

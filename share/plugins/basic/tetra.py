@@ -43,8 +43,6 @@ import zeobuilder.actions.primitive as primitive
 
 import numpy
 
-import math
-
 
 class Tetraeder(GLReferentBase, ColorMixin):
     info = ModelObjectInfo("plugins/basic/tetra.svg")

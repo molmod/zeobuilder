@@ -39,13 +39,10 @@ from zeobuilder.undefined import Undefined
 from zeobuilder.expressions import Expression
 import zeobuilder.actions.primitive as primitive
 
-from molmod.transformations import Rotation, Translation, Complete
+from molmod import Rotation, Translation, Complete, angstrom
 from molmod.bonds import BOND_SINGLE
-from molmod.units import angstrom
 
 import gtk, numpy
-
-import math
 
 
 __all__ = [
@@ -1246,7 +1243,7 @@ class BuilderActions(ApplicationTestCase):
             context.application.model.file_open("input/precursor.zml")
             context.application.main.select_nodes(context.application.model.universe.children)
 
-            rotation2 = Rotation.from_properties(1*math.pi, [0, 1, 0], False)
+            rotation2 = Rotation.from_properties(1*numpy.pi, [0, 1, 0], False)
 
             parameters = Parameters()
             parameters.connect_description1 = (
