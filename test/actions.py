@@ -625,7 +625,8 @@ class CoreActions(ApplicationTestCase):
     def test_define_unit_cell_vectors(self):
         def fn():
             context.application.model.file_open("input/periodic.zml")
-            context.application.model.universe.cell_active[:] = False
+            context.application.model.universe.cell = \
+                context.application.model.universe.cell.copy_with(active=numpy.zeros(3, bool))
             context.application.main.select_nodes([
                 context.application.model.universe.children[2],
                 context.application.model.universe.children[4],

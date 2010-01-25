@@ -138,7 +138,7 @@ class ModelObject(Node):
 
     def delete_referents(self):
         while len(self.references) > 0:
-            primitive.Delete(references[0].parent)
+            primitive.Delete(self.references[0].parent)
         #for reference in copy.copy(self.references):
         #    if reference.model is not None:
         #        #print "Deleting Referent %s(%i)" % (reference.parent.get_name(), id(reference.parent))
