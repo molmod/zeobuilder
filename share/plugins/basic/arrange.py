@@ -292,7 +292,7 @@ class SwapVector(Immediate):
 
     def do(self):
         for vector in context.application.cache.nodes:
-            primitive.SetProperty(vector, "targets", reversed(vector.get_targets()))
+            primitive.SetProperty(vector, "targets", vector.get_targets()[::-1])
 
 
 actions = {
