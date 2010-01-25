@@ -908,7 +908,7 @@ class MolecularActions(ApplicationTestCase):
 
             parameters = Parameters()
             parameters.num_hydrogens = 2
-            parameters.opening_angle = 1.9093
+            parameters.valence_angle = 1.9093
 
             context.application.main.select_nodes([context.application.model.universe.children[1]])
             SaturateHydrogensManual = context.application.plugins.get_action("SaturateHydrogensManual")
@@ -1007,12 +1007,13 @@ class MolecularActions(ApplicationTestCase):
 
     def test_frame_molecules(self):
         def fn():
+            from molmod import UnitCell
             context.application.model.file_open("input/methane_box22_125.xyz")
             universe = context.application.model.universe
 
             context.application.action_manager.record_primitives = False
-            primitive.SetProperty(universe, "cell", numpy.identity(3, float)*22*angstrom)
-            primitive.SetProperty(universe, "cell_active", numpy.array([True, True, True], bool))
+            unit_cell = UnitCell(numpy.identity(3, float)*22*angstrom, numpy.ones(3, bool))
+            primitive.SetProperty(universe, "cell", unit_cell)
 
             context.application.main.select_nodes([universe])
             AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")

@@ -173,7 +173,7 @@ class AlignUnitCell(Immediate):
     def do(self):
         universe = context.application.cache.node
         # first make sure the cell is right handed
-        if numpy.linalg.det(universe.cell.matrix) < 0 and universe.cell_active.sum() == 3:
+        if numpy.linalg.det(universe.cell.matrix) < 0 and universe.cell.active.sum() == 3:
             new_matrix = universe.cell.matrix.copy()
             temp = new_matrix[:,0].copy()
             new_matrix[:,0] = new_matrix[:,1]

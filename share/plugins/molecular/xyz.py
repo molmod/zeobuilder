@@ -81,11 +81,6 @@ class LoadXYZ(LoadFilter):
         geometries = []
         for title, coordinates in xyz_reader:
             geometries.append(coordinates)
-        if len(geometries) > 1:
-            geometries = numpy.array(geometries)
-            Trajectory = context.application.plugins.get_node("Trajectory")
-            trajectory = Trajectory(targets=universe.children, frames=geometries)
-            folder.add(trajectory)
 
         return [universe, folder]
 

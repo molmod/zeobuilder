@@ -91,8 +91,7 @@ class LoadPDB(LoadFilter):
                 alpha = float(line[33:40].strip())*numpy.pi/180
                 beta = float(line[40:47].strip())*numpy.pi/180
                 gamma = float(line[47:54].strip())*numpy.pi/180
-                universe.set_parameters([a, b, c], [alpha, beta, gamma])
-                universe.cell_active = numpy.array([True, True, True])
+                universe.set_unit_cell(UnitCell.from_properties([a, b, c], [alpha, beta, gamma]))
             counter += 1
 
         return [universe, folder]

@@ -696,13 +696,13 @@ class RingDistributionWindow(GladeWrapper):
 
         # A few usefull attributes
         for ring in rings:
-            ring.atoms = [graph.molecule.atoms[node] for node in ring.ring_nodes]
+            vertices = ring.ring_vertices
+            ring.atoms = [graph.molecule.atoms[vertex] for vertex in vertices]
             ring.bonds = [
-                graph.bonds[graph.pair_index[frozenset([
-                    ring.ring_nodes[index],
-                    ring.ring_nodes[(index+1)%len(ring)]
+                graph.bonds[graph.edge_index[frozenset([
+                    vertices[index], vertices[(index+1)%len(ring)]
                 ])]]
-                for index in xrange(len(ring))
+                for index in xrange(len(vertices))
             ]
 
         self.compute_properties()
@@ -848,7 +848,7 @@ class FrameMolecules(Immediate):
         positions = dict((node, atom.get_frame_up_to(parent).t) for node, atom in zip(group, atoms))
 
         Universe = context.application.plugins.get_node("Universe")
-        if isinstance(parent, Universe) and parent.cell_active.any():
+        if isinstance(parent, Universe) and parent.cell.active.any():
             # find the atom that is the closest to the origin
             closest = group[0]
             closest_distance = numpy.linalg.norm(positions[closest])
@@ -883,7 +883,7 @@ class FrameMolecules(Immediate):
         parent = cache.node
 
         Frame = context.application.plugins.get_node("Frame")
-        for group in graph.independent_nodes:
+        for group in graph.independent_vertices:
             atoms = [graph.molecule.atoms[i] for i in group]
             new_positions = self.calc_new_positions(group, atoms, graph, parent)
             frame = Frame(name=chemical_formula(atoms)[1])
