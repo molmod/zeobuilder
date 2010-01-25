@@ -976,15 +976,17 @@ class TranslateRotationCenterBase(Interactive):
         tmp = vector.copy()
         tmp[2] = 0
         transformed_vector = numpy.dot(self.eye_rotation, tmp)
-        camera.eye.t[:2] -= vector[:2]
+        new_eye_t = camera.eye.t.copy()
+        new_eye_t[:2] -= vector[:2]
         camera.rotation_center = Translation(camera.rotation_center.t + transformed_vector)
         if (camera.opening_angle > 0):
-            camera.eye.t[2] -= vector[2]
+            new_eye_t[2] -= vector[2]
         else:
             window_size = camera.window_size*(1 + 0.01*vector[-1])
             if window_size < 0.001: window_size = 0.001
             elif window_size > 1000: window_size = 1000
             camera.window_size = window_size
+        camera.eye = Translation(new_eye_t)
         drawing_area.queue_draw()
 
 
