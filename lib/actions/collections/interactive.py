@@ -145,7 +145,10 @@ class InteractiveBar(gtk.Table):
         context.application.main.window.connect("key_press_event", self.key_press)
         context.application.main.window.connect("key_release_event", self.key_release)
         main = context.application.main
-        main.drawing_area.add_events(gtk.gdk.BUTTON_PRESS_MASK | gtk.gdk.BUTTON_RELEASE_MASK | gtk.gdk.BUTTON_MOTION_MASK)
+        main.drawing_area.add_events(
+            gtk.gdk.BUTTON_PRESS_MASK | gtk.gdk.BUTTON_RELEASE_MASK |
+            gtk.gdk.BUTTON_MOTION_MASK | gtk.gdk.POINTER_MOTION_MASK
+        )
         main.drawing_area.connect("button_press_event", self.button_press)
         main.drawing_area.connect("motion_notify_event", self.button_motion)
         main.drawing_area.connect("button_release_event", self.button_release)
