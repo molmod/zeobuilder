@@ -211,7 +211,7 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
 
     def startElement(self, name, attrs):
         if name == "zml_file":
-            if attrs.getValue("version") != "0.2": raise FilterError, "Only format 0.2 is supported in this version of Zeobuilder. Use zb-convert to convert older zml files to the zml 0.2 format"
+            if attrs.getValue("version") != "0.2": raise FilterError, "Only format 0.2 is supported in this version of Zeobuilder. Use zml-upgrade to convert older zml files to the zml 0.2 format"
         else:
             new_tag = ZMLTag(name, dict((name, attrs.getValue(name)) for name in attrs.getNames()))
             if (len(self.hierarchy) == 0) or (self.hierarchy[-1][-1].being_processed):

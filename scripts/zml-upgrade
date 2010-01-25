@@ -46,18 +46,37 @@ def convert1(dom):
     universe = get_child(l, "model_object", {"class": "Universe"})
     try:
         active = get_child(universe, "array", {"label": "cell_active"})
-        active.setAttribute("label", "active")
         universe.removeChild(active)
-        matrix = get_child(universe, "array", {"label": "cell"})
-        matrix.setAttribute("label", "matrix")
-        universe.removeChild(matrix)
-        unit_cell = dom.createElement("unit_cell")
-        unit_cell.setAttribute("label", "cell")
-        unit_cell.appendChild(matrix)
-        unit_cell.appendChild(active)
-        universe.appendChild(unit_cell)
     except KeyError:
-        pass
+        active = dom.createElement("array")
+        active_shape = dom.createElement("shape")
+        active_shape.appendChild(dom.createTextNode("3"))
+        active.appendChild(active_shape)
+        active_cells = dom.createElement("cells")
+        active_cells.appendChild(dom.createTextNode("False False False"))
+        active.appendChild(active_cells)
+        print "Warning: no cell_active found"
+    active.setAttribute("label", "active")
+
+    try:
+        matrix = get_child(universe, "array", {"label": "cell"})
+        universe.removeChild(matrix)
+    except KeyError:
+        matrix = dom.createElement("matrix")
+        matrix_shape = dom.createElement("shape")
+        matrix_shape.appendChild(dom.createTextNode("3 3"))
+        matrix.appendChild(matrix_shape)
+        matrix_cells = dom.createElement("cells")
+        matrix_cells.appendChild(dom.createTextNode("10.0 0.0 0.0 0.0 10.0 0.0 0.0 0.0 10.0"))
+        matrix.appendChild(matrix_cells)
+        print "Warning: no cell found"
+    matrix.setAttribute("label", "matrix")
+
+    unit_cell = dom.createElement("unit_cell")
+    unit_cell.setAttribute("label", "cell")
+    unit_cell.appendChild(matrix)
+    unit_cell.appendChild(active)
+    universe.appendChild(unit_cell)
     dom.documentElement.setAttribute("version", "0.2")
 
 convertors = {
