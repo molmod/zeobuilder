@@ -98,6 +98,9 @@ class Configuration(object):
 
     def save_to_file(self):
         from zeobuilder.zml import dump_to_file
+        dirname = os.path.dirname(self.filename)
+        if not os.path.isdir(dirname):
+            os.mkdir(dirname)
         f = file(self.filename, "w")
         dump_to_file(f, self.settings)
         f.close()
