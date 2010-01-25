@@ -41,7 +41,7 @@ from zeobuilder.nodes.analysis import calculate_center
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod import Translation, Rotation, Complete
+from molmod import Translation, Rotation, Complete, UnitCell
 
 import numpy
 
@@ -166,7 +166,7 @@ class AlignUnitCell(Immediate):
         node = context.application.cache.node
         Universe = context.application.plugins.get_node("Universe")
         if not isinstance(node, Universe): return False
-        if node.cell_active.sum() == 0: return False
+        if node.cell.active.sum() == 0: return False
         # C) passed all tests:
         return True
 
@@ -182,7 +182,7 @@ class AlignUnitCell(Immediate):
             primitive.SetProperty(universe, "cell", new_cell)
 
         # then rotate the unit cell box to the normalized frame:
-        rotation = Rotation(universe.calc_align_rotation_matrix())
+        rotation = universe.cell.alignment_a
         for child in context.application.cache.transformed_children:
             primitive.Transform(child, rotation)
         new_cell = UnitCell(numpy.dot(rotation.r, universe.cell.matrix), universe.cell.active)
