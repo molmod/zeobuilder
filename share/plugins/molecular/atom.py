@@ -149,7 +149,11 @@ class Atom(GLGeometricBase, UserColorMixin):
 
     def revalidate_bounding_box(self):
         GLGeometricBase.revalidate_bounding_box(self)
-        self.bounding_box.extend_with_corners([-self.get_radius()*numpy.ones(3, float), self.get_radius()*numpy.ones(3, float)])
+        radius = self.get_radius()
+        self.bounding_box.extend_with_corners(numpy.array([
+            [-radius, -radius, -radius],
+            [ radius,  radius,  radius]
+        ]))
 
     #
     # Tools

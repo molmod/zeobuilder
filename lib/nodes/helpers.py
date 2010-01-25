@@ -168,8 +168,10 @@ class FrameAxes(object):
     #
 
     def extend_bounding_box(self, bounding_box):
-        bounding_box.extend_with_corners([numpy.array([-self.axis_thickness, -self.axis_thickness, -self.axis_thickness]),
-                                          numpy.array([ self.axis_length,     self.axis_length,     self.axis_length   ])])
+        bounding_box.extend_with_corners(numpy.array([
+            [-self.axis_thickness, -self.axis_thickness, -self.axis_thickness],
+            [ self.axis_length,     self.axis_length,     self.axis_length   ]
+        ]))
 
 
 class BoundingBox(object):
@@ -189,7 +191,7 @@ class BoundingBox(object):
 
     def extend_with_corners(self, corners):
         if self.corners is None:
-            self.corners = cornes.copy()
+            self.corners = corners.copy()
         else:
             for i in range(3):
                 if corners[0,i] < self.corners[0,i]: self.corners[0,i] = corners[0,i]

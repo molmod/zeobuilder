@@ -108,7 +108,10 @@ class Sphere(GLGeometricBase, ColorMixin):
 
     def revalidate_bounding_box(self):
         GLGeometricBase.revalidate_bounding_box(self)
-        self.bounding_box.extend_with_corners([-self.radius*numpy.ones(3, float), self.radius*numpy.ones(3, float)])
+        self.bounding_box.extend_with_corners(numpy.array([
+            [-self.radius, -self.radius, -self.radius],
+            [ self.radius,  self.radius,  self.radius]
+        ]))
 
 
 class AddSphere(AddBase):

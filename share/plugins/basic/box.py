@@ -113,7 +113,7 @@ class Box(GLGeometricBase, ColorMixin):
 
     def revalidate_bounding_box(self):
         GLGeometricBase.revalidate_bounding_box(self)
-        self.bounding_box.extend_with_corners([-0.5*self.size, 0.5*self.size])
+        self.bounding_box.extend_with_corners(numpy.array([-0.5*self.size, 0.5*self.size]))
 
 
 class AddBox(AddBase):

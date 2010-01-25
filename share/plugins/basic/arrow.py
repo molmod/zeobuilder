@@ -176,9 +176,15 @@ class Arrow(Vector, ColorMixin):
     def revalidate_bounding_box(self):
         Vector.revalidate_bounding_box(self)
         if self.length > 0.0:
-            self.bounding_box.extend_with_corners([numpy.array([0.0, 0.0, 0.0]), numpy.array([0.0, 0.0, self.length])])
+            self.bounding_box.extend_with_corners(numpy.array([
+                [0.0, 0.0, 0.0],
+                [0.0, 0.0, self.length]
+            ]))
             temp = {True: self.radius, False: self.arrow_radius}[self.radius > self.arrow_radius]
-            self.bounding_box.extend_with_corners([numpy.array([-temp, -temp, 0.0]), numpy.array([ temp,  temp, 0.0])])
+            self.bounding_box.extend_with_corners(numpy.array([
+                [-temp, -temp, 0.0],
+                [ temp,  temp, 0.0]
+            ]))
 
 
 class ConnectArrow(ConnectBase):
