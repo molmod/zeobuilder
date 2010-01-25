@@ -229,7 +229,7 @@ class Universe(GLPeriodicContainer, FrameAxes):
             return
         clip_planes = context.application.scene.clip_planes
         assert len(clip_planes) == 0
-        active, inactive = self.get_active_inactive()
+        active, inactive = self.cell.active_inactive
         for index in active:
             axis = self.cell.matrix[:,index]
             ortho = self.cell.reciprocal[index] / numpy.linalg.norm(self.cell.reciprocal[index])
