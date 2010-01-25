@@ -260,11 +260,6 @@ class CellMatrix(ComposedArray):
             decimals=decimals,
         )
 
-    def convert_to_value(self, representation):
-        intermediate = ComposedArray.convert_to_value(self, representation)
-        check_cell(intermediate)
-        return intermediate
-
 
 class CellParameters(ComposedInTable):
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
@@ -351,10 +346,16 @@ class Cell(ComposedInTable):
         )
 
     def convert_to_representation(self, value):
-        return value.active, value.matrix
+        return (
+            self.fields[0].convert_to_representation(value.active),
+            self.fields[1].convert_to_representation(value.matrix),
+        )
 
     def convert_to_value(self, representation):
-        return UnitCell(representation[1], representation[0])
+        return UnitCell(
+            self.fields[1].convert_to_value(representation[1]),
+            self.fields[0].convert_to_value(representation[0])
+        )
 
 
 class Repetitions(ComposedArray):

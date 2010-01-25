@@ -62,7 +62,8 @@ class Entry(Faulty):
 
     def write_to_widget(self, representation, original=False):
         #print self, representation
-        if representation == ambiguous: representation = ""
+        if representation is ambiguous:
+            representation = ""
         self.entry.set_text(representation)
         Faulty.write_to_widget(self, representation, original)
 

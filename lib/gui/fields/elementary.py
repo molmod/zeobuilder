@@ -145,7 +145,7 @@ class Composed(Multiple, FaultyMixin):
         return tuple(field.convert_to_representation(value[index]) for index, field in enumerate(self.fields))
 
     def write_to_widget(self, representation, original=False):
-        if representation == ambiguous:
+        if representation is ambiguous:
             for field in self.fields:
                 field.write_to_widget(ambiguous, original)
         else:
