@@ -43,9 +43,8 @@ import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod import Translation, Rotation, Complete, rotation_about_axis, \
-    quaternion_product, rotation_matrix_to_quaternion, \
-    quaternion_to_rotation_matrix
+from molmod import Translation, Rotation, Complete, quaternion_product, \
+    rotation_matrix_to_quaternion, quaternion_to_rotation_matrix
 from molmod import angle as compute_angle
 
 import numpy, gtk
@@ -370,7 +369,7 @@ class ReflectionDialog(ImmediateWithMemory):
             self.parameters.clear()
 
     def do(self):
-        transformation = rotation_around_center(
+        transformation = Complete.about_axis(
             self.parameters.center,
             math.pi,
             self.parameters.normal,
