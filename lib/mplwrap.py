@@ -35,7 +35,6 @@
 from matplotlib import rcParams
 
 rcParams["backend"] = "GTKAgg"
-rcParams["numerix"] = "numpy"
 rcParams["font.size"] = 9
 rcParams["legend.fontsize"] = 8
 rcParams["axes.titlesize"] = 9
