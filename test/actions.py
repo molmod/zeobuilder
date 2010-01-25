@@ -638,8 +638,10 @@ class CoreActions(ApplicationTestCase):
 
     def test_wrap_cell_contents(self):
         def fn():
+            from molmod import UnitCell
             context.application.model.file_open("input/core_objects.zml")
-            context.application.model.universe.cell_active[:] = True
+            unit_cell = UnitCell(numpy.identity(3, float), numpy.ones(3, bool))
+            context.application.model.universe.cell = unit_cell
             WrapCellContents = context.application.plugins.get_action("WrapCellContents")
             self.assert_(WrapCellContents.analyze_selection())
             WrapCellContents()

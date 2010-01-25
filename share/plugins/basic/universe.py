@@ -53,7 +53,7 @@ from molmod import Translation, UnitCell, angstrom
 
 import numpy, gtk
 
-import copy, StringIO
+import StringIO
 
 
 default_unit_cell = UnitCell(numpy.identity(3, float)*10*angstrom, numpy.zeros(3, bool))
@@ -475,16 +475,15 @@ class UnitCellToCluster(ImmediateWithMemory):
             # replication of the points
             new_points = {}
             for old_point in original_points:
-                orig_position = old_point.transformation.t
-                orig_position -= universe.cell.matrix[:,axis]*universe.to_index(orig_position)[axis]
-                fractional = universe.to_fractional(orig_position)
+                orig_position = universe.cell.shortest_vector(old_point.transformation.t)
+                #orig_position -= universe.cell.matrix[:,axis]*universe.cell.to_fractional(orig_position)[axis]
+                fractional = universe.cell.to_fractional(orig_position)
                 for cell_index in xrange(index_min, index_max):
                     position = orig_position + universe.cell.matrix[:,axis]*cell_index
                     if (fractional[axis]+cell_index < interval[0]) or (fractional[axis]+cell_index > interval[1]):
                         continue
                     state = old_point.__getstate__()
-                    state["transformation"] = copy.deepcopy(old_point.transformation)
-                    state["transformation"].t[:] = position
+                    state["transformation"] = state["transformation"].copy_with(t=position)
                     new_point = old_point.__class__(**state)
                     new_points[(old_point, cell_index)] = new_point
 
@@ -529,9 +528,10 @@ class UnitCellToCluster(ImmediateWithMemory):
 
             # remove the periodicity
 
-            tmp_active = universe.cell.active.copy()
-            tmp_active[axis] = False
-            primitive.SetProperty(universe, "cell.active", tmp_active)
+            new_active = universe.cell.active.copy()
+            new_active[axis] = False
+            new_cell = universe.cell.copy_with(active=new_active)
+            primitive.SetProperty(universe, "cell", new_cell)
 
             # add the new nodes
 
@@ -678,7 +678,7 @@ class SuperCell(ImmediateWithMemory):
                         -first_target_orig.transformation.t
                     ))
                     translation = first_target.transformation.t + shortest_vector
-                    other_cell_index = universe.to_index(translation - numpy.dot(universe.cell, -0.5*(repetitions - 1)))
+                    other_cell_index = universe.cell.to_fractional(translation - numpy.dot(universe.cell, -0.5*(repetitions - 1)))
                     other_cell_index %= repetitions
                     other_cell_hash = tuple(other_cell_index)
                     other_target_index = positioned.index(other_target_orig)
@@ -741,19 +741,16 @@ class DefineUnitCellVectors(Immediate):
     def do(self):
         vectors = context.application.cache.nodes
         universe = context.application.model.root[0]
-        new_unit_cell = UnitCell()
-        new_unit_cell.cell.active = copy.deepcopy(universe.cell.active)
-        new_unit_cell.cell = copy.deepcopy(universe.cell)
+        new_cell = universe.cell
         try:
             for vector in vectors:
-                new_unit_cell.add_cell_vector(vector.shortest_vector_relative_to(universe))
+                new_cell = new_cell.add_cell_vector(vector.shortest_vector_relative_to(universe))
         except ValueError:
             if len(vectors) == 1:
                 raise UserError("Failed to add the selected vector as cell vector since it would make the unit cell singular.")
             else:
                 raise UserError("Failed to add the selected vectors as cell vectors since they would make the unit cell singular.")
-        primitive.SetProperty(universe, "cell", new_unit_cell.cell)
-        primitive.SetProperty(universe, "cell.active", new_unit_cell.cell.active)
+        primitive.SetProperty(universe, "cell", new_cell)
 
 
 class WrapCellContents(Immediate):
@@ -777,9 +774,9 @@ class WrapCellContents(Immediate):
         universe = context.application.model.universe
         for child in universe.children:
             if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
-                cell_index = universe.to_index(child.transformation.t)
+                cell_index = universe.cell.to_fractional(child.transformation.t)
                 if cell_index.any():
-                    t = new_transformation.t - numpy.dot(universe.cell, cell_index)
+                    t = child.transformation.t - universe.cell.to_cartesian(cell_index)
                     new_transformation = child.transformation.copy_with(t=t)
                     primitive.SetProperty(child, "transformation", new_transformation)
 
