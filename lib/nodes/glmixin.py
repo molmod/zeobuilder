@@ -265,7 +265,7 @@ class GLMixin(gobject.GObject):
 
     def get_parentframe_up_to(self, upper_parent):
         if not isinstance(self.parent, GLMixin):
-            assert upper_parentisNone, "upper_parent must be (an indirect) parent of self."
+            assert upper_parent is None, "upper_parent must be (an indirect) parent of self."
             return Complete.identity()
         elif self.parent == upper_parent:
             return Complete.identity()
@@ -414,7 +414,7 @@ class GLTransformationMixin(GLMixin):
         if (upper_parent == self):
             return Complete.identity()
         elif (self.parent == upper_parent):
-            return copy.deepcopy(self.transformation)
+            return self.transformation
         else:
             return self.get_parentframe_up_to(upper_parent) * self.transformation
 

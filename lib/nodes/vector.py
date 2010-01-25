@@ -38,7 +38,7 @@ from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
-from molmod import Complete
+from molmod import Complete, Translation
 
 import numpy
 

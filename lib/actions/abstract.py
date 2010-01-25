@@ -37,7 +37,7 @@ from zeobuilder.nodes.glmixin import GLMixin, GLTransformationMixin
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 import zeobuilder.actions.primitive as primitive
 
-from molmod import UnitCell
+from molmod import UnitCell, PairSearchIntra, Translation
 
 import numpy
 
@@ -112,43 +112,46 @@ class AutoConnectMixin(object):
         # B) validating
         cache = context.application.cache
         if len(cache.nodes) == 0: return False
-        if cache.common_root == None: return False
         # C) passed all tests:
         return True
 
     def allow_node(self, node):
-        return isinstance(node, GLTransformationMixin) and \
-            isinstance(node.transformation, Translation)
+        raise NotImplementedError
 
     def get_vector(self, node1, node2, distance):
         raise NotImplementedError
 
-    def do(self, grid_size):
+    def do(self, cutoff):
         cache = context.application.cache
         parent = cache.common_root
-        nodes = cache.nodes_without_children
+
+        def iter_translation_nodes(nodes):
+            for node in nodes:
+                if isinstance(node, GLTransformationMixin) and \
+                   isinstance(node.transformation, Translation) and \
+                   self.allow_node(node):
+                    yield node
+                if isinstance(node, ContainerMixin):
+                    for subnode in iter_translation_nodes(node.children):
+                        yield subnode
+
+        nodes = []
+        coordinates = []
+        for node in iter_translation_nodes(cache.nodes_without_children):
+            nodes.append(node)
+            coordinates.append(node.get_frame_up_to(parent).t)
+        coordinates = numpy.array(coordinates)
 
         unit_cell = None
-        if isinstance(parent, UnitCell):
-            unit_cell = parent
-
-        binned_nodes = SparseBinnedObjects(
-            YieldPositionedChildren(
-                nodes, parent, True,
-                lambda node: self.allow_node(node)
-            )(),
-            grid_size
-        )
-
-        def connect_nodes(positioned1, positioned2):
-            delta = parent.shortest_vector(positioned2.coordinate - positioned1.coordinate)
-            distance = numpy.linalg.norm(delta)
-            return self.get_vector(positioned1.id, positioned2.id, distance)
+        if isinstance(parent, context.application.plugins.get_node("Universe")):
+            unit_cell = parent.cell
 
         vector_counter = 1
-        for (positioned1, positioned2), vector in IntraAnalyseNeighboringObjects(binned_nodes, connect_nodes)(unit_cell):
-            vector.name += " %i" % vector_counter
-            vector_counter += 1
-            primitive.Add(vector, parent)
+        for i0, i1, delta, distance in PairSearchIntra(coordinates, cutoff, unit_cell):
+            vector = self.get_vector(nodes[i0], nodes[i1], distance)
+            if vector is not None:
+                vector.name += " %i" % vector_counter
+                vector_counter += 1
+                primitive.Add(vector, parent)
 
 

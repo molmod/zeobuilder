@@ -238,14 +238,14 @@ class AutoConnectPhysical(AutoConnectMixin, Immediate):
     def allow_node(self, node):
         return isinstance(node, context.application.plugins.get_node("Atom"))
 
-    def get_vector(self, atom1, atom2, distance):
-        if atom1 in atom2.yield_neighbors():
+    def get_vector(self, atom0, atom1, distance):
+        if atom0 in atom1.yield_neighbors():
             return None
-        bond_type = bonds.bonded(atom1.number, atom2.number, distance)
+        bond_type = bonds.bonded(atom0.number, atom1.number, distance)
         if bond_type is None:
             return None
         else:
-            return Bond(bond_type=bond_type, targets=[atom1, atom2])
+            return Bond(bond_type=bond_type, targets=[atom0, atom1])
 
     def do(self):
         AutoConnectMixin.do(self, bonds.max_length)
