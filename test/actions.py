@@ -375,7 +375,7 @@ class CoreActions(ApplicationTestCase):
             ScaleUnitCell = context.application.plugins.get_action("ScaleUnitCell")
             self.assert_(ScaleUnitCell.analyze_selection())
             parameters = Parameters()
-            parameters.cell = numpy.array([
+            parameters.matrix = numpy.array([
                 [1.0, 0.0, 0.0],
                 [0.0, 2.0, 0.0],
                 [0.0, 0.0, 3.0],
@@ -546,8 +546,7 @@ class CoreActions(ApplicationTestCase):
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
             parameters = Parameters()
-            parameters.rotation = Rotation()
-            parameters.rotation.set_rotation_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False)
+            parameters.rotation = Rotation.from_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False)
             RotateDialog = context.application.plugins.get_action("RotateDialog")
             self.assert_(RotateDialog.analyze_selection(parameters))
             RotateDialog(parameters)
@@ -558,10 +557,7 @@ class CoreActions(ApplicationTestCase):
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
             parameters = Parameters()
-            parameters.complete = Complete()
-            parameters.complete.set_rotation_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False)
-            parameters.complete = Translation()
-            parameters.complete.t = numpy.array([2.0, 4.1, -1.0], float)
+            parameters.complete = Complete.from_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False, numpy.array([2.0, 4.1, -1.0], float))
             RotateAboutAxisDialog = context.application.plugins.get_action("RotateAboutAxisDialog")
             self.assert_(RotateAboutAxisDialog.analyze_selection(parameters))
             RotateAboutAxisDialog(parameters)
@@ -572,8 +568,7 @@ class CoreActions(ApplicationTestCase):
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
             parameters = Parameters()
-            parameters.translation = Translation()
-            parameters.translation.t = numpy.array([2.0, 4.1, -1.0], float)
+            parameters.translation = Translation([2.0, 4.1, -1.0])
             TranslateDialog = context.application.plugins.get_action("TranslateDialog")
             self.assert_(TranslateDialog.analyze_selection(parameters))
             TranslateDialog(parameters)

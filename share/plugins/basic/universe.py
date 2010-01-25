@@ -795,7 +795,7 @@ class ScaleUnitCell(ImmediateWithMemory):
         "Scale unit cell",
         fields.composed.CellMatrix(
             label_text="Cell dimensions",
-            attribute_name="cell",
+            attribute_name="matrix",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
@@ -813,17 +813,17 @@ class ScaleUnitCell(ImmediateWithMemory):
     @classmethod
     def default_parameters(cls):
         result = Parameters()
-        result.cell = context.application.model.universe.cell.copy()
+        result.matrix = context.application.model.universe.cell.matrix.copy()
         return result
 
     def do(self):
         universe = context.application.model.universe
-        scaling = numpy.dot(self.parameters.cell, numpy.linalg.inv(universe.cell))
-        primitive.SetProperty(universe, "cell", self.parameters.cell)
+        scaling = numpy.dot(self.parameters.matrix, numpy.linalg.inv(universe.cell.matrix))
+        primitive.SetProperty(universe, "cell", universe.cell.copy_with(matrix=self.parameters.matrix))
 
         for child in universe.children:
             if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
-                 new_transformation = child.transformation.copy_with(t=numpy.dot(scaling, new_transformation.t))
+                 new_transformation = child.transformation.copy_with(t=numpy.dot(scaling, child.transformation.t))
                  primitive.SetProperty(child, "transformation", new_transformation)
 
 
