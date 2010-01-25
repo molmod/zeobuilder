@@ -54,7 +54,7 @@ class CreateTube(ImmediateWithMemory):
     @staticmethod
     def analyze_selection(parameters=None):
         if not ImmediateWithMemory.analyze_selection(parameters): return False
-        if context.application.model.universe.cell_active.sum() != 2: return False
+        if context.application.model.universe.cell.active.sum() != 2: return False
         return True
 
     parameters_dialog = FieldsDialogSimple(
@@ -139,8 +139,8 @@ class CreateTube(ImmediateWithMemory):
             # some parts of the algorithm have been arranged sub functions like
             # these, to reduce the number of local variables in self.do. This
             # should also clarify the code.
-            active, inactive = universe.get_active_inactive()
-            lengths, angles = universe.get_parameters()
+            active, inactive = universe.cell.active_inactive
+            lengths, angles = universe.cell.parameters
             a = lengths[active[0]]
             b = lengths[active[1]]
             theta = angles[inactive[0]]
@@ -153,15 +153,15 @@ class CreateTube(ImmediateWithMemory):
 
         def create_pattern():
             "Read the atom positions and transform them to the flat coordinates"
-            active, inactive = universe.get_active_inactive()
-            a = universe.cell[:,active[0]]
-            b = universe.cell[:,active[1]]
+            active, inactive = universe.cell.active_inactive
+            a = universe.cell.matrix[:,active[0]]
+            b = universe.cell.matrix[:,active[1]]
             c = numpy.cross(a,b)
             tmp_cell = UnitCell(numpy.array([a,b,c]).transpose())
-            r = tmp_cell.calc_align_rotation_matrix()
+            rotation = tmp_cell.alignment_a
 
             return [
-                (atom.number, numpy.dot(r, atom.get_absolute_frame().t))
+                (atom.number, rotation*atom.get_absolute_frame().t)
                 for atom in yield_atoms([universe])
             ]
 
@@ -259,7 +259,7 @@ class CreateTube(ImmediateWithMemory):
         else:
             tube_length = numpy.linalg.norm(big_b)
             big_matrix = numpy.diag([radius*2, radius*2, tube_length])
-            big_cell = UnitCell(big_cell, numpy.array([False, False, periodic_tube], bool))
+            big_cell = UnitCell(big_matrix, numpy.array([False, False, periodic_tube], bool))
             primitive.SetProperty(universe, "cell", big_cell)
             for p in yield_translations():
                 for number, coordinate in yield_pattern():
