@@ -244,7 +244,6 @@ class Element(Edit):
 
     def create_widgets(self):
         Edit.create_widgets(self)
-        to_mendeljev = gtk.Tooltips()
         self.buttons = {}
         ta_elements = gtk.Table(11, 19, homogeneous=True)
         ta_elements.set_row_spacings(0)
@@ -266,7 +265,7 @@ class Element(Edit):
                     tip = tip + "\nMass = %s" % express_measure(atom_info.mass, measure="Mass")
             if atom_info.radius is not None:
                 tip = tip + "\nRadius = " + express_measure(atom_info.radius, "Length")
-            to_mendeljev.set_tip(bu_element, tip)
+            bu_element.set_tooltip_text(tip)
             ta_elements.attach(
                 bu_element,
                 int(atom_info.col), int(atom_info.col) + 1,

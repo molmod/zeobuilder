@@ -94,24 +94,23 @@ class InteractiveGroup(object):
 
 
 class InteractiveButton(gtk.Button):
-    def __init__(self, keys_description, tooltips):
+    def __init__(self, keys_description):
         gtk.Button.__init__(self)
         self.image = gtk.Image()
         self.add(self.image)
         self.keys_description = keys_description
-        self.tooltips = tooltips
         self.interactive_group = None
         self.unset_interactive_group()
 
     def unset_interactive_group(self):
-        self.tooltips.set_tip(self, "There are no actions associated with '%s'." % self.keys_description)
+        self.set_tooltip_text("There are no actions associated with '%s'." % self.keys_description)
         self.image.set_from_pixbuf(empty_pixbuf)
         if self.interactive_group is not None:
             self.interactive_group.deactivate()
             self.interactive_group = None
 
     def set_interactive_group(self, interactive_group):
-        self.tooltips.set_tip(self, interactive_group.description)
+        self.set_tooltip_text(interactive_group.description)
         self.image.set_from_pixbuf(interactive_group.pixbuf)
         self.interactive_group = interactive_group
         self.interactive_group.activate()
@@ -134,9 +133,8 @@ class InteractiveBar(gtk.Table):
         gtk.Table.__init__(self, 2, 4)
         self.set_row_spacings(0)
         self.set_col_spacings(5)
-        self.tooltips = gtk.Tooltips()
         for index, (modifier, label) in enumerate(self.modifier_labels):
-            button = InteractiveButton(label, self.tooltips)
+            button = InteractiveButton(label)
             button.connect("button-press-event", self.on_interactive_button_press_event)
             self.buttons[modifier] = button
             self.attach(button, index, index+1, 0, 1, xoptions=0, yoptions=0)
