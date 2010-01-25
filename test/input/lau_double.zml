@@ -2144,10 +2144,10 @@
      <str label="name">Si</str>
     </model_object>
    </list>
-  <unit_cell label="cell"><array label="cell">
+  <unit_cell label="cell"><array label="matrix">
     <shape>3 3 </shape>
     <cells>25.7380698211 0.0 0.0 0.0 24.3396724887 0.0 -9.88326763323 0.0 14.3808158105 </cells>
-   </array><array label="cell_active">
+   </array><array label="active">
     <shape>3 </shape>
     <cells>True True True </cells>
    </array></unit_cell></model_object>

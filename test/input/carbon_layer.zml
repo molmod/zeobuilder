@@ -22,10 +22,10 @@
      </translation>
     </model_object>
    </list>
-  <unit_cell label="cell"><array label="cell">
+  <unit_cell label="cell"><array label="matrix">
     <shape>3 3 </shape>
     <cells>4.65061601558 2.32625287086 0.0 0.0 4.02700639138 0.0 0.0 0.0 18.8972613392 </cells>
-   </array><array label="cell_active">
+   </array><array label="active">
     <shape>3 </shape>
     <cells>True True False </cells>
    </array></unit_cell></model_object>

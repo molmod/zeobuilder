@@ -84,10 +84,10 @@
     </model_object>
    </list>
    <float label="axis_thickness">0.08</float>
-  <unit_cell label="cell"><array label="cell">
+  <unit_cell label="cell"><array label="matrix">
     <shape>3 3 </shape>
     <cells>9.4486306696 4.7243153348 0.0 0.0 8.18251415987 0.0 0.0 0.0 18.8972613392 </cells>
-   </array><array label="cell_active">
+   </array><array label="active">
     <shape>3 </shape>
     <cells>True True False </cells>
    </array></unit_cell></model_object>

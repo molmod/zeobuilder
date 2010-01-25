@@ -183,10 +183,10 @@
      </list>
     </model_object>
    </list>
-  <unit_cell label="cell"><array label="cell">
+  <unit_cell label="cell"><array label="matrix">
     <shape>3 3 </shape>
     <cells>13.4953438705 1.85230209988 6.35075005672 4.84638371101e-16 13.0977537563 -4.71519135226 -1.99059518868e-16 0.0 8.55192420801 </cells>
-   </array><array label="cell_active">
+   </array><array label="active">
     <shape>3 </shape>
     <cells>False True True </cells>
    </array></unit_cell></model_object>

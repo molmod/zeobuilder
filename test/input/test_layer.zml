@@ -14,11 +14,11 @@
      </translation>
     </model_object>
    </list>
-  <unit_cell label="cell"><array label="cell">
+  <unit_cell label="cell"><array label="matrix">
     <shape>3 3 </shape>
     <cells>5.00 2.500 0.0 0.0 4.330127 0.0 0.0 0.0 18.8972613392 </cells>
     <!-- <cells>5.00 0.0 0.0 0.0 5.0 0.0 0.0 0.0 18.8972613392 </cells> -->
-   </array><array label="cell_active">
+   </array><array label="active">
     <shape>3 </shape>
     <cells>True True False </cells>
    </array></unit_cell></model_object>
