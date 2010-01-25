@@ -41,7 +41,7 @@ from zeobuilder.conversion import measures, units_by_measure
 from zeobuilder.undefined import Undefined
 
 from molmod import Translation as MathTranslation, Rotation as MathRotation, \
-    UnitCell
+    Complete as MathComplete, UnitCell
 
 import numpy, gtk, sys
 

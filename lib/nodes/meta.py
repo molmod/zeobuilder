@@ -129,6 +129,7 @@ class Property(object):
         self.fget = fget
         self.fset = fset
         self.signal = signal
+        self.signal_name = None
 
     def default(self, node):
         if self.fdefault is None:

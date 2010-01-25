@@ -146,11 +146,11 @@ class Model(gobject.GObject):
 
     def file_save(self, filename=None, nodes=None):
         self.emit("file-saving")
+        about = "Could not save to file '%s'" % filename
         if filename is None:
             if self.filename is None:
-                raise FileNameError(about, "One needs a filename to save to.")
+                raise FilenameError(about, "One needs a filename to save to.")
             filename = self.filename
-        about = "Could not save to file '%s'" % filename
         # first determine the extension
         last_dot = filename.rfind(".")
         if last_dot == -1:

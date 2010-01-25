@@ -226,7 +226,7 @@ class List(Edit):
             self.list_store.remove(self.list_store.get_iter_first())
         elif not self.can_ambiguous and can_ambiguous:
             self.can_ambiguous = True
-            self.list_store.prepend([str(ambiguous)] + [" "] * (len(self.fields)-1) + [ambiguous])
+            self.list_store.prepend([str(ambiguous)] + [" "] * (len(self.columns)-1) + [ambiguous])
 
 
 class Element(Edit):

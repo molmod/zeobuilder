@@ -33,7 +33,7 @@
 
 from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ParentMixin
-from zeobuilder.gui.simple import nosave_cancel_save_question
+from zeobuilder.gui.simple import nosave_cancel_save_question, ok_error
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.visual.drawing_area import DrawingArea
 from zeobuilder.filters import run_file_dialog

@@ -264,7 +264,7 @@ class Element(Base):
         if self.field.original_representation == ambiguous:
             str_original = str(self.field.original_representation)
         else:
-            str_original = moldata.periodic.symbol[self.field.original_representation]
+            str_original = periodic[self.field.original_representation].symbol
         self.add_item(
             "Revert to '%s'" % str_original,
             gtk.STOCK_REFRESH,
