@@ -1246,8 +1246,7 @@ class BuilderActions(ApplicationTestCase):
             context.application.model.file_open("input/precursor.zml")
             context.application.main.select_nodes(context.application.model.universe.children)
 
-            rotation2 = Rotation()
-            rotation2.set_rotation_properties(1*math.pi, [0, 1, 0], False)
+            rotation2 = Rotation.from_properties(1*math.pi, [0, 1, 0], False)
 
             parameters = Parameters()
             parameters.connect_description1 = (
