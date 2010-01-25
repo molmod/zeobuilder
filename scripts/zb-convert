@@ -46,8 +46,10 @@ def convert1(dom):
     universe = get_child(l, "model_object", {"class": "Universe"})
     try:
         active = get_child(universe, "array", {"label": "cell_active"})
+        active.setAttribute("label", "active")
         universe.removeChild(active)
         matrix = get_child(universe, "array", {"label": "cell"})
+        matrix.setAttribute("label", "matrix")
         universe.removeChild(matrix)
         unit_cell = dom.createElement("unit_cell")
         unit_cell.setAttribute("label", "cell")
