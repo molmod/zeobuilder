@@ -16,8 +16,6 @@
    <float label="axis_length">1.0</float>
    <list label="children">
     <model_object class="Atom" id="1">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -30,8 +28,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="2">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -44,8 +40,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="3">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -58,8 +52,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="4">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -72,8 +64,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="5">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -86,8 +76,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="6">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -100,8 +88,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="7">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -114,8 +100,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="8">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -128,8 +112,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="9">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -142,8 +124,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="10">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -156,8 +136,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="11">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -170,8 +148,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="12">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -184,8 +160,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="13">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -198,8 +172,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="14">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -212,8 +184,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="15">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -226,8 +196,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="16">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -240,8 +208,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="17">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -254,8 +220,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="18">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -268,8 +232,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="19">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -282,8 +244,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="20">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -296,8 +256,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="21">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -310,8 +268,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="22">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -324,8 +280,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="23">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -338,8 +292,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="24">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -352,8 +304,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="25">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -366,8 +316,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="26">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -380,8 +328,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="27">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -394,8 +340,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="28">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -408,8 +352,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="29">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -422,8 +364,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="30">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -436,8 +376,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="31">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -450,8 +388,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="32">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -464,8 +400,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="33">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -478,8 +412,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="34">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -492,8 +424,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="35">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -506,8 +436,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="36">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -520,8 +448,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="37">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -534,8 +460,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="38">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -548,8 +472,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="39">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -562,8 +484,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="40">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -576,8 +496,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="41">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -590,8 +508,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="42">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -604,8 +520,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="43">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -618,8 +532,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="44">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -632,8 +544,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="45">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -646,8 +556,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="46">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -660,8 +568,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="47">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -674,8 +580,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="48">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">8</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -688,8 +592,6 @@
      <str label="name">Single O</str>
     </model_object>
     <model_object class="Atom" id="49">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -702,8 +604,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="50">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -716,8 +616,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="51">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -730,8 +628,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="52">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -744,8 +640,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="53">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -758,8 +652,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="54">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -772,8 +664,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="55">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -786,8 +676,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="56">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -800,8 +688,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="57">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -814,8 +700,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="58">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -828,8 +712,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="59">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -842,8 +724,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="60">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -856,8 +736,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="61">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -870,8 +748,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="62">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -884,8 +760,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="63">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -898,8 +772,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="64">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -912,8 +784,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="65">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -926,8 +796,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="66">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -940,8 +808,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="67">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -954,8 +820,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="68">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -968,8 +832,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="69">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -982,8 +844,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="70">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -996,8 +856,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="71">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>
@@ -1010,8 +868,6 @@
      <str label="name">Single Si</str>
     </model_object>
     <model_object class="Atom" id="72">
-     <none label="user_color"/>
-     <none label="user_radius"/>
      <int label="number">14</int>
      <bool label="visible">True</bool>
      <int label="quality">50</int>

@@ -1,10 +1,7 @@
 <?xml version="1.0" ?><zml_file version="0.2">
  <list>
   <model_object class="Universe" id="0">
-   <array label="cell">
-    <shape>3 3 </shape>
-    <cells>18.897261249 0.0 0.0 0.0 18.897261249 0.0 0.0 0.0 18.897261249 </cells>
-   </array>
+   
    <float label="axis_length">1.0</float>
    <float label="axis_thickness">0.08</float>
    <list label="children">
@@ -2797,7 +2794,10 @@
      </list>
     </model_object>
    </list>
-  </model_object>
+  <unit_cell label="cell"><array label="matrix">
+    <shape>3 3 </shape>
+    <cells>18.897261249 0.0 0.0 0.0 18.897261249 0.0 0.0 0.0 18.897261249 </cells>
+   </array><array label="active"><shape>3</shape><cells>False False False</cells></array></unit_cell></model_object>
   <model_object class="Folder" id="272">
   </model_object>
  </list>
