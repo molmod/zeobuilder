@@ -340,7 +340,7 @@ class SaturateWithHydrogens(Immediate):
 
 class SaturateHydrogensManual(ImmediateWithMemory):
     description = "Saturate with hydrogens (fixed number)"
-    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens (fixed number)", False, order=(0, 4, 1, 5, 1, 3))
+    menu_info = MenuInfo("default/_Object:tools/_Molecular:add", "S_aturate with hydrogens (fixed number)", order=(0, 4, 1, 5, 1, 3))
     authors = [authors.toon_verstraelen]
 
     parameters_dialog = FieldsDialogSimple(
