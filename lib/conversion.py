@@ -59,12 +59,12 @@ units = {
 }
 
 units_by_measure = {
-    "Length": ["au", "A", "nm"],
-    "Energy": ["au", "kJ/mol", "kcal/mol", "eV"],
-    "Mass": ["au", "u"],
+    "Length": ["A", "au", "nm"],
+    "Energy": ["kJ/mol", "au", "kcal/mol", "eV"],
+    "Mass": ["amu", "au"],
     "Charge": ["au"],
-    "Angle": ["rad", "deg"],
-    "Time": ["au", "ns", "ps", "fs"],
+    "Angle": ["deg", "rad"],
+    "Time": ["ps", "au", "ns", "fs"],
 }
 
 from_unit = dict((unit, eval("lambda x: x*%s" % value)) for unit, value in units.iteritems())
