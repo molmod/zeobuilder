@@ -1,4 +1,4 @@
-Zeobuilder 0.003 README
+Zeobuilder 0.004 README
 =======================
 
 Contents of this README File:
@@ -16,8 +16,8 @@ Short description
 Zeobuilder is a GUI toolkit for the interactive construction of complex
 molecular models. The objective of Zeobuilder, is to become the ultimate
 molecular editor through an open and community-oriented developemnt process.
-From the users point-of-view, we focus and user-friendly and efficient program,
-while from the developers point-of-view, we try to make it easy to extend
+From the user perspective, we focus and user-friendly and efficient program,
+while from the developers perspective, we try to make it easy to extend
 Zeobuilder with new features.
 
 More information about Zeobuilder can be found on the CMM Code website:
@@ -39,16 +39,16 @@ The following software has to be installed on your system before you can use
 Zeobuilder:
   1) Python (>=2.4, <3.0): see http://www.python.org/
   2) Numpy (>=1.0.1): see http://www.scipy.org/
-  3) PyGTK (>=2.8): see http://www.pygtk.org
+  3) PyGTK (>=2.12): see http://www.pygtk.org
      GTK (>=2.8): see http://www.gtk.org
   4) PyOpenGL (>=2.0): see http://pyopengl.sf.net/
      Any OpenGL implementation (this is installed by default on most machines)
   5) PyGTKGLExt and GTKGLExt: http://www.k-3d.org/gtkglext/Main_Page
 
 You can get these dependencies from the Zeobuilder site: http://molmod.ugent.be/code/
-  6) MolMod (>= 0.002)
-  9) ConScan (>= 0.002)
- 10) Iterative (>= 0.002)
+  6) MolMod (= 0.004)
+  9) ConScan (= 0.004)
+ 10) Iterative (= 0.004)
 
 We strongly recommend the installation of Zeobuilder on an operating system that
 has a software management system that automatically installs all these
