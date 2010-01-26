@@ -43,7 +43,12 @@ import zeobuilder.authors as authors
 from molmod import angle, Translation
 
 from OpenGL.GLUT import glutInit, glutStrokeCharacter, GLUT_STROKE_MONO_ROMAN
-from OpenGL.GL import *
+from OpenGL.GL import glBegin, glCallList, glColor, glDisable, glEnable, \
+    glEnd, glEndList, glGenLists, glGetInteger, glGetIntegerv, glLineWidth, \
+    glLoadIdentity, glMatrixMode, glNewList, glPopMatrix, glPushMatrix, \
+    glRectf, glScale, glScaled, glScalef, glTranslate, glVertex, glVertex3f, \
+    GL_COMPILE, GL_DEPTH, GL_DEPTH_TEST, GL_LIGHTING, GL_LINE, GL_LINES, \
+    GL_LINE_LOOP, GL_LINE_STRIP, GL_MODELVIEW, GL_PROJECTION, GL_VIEWPORT
 import numpy
 
 
