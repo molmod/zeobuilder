@@ -32,9 +32,11 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Interactive, InteractiveWithMemory, ImmediateWithMemory, Immediate, CancelException, UserError, Parameters
+from zeobuilder.actions.composed import Interactive, InteractiveWithMemory, \
+    ImmediateWithMemory, Immediate, CancelException, UserError, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
+from zeobuilder.actions.collections.interactive import InteractiveInfo, \
+    InteractiveGroup
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.vector import Vector
 from zeobuilder.nodes.analysis import calculate_center, some_fixed, list_by_parent
@@ -214,6 +216,7 @@ class RotateAboutAxisDialog(ImmediateWithMemory):
 
         if isinstance(last, Vector):
             if (len(nodes) >= 2) and isinstance(next_to_last, Vector):
+                parent = nodes[-2].parent
                 b1 = last.children[0].translation_relative_to(parent)
                 e1 = last.children[1].translation_relative_to(parent)
                 b2 = next_to_last.children[0].translation_relative_to(parent)
@@ -424,11 +427,11 @@ class RoundRotation(Immediate):
         if len(cache.nodes) == 1:
             victim = cache.last
             master = None
-            factor, selected_quaternion = quaternion_from_rotation_matrix(victim.transformation.r)
+            factor, selected_quaternion = rotation_matrix_to_quaternion(victim.transformation.r)
         elif len(cache.nodes) == 2:
             master = cache.last
             victim = cache.next_to_last
-            factor, selected_quaternion = quaternion_from_rotation_matrix(victim.get_frame_relative_to(master).r)
+            factor, selected_quaternion = rotation_matrix_to_quaternion(victim.get_frame_relative_to(master).r)
 
         step = 15
         for axis_name, axis in self.axes.iteritems():

@@ -32,8 +32,9 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Interactive
-from zeobuilder.actions.collections.interactive import InteractiveInfo, InteractiveGroup
+from zeobuilder.actions.composed import Interactive, UserError
+from zeobuilder.actions.collections.interactive import InteractiveInfo, \
+    InteractiveGroup
 from zeobuilder.nodes.model_object import ModelObject
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.glmixin import GLTransformationMixin
@@ -48,10 +49,12 @@ import zeobuilder.gui.fields as fields
 import zeobuilder.actions.primitive as primitive
 import zeobuilder.authors as authors
 
-from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
+from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, \
+    BOND_HYBRID, BOND_HYDROGEN
 from molmod.periodic import periodic
 from molmod.io import load_cml
-from molmod import angle as compute_angle, Translation, Rotation, random_orthonormal
+from molmod import angle as compute_angle, Translation, Rotation, \
+    random_orthonormal
 
 import gtk, numpy, os
 

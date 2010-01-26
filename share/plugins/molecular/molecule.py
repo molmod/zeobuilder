@@ -51,7 +51,7 @@ import zeobuilder.authors as authors
 from molmod.periodic import periodic
 from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE
 from molmod import Translation, Complete, Rotation, EqualPattern, RingPattern, \
-    GraphSearch, random_orthonormal, deg
+    GraphSearch, random_orthonormal, deg, GraphError
 
 import numpy, gtk, sys, traceback
 
@@ -626,7 +626,7 @@ class CloneOrder(Immediate):
         graph_ref = create_molecular_graph([frame_ref])
         try:
             match_generator = GraphSearch(EqualPattern(graph_ref))
-        except PatternError, e:
+        except GraphError, e:
             raise UserError("Could not setup a graph match definition to clone the order.")
 
         some_failed = False
@@ -637,7 +637,7 @@ class CloneOrder(Immediate):
             try:
                 match = match_generator(graph_other).next()
                 all_failed = False
-            except (StopIteration, PatternError):
+            except (StopIteration, GraphError):
                 some_failed = True
                 continue
 

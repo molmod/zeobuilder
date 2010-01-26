@@ -31,16 +31,14 @@
 # --
 
 
-import numpy
-
 from zeobuilder import context
-from zeobuilder.filters import LoadFilter, DumpFilter, FilterError
-from zeobuilder.nodes.glcontainermixin import GLContainerMixin
+from zeobuilder.filters import LoadFilter, FilterError
 import zeobuilder.authors as authors
-
 
 from molmod.periodic import periodic
 from molmod import angstrom, deg, Translation
+
+import numpy
 
 
 class LoadG03ZMAT(LoadFilter):

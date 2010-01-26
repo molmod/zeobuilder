@@ -33,7 +33,8 @@
 
 from zeobuilder import context
 from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
-from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, CancelException, Parameters
+from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, \
+    Parameters, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObjectInfo

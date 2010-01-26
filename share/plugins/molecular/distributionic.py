@@ -35,18 +35,16 @@ from zeobuilder import context
 from zeobuilder.actions.composed import ImmediateWithMemory, Parameters, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.moltools import create_molecular_graph
-from zeobuilder.nodes.parent_mixin import ContainerMixin
 from zeobuilder.gui.fields_dialogs import FieldsDialogSimple
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 from zeobuilder.gui.simple import ask_save_filename
-from zeobuilder.gui import load_image
 from zeobuilder.expressions import Expression
 from zeobuilder.conversion import express_measure, to_unit
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod import Graph, GraphSearch, CriteriaSet, BondPattern, \
-    BendingAnglePattern, DihedralAnglePattern, angle
+from molmod import GraphSearch, CriteriaSet, BondPattern, BendingAnglePattern, \
+    DihedralAnglePattern, angle
 
 import gtk, numpy, os
 

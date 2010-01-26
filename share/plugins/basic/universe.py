@@ -32,9 +32,10 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, UserError, Parameters
+from zeobuilder.actions.composed import ImmediateWithMemory, Immediate, \
+    UserError, Parameters
 from zeobuilder.actions.collections.menu import MenuInfo
-from zeobuilder.nodes.meta import NodeClass, Property
+from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.elementary import GLContainerBase, GLReferentBase
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.nodes.parent_mixin import ReferentMixin

@@ -248,7 +248,7 @@ class CreateTube(ImmediateWithMemory):
                 [rot_a[1], rot_b[1], 0],
                 [0, 0, 10*angstrom],
             ], float)
-            big_cell = UnitCell(big_cell, numpy.array([True, periodic_tube, False], bool))
+            big_cell = UnitCell(big_matrix, numpy.array([True, periodic_tube, False], bool))
             primitive.SetProperty(universe, "cell", big_cell)
             for p in iter_translations():
                 for number, coordinate in iter_pattern():

@@ -31,13 +31,10 @@
 # --
 
 
-import numpy
-
 from zeobuilder import context
 from zeobuilder.filters import LoadFilter, DumpFilter, FilterError
 from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 import zeobuilder.authors as authors
-
 
 from molmod.io import XYZReader
 from molmod.periodic import periodic
@@ -54,7 +51,7 @@ class LoadXYZ(LoadFilter):
         try:
             xyz_reader = XYZReader(f)
             molecule = xyz_reader.get_first_molecule()
-        except XYZError:
+        except IOError:
             raise FilterError("Could not read the first frame from the XYZ file. Incorrect file format.")
 
         Universe = context.application.plugins.get_node("Universe")

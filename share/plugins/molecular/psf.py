@@ -31,14 +31,11 @@
 # --
 
 
-import numpy
-
-from molmod.io import PSFFile
-
-from zeobuilder import context
-from zeobuilder.filters import DumpFilter, FilterError
+from zeobuilder.filters import DumpFilter
 from zeobuilder.moltools import create_molecular_graph
 import zeobuilder.authors as authors
+
+from molmod.io import PSFFile
 
 
 class DumpPSF(DumpFilter):

@@ -37,14 +37,11 @@ from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.vector import Vector
-from zeobuilder.nodes.glcontainermixin import GLContainerMixin
 from zeobuilder.nodes.model_object import ModelObjectInfo
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo, FieldsDialogSimple
-import zeobuilder.actions.primitive as primitive
 import zeobuilder.gui.fields as fields
 import zeobuilder.authors as authors
 
-from molmod.periodic import periodic
 from molmod.bonds import bonds, BOND_SINGLE, BOND_DOUBLE, BOND_TRIPLE, BOND_HYBRID, BOND_HYDROGEN
 
 import numpy, gtk

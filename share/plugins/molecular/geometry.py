@@ -43,7 +43,7 @@ from molmod.periodic import periodic
 from molmod import Translation, superpose, guess_geometry, tune_geometry, \
     angstrom
 
-import numpy, gtk, tempfile, os
+import numpy, tempfile, os
 
 
 def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent, graph=None):

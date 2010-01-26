@@ -37,8 +37,6 @@ from zeobuilder.zml import load_from_file, dump_to_file
 from zeobuilder.plugins import PluginNotFoundError
 import zeobuilder.authors as authors
 
-import numpy
-
 
 class LoadZML(LoadFilter):
     authors = [authors.toon_verstraelen]

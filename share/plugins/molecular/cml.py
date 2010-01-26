@@ -31,15 +31,11 @@
 # --
 
 
-import numpy
-
 from zeobuilder import context
-from zeobuilder.filters import LoadFilter, DumpFilter, FilterError
-from zeobuilder.nodes.glcontainermixin import GLContainerMixin
+from zeobuilder.filters import LoadFilter, DumpFilter
 import zeobuilder.authors as authors
 
-
-from molmod import angstrom, Molecule, MolecularGraph, Translation
+from molmod import Molecule, MolecularGraph, Translation
 from molmod.periodic import periodic
 from molmod.io import load_cml, dump_cml
 
