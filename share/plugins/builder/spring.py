@@ -34,7 +34,7 @@
 from zeobuilder import context
 from zeobuilder.actions.abstract import ConnectBase, AutoConnectMixin
 from zeobuilder.actions.composed import Immediate, ImmediateWithMemory, \
-    Parameters, UserError
+    CancelException, Parameters, UserError
 from zeobuilder.actions.collections.menu import MenuInfo
 from zeobuilder.nodes.meta import Property
 from zeobuilder.nodes.model_object import ModelObjectInfo
@@ -206,7 +206,7 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
         self.init_proxies(["la_num_iter", "la_rms_error", "progress_bar"])
         self.state_indices = None
 
-    def run(self, minimize, auto_close, involved_frames, update_interval, update_steps, num_springs):
+    def run(self, minimize, involved_frames, update_interval, update_steps, num_springs):
         self.la_num_iter.set_text("0")
         self.la_rms_error.set_text(express_measure(0.0, "Length"))
         self.progress_bar.set_fraction(0.0)
@@ -223,7 +223,7 @@ class OptimizationReportDialog(ChildProcessDialog, GladeWrapper):
 
         result = ChildProcessDialog.run(self,
             [context.get_share_filename("helpers/iterative")],
-            self.minimize, auto_close, pickle=True
+            self.minimize, pickle=True
         )
 
         # just to avoid confusion
@@ -369,13 +369,6 @@ class OptimizeSprings(ImmediateWithMemory):
         result.update_steps = 1
         return result
 
-    def ask_parameters(self):
-        if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
-            self.parameters.clear()
-            return
-
-        self.parameters.auto_close_report_dialog = False
-
     def do(self):
         cache = context.application.cache
         parent = cache.parent
@@ -436,7 +429,6 @@ class OptimizeSprings(ImmediateWithMemory):
 
         result = self.report_dialog.run(
             minimize,
-            self.parameters.auto_close_report_dialog,
             involved_frames,
             self.parameters.update_interval,
             self.parameters.update_steps,

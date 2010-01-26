@@ -1112,7 +1112,6 @@ class BuilderActions(ApplicationTestCase):
             parameters.allow_rotation = True
             parameters.update_interval = 0.4
             parameters.update_steps = 1
-            parameters.auto_close_report_dialog = True
 
             OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
             self.assert_(OptimizeSprings.analyze_selection(parameters))
@@ -1131,7 +1130,6 @@ class BuilderActions(ApplicationTestCase):
             parameters.allow_rotation = False
             parameters.update_interval = 0.4
             parameters.update_steps = 1
-            parameters.auto_close_report_dialog = True
 
             OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
             self.assert_(OptimizeSprings.analyze_selection(parameters))
@@ -1149,7 +1147,6 @@ class BuilderActions(ApplicationTestCase):
             parameters.allow_rotation = True
             parameters.update_interval = 0.4
             parameters.update_steps = 1
-            parameters.auto_close_report_dialog = True
 
             OptimizeSprings = context.application.plugins.get_action("OptimizeSprings")
             self.assert_(OptimizeSprings.analyze_selection(parameters))
@@ -1219,7 +1216,6 @@ class BuilderActions(ApplicationTestCase):
             parameters.allow_inversions = True
             parameters.minimum_triangle_size = 0.1*angstrom
             parameters.rotation2 = Undefined()
-            parameters.auto_close_report_dialog = True
 
             ScanForConnections = context.application.plugins.get_action("ScanForConnections")
             self.assert_(ScanForConnections.analyze_selection(parameters))
@@ -1259,7 +1255,6 @@ class BuilderActions(ApplicationTestCase):
             parameters.allow_inversions = Undefined()
             parameters.minimum_triangle_size = Undefined()
             parameters.rotation2 = rotation2
-            parameters.auto_close_report_dialog = True
 
             ScanForConnections = context.application.plugins.get_action("ScanForConnections")
             self.assert_(ScanForConnections.analyze_selection(parameters))

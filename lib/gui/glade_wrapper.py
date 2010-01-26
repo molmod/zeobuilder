@@ -35,9 +35,10 @@
 
 
 from zeobuilder import context
+from zeobuilder.application import TestApplication
 
 import new, types
-import gtk, gtk.glade
+import gtk, gtk.glade, gobject
 
 
 __all__ = ["GladeWrapper", "GladeWrapperError"]
@@ -66,6 +67,17 @@ class GladeWrapper(object):
             raise GladeWrapperError, "The widget '%s' passed to the constructor does not exist." % widget_name
         else:
             self.__dict__[widget_dict_name] = widget
+
+        # In case of a dialog in a test application, connect to a signal to
+        # close immedeately.
+        if widget_dict_name == "dialog":
+            widget.connect("show", self.on_dialog_show)
+
+    def on_dialog_show(self, dialog):
+        def response():
+            dialog.response(gtk.RESPONSE_CLOSE)
+        if isinstance(context.application, TestApplication):
+            gobject.idle_add(response)
 
     def init_callbacks(self, descendant_class):
         "This method connects the events automatically, based on descendant_class.__dict__"

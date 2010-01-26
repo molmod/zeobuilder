@@ -35,10 +35,11 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.actions.collections.menu import MenuInfo
+from zeobuilder.application import TestApplication
 from zeobuilder.gui.glade_wrapper import GladeWrapper
 import zeobuilder.authors as authors
 
-import gtk
+import gtk, gobject
 
 
 class InfoDialog(GladeWrapper):
@@ -121,6 +122,7 @@ class PluginsDialog(object):
         self.info_button.set_sensitive(False)
         self.dialog.add_button(gtk.STOCK_CLOSE, gtk.RESPONSE_CLOSE)
         self.dialog.hide()
+        self.dialog.connect("show", self.on_dialog_show)
 
         self.info_dialog = InfoDialog()
 
@@ -148,6 +150,12 @@ class PluginsDialog(object):
             self.info_dialog.run(plugin)
             response = self.dialog.run()
         self.dialog.hide()
+
+    def on_dialog_show(self, dialog):
+        def response():
+            dialog.response(gtk.RESPONSE_CLOSE)
+        if isinstance(context.application, TestApplication):
+            gobject.idle_add(response)
 
 
 class ViewPlugins(Immediate):

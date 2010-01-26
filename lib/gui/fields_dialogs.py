@@ -33,8 +33,9 @@
 from simple import field_error
 import fields
 from zeobuilder import context
+from zeobuilder.application import TestApplication
 
-import gtk
+import gtk, gobject
 
 
 __all__ = ["FieldsDialogBase", "FieldsDialogSimple", "FieldsDialogMultiplex"]
@@ -50,6 +51,7 @@ class FieldsDialogBase(object):
         self.dialog = gtk.Dialog()
         self.dialog.set_transient_for(context.parent_window)
         self.dialog.connect("response", self.on_dialog_response)
+        self.dialog.connect("show", self.on_dialog_show)
         self.dialog.set_title(self.title)
         for action_button in self.action_buttons:
             button = self.dialog.add_button(action_button[0], action_button[1])
@@ -105,6 +107,12 @@ class FieldsDialogBase(object):
                 e.field.grab_focus()
                 self.valid = False
                 self.hide = False
+
+    def on_dialog_show(self, dialog):
+        def response():
+            dialog.response(gtk.RESPONSE_CLOSE)
+        if isinstance(context.application, TestApplication):
+            gobject.idle_add(response)
 
     def init_widgets(self, data):
         raise NotImplementedError

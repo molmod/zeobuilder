@@ -232,7 +232,6 @@ class ConscanResultsWindow(GladeWrapper):
         parameters.allow_rotation = True
         parameters.update_interval = 0.4
         parameters.update_steps = 1
-        parameters.auto_close_report_dialog = True
         OptimizeSprings(parameters)
 
     def round_rotation(self):
@@ -338,12 +337,12 @@ class ConscanReportDialog(ChildProcessDialog):
             pb.set_text("- / -")
             pb.set_fraction(0.0)
 
-    def run(self, inp, auto_close):
+    def run(self, inp):
         self.clear_gui()
         self.connections = []
         response = ChildProcessDialog.run(self,
             [context.get_share_filename("helpers/conscan")],
-            inp, auto_close, pickle=True
+            inp, pickle=True
         )
         if response == gtk.RESPONSE_OK:
             result = self.connections
@@ -552,8 +551,6 @@ class ScanForConnections(ImmediateWithMemory):
             self.parameters.clear()
             return
 
-        self.parameters.auto_close_report_dialog = False
-
     def do(self):
         cache = context.application.cache
 
@@ -625,9 +622,9 @@ class ScanForConnections(ImmediateWithMemory):
                 inp["rotation2"] = self.parameters.rotation2
 
         if inp["allow_rotations"]:
-            connections = self.triangle_report_dialog.run(inp, self.parameters.auto_close_report_dialog)
+            connections = self.triangle_report_dialog.run(inp)
         else:
-            connections = self.pair_report_dialog.run(inp, self.parameters.auto_close_report_dialog)
+            connections = self.pair_report_dialog.run(inp)
 
         if connections is not None and len(connections) > 0:
             if len(cache.nodes) == 1:

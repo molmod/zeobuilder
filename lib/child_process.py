@@ -32,6 +32,7 @@
 
 
 from zeobuilder import context
+from zeobuilder.application import TestApplication
 from zeobuilder.gui.simple import ok_error
 
 import gobject, gtk, subprocess, cPickle, gobject
@@ -47,9 +48,8 @@ class ChildProcessDialog(object):
         self.buttons = buttons
         self.response_active = False
 
-    def run(self, args, input_data, auto_close, pickle=False):
+    def run(self, args, input_data, pickle=False):
         self.response_active = False
-        self.auto_close = auto_close
         self.error_lines = []
         self.pickle = pickle
 
@@ -133,7 +133,7 @@ class ChildProcessDialog(object):
                 "\n".join(self.error_lines)
             )
 
-        if self.auto_close:
+        if isinstance(context.application, TestApplication):
             #print >> sys.stderr, "ZEOBUILDER, auto_close dialog"
             self.dialog.response(gtk.RESPONSE_OK)
 
