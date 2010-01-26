@@ -31,13 +31,11 @@
 # --
 
 
-import numpy
-
 from zeobuilder import context
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 
 from molmod.periodic import periodic
-from molmod import Graph, Molecule, MolecularGraph
+from molmod import Molecule, MolecularGraph
 
 
 __all__ = [

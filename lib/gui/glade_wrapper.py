@@ -36,7 +36,7 @@
 
 from zeobuilder import context
 
-import new, types, os
+import new, types
 import gtk, gtk.glade
 
 

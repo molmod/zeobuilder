@@ -42,20 +42,19 @@ from OpenGL.GLU import gluCylinder, gluDisk, gluNewQuadric, gluPickMatrix, \
     GLU_OUTSIDE, GLU_SMOOTH
 from OpenGL.GL import glBegin, glCallList, glClear, glClearColor, glClipPlane, \
     glCullFace, glDeleteLists, glDepthFunc, glDisable, glEnable, glEnd, \
-    glEndList, glFogf, glFogfv, glFrustum, glGenLists, glInitNames, glLight, \
+    glEndList, glFogfv, glFrustum, glGenLists, glInitNames, glLight, \
     glLineWidth, glLoadIdentity, glMaterial, glMatrixMode, glMultMatrixf, \
-    glNewList, glNormal, glNormal3f, glNormal3fv, glOrtho, glPopMatrix, \
+    glNewList, glNormal3fv, glOrtho, glPopMatrix, \
     glPopName, glPushMatrix, glPushName, glRenderMode, glRotate, \
     glSelectBuffer, glShadeModel, glTranslate, glTranslatef, glVertex, \
     GL_AMBIENT, GL_AMBIENT_AND_DIFFUSE, GL_BACK, GL_CLIP_PLANE0, \
     GL_CLIP_PLANE1, GL_CLIP_PLANE2, GL_CLIP_PLANE3, GL_CLIP_PLANE4, \
-    GL_CLIP_PLANE5, GL_COLOR, GL_COLOR_BUFFER_BIT, GL_COMPILE, \
-    GL_DEPTH, GL_DEPTH_BUFFER, GL_DEPTH_BUFFER_BIT, GL_DEPTH_TEST, \
-    GL_FOG, GL_FOG_COLOR, GL_FOG_END, GL_FOG_MODE, GL_FOG_START, \
-    GL_FRONT, GL_LESS, GL_LIGHT0, GL_LIGHTING, GL_LINE, GL_LINEAR, GL_LINES, \
-    GL_MODELVIEW, GL_POLYGON, GL_POSITION, GL_PROJECTION, GL_Q, GL_QUADS, \
-    GL_QUAD_STRIP, GL_R, GL_RENDER, GL_S, GL_SELECT, GL_SHININESS, GL_SMOOTH, \
-    GL_SPECULAR, GL_T, GL_TRIANGLES, GL_TRIANGLE_STRIP
+    GL_CLIP_PLANE5, GL_COLOR_BUFFER_BIT, GL_COMPILE, GL_DEPTH_BUFFER_BIT, \
+    GL_DEPTH_TEST, GL_FOG, GL_FOG_COLOR, GL_FOG_END, GL_FOG_MODE, \
+    GL_FOG_START, GL_FRONT, GL_LESS, GL_LIGHT0, GL_LIGHTING, GL_LINEAR, \
+    GL_LINES, GL_MODELVIEW, GL_POLYGON, GL_POSITION, GL_PROJECTION, GL_QUADS, \
+    GL_QUAD_STRIP, GL_RENDER, GL_SELECT, GL_SHININESS, GL_SMOOTH, \
+    GL_SPECULAR, GL_TRIANGLES, GL_TRIANGLE_STRIP
 
 import numpy
 

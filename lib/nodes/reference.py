@@ -31,18 +31,12 @@
 # --
 
 
-from zeobuilder import context
-
 from zeobuilder.nodes.node import Node, NodeInfo
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.analysis import bridge as tree_bridge
 from zeobuilder.gui import load_image
 
 from molmod import Translation
-
-import gtk.gdk, gobject
-
-import os
 
 
 __all__ = [

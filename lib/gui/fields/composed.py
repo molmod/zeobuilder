@@ -34,16 +34,15 @@
 from elementary import Composed
 from faulty import Float, Length, Int, MeasureEntry
 from edit import CheckButton, ComboBox
-from mixin import InvalidField, EditMixin, FaultyMixin, TableMixin
+from mixin import TableMixin
 import popups
 
 from zeobuilder.conversion import measures, units_by_measure
-from zeobuilder.undefined import Undefined
 
 from molmod import Translation as MathTranslation, Rotation as MathRotation, \
     Complete as MathComplete, UnitCell
 
-import numpy, gtk, sys
+import numpy, gtk
 
 
 __all__ = [

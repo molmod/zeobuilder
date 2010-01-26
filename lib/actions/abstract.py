@@ -33,11 +33,11 @@
 
 from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
-from zeobuilder.nodes.glmixin import GLMixin, GLTransformationMixin
+from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.parent_mixin import ContainerMixin
 import zeobuilder.actions.primitive as primitive
 
-from molmod import UnitCell, PairSearchIntra, Translation
+from molmod import PairSearchIntra, Translation
 
 import numpy
 

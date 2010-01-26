@@ -34,7 +34,6 @@
 from zeobuilder import context
 from zeobuilder.nodes.reference import SpatialReference
 from zeobuilder.nodes.elementary import GLReferentBase
-from zeobuilder.nodes.color_mixin import ColorMixin
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 

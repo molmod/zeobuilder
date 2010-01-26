@@ -34,7 +34,7 @@
 from zeobuilder import context
 from zeobuilder.actions.composed import UserError
 
-import gtk.gtkgl, gtk.gdkgl, numpy
+import gtk.gtkgl, gtk.gdkgl
 from OpenGL.GL import glViewport, glFlush
 
 

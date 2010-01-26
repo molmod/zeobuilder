@@ -32,9 +32,8 @@
 
 
 from zeobuilder import context
-from zeobuilder.actions.composed import CancelException
 
-import gtk, gobject
+import gobject
 
 
 __all__ = ["ActionManager"]

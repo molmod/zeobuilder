@@ -33,7 +33,7 @@
 
 
 from base import Single
-from mixin import ambiguous, EditMixin
+from mixin import EditMixin
 
 import gtk
 

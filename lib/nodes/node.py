@@ -31,10 +31,9 @@
 # --
 
 
-from zeobuilder.nodes.meta import NodeClass, Property
-import zeobuilder.gui.fields as fields
+from zeobuilder.nodes.meta import NodeClass
 
-import gtk.gdk, gobject
+import gobject
 
 
 __all__ = ["Node", "NodeInfo"]

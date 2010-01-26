@@ -35,7 +35,7 @@ from zeobuilder import context
 
 import gtk
 
-import os, sys, traceback
+import sys, traceback
 
 
 __all__ = ["Application"]

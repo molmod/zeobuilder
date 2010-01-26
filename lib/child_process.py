@@ -34,7 +34,7 @@
 from zeobuilder import context
 from zeobuilder.gui.simple import ok_error
 
-import gobject, gtk, os, subprocess, cPickle, threading, gobject, sys
+import gobject, gtk, subprocess, cPickle, gobject
 
 
 __all__ = ["ChildProcessDialog"]

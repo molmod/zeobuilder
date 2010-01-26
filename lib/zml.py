@@ -40,8 +40,7 @@ from zeobuilder.expressions import Expression
 
 from molmod import Translation, Rotation, Complete, UnitCell
 
-import xml.sax.handler, xml.sax.saxutils, base64, gzip, bz2, numpy, types
-import StringIO, string, gobject
+import xml.sax.handler, xml.sax.saxutils, base64, numpy, types, StringIO
 
 
 __all__ = ["dump_to_file", "load_from_file", "load_from_string"]

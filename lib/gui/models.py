@@ -31,16 +31,11 @@
 # --
 
 
-from zeobuilder import context
 from zeobuilder.nodes.node import Node
-from zeobuilder.nodes.parent_mixin import ParentMixin
 from zeobuilder.nodes.glmixin import GLMixin
-from zeobuilder.gui.simple import ok_error
 from zeobuilder.models import Model as ModelBase
 
-import gtk, gobject
-
-import array
+import gtk
 
 
 __all__ = ["Model"]

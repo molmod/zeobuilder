@@ -31,7 +31,7 @@
 # --
 
 from elementary import Group
-from mixin import EditMixin, TableMixin, ambiguous
+from mixin import TableMixin
 
 import gtk
 

@@ -35,9 +35,7 @@
 
 from zeobuilder import context
 
-import gobject, gtk
-
-import os
+import gtk, os
 
 
 __all__ = [
@@ -51,6 +49,7 @@ template="<big><b>%s</b></big>\n\n%s"
 
 def escape_pango(s):
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
 
 def apply_template(template, items, escape):
     if escape:

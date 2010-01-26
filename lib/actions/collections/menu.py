@@ -37,8 +37,6 @@ from zeobuilder.gui import load_image
 
 import gtk.gdk
 
-import os
-
 
 __all__ = ["Menu", "MenuInfo", "MenuInfoBase"]
 

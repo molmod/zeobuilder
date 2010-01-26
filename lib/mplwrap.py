@@ -43,9 +43,9 @@ rcParams["xtick.labelsize"] = 9
 rcParams["ytick.labelsize"] = 9
 rcParams["figure.facecolor"] = "w"
 
-from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
 
 # UGLY HACK: TODO report this as a bug to the matplotlib project
+from matplotlib.backends.backend_gtkagg import FigureCanvasGTKAgg as FigureCanvas
 import gtk
 from zeobuilder.gui import load_image
 gtk.window_set_default_icon(load_image("zeobuilder.svg"))

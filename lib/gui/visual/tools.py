@@ -34,10 +34,10 @@
 from zeobuilder import context
 
 from OpenGL.GL import glBegin, glCallList, glColor, glDisable, glEnable, \
-    glEnd, glEndList, glGenLists, glGetInteger, glGetIntegerv, glLineWidth, \
-    glLoadIdentity, glMatrixMode, glNewList, glScale, glScalef, glVertex, \
-    glVertex3f, GL_COMPILE, GL_DEPTH, GL_DEPTH_TEST, GL_LIGHTING, GL_LINE, \
-    GL_LINES, GL_LINE_LOOP, GL_MODELVIEW, GL_PROJECTION, GL_VIEWPORT
+    glEnd, glEndList, glGenLists, glGetIntegerv, glLineWidth, glLoadIdentity, \
+    glMatrixMode, glNewList, glScalef, glVertex3f, GL_COMPILE, GL_DEPTH_TEST, \
+    GL_LIGHTING, GL_LINES, GL_LINE_LOOP, GL_MODELVIEW, GL_PROJECTION, \
+    GL_VIEWPORT
 
 
 class Tool(object):
