@@ -22,7 +22,7 @@
               <widget class="GtkImage" id="im_logo">
                 <property name="visible">True</property>
                 <property name="yalign">0.54000002145767212</property>
-                <property name="pixbuf">zeobuilder.svg</property>
+                <property name="stock">gtk-missing-image</property>
               </widget>
               <packing>
                 <property name="expand">False</property>
