@@ -58,10 +58,9 @@ def apply_template(template, items, escape):
     else:
         return (template % items).strip()
 
-def run_dialog(dialog, line_wrap=True):
+def run_dialog(dialog, line_wrap, message):
     dialog.set_title(context.title)
-    dialog.label.set_property("use-markup", True)
-    dialog.label.set_line_wrap(line_wrap)
+    dialog.set_markup(message)
     result = dialog.run()
     dialog.destroy()
     return result
@@ -69,29 +68,29 @@ def run_dialog(dialog, line_wrap=True):
 
 def ok_error(message, details="", line_wrap=True, markup=False):
     full = apply_template(template, (message, details), not markup)
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK, full)
-    return run_dialog(dialog, line_wrap)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_OK)
+    return run_dialog(dialog, line_wrap, full)
 
 
 def ok_information(message, details="", line_wrap=True, markup=False):
     full = apply_template(template, (message, details), not markup)
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK, full)
-    return run_dialog(dialog, line_wrap)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_INFO, gtk.BUTTONS_OK)
+    return run_dialog(dialog, line_wrap, full)
 
 
 def yes_no_question(message, details="", line_wrap=True, markup=False):
     full = apply_template(template, (message, details), not markup)
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO, full)
-    return run_dialog(dialog, line_wrap)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_YES_NO)
+    return run_dialog(dialog, line_wrap, full)
 
 
 def nosave_cancel_save_question(message, details="", line_wrap=True, markup=False):
     full = apply_template(template, (message, details), not markup)
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE, full)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_QUESTION, gtk.BUTTONS_NONE)
     dialog.add_button(gtk.STOCK_NO, gtk.RESPONSE_NO)
     dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
     dialog.add_button(gtk.STOCK_SAVE, gtk.RESPONSE_OK)
-    return run_dialog(dialog, line_wrap)
+    return run_dialog(dialog, line_wrap, full)
 
 
 def ask_name(initial_name=None):
@@ -132,9 +131,9 @@ field_template=template % (
 
 def field_error(location, problem, line_wrap=True, markup=False):
     full = apply_template(field_template, (location, problem), not markup)
-    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE, full)
+    dialog = gtk.MessageDialog(context.parent_window, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_NONE)
     button = dialog.add_button(gtk.STOCK_JUMP_TO, gtk.RESPONSE_OK)
-    return run_dialog(dialog, line_wrap)
+    return run_dialog(dialog, line_wrap, full)
 
 
 def ask_save_filename(title, filename):
