@@ -93,7 +93,7 @@ def convert1(dom):
         matrix = get_child(universe, "array", {"label": "cell"})
         universe.removeChild(matrix)
     except KeyError:
-        matrix = dom.createElement("matrix")
+        matrix = dom.createElement("array")
         matrix_shape = dom.createElement("shape")
         matrix_shape.appendChild(dom.createTextNode("3 3"))
         matrix.appendChild(matrix_shape)
