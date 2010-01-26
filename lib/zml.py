@@ -40,7 +40,11 @@ from zeobuilder.expressions import Expression
 
 from molmod import Translation, Rotation, Complete, UnitCell
 
-import xml.sax.handler, xml.sax.saxutils, base64, numpy, types, StringIO
+import xml.sax
+from xml.sax.saxutils import XMLFilterBase, quoteattr, escape
+from xml.sax.xmlreader import AttributesImpl as Attributes
+from xml.sax.handler import ContentHandler
+import base64, numpy, types, StringIO
 
 
 __all__ = ["dump_to_file", "load_from_file", "load_from_string"]
@@ -82,10 +86,10 @@ def dump_to_file(f, node):
         if cls == types.InstanceType: cls = node.__class__ # For old style stuff
 
         if name is None: name_key = ""
-        else: name_key = " label=" + xml.sax.saxutils.quoteattr(name)
+        else: name_key = " label=" + quoteattr(name)
 
         if issubclass(cls, str):
-            indenter.write_line("<str%s>%s</str>" % (name_key, xml.sax.saxutils.escape(node)))
+            indenter.write_line("<str%s>%s</str>" % (name_key, escape(node)))
         elif issubclass(cls, float):
             indenter.write_line("<float%s>%s</float>" % (name_key, str(node)))
         elif issubclass(cls, bool):
@@ -145,7 +149,7 @@ def dump_to_file(f, node):
             dump_stage3(indenter, node.active, use_references, name="active")
             indenter.write_line("</unit_cell>", -1)
         elif cls == Expression:
-            indenter.write_line("<expression%s>%s</expression>" % (name_key, xml.sax.saxutils.escape(node.code)))
+            indenter.write_line("<expression%s>%s</expression>" % (name_key, escape(node.code)))
         elif issubclass(cls, ModelObject):
             if node in identifiers:
                 if use_references:
@@ -196,7 +200,7 @@ class ZMLTag(object):
         self.being_processed = False
 
 
-class ZMLHandler(xml.sax.handler.ContentHandler):
+class ZMLHandler(ContentHandler):
     def __init__(self):
         self.root = None
         self.model_object_tags = {}
@@ -210,7 +214,8 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
 
     def startElement(self, name, attrs):
         if name == "zml_file":
-            if attrs.getValue("version") != "0.2": raise FilterError, "Only format 0.2 is supported in this version of Zeobuilder. Use zml-upgrade to convert older zml files to the zml 0.2 format"
+            if attrs.getValue("version") != "0.2":
+                raise FilterError, "Only format 0.2 is supported in this handler."
         else:
             new_tag = ZMLTag(name, dict((name, attrs.getValue(name)) for name in attrs.getNames()))
             if (len(self.hierarchy) == 0) or (self.hierarchy[-1][-1].being_processed):
@@ -252,7 +257,8 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
         elif name == "array":
             child_dict = dict((tag.name, tag.value) for tag in child_tags)
             current_tag.value = numpy.reshape(child_dict["cells"], child_dict["shape"])
-        elif name == "grid": current_tag.value = numpy.reshape(numpy.array([eval(item) for item in current_tag.content.split()]), (int(current_tag.attributes["rows"]), int(current_tag.attributes["cols"]), -1))
+        elif name == "grid":
+            current_tag.value = numpy.reshape(numpy.array([eval(item) for item in current_tag.content.split()]), (int(current_tag.attributes["rows"]), int(current_tag.attributes["cols"]), -1))
         elif name == "binary":
             current_tag.value = StringIO.StringIO()
             current_tag.content.seek(0)
@@ -310,11 +316,106 @@ class ZMLHandler(xml.sax.handler.ContentHandler):
             model_object_tag.value.initstate(**model_object_tag.state)
 
 
+class Convertor1(XMLFilterBase):
+    """XMLFilter that converts from zml format 0.1 to format 0.2"""
+    def __init__(self, parent):
+        self.in_universe = -1
+        self.recording = None
+        self.cell = None
+        self.cell_active = None
+        XMLFilterBase.__init__(self, parent)
+
+    def startElement(self, name, attrs):
+        if self.in_universe >= 0:
+            self.in_universe += 1
+        if name == "zml_file":
+            if attrs.getValue("version") != "0.1":
+                raise FilterError, "Only format 0.1 is supported in this handler."
+            attrs = Attributes({"version": "0.2"})
+        elif name == "model_object" and attrs["class"] == "Universe":
+            self.in_universe = 0
+        elif self.in_universe == 1:
+            if name == "array" and attrs["label"] == "cell":
+                self.recording = "cell"
+                self.cell = []
+            elif name == "array" and attrs["label"] == "cell_active":
+                self.recording = "cell_active"
+                self.cell_active = []
+        if self.recording is None:
+            XMLFilterBase.startElement(self, name, attrs)
+
+    def characters(self, text):
+        if self.recording == "cell":
+            self.cell.append(text)
+        elif self.recording == "cell_active":
+            self.cell_active.append(text)
+        elif self.recording is None:
+            XMLFilterBase.characters(self, text)
+
+    def endElement(self, name):
+        if self.in_universe >= 0:
+            self.in_universe -= 1
+            if self.in_universe == -1:
+                # send the recorded tags in the new format
+                if not (self.cell is None and self.cell_active is None):
+                    if self.cell is None:
+                        self.cell = numpy.identity(3, float)*20.0
+                    if self.cell_active is None:
+                        self.cell_active = numpy.zeros(3, bool)
+                    XMLFilterBase.startElement(self, "unit_cell", Attributes({"label": "cell"}))
+                    # matrix
+                    XMLFilterBase.startElement(self, "array", Attributes({"label": "matrix"}))
+                    XMLFilterBase.startElement(self, "shape", Attributes({}))
+                    XMLFilterBase.characters(self, "3 3")
+                    XMLFilterBase.endElement(self, "shape")
+                    XMLFilterBase.startElement(self, "cells", Attributes({}))
+                    XMLFilterBase.characters(self, " ".join(str(v) for v in self.cell.ravel()))
+                    XMLFilterBase.endElement(self, "cells")
+                    XMLFilterBase.endElement(self, "array")
+                    # matrix
+                    XMLFilterBase.startElement(self, "array", Attributes({"label": "active"}))
+                    XMLFilterBase.startElement(self, "shape", Attributes({}))
+                    XMLFilterBase.characters(self, "3")
+                    XMLFilterBase.endElement(self, "shape")
+                    XMLFilterBase.startElement(self, "cells", Attributes({}))
+                    XMLFilterBase.characters(self, " ".join(str(v) for v in self.cell_active))
+                    XMLFilterBase.endElement(self, "cells")
+                    XMLFilterBase.endElement(self, "array")
+                    # end unit cell
+                    XMLFilterBase.endElement(self, "unit_cell")
+        if self.recording is None:
+            XMLFilterBase.endElement(self, name)
+        else:
+            if name == "array" and self.recording == "cell":
+                self.recording = None
+                words = (" ".join(self.cell)).split()[2:]
+                self.cell = numpy.array([float(v) for v in words])
+                self.cell.shape = (3,3)
+            if name == "array" and self.recording == "cell_active":
+                self.recording = None
+                words = (" ".join(self.cell_active)).split()[1:]
+                self.cell_active = numpy.array([eval(v) for v in words])
+                self.cell_active.shape = (3,)
+
+convertors = [Convertor1]
+
 def load_from_file(f):
-    content_handler = ZMLHandler()
-    f.seek(0)
-    xml.sax.parse(f, content_handler)
-    root = content_handler.root
+    counter = 0
+    while True:
+        try:
+            zml_handler = ZMLHandler()
+            parser = xml.sax.make_parser()
+            for i in xrange(counter):
+                parser = convertors[i](parser)
+            parser.setContentHandler(zml_handler)
+            f.seek(0)
+            parser.parse(f)
+            break
+        except FilterError:
+            if counter >= len(convertors):
+                raise FilterError("Could not read or convert ZML file, please send a bug report that includes this file.")
+            counter += 1
+    root = zml_handler.root
     for node in root:
         if isinstance(node, ParentMixin):
             node.reparent()

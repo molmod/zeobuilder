@@ -50,6 +50,10 @@ class LoadFilters(ApplicationTestCase):
 
     def test_zml(self):
         self.helper_file_open("core_objects.zml")
+        # old file formats
+        self.helper_file_open("format1_0.1.zml")
+        self.helper_file_open("format2_0.1.zml")
+        self.helper_file_open("format3_0.1.zml")
 
     def test_xyz(self):
         self.helper_file_open("tpa.xyz")

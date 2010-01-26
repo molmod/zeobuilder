@@ -93,7 +93,7 @@ setup(
         'zeobuilder.gui.fields',
         'zeobuilder.gui.visual',
     ],
-    scripts=['scripts/zeobuilder', 'scripts/zml-upgrade'],
+    scripts=['scripts/zeobuilder'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

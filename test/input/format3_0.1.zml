@@ -1,0 +1,3000 @@
+<?xml version='1.0'?>
+<zml_file version='0.1'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <array label="cell_active">
+    <shape>3 </shape>
+    <cells>False False False </cells>
+   </array>
+   <str label="name">Universe</str>
+   <float label="axis_length">1.8897261249</float>
+   <array label="repetitions">
+    <shape>3 </shape>
+    <cells>1 1 1 </cells>
+   </array>
+   <bool label="clipping">False</bool>
+   <bool label="visible">True</bool>
+   <float label="axis_thickness">0.18897261249</float>
+   <bool label="axes_visible">True</bool>
+   <bool label="box_visible">True</bool>
+   <list label="children">
+    <model_object id='1' class='Frame'>
+     <str label="name">Precursor</str>
+     <bool label="visible">True</bool>
+     <transformation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+      <array label="rotation_matrix">
+       <shape>3 3 </shape>
+       <cells>1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0 </cells>
+      </array>
+     </transformation>
+     <float label="axis_length">1.8897261249</float>
+     <float label="axis_thickness">0.18897261249</float>
+     <bool label="axes_visible">True</bool>
+     <list label="children">
+      <model_object id='2' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.35761617118 2.30397299101 -0.789055143423 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='3' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.2963620879 2.36828037111 -0.675248277323 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='4' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.49269379458 -6.49744533299 -0.786271576823 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='5' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.355776967 -6.50916163489 -0.753396011423 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='6' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.9812059961 -2.12460018269 -4.14810002222 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='7' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.621738217 -1.04237292819 -7.85767019992 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='8' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>2.69696046128 -1.02357204299 -7.95347931442 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='9' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.05302484358 -2.21712117369 -4.34536853242 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='10' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.9914313041 6.48667389861 -4.37065306792 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='11' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.645191608 4.89457963841 -7.95423520492 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='12' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>2.66517526788 4.90232751551 -8.04229644232 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='13' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.07762907778 6.51558670831 -4.56918769462 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='14' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-2.93684224032 -2.12460018269 -8.49700234252 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='15' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.29630812962 -1.04237292819 -4.78743216482 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='16' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-2.92661882202 6.48667389861 -8.27444929682 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='17' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.27285662842 4.89457963841 -4.69086715982 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='18' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.62168425872 2.36828037111 -11.9698540874 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='19' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.56227126942 -6.50916163489 -11.8917063533 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='20' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>2.93684229558 2.12460018731 8.4970023425 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='21' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.29630818498 1.04237293281 4.7874321648 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='22' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>16.2210878304 1.02357204761 4.69162305027 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='23' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.8650234481 2.21712117831 8.29973383232 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='24' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>2.92661887728 -6.48667389399 8.27444929677 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='25' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.27285668368 -4.89457963379 4.69086715982 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='26' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>16.2528730238 -4.90232751089 4.6028059224 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='27' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.8404192139 -6.51558670379 8.07591467009 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='28' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.5604321205 -2.30397298639 11.8560472213 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='29' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.62168431408 -2.36828036649 11.9698540875 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='30' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.4253544971 6.49744533751 11.8588307879 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='31' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.56227132468 6.50916163951 11.8917063533 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='32' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-8.35761611592 -2.30397298639 0.789055143429 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='33' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-8.49269373932 6.49744533751 0.786271576847 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='34' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-2.69696040602 1.02357204761 7.95347931446 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='35' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.05302478832 2.21712117831 4.3453685324 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='36' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-2.66517521262 -4.90232751089 8.04229644233 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='37' class='Atom'>
+       <int label="number">14</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.07762902242 -6.51558670379 4.56918769464 </cells>
+        </array>
+       </translation>
+       <str label="name">Si</str>
+      </model_object>
+      <model_object id='38' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.05716110272 9.40091504211 -8.95272869482 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='39' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.10522210882 -9.40091503754 -11.0998714227 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='40' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.3243350092 2.22613517191 -0.730887483623 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='41' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.4264936035 -5.84360009369 -0.728357140323 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='42' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>8.00990656418 -9.40091503754 -1.46430342072 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='43' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.8128242379 -9.40091503754 -1.54523094202 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='44' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.0977367544 -2.00804187529 -6.46928841592 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='45' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.6686431092 -2.20733239239 -10.6497405494 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='46' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.66631437438 -2.29758571209 -10.480232116 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='47' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.34737166978 -2.03436576019 -5.65742427822 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='48' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.21309518798 -2.07947352279 -6.42374601632 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='49' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.1582609027 5.86986729151 -6.64635575382 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='50' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.6724414587 5.83604119381 -10.8039422012 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='51' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.44308102718 6.06923339761 -10.6799761674 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='52' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.42303630378 5.93392900711 -5.83192158852 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='53' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.26228475898 5.99402229791 -6.51974410352 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='54' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.5286521979 1.91769407381 -7.92588931302 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='55' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>2.90581299268 1.95170914411 -8.17117576402 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='56' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.7435918331 -4.79822249869 -2.79203255502 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='57' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.4598305582 0.0638727453131 -2.18507142092 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='58' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.2101013611 4.94106690111 -1.92459157192 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='59' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.13588933418 -4.88095470849 -2.94377756282 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='60' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.34020652278 -0.0263219928869 -2.32164192802 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='61' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.38181829208 4.85470641721 -2.04850091392 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='62' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-0.151367034918 -1.59815460959 -7.38977401142 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='63' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-0.151367034918 5.74590125771 -7.38977401142 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='64' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.8608890234 9.40091504211 -3.69237366992 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='65' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.12831153248 9.40091504211 -3.69741923872 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='66' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.82031337172 -2.00804187529 -6.17581394872 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='67' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.24940512722 -2.20733239239 -1.99536181522 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='68' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-9.70495304843 -2.07947352279 -6.22135634842 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='69' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.75978544392 5.86986729151 -5.99874661082 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='70' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.24560677772 5.83604119381 -1.84116016352 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='71' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-9.6557634774 5.99402229791 -6.12535826122 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='72' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.38939603852 1.91769407381 -4.71921305172 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='73' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.17445640322 -4.79822249869 -9.85306980972 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='74' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.45821767822 0.0638727453131 -10.4600309438 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='75' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.70794498562 4.94106690111 -10.7205107928 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='76' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>18.7666812014 -1.59815460959 -5.25532835332 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='77' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>18.7666812014 5.74590125771 -5.25532835332 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='78' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.59371322712 2.22613517191 -11.9142148811 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='79' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.66631431902 2.29758571671 -14.8099726134 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='80' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.49155463282 -5.84360009369 -11.9167452244 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='81' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.44308097192 -6.06923339299 -14.610228562 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='82' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-8.00990650892 9.40091504211 1.46430342074 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='83' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.12831147712 -9.40091503754 3.6974192387 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='84' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.82031342708 2.00804187991 6.17581394877 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='85' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.24940518248 2.20733239701 1.99536181526 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='86' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.2517320276 2.29758571671 2.16487024867 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='87' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.5706766219 2.03436576481 6.98767808655 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='88' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.70495310378 2.07947352741 6.22135634838 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='89' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.75978549928 -5.86986728689 5.99874661086 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='90' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.24560683298 -5.83604118919 1.84116016347 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='91' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>15.4749691542 -6.06923339299 1.96512619726 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='92' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>14.4950138776 -5.93392900249 6.81318077617 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='93' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>9.65576353268 -5.99402229329 6.12535826123 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='94' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.38939609388 -1.91769406929 4.71921305169 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='95' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>16.0122352991 -1.95170913949 4.47392660068 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='96' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.17445645858 4.79822250331 9.85306980973 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='97' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.45821773348 -0.0638727406869 10.4600309438 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='98' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.70794504088 -4.94106689649 10.7205107929 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='99' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.7821589575 4.88095471301 9.7013248019 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='100' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.5778417689 0.0263219975131 10.3234604368 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='101' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.5362281099 -4.85470641259 10.5966014509 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='102' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.05716115798 -9.40091503754 8.95272869478 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='103' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.789738649 -9.40091503754 8.94768312603 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='104' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.6686431092 -2.20733239239 14.6404641801 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='105' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.59371328248 -2.22613516739 11.9142148812 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='106' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.66631437438 -2.29758571209 14.8099726135 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='107' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>11.6724414587 5.83604119381 14.4862625283 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='108' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>7.49155468818 5.84360009831 11.9167452244 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='109' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>3.44308102718 6.06923339761 14.6102285621 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='110' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>10.9081417275 9.40091504211 11.180798944 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='111' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>4.10522216408 9.40091504211 11.0998714227 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='112' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-11.3243349539 -2.22613516739 0.730887483578 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='113' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-11.4264935482 5.84360009831 0.728357140297 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='114' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.66631431902 2.29758571671 10.4802321161 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='115' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.34737161442 2.03436576481 5.65742427818 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='116' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-9.21309513264 2.07947352741 6.42374601635 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='117' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-3.44308097192 -6.06923339299 10.6799761675 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='118' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-4.42303624852 -5.93392900249 5.83192158856 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='119' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-9.26228470367 -5.99402229329 6.5197441035 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='120' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-2.90581293732 -1.95170913949 8.17117576405 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='121' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.13588927892 4.88095471301 2.94377756283 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='122' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.34020646752 0.0263219975131 2.32164192799 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='123' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>-7.38181823682 -4.85470641259 2.04850091389 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='124' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>0.151367090282 1.59815461421 7.3897740114 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='125' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>0.151367090282 -5.74590125309 7.3897740114 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='126' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>19.0694153266 1.59815461421 5.25532835333 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='127' class='Atom'>
+       <int label="number">8</int>
+       <bool label="visible">True</bool>
+       <int label="quality">15</int>
+       <translation label="transformation">
+        <array label="translation_vector">
+         <shape>3 </shape>
+         <cells>19.0694153266 -5.74590125309 5.25532835333 </cells>
+        </array>
+       </translation>
+       <str label="name">O</str>
+      </model_object>
+      <model_object id='128' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 25</str>
+       <list label="targets">
+        <reference to='3' />
+        <reference to='86' />
+       </list>
+      </model_object>
+      <model_object id='129' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 26</str>
+       <list label="targets">
+        <reference to='5' />
+        <reference to='91' />
+       </list>
+      </model_object>
+      <model_object id='130' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 27</str>
+       <list label="targets">
+        <reference to='70' />
+        <reference to='33' />
+       </list>
+      </model_object>
+      <model_object id='131' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 29</str>
+       <list label="targets">
+        <reference to='67' />
+        <reference to='32' />
+       </list>
+      </model_object>
+      <model_object id='132' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 30</str>
+       <list label="targets">
+        <reference to='4' />
+        <reference to='90' />
+       </list>
+      </model_object>
+      <model_object id='133' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 88</str>
+       <list label="targets">
+        <reference to='45' />
+        <reference to='7' />
+       </list>
+      </model_object>
+      <model_object id='134' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 99</str>
+       <list label="targets">
+        <reference to='68' />
+        <reference to='15' />
+       </list>
+      </model_object>
+      <model_object id='135' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 101</str>
+       <list label="targets">
+        <reference to='44' />
+        <reference to='6' />
+       </list>
+      </model_object>
+      <model_object id='136' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 102</str>
+       <list label="targets">
+        <reference to='60' />
+        <reference to='2' />
+       </list>
+      </model_object>
+      <model_object id='137' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 105</str>
+       <list label="targets">
+        <reference to='40' />
+        <reference to='2' />
+       </list>
+      </model_object>
+      <model_object id='138' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 106</str>
+       <list label="targets">
+        <reference to='40' />
+        <reference to='3' />
+       </list>
+      </model_object>
+      <model_object id='139' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 114</str>
+       <list label="targets">
+        <reference to='46' />
+        <reference to='8' />
+       </list>
+      </model_object>
+      <model_object id='140' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 120</str>
+       <list label="targets">
+        <reference to='58' />
+        <reference to='3' />
+       </list>
+      </model_object>
+      <model_object id='141' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 139</str>
+       <list label="targets">
+        <reference to='62' />
+        <reference to='14' />
+       </list>
+      </model_object>
+      <model_object id='142' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 140</str>
+       <list label="targets">
+        <reference to='62' />
+        <reference to='8' />
+       </list>
+      </model_object>
+      <model_object id='143' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 141</str>
+       <list label="targets">
+        <reference to='16' />
+        <reference to='38' />
+       </list>
+      </model_object>
+      <model_object id='144' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 142</str>
+       <list label="targets">
+        <reference to='63' />
+        <reference to='16' />
+       </list>
+      </model_object>
+      <model_object id='145' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 143</str>
+       <list label="targets">
+        <reference to='63' />
+        <reference to='12' />
+       </list>
+      </model_object>
+      <model_object id='146' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 144</str>
+       <list label="targets">
+        <reference to='78' />
+        <reference to='18' />
+       </list>
+      </model_object>
+      <model_object id='147' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 145</str>
+       <list label="targets">
+        <reference to='74' />
+        <reference to='18' />
+       </list>
+      </model_object>
+      <model_object id='148' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 146</str>
+       <list label="targets">
+        <reference to='74' />
+        <reference to='14' />
+       </list>
+      </model_object>
+      <model_object id='149' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 147</str>
+       <list label="targets">
+        <reference to='56' />
+        <reference to='5' />
+       </list>
+      </model_object>
+      <model_object id='150' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 148</str>
+       <list label="targets">
+        <reference to='56' />
+        <reference to='6' />
+       </list>
+      </model_object>
+      <model_object id='151' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 153</str>
+       <list label="targets">
+        <reference to='75' />
+        <reference to='18' />
+       </list>
+      </model_object>
+      <model_object id='152' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 154</str>
+       <list label="targets">
+        <reference to='75' />
+        <reference to='16' />
+       </list>
+      </model_object>
+      <model_object id='153' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 156</str>
+       <list label="targets">
+        <reference to='53' />
+        <reference to='11' />
+       </list>
+      </model_object>
+      <model_object id='154' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 157</str>
+       <list label="targets">
+        <reference to='11' />
+        <reference to='49' />
+       </list>
+      </model_object>
+      <model_object id='155' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 180</str>
+       <list label="targets">
+        <reference to='43' />
+        <reference to='5' />
+       </list>
+      </model_object>
+      <model_object id='156' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 193</str>
+       <list label="targets">
+        <reference to='41' />
+        <reference to='5' />
+       </list>
+      </model_object>
+      <model_object id='157' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 194</str>
+       <list label="targets">
+        <reference to='4' />
+        <reference to='41' />
+       </list>
+      </model_object>
+      <model_object id='158' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 195</str>
+       <list label="targets">
+        <reference to='13' />
+        <reference to='53' />
+       </list>
+      </model_object>
+      <model_object id='159' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 196</str>
+       <list label="targets">
+        <reference to='13' />
+        <reference to='61' />
+       </list>
+      </model_object>
+      <model_object id='160' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 197</str>
+       <list label="targets">
+        <reference to='13' />
+        <reference to='65' />
+       </list>
+      </model_object>
+      <model_object id='161' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 198</str>
+       <list label="targets">
+        <reference to='52' />
+        <reference to='13' />
+       </list>
+      </model_object>
+      <model_object id='162' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 199</str>
+       <list label="targets">
+        <reference to='52' />
+        <reference to='12' />
+       </list>
+      </model_object>
+      <model_object id='163' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 210</str>
+       <list label="targets">
+        <reference to='71' />
+        <reference to='17' />
+       </list>
+      </model_object>
+      <model_object id='164' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 233</str>
+       <list label="targets">
+        <reference to='48' />
+        <reference to='7' />
+       </list>
+      </model_object>
+      <model_object id='165' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 234</str>
+       <list label="targets">
+        <reference to='7' />
+        <reference to='44' />
+       </list>
+      </model_object>
+      <model_object id='166' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 235</str>
+       <list label="targets">
+        <reference to='54' />
+        <reference to='7' />
+       </list>
+      </model_object>
+      <model_object id='167' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 236</str>
+       <list label="targets">
+        <reference to='54' />
+        <reference to='11' />
+       </list>
+      </model_object>
+      <model_object id='168' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 259</str>
+       <list label="targets">
+        <reference to='76' />
+        <reference to='6' />
+       </list>
+      </model_object>
+      <model_object id='169' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 277</str>
+       <list label="targets">
+        <reference to='57' />
+        <reference to='6' />
+       </list>
+      </model_object>
+      <model_object id='170' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 278</str>
+       <list label="targets">
+        <reference to='57' />
+        <reference to='3' />
+       </list>
+      </model_object>
+      <model_object id='171' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 288</str>
+       <list label="targets">
+        <reference to='9' />
+        <reference to='47' />
+       </list>
+      </model_object>
+      <model_object id='172' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 289</str>
+       <list label="targets">
+        <reference to='9' />
+        <reference to='48' />
+       </list>
+      </model_object>
+      <model_object id='173' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 290</str>
+       <list label="targets">
+        <reference to='9' />
+        <reference to='60' />
+       </list>
+      </model_object>
+      <model_object id='174' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 291</str>
+       <list label="targets">
+        <reference to='55' />
+        <reference to='8' />
+       </list>
+      </model_object>
+      <model_object id='175' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 292</str>
+       <list label="targets">
+        <reference to='55' />
+        <reference to='12' />
+       </list>
+      </model_object>
+      <model_object id='176' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 293</str>
+       <list label="targets">
+        <reference to='8' />
+        <reference to='47' />
+       </list>
+      </model_object>
+      <model_object id='177' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 296</str>
+       <list label="targets">
+        <reference to='42' />
+        <reference to='4' />
+       </list>
+      </model_object>
+      <model_object id='178' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 298</str>
+       <list label="targets">
+        <reference to='79' />
+        <reference to='18' />
+       </list>
+      </model_object>
+      <model_object id='179' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 310</str>
+       <list label="targets">
+        <reference to='69' />
+        <reference to='16' />
+       </list>
+      </model_object>
+      <model_object id='180' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 311</str>
+       <list label="targets">
+        <reference to='17' />
+        <reference to='69' />
+       </list>
+      </model_object>
+      <model_object id='181' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 312</str>
+       <list label="targets">
+        <reference to='17' />
+        <reference to='70' />
+       </list>
+      </model_object>
+      <model_object id='182' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 313</str>
+       <list label="targets">
+        <reference to='66' />
+        <reference to='15' />
+       </list>
+      </model_object>
+      <model_object id='183' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 314</str>
+       <list label="targets">
+        <reference to='66' />
+        <reference to='14' />
+       </list>
+      </model_object>
+      <model_object id='184' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 315</str>
+       <list label="targets">
+        <reference to='15' />
+        <reference to='72' />
+       </list>
+      </model_object>
+      <model_object id='185' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 316</str>
+       <list label="targets">
+        <reference to='15' />
+        <reference to='67' />
+       </list>
+      </model_object>
+      <model_object id='186' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 317</str>
+       <list label="targets">
+        <reference to='72' />
+        <reference to='17' />
+       </list>
+      </model_object>
+      <model_object id='187' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 319</str>
+       <list label="targets">
+        <reference to='50' />
+        <reference to='11' />
+       </list>
+      </model_object>
+      <model_object id='188' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 322</str>
+       <list label="targets">
+        <reference to='49' />
+        <reference to='10' />
+       </list>
+      </model_object>
+      <model_object id='189' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 323</str>
+       <list label="targets">
+        <reference to='10' />
+        <reference to='77' />
+       </list>
+      </model_object>
+      <model_object id='190' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 324</str>
+       <list label="targets">
+        <reference to='10' />
+        <reference to='58' />
+       </list>
+      </model_object>
+      <model_object id='191' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 325</str>
+       <list label="targets">
+        <reference to='10' />
+        <reference to='64' />
+       </list>
+      </model_object>
+      <model_object id='192' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 350</str>
+       <list label="targets">
+        <reference to='39' />
+        <reference to='19' />
+       </list>
+      </model_object>
+      <model_object id='193' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 351</str>
+       <list label="targets">
+        <reference to='59' />
+        <reference to='4' />
+       </list>
+      </model_object>
+      <model_object id='194' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 352</str>
+       <list label="targets">
+        <reference to='59' />
+        <reference to='9' />
+       </list>
+      </model_object>
+      <model_object id='195' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 355</str>
+       <list label="targets">
+        <reference to='19' />
+        <reference to='81' />
+       </list>
+      </model_object>
+      <model_object id='196' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 356</str>
+       <list label="targets">
+        <reference to='73' />
+        <reference to='19' />
+       </list>
+      </model_object>
+      <model_object id='197' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 357</str>
+       <list label="targets">
+        <reference to='73' />
+        <reference to='14' />
+       </list>
+      </model_object>
+      <model_object id='198' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 358</str>
+       <list label="targets">
+        <reference to='80' />
+        <reference to='19' />
+       </list>
+      </model_object>
+      <model_object id='199' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 369</str>
+       <list label="targets">
+        <reference to='61' />
+        <reference to='2' />
+       </list>
+      </model_object>
+      <model_object id='200' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 376</str>
+       <list label="targets">
+        <reference to='51' />
+        <reference to='12' />
+       </list>
+      </model_object>
+      <model_object id='201' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 3</str>
+       <list label="targets">
+        <reference to='26' />
+        <reference to='127' />
+       </list>
+      </model_object>
+      <model_object id='202' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 6</str>
+       <list label="targets">
+        <reference to='22' />
+        <reference to='126' />
+       </list>
+      </model_object>
+      <model_object id='203' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 38</str>
+       <list label="targets">
+        <reference to='98' />
+        <reference to='29' />
+       </list>
+      </model_object>
+      <model_object id='204' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 44</str>
+       <list label="targets">
+        <reference to='93' />
+        <reference to='27' />
+       </list>
+      </model_object>
+      <model_object id='205' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 45</str>
+       <list label="targets">
+        <reference to='27' />
+        <reference to='92' />
+       </list>
+      </model_object>
+      <model_object id='206' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 46</str>
+       <list label="targets">
+        <reference to='27' />
+        <reference to='101' />
+       </list>
+      </model_object>
+      <model_object id='207' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 52</str>
+       <list label="targets">
+        <reference to='33' />
+        <reference to='113' />
+       </list>
+      </model_object>
+      <model_object id='208' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 53</str>
+       <list label="targets">
+        <reference to='33' />
+        <reference to='121' />
+       </list>
+      </model_object>
+      <model_object id='209' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 54</str>
+       <list label="targets">
+        <reference to='33' />
+        <reference to='82' />
+       </list>
+      </model_object>
+      <model_object id='210' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 86</str>
+       <list label="targets">
+        <reference to='102' />
+        <reference to='24' />
+       </list>
+      </model_object>
+      <model_object id='211' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 87</str>
+       <list label="targets">
+        <reference to='104' />
+        <reference to='28' />
+       </list>
+      </model_object>
+      <model_object id='212' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 89</str>
+       <list label="targets">
+        <reference to='105' />
+        <reference to='28' />
+       </list>
+      </model_object>
+      <model_object id='213' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 115</str>
+       <list label="targets">
+        <reference to='29' />
+        <reference to='106' />
+       </list>
+      </model_object>
+      <model_object id='214' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 116</str>
+       <list label="targets">
+        <reference to='29' />
+        <reference to='105' />
+       </list>
+      </model_object>
+      <model_object id='215' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 121</str>
+       <list label="targets">
+        <reference to='124' />
+        <reference to='20' />
+       </list>
+      </model_object>
+      <model_object id='216' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 122</str>
+       <list label="targets">
+        <reference to='34' />
+        <reference to='124' />
+       </list>
+      </model_object>
+      <model_object id='217' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 123</str>
+       <list label="targets">
+        <reference to='34' />
+        <reference to='120' />
+       </list>
+      </model_object>
+      <model_object id='218' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 125</str>
+       <list label="targets">
+        <reference to='35' />
+        <reference to='122' />
+       </list>
+      </model_object>
+      <model_object id='219' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 126</str>
+       <list label="targets">
+        <reference to='35' />
+        <reference to='121' />
+       </list>
+      </model_object>
+      <model_object id='220' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 127</str>
+       <list label="targets">
+        <reference to='35' />
+        <reference to='115' />
+       </list>
+      </model_object>
+      <model_object id='221' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 128</str>
+       <list label="targets">
+        <reference to='35' />
+        <reference to='116' />
+       </list>
+      </model_object>
+      <model_object id='222' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 129</str>
+       <list label="targets">
+        <reference to='32' />
+        <reference to='122' />
+       </list>
+      </model_object>
+      <model_object id='223' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 135</str>
+       <list label="targets">
+        <reference to='21' />
+        <reference to='85' />
+       </list>
+      </model_object>
+      <model_object id='224' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 136</str>
+       <list label="targets">
+        <reference to='21' />
+        <reference to='94' />
+       </list>
+      </model_object>
+      <model_object id='225' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 137</str>
+       <list label="targets">
+        <reference to='21' />
+        <reference to='84' />
+       </list>
+      </model_object>
+      <model_object id='226' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 138</str>
+       <list label="targets">
+        <reference to='21' />
+        <reference to='88' />
+       </list>
+      </model_object>
+      <model_object id='227' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 152</str>
+       <list label="targets">
+        <reference to='103' />
+        <reference to='27' />
+       </list>
+      </model_object>
+      <model_object id='228' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 171</str>
+       <list label="targets">
+        <reference to='26' />
+        <reference to='91' />
+       </list>
+      </model_object>
+      <model_object id='229' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 172</str>
+       <list label="targets">
+        <reference to='26' />
+        <reference to='95' />
+       </list>
+      </model_object>
+      <model_object id='230' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 173</str>
+       <list label="targets">
+        <reference to='26' />
+        <reference to='92' />
+       </list>
+      </model_object>
+      <model_object id='231' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 177</str>
+       <list label="targets">
+        <reference to='99' />
+        <reference to='30' />
+       </list>
+      </model_object>
+      <model_object id='232' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 185</str>
+       <list label="targets">
+        <reference to='118' />
+        <reference to='36' />
+       </list>
+      </model_object>
+      <model_object id='233' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 187</str>
+       <list label="targets">
+        <reference to='89' />
+        <reference to='24' />
+       </list>
+      </model_object>
+      <model_object id='234' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 188</str>
+       <list label="targets">
+        <reference to='24' />
+        <reference to='98' />
+       </list>
+      </model_object>
+      <model_object id='235' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 202</str>
+       <list label="targets">
+        <reference to='96' />
+        <reference to='31' />
+       </list>
+      </model_object>
+      <model_object id='236' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 209</str>
+       <list label="targets">
+        <reference to='101' />
+        <reference to='28' />
+       </list>
+      </model_object>
+      <model_object id='237' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 227</str>
+       <list label="targets">
+        <reference to='125' />
+        <reference to='24' />
+       </list>
+      </model_object>
+      <model_object id='238' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 228</str>
+       <list label="targets">
+        <reference to='36' />
+        <reference to='125' />
+       </list>
+      </model_object>
+      <model_object id='239' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 229</str>
+       <list label="targets">
+        <reference to='36' />
+        <reference to='120' />
+       </list>
+      </model_object>
+      <model_object id='240' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 230</str>
+       <list label="targets">
+        <reference to='36' />
+        <reference to='117' />
+       </list>
+      </model_object>
+      <model_object id='241' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 251</str>
+       <list label="targets">
+        <reference to='100' />
+        <reference to='28' />
+       </list>
+      </model_object>
+      <model_object id='242' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 252</str>
+       <list label="targets">
+        <reference to='88' />
+        <reference to='23' />
+       </list>
+      </model_object>
+      <model_object id='243' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 253</str>
+       <list label="targets">
+        <reference to='23' />
+        <reference to='100' />
+       </list>
+      </model_object>
+      <model_object id='244' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 254</str>
+       <list label="targets">
+        <reference to='23' />
+        <reference to='87' />
+       </list>
+      </model_object>
+      <model_object id='245' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 255</str>
+       <list label="targets">
+        <reference to='23' />
+        <reference to='99' />
+       </list>
+      </model_object>
+      <model_object id='246' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 256</str>
+       <list label="targets">
+        <reference to='95' />
+        <reference to='22' />
+       </list>
+      </model_object>
+      <model_object id='247' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 257</str>
+       <list label="targets">
+        <reference to='22' />
+        <reference to='86' />
+       </list>
+      </model_object>
+      <model_object id='248' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 258</str>
+       <list label="targets">
+        <reference to='22' />
+        <reference to='87' />
+       </list>
+      </model_object>
+      <model_object id='249' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 287</str>
+       <list label="targets">
+        <reference to='112' />
+        <reference to='32' />
+       </list>
+      </model_object>
+      <model_object id='250' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 299</str>
+       <list label="targets">
+        <reference to='114' />
+        <reference to='34' />
+       </list>
+      </model_object>
+      <model_object id='251' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 300</str>
+       <list label="targets">
+        <reference to='123' />
+        <reference to='32' />
+       </list>
+      </model_object>
+      <model_object id='252' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 301</str>
+       <list label="targets">
+        <reference to='37' />
+        <reference to='123' />
+       </list>
+      </model_object>
+      <model_object id='253' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 302</str>
+       <list label="targets">
+        <reference to='37' />
+        <reference to='118' />
+       </list>
+      </model_object>
+      <model_object id='254' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 303</str>
+       <list label="targets">
+        <reference to='37' />
+        <reference to='119' />
+       </list>
+      </model_object>
+      <model_object id='255' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 304</str>
+       <list label="targets">
+        <reference to='115' />
+        <reference to='34' />
+       </list>
+      </model_object>
+      <model_object id='256' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 306</str>
+       <list label="targets">
+        <reference to='84' />
+        <reference to='20' />
+       </list>
+      </model_object>
+      <model_object id='257' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 307</str>
+       <list label="targets">
+        <reference to='20' />
+        <reference to='97' />
+       </list>
+      </model_object>
+      <model_object id='258' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 308</str>
+       <list label="targets">
+        <reference to='20' />
+        <reference to='96' />
+       </list>
+      </model_object>
+      <model_object id='259' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 309</str>
+       <list label="targets">
+        <reference to='97' />
+        <reference to='29' />
+       </list>
+      </model_object>
+      <model_object id='260' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 318</str>
+       <list label="targets">
+        <reference to='108' />
+        <reference to='30' />
+       </list>
+      </model_object>
+      <model_object id='261' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 320</str>
+       <list label="targets">
+        <reference to='30' />
+        <reference to='107' />
+       </list>
+      </model_object>
+      <model_object id='262' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 321</str>
+       <list label="targets">
+        <reference to='30' />
+        <reference to='110' />
+       </list>
+      </model_object>
+      <model_object id='263' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 362</str>
+       <list label="targets">
+        <reference to='83' />
+        <reference to='37' />
+       </list>
+      </model_object>
+      <model_object id='264' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 370</str>
+       <list label="targets">
+        <reference to='25' />
+        <reference to='90' />
+       </list>
+      </model_object>
+      <model_object id='265' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 371</str>
+       <list label="targets">
+        <reference to='25' />
+        <reference to='94' />
+       </list>
+      </model_object>
+      <model_object id='266' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 372</str>
+       <list label="targets">
+        <reference to='25' />
+        <reference to='89' />
+       </list>
+      </model_object>
+      <model_object id='267' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 373</str>
+       <list label="targets">
+        <reference to='25' />
+        <reference to='93' />
+       </list>
+      </model_object>
+      <model_object id='268' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 377</str>
+       <list label="targets">
+        <reference to='31' />
+        <reference to='109' />
+       </list>
+      </model_object>
+      <model_object id='269' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 378</str>
+       <list label="targets">
+        <reference to='31' />
+        <reference to='108' />
+       </list>
+      </model_object>
+      <model_object id='270' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 379</str>
+       <list label="targets">
+        <reference to='31' />
+        <reference to='111' />
+       </list>
+      </model_object>
+      <model_object id='271' class='Bond'>
+       <bool label="visible">True</bool>
+       <int label="bond_type">1</int>
+       <int label="quality">15</int>
+       <str label="name">Bond 382</str>
+       <list label="targets">
+        <reference to='85' />
+        <reference to='2' />
+       </list>
+      </model_object>
+     </list>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='272' class='Folder'>
+   <str label="name">Folder</str>
+   <list label="children">
+   </list>
+  </model_object>
+ </list>
+</zml_file>
