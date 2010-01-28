@@ -63,7 +63,7 @@ def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent, graph=None):
 
         # Put coordinates of guessed geometry back into Zeobuilder model
         for i,atomindex in enumerate(group):
-            atom = graph.molecule.atoms[atomindex]
+            atom = atoms[atomindex]
             # Make sure atoms in subframes are treated properly
             transf = atom.parent.get_frame_relative_to(parent)
             org_pos = atom.transformation.t
@@ -209,10 +209,10 @@ class OptimizeMopacPM3(Immediate):
         self.write_mopac_input(org_mol, os.path.join(work, 'mopac'))
 
         # Run input file through mopac and capture output in file object
-        retcode = os.system('cd %s; run_mopac7 mopac > mopac.out' % work)
+        retcode = os.system('cd %s; run_mopac7 mopac > mopac.stdout' % work)
         if retcode != 0:
             raise UserError("Failed to run Mopac.", "Check that the run_mopac7 binary is in the path. The input file can be found here: %s." % work)
-        opt_coords = self.read_mopac_output(os.path.join(work, 'mopac.out'), org_mol.size)
+        opt_coords = self.read_mopac_output(os.path.join(work, 'mopac.OUT'), org_mol.size)
 
         # clean up
         def safe_remove(filename):
@@ -221,7 +221,8 @@ class OptimizeMopacPM3(Immediate):
                 os.remove(filename)
         safe_remove("mopac.dat")
         safe_remove("mopac.log")
-        safe_remove("mopac.out")
+        safe_remove("mopac.stdout")
+        safe_remove("mopac.OUT")
         safe_remove("mopac.arc")
         os.rmdir(work)
 
