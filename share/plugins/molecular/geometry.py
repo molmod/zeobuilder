@@ -48,16 +48,18 @@ import numpy, tempfile, os
 
 def coords_to_zeobuilder(org_coords, opt_coords, atoms, parent, graph=None):
     if graph == None:
-        atomgroups = [numpy.arange(len(atoms))]
+        groups = [numpy.arange(len(atoms))]
     else:
-        atomgroups = graph.independent_nodes
+        # if the molecular graph has disconnected islands, then each independent
+        # part is treated seperately in the loop below
+        groups = graph.independent_vertices
 
-    for group in atomgroups:
+    for group in groups:
         group_org = org_coords[group]
         group_opt = opt_coords[group]
         # Transform the guessed geometry as to overlap with the original geometry
         transf = superpose(group_org, group_opt)
-        group_opt = numpy.dot(group_opt, transf.r.transpose()) + transf.t
+        group_opt = transf * group_opt
 
         # Put coordinates of guessed geometry back into Zeobuilder model
         for i,atomindex in enumerate(group):
