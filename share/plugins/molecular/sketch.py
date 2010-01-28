@@ -181,11 +181,11 @@ class SketchOptions(GladeWrapper):
             bu_element.show()
 
         # 6)fill the fragment combo box with filenames from share/fragments
-        fragmentdir = context.get_share_filename('fragments')
+        fragment_dir = context.get_share_filename('fragments')
         self.fragment_store = gtk.ListStore(str)
-        for filename in os.listdir (fragmentdir):
+        for filename in sorted(os.listdir(fragment_dir)):
             # Ignore subfolders and files with extension other than cml
-            if os.path.isdir (os.path.join (fragmentdir, filename)) or filename[-3:] != 'cml':
+            if os.path.isdir (os.path.join (fragment_dir, filename)) or filename[-3:] != 'cml':
                 continue
             self.fragment_store.append([filename[:-4]])
         self.cb_fragment.set_model(self.fragment_store)
@@ -198,6 +198,10 @@ class SketchOptions(GladeWrapper):
     @property
     def current_object(self):
        return self.object_store.get_value(self.cb_object.get_active_iter(),0)
+
+    @property
+    def current_fragment(self):
+       return self.fragment_store.get_value(self.cb_fragment.get_active_iter(), 0)
 
     def on_window_delete_event(self, window, event):
         return True
@@ -238,62 +242,65 @@ class SketchOptions(GladeWrapper):
         else:
             self.cb_bondtype.hide()
 
-    def get_fragment(self, fragmentname):
-        fragmentdir = context.get_share_filename('fragments')
-        filename = fragmentdir+'/'+fragmentname+'.cml'
-
-        molecules = load_cml(filename)
-        molecule = molecules[0]
-
-        Frame = context.application.plugins.get_node("Frame")
-        fragment_frame = Frame(name=fragmentname)
-
-        load_filter = context.application.plugins.get_load_filter('cml')
-        load_filter.load_molecule(fragment_frame,molecule)
-
-        return fragment_frame
-
     def get_new(self, position):
-
         if self.current_object == "Fragment":
-            new = self.get_fragment(self.fragment_store.get_value(self.cb_fragment.get_active_iter(), 0))
+            filename = context.get_share_filename('fragments/%s.cml' % self.current_fragment)
+            molecule = load_cml(filename)[0]
+
+            Frame = context.application.plugins.get_node("Frame")
+            new = Frame(name=self.current_fragment)
+
+            load_filter = context.application.plugins.get_load_filter('cml')
+            load_filter.load_molecule(new, molecule)
         else:
-            new = context.application.plugins.get_node(self.current_object)()
+            NewClass = context.application.plugins.get_node(self.current_object)
+            new = NewClass()
             if self.current_object == "Atom":
                 new.set_number(self.atom_number)
                 new.set_name(periodic[self.atom_number].symbol)
 
-        new.transformation.t[:] = position
+        translation = Translation(position)
+        primitive.Transform(new, translation)
         return new
 
     def add_new(self, position, parent):
         new = self.get_new(position)
 
-        primitive.Add(new, parent)
         if self.current_object == "Fragment":
-            # get rid of frame
+            result = new.children[1]
+            primitive.Add(new, parent)
             UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
             UnframeAbsolute([new])
-        return new
+            #return result
+        else:
+            primitive.Add(new, parent)
+            return new
 
     def replace(self, gl_object):
         if not gl_object.get_fixed():
-            state = gl_object.__getstate__()
-            state.pop("name", None)
-            state.pop("transformation", None)
             new = self.get_new(gl_object.transformation.t)
 
-            if(self.current_object == "Fragment"): #fragments are inserted at frames - have no refs
+            # select a target object, i.e. the one the will be connected with
+            # the bonds/vectors/... of the replaced object
+            if(self.current_object == "Fragment"):
+                # fragments are inserted as frames
+                # take atom with index 1 as target
                 target_object = new.children[1]
             else:
                 target_object = new
+            # check if all connections to the replaced object are applicable
+            # to the new object. if not, then do not perform the replacement
+            # and return early.
             for reference in gl_object.references[::-1]:
                 if not reference.check_target(target_object):
                     return
+            # add the new object
             parent = gl_object.parent
             primitive.Add(new, parent)
+
             if(self.current_object == "Fragment"):
-                # rotation
+                # Fix the rotation and translation of the molecular fragment.
+                # Rotation
                 Bond = context.application.plugins.get_node("Bond")
                 if len(gl_object.references) == 1 and isinstance(gl_object.references[0].parent, Bond):
                     bond1 = gl_object.references[0].parent
@@ -308,11 +315,11 @@ class SketchOptions(GladeWrapper):
                     if numpy.linalg.norm(axis) < 1e-8:
                         axis = random_orthonormal(direction1)
                     angle = compute_angle(direction1, direction2)
-                    rotation = Rotation.from_properties(angle,axis,False)
+                    rotation = Rotation.from_properties(angle, axis, False)
                     primitive.Transform(new, rotation)
                 else:
                     bond1 = None
-                # tranlsation
+                # Tranlsation
                 pos_old = new.children[1].get_frame_relative_to(parent).t
                 pos_new = gl_object.transformation.t
                 translation = Translation(pos_new - pos_old)
@@ -324,12 +331,15 @@ class SketchOptions(GladeWrapper):
                     translation = Translation(-direction1/old_length*(new_length-old_length))
                     primitive.Transform(new, translation)
 
+            # let the references to the replaced object point to the new object
             for reference in gl_object.references[::-1]:
                 reference.set_target(target_object)
+            # delete the replaced object
             primitive.Delete(gl_object)
             if(self.current_object == "Fragment"):
+                # Delete the first atom in the fragment
                 primitive.Delete(new.children[0])
-                # get rid of frame
+                # Unframe the fragment
                 UnframeAbsolute = context.application.plugins.get_action("UnframeAbsolute")
                 UnframeAbsolute([new])
 
@@ -438,8 +448,10 @@ class Sketch(Interactive):
         elif event.button == 3:
             self.tool = self.options.erase_at
             self.tool(numpy.array([event.x, event.y], float), self.parent)
+        else:
+            raise ValueError("Unrecognized event.button = %s" % event.button)
 
-        if self.tool is None:
+        if self.tool is None or self.first_hit is None:
             self.finish()
 
     def button_motion(self, drawing_area, event, start_button):
