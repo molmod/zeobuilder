@@ -41,7 +41,7 @@ __all__ = ["CacheTestCase"]
 
 
 class CacheTestCase(ApplicationTestCase):
-    def test_addBox(self):
+    def test_add_box(self):
         def fn():
             FileNew = context.application.plugins.get_action("FileNew")
             FileNew()
