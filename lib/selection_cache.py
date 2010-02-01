@@ -232,7 +232,9 @@ class SelectionCache(gobject.GObject):
     def get_nodes_without_children(self):
         #print "DEBUG self.nodes_by_parent:", self.nodes_by_parent
         #print "DEBUG self.traces_by_parent:", self.traces_by_parent
-        return analysis.list_without_children(self.nodes_by_parent, self.traces_by_parent)
+        return analysis.list_without_children(
+            self.nodes_by_parent, self.traces_by_parent, self.nodes
+        )
 
     def get_some_nodes_without_children_fixed(self):
         #print "DEBUG self.nodes_without_children:", self.nodes_without_children
