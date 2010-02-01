@@ -263,8 +263,8 @@ class Element(Edit):
                     tip = tip + "\nMass = *%s" % express_measure(atom_info.mass, measure="Mass")
                 else:
                     tip = tip + "\nMass = %s" % express_measure(atom_info.mass, measure="Mass")
-            if atom_info.radius is not None:
-                tip = tip + "\nRadius = " + express_measure(atom_info.radius, "Length")
+            if atom_info.vdw_radius is not None:
+                tip = tip + "\nVan der Waals radius = " + express_measure(atom_info.vdw_radius, "Length")
             bu_element.set_tooltip_text(tip)
             ta_elements.attach(
                 bu_element,

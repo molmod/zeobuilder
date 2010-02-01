@@ -155,7 +155,7 @@ class Translation(ComposedArray):
                not isinstance(self.attribute, MathComplete)
 
     def convert_to_representation(self, value):
-        return tuple(value.t)
+        return ComposedArray.convert_to_representation(self, value.t)
 
     def convert_to_value(self, representation):
         return MathTranslation(representation)

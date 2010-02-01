@@ -142,7 +142,10 @@ class Composed(Multiple, FaultyMixin):
         FaultyMixin.check(self)
 
     def convert_to_representation(self, value):
-        return tuple(field.convert_to_representation(value[index]) for index, field in enumerate(self.fields))
+        return tuple(
+            field.convert_to_representation(value[index])
+            for index, field in enumerate(self.fields)
+        )
 
     def write_to_widget(self, representation, original=False):
         if representation is ambiguous:

@@ -509,8 +509,23 @@ class BasicActions(ApplicationTestCase):
     def test_edit_properties(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
-            context.application.main.toggle_selection(context.application.model.universe, on=True)
             EditProperties = context.application.plugins.get_action("EditProperties")
+            context.application.main.select_nodes([context.application.model.universe])
+            self.assert_(EditProperties.analyze_selection())
+            EditProperties()
+            context.application.main.select_nodes([context.application.model.universe.children[0]])
+            self.assert_(EditProperties.analyze_selection())
+            EditProperties()
+        self.run_test_application(fn)
+
+    def test_edit_properties2(self):
+        def fn():
+            context.application.model.file_open("input/tpa.xyz")
+            EditProperties = context.application.plugins.get_action("EditProperties")
+            context.application.main.select_nodes([context.application.model.universe])
+            self.assert_(EditProperties.analyze_selection())
+            EditProperties()
+            context.application.main.select_nodes([context.application.model.universe.children[0]])
             self.assert_(EditProperties.analyze_selection())
             EditProperties()
         self.run_test_application(fn)
