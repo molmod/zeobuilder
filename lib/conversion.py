@@ -50,7 +50,7 @@ units = {
     "kJ/mol": molmod.units.kjmol,
     "kcal/mol": molmod.units.kcalmol,
     "eV": molmod.units.electronvolt,
-    "u": molmod.units.unified,
+    "amu": molmod.units.unified,
     "rad": 1,
     "deg": molmod.units.deg,
     "ns": molmod.units.nanosecond,
