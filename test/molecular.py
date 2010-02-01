@@ -121,6 +121,26 @@ class MolecularActions(ApplicationTestCase):
             AutoConnectPhysical()
         self.run_test_application(fn)
 
+    def test_auto_connect_physical_tpa_framed(self):
+        def fn():
+            context.application.model.file_open("input/tpa.xyz")
+            # put it in a frame
+            context.application.main.select_nodes(context.application.model.universe.children)
+            Frame = context.application.plugins.get_action("Frame")
+            self.assert_(Frame.analyze_selection())
+            Frame()
+            # add bonds
+            context.application.main.select_nodes([context.application.model.universe])
+            AutoConnectPhysical = context.application.plugins.get_action("AutoConnectPhysical")
+            self.assert_(AutoConnectPhysical.analyze_selection())
+            AutoConnectPhysical()
+            # count the number of bonds that are direct children of the universe
+            # object, should be zero
+            Bond = context.application.plugins.get_node("Bond")
+            for child in context.application.model.universe.children:
+                self.assert_(not isinstance(child, Bond))
+        self.run_test_application(fn)
+
     def test_auto_connect_physical_lau(self):
         def fn():
             context.application.model.file_open("input/lau.zml")

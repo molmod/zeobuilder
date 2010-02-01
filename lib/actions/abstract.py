@@ -35,6 +35,7 @@ from zeobuilder import context
 from zeobuilder.actions.composed import Immediate
 from zeobuilder.nodes.glmixin import GLTransformationMixin
 from zeobuilder.nodes.parent_mixin import ContainerMixin
+from zeobuilder.nodes.analysis import common_parent
 import zeobuilder.actions.primitive as primitive
 
 from molmod import PairSearchIntra, Translation
@@ -150,6 +151,6 @@ class AutoConnectMixin(object):
             if vector is not None:
                 vector.name += " %i" % vector_counter
                 vector_counter += 1
-                primitive.Add(vector, parent)
+                primitive.Add(vector, common_parent([nodes[i0], nodes[i1]]))
 
 
