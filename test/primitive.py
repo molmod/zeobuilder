@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
 # Copyright (C) 2007 - 2010 Toon Verstraelen <Toon.Verstraelen@UGent.be>, Center
 # for Molecular Modeling (CMM), Ghent University, Ghent, Belgium; all rights
@@ -32,29 +31,39 @@
 # --
 
 
-import sys, os
+from application_test_case import ApplicationTestCase
 
-if '-i' in sys.argv:
-    # use the installed library for testing
-    sys.argv.remove('-i')
-else:
-    import glob
-    retcode = os.system("(cd ..; python setup.py build)")
-    if retcode != 0: sys.exit(retcode)
-    sys.path.insert(0, glob.glob("../build/lib*")[0])
-
-if not os.path.isdir("output"):
-    os.mkdir("output")
+from zeobuilder import context
+import zeobuilder.actions.primitive as primitive
 
 
-import unittest
+__all__ = ["PrimitiveActions"]
 
-from basic import *
-from molecular import *
-from builder import *
-from primitive import *
-from filters import *
 
-unittest.main()
+class PrimitiveActions(ApplicationTestCase):
+    def test_set_extra(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            universe = context.application.model.root[0]
+            context.application.action_manager.record_primitives = False
+            p = primitive.SetExtra(universe, "foo", "bar")
+            self.assert_(universe.extra["foo"] == "bar")
+            p.undo()
+            self.assert_("foo" not in universe.extra)
+        self.run_test_application(fn)
+
+    def test_unset_extra(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            universe = context.application.model.root[0]
+            universe.extra["foo"] = "bar"
+            context.application.action_manager.record_primitives = False
+            p = primitive.UnsetExtra(universe, "foo")
+            self.assert_("foo" not in universe.extra)
+            p.undo()
+            self.assert_(universe.extra["foo"] == "bar")
+        self.run_test_application(fn)
 
 
