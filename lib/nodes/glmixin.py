@@ -38,7 +38,7 @@ from zeobuilder.nodes.analysis import common_parent
 from zeobuilder.gui.fields_dialogs import DialogFieldInfo
 import zeobuilder.gui.fields as fields
 
-from molmod import Complete
+from molmod import Translation, Rotation, Complete
 
 import gobject
 
@@ -304,6 +304,33 @@ class GLTransformationMixin(GLMixin):
         return self.Transformation.identity()
 
     def set_transformation(self, transformation, init=False):
+        if not transformation.__class__ == self.Transformation:
+            # create an object of the proper type and take only the attributes
+            # of interest.
+            if isinstance(transformation, Translation):
+                t = transformation.t
+            else:
+                t = None
+            if isinstance(transformation, Rotation):
+                r = transformation.r
+            else:
+                r = None
+            if self.Transformation == Translation:
+                if t is None:
+                    transformation = Translation.identity()
+                else:
+                    transformation = Translation(t)
+            elif self.Transformation == Rotation:
+                if r is None:
+                    transformation = Rotation.identity()
+                else:
+                    transformation = Rotation(r)
+            else: # self.Transformation == Complete:
+                if r is None:
+                    r = numpy.identity(3, float)
+                if t is None:
+                    t = numpy.zeros(3, float)
+                transformation = Complete(r, t)
         self.transformation = transformation
         if not init:
             self.invalidate_transformation_list()

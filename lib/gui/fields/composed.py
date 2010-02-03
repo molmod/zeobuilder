@@ -231,7 +231,6 @@ class Complete(ComposedInTable):
         )
 
     def applicable_attribute(self):
-        print self.attribute
         return isinstance(self.attribute, MathComplete)
 
     def convert_to_representation(self, value):
