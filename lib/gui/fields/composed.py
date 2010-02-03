@@ -133,6 +133,7 @@ class ComposedArray(ComposedInTable):
 
 
 class Translation(ComposedArray):
+    Popup = popups.Default
     reset_representation = ('0.0', '0.0', '0.0')
 
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=3, vector_name="t.%s"):
@@ -158,7 +159,8 @@ class Translation(ComposedArray):
         return ComposedArray.convert_to_representation(self, value.t)
 
     def convert_to_value(self, representation):
-        return MathTranslation(representation)
+        t = ComposedArray.convert_to_value(self, representation)
+        return MathTranslation(t)
 
 
 class Rotation(ComposedInTable):
@@ -198,11 +200,52 @@ class Rotation(ComposedInTable):
                not isinstance(self.attribute, MathComplete)
 
     def convert_to_representation(self, value):
-        return value.properties
+        return ComposedInTable.convert_to_representation(value.properties)
 
     def convert_to_value(self, representation):
-        return MathRotation.from_properties(representation)
+        properties = ComposedInTable.convert_to_value(self, representation)
+        return MathRotation.from_properties(*properties)
 
+
+class Complete(ComposedInTable):
+    def __init__(self, label_text=None, attribute_name=None, show_popup=False, history_name=None, show_field_popups=True, decimals=3, scientific=False):
+        fields = [
+            Rotation(
+                label_text="Rotation around axis n",
+                attribute_name="transformation",
+            ),
+            Translation(
+                label_text="Translation with vector t",
+                attribute_name="transformation",
+            )
+        ]
+        ComposedInTable.__init__(
+            self,
+            fields=fields,
+            label_text=label_text,
+            attribute_name=attribute_name,
+            show_popup=show_popup,
+            history_name=history_name,
+            show_field_popups=show_field_popups,
+            cols=2
+        )
+
+    def applicable_attribute(self):
+        print self.attribute
+        return isinstance(self.attribute, MathComplete)
+
+    def convert_to_representation(self, value):
+        return (
+            ComposedInTable.convert_to_representation(self.fields[0], value.properties[:3]),
+            ComposedArray.convert_to_representation(self.fields[1], value.t)
+        )
+
+    def convert_to_value(self, representation):
+        properties = (
+            ComposedInTable.convert_to_value(self.fields[0], representation[0]) +
+            (ComposedArray.convert_to_value(self.fields[1], representation[1]),)
+        )
+        return MathComplete.from_properties(*properties)
 
 class Parameters(object):
     pass
@@ -339,7 +382,7 @@ class Cell(ComposedInTable):
             show_popup=show_popup,
             history_name=history_name,
             show_field_popups=show_field_popups,
-            cols=3,
+            cols=1,
         )
 
     def convert_to_representation(self, value):

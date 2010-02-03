@@ -317,15 +317,19 @@ class GLTransformationMixin(GLMixin):
     #
 
     dialog_fields = set([
-        DialogFieldInfo("Translation", (3, 0), fields.composed.Translation(
+        DialogFieldInfo("Transformation", (3, 0), fields.composed.Translation(
             label_text="Translation with vector t",
             attribute_name="transformation",
         )),
-        DialogFieldInfo("Rotation", (4, 0), fields.composed.Rotation(
+        DialogFieldInfo("Transformation", (3, 1), fields.composed.Rotation(
             label_text="Rotation around axis n",
             attribute_name="transformation",
         )),
-        DialogFieldInfo("Rotation", (4, 1), fields.read.Handedness()),
+        DialogFieldInfo("Transformation", (3, 2), fields.composed.Complete(
+            label_text="The transformation is a rotation followed by a translation.",
+            attribute_name="transformation",
+        )),
+        DialogFieldInfo("Transformation", (3, 3), fields.read.Handedness()),
     ])
 
     #
