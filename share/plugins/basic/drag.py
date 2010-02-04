@@ -90,6 +90,9 @@ class MoveNon3DObjects(MoveObjects):
     drag_info = DragInfo(order=1)
     authors = [authors.toon_verstraelen]
 
+    def ask_parameters(self):
+        pass
+
     def do(self):
         node = context.application.cache.node
         destination = context.application.cache.drag_destination
@@ -113,6 +116,9 @@ class DropTarget(ImmediateWithMemory):
         if not destination.check_target(context.application.cache.node): return False
         # C) passed all tests:
         return True
+
+    def ask_parameters(self):
+        pass
 
     def do(self):
         destination = context.application.cache.drag_destination

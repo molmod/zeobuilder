@@ -33,6 +33,7 @@
 
 from zeobuilder import context
 from zeobuilder.gui.simple import ok_error
+from zeobuilder.application import TestApplication
 
 import gtk
 
@@ -228,6 +229,8 @@ class ImmediateWithMemory(Immediate, RememberParametersMixin):
                 self.parameters = self.last_parameters()
             else:
                 self.parameters = self.default_parameters()
+            self.ask_parameters()
+        elif isinstance(context.application, TestApplication):
             self.ask_parameters()
         if not self.parameters.empty():
             if self.store_last_parameters:

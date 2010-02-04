@@ -559,12 +559,13 @@ class BasicActions(ApplicationTestCase):
             RotateDialog(parameters)
         self.run_test_application(fn)
 
-    def test_rotate_around_center_dialog(self):
+    def test_rotate_about_axis_dialog(self):
         def fn():
             context.application.model.file_open("input/core_objects.zml")
             context.application.main.toggle_selection(context.application.model.universe.children[3], on=True)
             parameters = Parameters()
-            parameters.complete = Complete.from_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False, numpy.array([2.0, 4.1, -1.0], float))
+            parameters.center = Translation([2.0, 4.1, -1.0])
+            parameters.rotation = Rotation.from_properties(1.0, numpy.array([0.1, 1.4, 0.3]), False)
             RotateAboutAxisDialog = context.application.plugins.get_action("RotateAboutAxisDialog")
             self.assert_(RotateAboutAxisDialog.analyze_selection(parameters))
             RotateAboutAxisDialog(parameters)

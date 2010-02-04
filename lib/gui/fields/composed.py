@@ -200,7 +200,7 @@ class Rotation(ComposedInTable):
                not isinstance(self.attribute, MathComplete)
 
     def convert_to_representation(self, value):
-        return ComposedInTable.convert_to_representation(value.properties)
+        return ComposedInTable.convert_to_representation(self, value.properties)
 
     def convert_to_value(self, representation):
         properties = ComposedInTable.convert_to_value(self, representation)

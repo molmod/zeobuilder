@@ -176,7 +176,9 @@ class BuilderActions(ApplicationTestCase):
             context.application.model.file_open("input/precursor.zml")
             context.application.main.select_nodes(context.application.model.universe.children)
 
-            parameters = Parameters()
+            ScanForConnections = context.application.plugins.get_action("ScanForConnections")
+
+            parameters = ScanForConnections.default_parameters()
             parameters.connect_description1 = (
                 Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
                 Expression("node.get_radius()"),
@@ -191,7 +193,6 @@ class BuilderActions(ApplicationTestCase):
             parameters.minimum_triangle_size = 0.1*angstrom
             parameters.rotation2 = Undefined()
 
-            ScanForConnections = context.application.plugins.get_action("ScanForConnections")
             self.assert_(ScanForConnections.analyze_selection(parameters))
             ScanForConnections(parameters)
 
@@ -213,9 +214,10 @@ class BuilderActions(ApplicationTestCase):
             context.application.model.file_open("input/precursor.zml")
             context.application.main.select_nodes(context.application.model.universe.children)
 
+            ScanForConnections = context.application.plugins.get_action("ScanForConnections")
             rotation2 = Rotation.from_properties(1*numpy.pi, [0, 1, 0], False)
 
-            parameters = Parameters()
+            parameters = ScanForConnections.default_parameters()
             parameters.connect_description1 = (
                 Expression("isinstance(node, Atom) and node.number == 8 and node.num_bonds() == 1"),
                 Expression("node.get_radius()"),
@@ -226,11 +228,8 @@ class BuilderActions(ApplicationTestCase):
             )
             parameters.action_radius = 4*angstrom
             parameters.hit_tolerance = 0.1*angstrom
-            parameters.allow_inversions = Undefined()
-            parameters.minimum_triangle_size = Undefined()
             parameters.rotation2 = rotation2
 
-            ScanForConnections = context.application.plugins.get_action("ScanForConnections")
             self.assert_(ScanForConnections.analyze_selection(parameters))
             ScanForConnections(parameters)
 

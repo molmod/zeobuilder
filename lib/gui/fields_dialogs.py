@@ -110,7 +110,7 @@ class FieldsDialogBase(object):
 
     def on_dialog_show(self, dialog):
         def response():
-            dialog.response(gtk.RESPONSE_CLOSE)
+            dialog.response(gtk.RESPONSE_OK)
         if isinstance(context.application, TestApplication):
             gobject.idle_add(response)
 

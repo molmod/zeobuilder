@@ -169,14 +169,17 @@ class RotateAboutAxisDialog(ImmediateWithMemory):
 
     parameters_dialog = FieldsDialogSimple(
         "Rotation about axis",
-        fields.group.Notebook([
-            ("Center", fields.composed.Translation(
-                label_text="Rotation center t",
-            )),
-            ("Rotation", fields.composed.Rotation(
-                label_text="Rotation axis n",
-            ))
-        ]),
+        fields.group.Table([
+            fields.composed.Translation(
+                label_text="",
+                attribute_name="center",
+                vector_name="c.%s",
+            ),
+            fields.composed.Rotation(
+                label_text="",
+                attribute_name="rotation",
+            )
+        ], label_text="The rotation axis is defined by center c and axis n."),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
 
@@ -205,7 +208,8 @@ class RotateAboutAxisDialog(ImmediateWithMemory):
     @classmethod
     def default_parameters(cls):
         result = Parameters()
-        result.complete = Complete.identity()
+        result.center = Translation.identity()
+        result.rotation = Rotation.identity()
         return result
 
     def ask_parameters(self):
@@ -224,28 +228,29 @@ class RotateAboutAxisDialog(ImmediateWithMemory):
                 if (b1 is not None) and (e1 is not None) and (b2 is not None) and (e2 is not None):
                     angle = compute_angle(e1 - b1, e2 - b2)
                     axis = numpy.cross(e1 - b1, e2 - b2)
-                    self.parameters.complete = Complete.from_properties(angle, axis, False, b1)
+                    self.parameters.center = Translation(0.5*(b1+b2))
+                    self.parameters.rotation = Rotation.from_properties(angle, axis, False, b1)
             else:
                 parent = next_to_last.parent
                 b = last.children[0].translation_relative_to(parent)
                 e = last.children[1].translation_relative_to(parent)
                 if (b is not None) and (e is not None):
-                    self.parameters.complete = Complete.from_properties(numpy.pi*0.25, e - b, False, b)
+                    self.parameters.center = Translation(b)
+                    self.parameters.rotation = Rotation.from_properties(numpy.pi*0.25, e - b, False, b)
         elif isinstance(last, GLTransformationMixin) and isinstance(last.transformation, Translation):
             parent = last.parent
-            self.parameters.complete = Complete(numpy.identity(3, float), last.get_frame_relative_to(parent).t)
+            self.parameters.center = Translation(last.get_frame_relative_to(parent).t)
+            self.parameters.rotation = Rotation.identity()
         else:
-            self.parameters.complete = Complete(numpy.identity(3, float), calculate_center(cache.translations))
+            self.parameters.center = Translation(calculate_center(cache.translations))
 
-        if self.parameters_dialog.run(self.parameters.complete) != gtk.RESPONSE_OK:
+        if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
-        else:
-            t = self.parameters.complete.t - numpy.dot(self.parameters.complete.r, self.parameters.complete.t)
-            self.parameters.complete = Complete(self.parameters.complete.r, t)
 
     def do(self):
+        transformation = self.parameters.center * self.parameters.rotation * self.parameters.center.inv
         for victim in context.application.cache.transformed_nodes:
-            primitive.Transform(victim, self.parameters.complete)
+            primitive.Transform(victim, transformation)
 
 
 def parent_of_translated_nodes(cache):
