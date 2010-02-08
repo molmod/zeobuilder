@@ -80,8 +80,7 @@ class Move3DObjects(MoveObjects):
         destination = context.application.cache.drag_destination
         if isinstance(node, GLTransformationMixin):
             transformation = destination.get_frame_relative_to(node.parent)
-            transformation.invert()
-            primitive.Transform(node, transformation)
+            primitive.Transform(node, transformation.inv)
         primitive.Move(node, destination, new_index=self.parameters.child_index)
 
 
