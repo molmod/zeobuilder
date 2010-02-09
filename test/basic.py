@@ -670,6 +670,13 @@ class BasicActions(ApplicationTestCase):
             ViewPlugins()
         self.run_test_application(fn)
 
+    def test_camera_settings(self):
+        def fn():
+            CameraSettings = context.application.plugins.get_action("CameraSettings")
+            self.assert_(CameraSettings.analyze_selection())
+            CameraSettings()
+        self.run_test_application(fn)
+
     def test_about(self):
         def fn():
             About = context.application.plugins.get_action("About")
