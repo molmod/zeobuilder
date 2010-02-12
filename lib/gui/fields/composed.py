@@ -250,9 +250,9 @@ class Parameters(object):
     pass
 
 
-class CellMatrixPopup(popups.Measure):
+class CellPopup(popups.Default):
     def fill_menu(self):
-        popups.Measure.fill_menu(self)
+        popups.Default.fill_menu(self)
         self.add_separator()
         try:
             cell = self.field.convert_to_value(self.field.read_from_widget())
@@ -281,9 +281,6 @@ class CellMatrixPopup(popups.Measure):
 
 
 class CellMatrix(ComposedArray):
-    Popup = CellMatrixPopup
-    reset_representation = (('10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A'))
-
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False, scientific=False, decimals=3):
         ComposedArray.__init__(
             self,
@@ -336,22 +333,15 @@ class CellParameters(ComposedInTable):
         )
 
     def applicable_attribute(self):
-        return (
-            isinstance(self.attribute, numpy.ndarray) and
-            self.attribute.shape == (3,3)
-        )
+        return isinstance(self.attribute, UnitCell)
 
     def convert_to_representation(self, value):
-        unit_cell = UnitCell(value)
-        self.saved_value = value
-        lengths, angles = unit_cell.get_parameters()
+        lengths, angles = value.parameters
         return ComposedInTable.convert_to_representation(self, (lengths, angles))
 
     def convert_to_value(self, representation):
         lengths, angles = ComposedInTable.convert_to_value(self, representation)
-        unit_cell = UnitCell(self.saved_value)
-        unit_cell.set_parameters(lengths, angles)
-        return unit_cell.cell
+        return UnitCell.from_parameters3(lengths, angles)
 
 
 class CellActive(ComposedArray):
@@ -370,6 +360,9 @@ class CellActive(ComposedArray):
 
 
 class Cell(ComposedInTable):
+    Popup = CellPopup
+    reset_representation = ((False, False, False), ('10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A', '0.0 A', '0.0 A', '0.0 A', '10.0 A'))
+
     def __init__(self, label_text=None, attribute_name=None, show_popup=True, history_name=None, show_field_popups=False):
         ComposedInTable.__init__(self,
             fields=[
