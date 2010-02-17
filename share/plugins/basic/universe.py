@@ -647,7 +647,7 @@ class SuperCell(ImmediateWithMemory):
             nodes = load_from_file(serialized)
             new_children[cell_hash] = nodes
             for node in nodes:
-                t = node.transformation.t + numpy.dot(universe.cell.matrix, cell_index - 0.5*(repetitions - 1))
+                t = node.transformation.t + numpy.dot(universe.cell.matrix, cell_index)
                 new_transformation = node.transformation.copy_with(t=t)
                 node.set_transformation(new_transformation)
 

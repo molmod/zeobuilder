@@ -625,6 +625,27 @@ class BasicActions(ApplicationTestCase):
             SuperCell(parameters)
         self.run_test_application(fn)
 
+    def test_super_cell2(self):
+        def fn():
+            context.application.model.file_open("input/silica_layer.zml")
+            parameters = Parameters()
+            parameters.repetitions_a = 2
+            parameters.repetitions_b = 3
+            SuperCell = context.application.plugins.get_action("SuperCell")
+            self.assert_(SuperCell.analyze_selection(parameters))
+            SuperCell(parameters)
+            crd_before = [node.transformation.t for node in context.application.model.universe.children]
+            WrapCellContents = context.application.plugins.get_action("WrapCellContents")
+            self.assert_(WrapCellContents.analyze_selection())
+            WrapCellContents()
+            # coordinates should not be changed
+            crd_after = [node.transformation.t for node in context.application.model.universe.children]
+            for i in xrange(len(crd_after)):
+                self.assertAlmostEqual(crd_before[i][0], crd_after[i][0])
+                self.assertAlmostEqual(crd_before[i][1], crd_after[i][1])
+                self.assertAlmostEqual(crd_before[i][2], crd_after[i][2])
+        self.run_test_application(fn)
+
     def test_define_unit_cell_vectors(self):
         def fn():
             context.application.model.file_open("input/periodic.zml")
@@ -656,7 +677,6 @@ class BasicActions(ApplicationTestCase):
 
     def test_wrap_cell_contents2(self):
         def fn():
-            from molmod import UnitCell
             context.application.model.file_open("input/silica_layer.zml")
             crd_before = [node.transformation.t for node in context.application.model.universe.children]
             WrapCellContents = context.application.plugins.get_action("WrapCellContents")
