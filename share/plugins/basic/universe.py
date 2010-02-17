@@ -774,6 +774,7 @@ class WrapCellContents(Immediate):
         for child in universe.children:
             if isinstance(child, GLTransformationMixin) and isinstance(child.transformation, Translation):
                 cell_index = universe.cell.to_fractional(child.transformation.t)
+                cell_index = numpy.floor(cell_index)
                 if cell_index.any():
                     t = child.transformation.t - universe.cell.to_cartesian(cell_index)
                     new_transformation = child.transformation.copy_with(t=t)
