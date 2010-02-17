@@ -535,14 +535,14 @@ class RotateMouseMixin(object):
         elif start_button == 1: # XY rotation
             rotx = (event.x - self.former_x) / float(drawing_area.allocation.width) * 360
             roty = (event.y - self.former_y) / float(drawing_area.allocation.width) * 360
-            rotation_axis = numpy.array([-roty, -rotx, 0.0], float)
+            rotation_axis = numpy.array([roty, rotx, 0.0], float)
             rotation_angle = numpy.sqrt(rotx*rotx + roty*roty)/30
             self.former_x = event.x
             self.former_y = event.y
         elif start_button == 3: # Z rotation
             srcx, srcy = self.screen_rotation_center
             rotz = numpy.arctan2(-(event.y - srcy), event.x - srcx)
-            rotation_axis = numpy.array([0.0, 0.0, -1.0], float)
+            rotation_axis = numpy.array([0.0, 0.0, 1.0], float)
             rotation_angle = rotz - self.former_rotz
             self.former_rotz = rotz
         return rotation_angle, rotation_axis
@@ -561,22 +561,22 @@ class RotateKeyboardMixin(object):
         rotation_axis = numpy.zeros(3, float)
         if event.keyval == 65363:
             #print "right"
-            rotation_axis[1] = -1
+            rotation_axis[1] = +1
         elif event.keyval == 65361:
             #print "left"
-            rotation_axis[1] = +1
+            rotation_axis[1] = -1
         elif event.keyval == 65362:
             #print "up"
-            rotation_axis[0] = +1
+            rotation_axis[0] = -1
         elif event.keyval == 65364:
             #print "down"
-            rotation_axis[0] = -1
+            rotation_axis[0] = +1
         elif event.keyval == 65365:
             #print "page up, to front"
-            rotation_axis[2] = +1
+            rotation_axis[2] = -1
         elif event.keyval == 65366:
             #print "page down, to back"
-            rotation_axis[2] = -1
+            rotation_axis[2] = +1
         else:
             raise RotateKeyboardError("Key %i is not supported" % event.keyval)
 
