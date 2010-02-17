@@ -457,15 +457,15 @@ class UnitCellToCluster(ImmediateWithMemory):
             index_min = int(numpy.floor(interval[0]))
             index_max = int(numpy.ceil(interval[1]))
 
-            original_points = [
+            old_points = [
                 node for node in universe.children if (
                     isinstance(node, GLTransformationMixin) and
                     isinstance(node.transformation, Translation)
                 )
             ]
-            if len(original_points) == 0: return
+            if len(old_points) == 0: return
 
-            original_connections = [
+            old_connections = [
                 node for node in universe.children if (
                     isinstance(node, ReferentMixin) and
                     reduce(
@@ -478,13 +478,18 @@ class UnitCellToCluster(ImmediateWithMemory):
 
             # replication of the points
             new_points = {}
-            for old_point in original_points:
-                orig_position = universe.cell.shortest_vector(old_point.transformation.t)
-                #orig_position -= universe.cell.matrix[:,axis]*universe.cell.to_fractional(orig_position)[axis]
-                fractional = universe.cell.to_fractional(orig_position)
+            for old_point in old_points:
+                # determine the wrapped position
+                old_pos = old_point.transformation.t.copy()
+                old_frac = universe.cell.to_fractional(old_pos)
+                old_index = numpy.floor(old_frac).astype(int)
+                old_pos -= universe.cell.to_cartesian(old_index)
+                old_frac -= old_index
+                del old_index
+                # make copies
                 for cell_index in xrange(index_min, index_max):
-                    position = orig_position + universe.cell.matrix[:,axis]*cell_index
-                    if (fractional[axis]+cell_index < interval[0]) or (fractional[axis]+cell_index > interval[1]):
+                    position = old_pos + universe.cell.matrix[:,axis]*cell_index
+                    if (old_frac[axis]+cell_index < interval[0]) or (old_frac[axis]+cell_index > interval[1]):
                         continue
                     state = old_point.__getstate__()
                     state["transformation"] = state["transformation"].copy_with(t=position)
@@ -494,7 +499,7 @@ class UnitCellToCluster(ImmediateWithMemory):
             new_connections = []
             # replication of the connections
             for cell_index in xrange(index_min-1, index_max+1):
-                for connection in original_connections:
+                for connection in old_connections:
                     old_target0 = connection.children[0].target
                     new_target0 = new_points.get((old_target0, cell_index))
                     if new_target0 is None: continue
@@ -523,12 +528,12 @@ class UnitCellToCluster(ImmediateWithMemory):
 
             # remove the existing points and connections
 
-            for node in original_connections:
+            for node in old_connections:
                 primitive.Delete(node)
-            del original_connections
-            for node in original_points:
+            del old_connections
+            for node in old_points:
                 primitive.Delete(node)
-            del original_points
+            del old_points
 
             # remove the periodicity
 

@@ -614,6 +614,40 @@ class BasicActions(ApplicationTestCase):
                     self.assert_(distance < 4.0, "Incorrect bonds detected.")
         self.run_test_application(fn)
 
+    def test_unit_cell_to_cluster2(self):
+        def fn():
+            context.application.model.file_open("input/silica_layer.zml")
+            parameters = Parameters()
+            parameters.interval_a = numpy.array([0.0, 3.0], float)
+            parameters.interval_b = numpy.array([0.0, 3.0], float)
+            UnitCellToCluster = context.application.plugins.get_action("UnitCellToCluster")
+            self.assert_(UnitCellToCluster.analyze_selection(parameters))
+            UnitCellToCluster(parameters)
+            crd_cluster = [node.transformation.t for node in context.application.model.universe.children]
+
+            context.application.model.file_open("input/silica_layer.zml")
+            parameters = Parameters()
+            parameters.repetitions_a = 3
+            parameters.repetitions_b = 3
+            SuperCell = context.application.plugins.get_action("SuperCell")
+            self.assert_(SuperCell.analyze_selection(parameters))
+            SuperCell(parameters)
+            crd_super = [node.transformation.t for node in context.application.model.universe.children]
+
+            # check that the number of atoms is the same
+            self.assertEqual(len(crd_super), len(crd_cluster))
+            # check if the coordinates match
+            for c_super in crd_super:
+                for i in xrange(len(crd_cluster)):
+                    c_cluster = crd_cluster[i]
+                    delta = c_cluster - c_super
+                    delta = context.application.model.universe.shortest_vector(delta)
+                    if numpy.linalg.norm(delta) < 1e-3:
+                        del crd_cluster[i]
+                        break
+            self.assertEqual(len(crd_cluster), 0)
+        self.run_test_application(fn)
+
     def test_super_cell(self):
         def fn():
             context.application.model.file_open("input/periodic.zml")
