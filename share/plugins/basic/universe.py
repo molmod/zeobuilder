@@ -661,6 +661,8 @@ class SuperCell(ImmediateWithMemory):
             cell_index = numpy.array(cell_index)
             cell_hash = tuple(cell_index)
             for connector in universe.children:
+                # Only applicable to ReferentMixin with only SpatialReference
+                # children
                 if not isinstance(connector, ReferentMixin):
                     continue
                 skip = False
@@ -671,6 +673,7 @@ class SuperCell(ImmediateWithMemory):
                 if skip:
                     continue
 
+                # first locate the new first target for this cell_index
                 first_target_orig = connector.children[0].target
                 first_target_index = positioned.index(first_target_orig)
                 first_target = new_children[cell_hash][first_target_index]
@@ -678,14 +681,16 @@ class SuperCell(ImmediateWithMemory):
                 new_targets = [first_target]
 
                 for reference in connector.children[1:]:
+                    # then find the other new targets, taking into account
+                    # periodicity
                     other_target_orig = reference.target
                     shortest_vector = universe.shortest_vector((
                         other_target_orig.transformation.t
                         -first_target_orig.transformation.t
                     ))
                     translation = first_target.transformation.t + shortest_vector
-                    other_target_pos = translation - numpy.dot(universe.cell.matrix, -0.5*(repetitions - 1))
-                    other_cell_index = universe.cell.to_fractional(other_target_pos).astype(int)
+                    other_target_pos = translation
+                    other_cell_index = numpy.floor(universe.cell.to_fractional(other_target_pos)).astype(int)
                     other_cell_index %= repetitions
                     other_cell_hash = tuple(other_cell_index)
                     other_target_index = positioned.index(other_target_orig)
