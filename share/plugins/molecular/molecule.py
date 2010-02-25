@@ -118,8 +118,8 @@ def compute_inertia_tensor(particles, center):
 def align_rotation_matrix(inertia_tensor):
     if abs(inertia_tensor.ravel()).max() < 1e-6:
         return numpy.identity(3, float)
-    evals, evecs = numpy.linalg.eig(inertia_tensor)
-    result = numpy.array([evecs[:,index] for index in evals.argsort()], float).transpose()
+    evals, evecs = numpy.linalg.eigh(inertia_tensor)
+    result = evecs
     if numpy.linalg.det(result) < 0: result *= -1
     return result
 

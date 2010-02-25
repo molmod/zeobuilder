@@ -38,7 +38,7 @@ from zeobuilder.actions.composed import Parameters
 from zeobuilder.expressions import Expression
 import zeobuilder.actions.primitive as primitive
 
-from molmod import  angstrom
+from molmod import angstrom, Translation
 from molmod.bonds import BOND_SINGLE
 
 import numpy
@@ -435,4 +435,21 @@ class MolecularActions(ApplicationTestCase):
             AddZeoliteTetraeders()
         self.run_test_application(fn)
 
+    def test_com_praxes_diatomic(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            Atom = context.application.plugins.get_node("Atom")
+            Frame = context.application.plugins.get_node("Frame")
+            frame = Frame()
+            context.application.model.universe.add(frame)
+            atom1 = Atom()
+            atom2 = Atom(transformation=Translation([1.1,0.1,0.03]))
+            frame.add(atom1)
+            frame.add(atom2)
+            CenterOfMassAndPrincipalAxes = context.application.plugins.get_action("CenterOfMassAndPrincipalAxes")
+            context.application.main.select_nodes([context.application.model.universe.children[0]])
+            self.assert_(CenterOfMassAndPrincipalAxes.analyze_selection())
+            CenterOfMassAndPrincipalAxes()
+        self.run_test_application(fn)
 
