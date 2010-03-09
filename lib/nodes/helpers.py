@@ -219,12 +219,9 @@ class BoundingBox(object):
         # a margin of sel_margin is left between the bounding_box edges and the frame
         # that visualises the selection
         sel_margin = 0.06
-        gray = 4.5
 
         vb = context.application.vis_backend
-        vb.set_specular(False)
-        vb.set_color(gray, gray, gray)
-        vb.set_line_width(1)
+        vb.call_list(context.application.scene.begin_mesh_list)
 
         corners = []
         for x in [0, 1]:
@@ -252,6 +249,6 @@ class BoundingBox(object):
         vb.draw_line(corners[4], corners[5])
         vb.draw_line(corners[6], corners[7])
 
-        vb.set_specular(True)
+        vb.call_list(context.application.scene.end_mesh_list)
 
 

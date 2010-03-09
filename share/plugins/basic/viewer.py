@@ -141,6 +141,10 @@ class RendererConfiguration(Immediate):
                 attribute_name="background_color",
             ),
             fields.edit.Color(
+                label_text="Selection mesh color",
+                attribute_name="selection_mesh_color",
+            ),
+            fields.edit.Color(
                 label_text="Fog color",
                 attribute_name="fog_color",
             ),

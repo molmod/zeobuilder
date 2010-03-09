@@ -49,6 +49,11 @@ class Scene(object):
             None,
         )
         config.register_setting(
+            "selection_mesh_color",
+            numpy.array([1, 1, 1, 0], float),
+            None,
+        )
+        config.register_setting(
             "fog_color",
             numpy.array([0, 0, 0, 0], float),
             None,
@@ -63,12 +68,15 @@ class Scene(object):
         self.clip_planes = []
 
     def initialize_draw(self):
+        vb = context.application.vis_backend
+        self.rotation_center_list = vb.create_list()
+        self.begin_mesh_list = vb.create_list()
+        self.end_mesh_list = vb.create_list()
         self.update_rotation_center()
         self.update_render_settings()
 
     def update_rotation_center(self):
         vb = context.application.vis_backend
-        self.rotation_center_list = vb.create_list()
         small = 0.1
         big = 0.3
         vb.begin_list(self.rotation_center_list)
@@ -98,6 +106,18 @@ class Scene(object):
             camera = context.application.camera
             zfar = camera.znear + camera.window_depth
             vb.set_fog(configuration.fog_color, zfar - configuration.fog_depth, zfar)
+
+        vb.begin_list(self.begin_mesh_list)
+        c = configuration.selection_mesh_color
+        vb.set_color(c[0]*5, c[1]*5, c[2]*5, c[3])
+        vb.set_line_width(1)
+        vb.set_specular(False)
+        vb.end_list()
+
+        vb.begin_list(self.end_mesh_list)
+        vb.set_specular(True)
+        vb.end_list()
+
         context.application.main.drawing_area.queue_draw()
 
     def get_model_center(self):
