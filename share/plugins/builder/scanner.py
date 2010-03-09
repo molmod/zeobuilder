@@ -196,14 +196,12 @@ class ConscanResultsWindow(GladeWrapper):
     def apply_normal(self):
         model, iter = self.tree_selection.get_selected()
         old_transformation = self.frame2.transformation
-        self.frame2.transformation.clear()
         transformation = self.frame1.get_frame_relative_to(self.frame2)
         if self.cb_inverse.get_active() and len(model.get_value(iter, 3)[3]) > 0:
             transformation = model.get_value(iter, 3)[1].inv * transformation
         else:
             transformation = model.get_value(iter, 3)[1] * transformation
-        self.frame2.set_transformation(transformation)
-        primitive.SetProperty(self.frame2, "transformation", old_transformation, done=True)
+        primitive.SetProperty(self.frame2, "transformation", transformation)
 
     def connect_springs(self):
         model, iter = self.tree_selection.get_selected()
