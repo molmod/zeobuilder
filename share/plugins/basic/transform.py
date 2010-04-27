@@ -229,14 +229,14 @@ class RotateAboutAxisDialog(ImmediateWithMemory):
                     angle = compute_angle(e1 - b1, e2 - b2)
                     axis = numpy.cross(e1 - b1, e2 - b2)
                     self.parameters.center = Translation(0.5*(b1+b2))
-                    self.parameters.rotation = Rotation.from_properties(angle, axis, False, b1)
+                    self.parameters.rotation = Rotation.from_properties(angle, axis, False)
             else:
                 parent = next_to_last.parent
                 b = last.children[0].translation_relative_to(parent)
                 e = last.children[1].translation_relative_to(parent)
                 if (b is not None) and (e is not None):
                     self.parameters.center = Translation(b)
-                    self.parameters.rotation = Rotation.from_properties(numpy.pi*0.25, e - b, False, b)
+                    self.parameters.rotation = Rotation.from_properties(numpy.pi*0.25, e - b, False)
         elif isinstance(last, GLTransformationMixin) and isinstance(last.transformation, Translation):
             parent = last.parent
             self.parameters.center = Translation(last.get_frame_relative_to(parent).t)
