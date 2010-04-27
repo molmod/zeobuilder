@@ -40,7 +40,7 @@ import zeobuilder.gui.fields as fields
 
 from molmod import Translation, Rotation, Complete
 
-import gobject
+import gobject, numpy
 
 
 __all__ = ["GLMixinError", "GLMixin", "GLTransformationMixin"]

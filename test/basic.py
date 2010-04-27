@@ -36,6 +36,7 @@ from application_test_case import ApplicationTestCase
 from zeobuilder import context
 from zeobuilder.actions.composed import Parameters
 from zeobuilder.expressions import Expression
+import zeobuilder.actions.primitive as primitive
 
 from molmod import Rotation, Translation, Complete
 
@@ -809,4 +810,14 @@ class BasicActions(ApplicationTestCase):
             AddTetraeder()
         self.run_test_application(fn)
 
+    def test_random_rotation(self):
+        def fn():
+            FileNew = context.application.plugins.get_action("FileNew")
+            FileNew()
+            context.application.main.select_nodes([context.application.model.universe])
+            Frame = context.application.plugins.get_node("Frame")
+            frame = Frame(transformation=Translation(numpy.random.uniform(-5, 5, 3)))
+            context.application.model.universe.add(frame)
+            frame.set_transformation(Rotation.random())
+        self.run_test_application(fn)
 
