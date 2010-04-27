@@ -872,6 +872,16 @@ class FrameMolecules(Immediate):
                         delta = parent.shortest_vector(delta)
                         positions[neighbor] = positions[subject] + delta
 
+            # structures that are inherently periodic will have bonds whose
+            # lengths based on the new positions will not make sense without
+            # periodic boundary conditions. These weird bonds can be easily
+            # detected because they violate: parent.shortest_vector(delta) ==
+            # delta.
+            for i0, i1 in graph.edges:
+                delta = positions[i0] - positions[i1]
+                if abs(delta - parent.shortest_vector(delta)).max() > 1e-4:
+                    # hmm... the structure is really a periodic thing. bail out.
+                    return None
         return positions
 
     def do(self):
@@ -884,6 +894,9 @@ class FrameMolecules(Immediate):
         for group in graph.independent_vertices:
             atoms = [graph.molecule.atoms[i] for i in group]
             new_positions = self.calc_new_positions(group, atoms, graph, parent)
+            if new_positions is None:
+                # this happens for groups of atoms that are inherently periodic.
+                continue
             frame = Frame(name=chemical_formula(atoms)[1])
             primitive.Add(frame, parent, index=0)
             for node, atom in zip(group, atoms):
