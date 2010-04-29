@@ -877,11 +877,14 @@ class FrameMolecules(Immediate):
             # periodic boundary conditions. These weird bonds can be easily
             # detected because they violate: parent.shortest_vector(delta) ==
             # delta.
-            for i0, i1 in graph.edges:
-                delta = positions[i0] - positions[i1]
-                if abs(delta - parent.shortest_vector(delta)).max() > 1e-4:
-                    # hmm... the structure is really a periodic thing. bail out.
-                    return None
+            for i0 in group:
+                for i1 in graph.neighbors[i0]:
+                    if i0 > i1:
+                        # do not do things twice
+                        delta = positions[i0] - positions[i1]
+                        if abs(delta - parent.shortest_vector(delta)).max() > 1e-4:
+                            # hmm... the structure is really a periodic thing. bail out.
+                            return None
         return positions
 
     def do(self):

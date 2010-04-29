@@ -431,6 +431,20 @@ class MolecularActions(ApplicationTestCase):
             self.assert_(len(universe.children) > 1)
         self.run_test_application(fn)
 
+    def test_frame_molecules_periodic2(self):
+        def fn():
+            context.application.model.file_open("input/sdock_testing.zml")
+            universe = context.application.model.universe
+
+            context.application.main.select_nodes([universe])
+            FrameMolecules = context.application.plugins.get_action("FrameMolecules")
+            self.assert_(FrameMolecules.analyze_selection())
+            FrameMolecules()
+
+            # there should not be two frames.
+            self.assert_(len(universe.children) > 2)
+        self.run_test_application(fn)
+
     def test_select_bonded_neighbors(self):
         def fn():
             context.application.model.file_open("input/springs.zml")
