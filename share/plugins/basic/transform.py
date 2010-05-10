@@ -709,7 +709,9 @@ class RotateWorldBase(Interactive):
 
     def do_rotation(self, drawing_area, rotation_angle, rotation_axis):
         camera = context.application.camera
-        rotation = Rotation.from_properties(rotation_angle, rotation_axis, False)
+        # Note that the camera must be rotated in the opposite direction to
+        # let the scene rotate in the right direction.
+        rotation = Rotation.from_properties(-rotation_angle, rotation_axis, False)
         camera.rotation = camera.rotation * rotation
         drawing_area.queue_draw()
 
