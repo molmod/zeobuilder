@@ -288,7 +288,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
                 vb.draw_line(origin, origin+self.cell.matrix[:,2])
 
         def draw_gray(origin, axis1, axis2, n1, n2, delta, nd):
-            vb.set_color(gray, gray, gray)
+            c = context.application.configuration.periodic_box_color
+            vb.set_color(gray*c[0], gray*c[1], gray*c[2], c[3])
             if n1 == 0 and n2 == 0:
                 return
             for i1 in xrange(n1+1):
@@ -301,7 +302,8 @@ class Universe(GLPeriodicContainer, FrameAxes):
                     vb.draw_line(origin+i1*axis1+i2*axis2, origin+i1*axis1+i2*axis2+nd*delta)
 
         def draw_ortho(origin, axis1, axis2, n1, n2, delta):
-            vb.set_color(gray, gray, gray)
+            c = context.application.configuration.periodic_box_color
+            vb.set_color(gray*c[0], gray*c[1], gray*c[2], c[3])
             if n1 == 0 and n2 == 0:
                 return
             for i1 in xrange(n1+1):

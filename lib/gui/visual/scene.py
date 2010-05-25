@@ -54,6 +54,11 @@ class Scene(object):
             None,
         )
         config.register_setting(
+            "periodic_box_color",
+            numpy.array([1, 1, 1, 0], float),
+            None,
+        )
+        config.register_setting(
             "fog_color",
             numpy.array([0, 0, 0, 0], float),
             None,
@@ -118,6 +123,9 @@ class Scene(object):
         vb.set_specular(True)
         vb.end_list()
 
+        universe = context.application.model.universe
+        if universe is not None:
+            universe.invalidate_box_list()
         context.application.main.drawing_area.queue_draw()
 
     def get_model_center(self):
