@@ -271,6 +271,7 @@ class TranslateDialog(ImmediateWithMemory):
         "Translation",
         fields.composed.Translation(
             label_text="Translate with vector t",
+            attribute_name="translation",
         ),
         ((gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL), (gtk.STOCK_OK, gtk.RESPONSE_OK))
     )
@@ -304,7 +305,7 @@ class TranslateDialog(ImmediateWithMemory):
                 self.parameters.translation = Translation(e - b)
         else:
             self.parameters = self.last_parameters()
-        if self.parameters_dialog.run(self.parameters.translation) != gtk.RESPONSE_OK:
+        if self.parameters_dialog.run(self.parameters) != gtk.RESPONSE_OK:
             self.parameters.clear()
 
     def do(self):
