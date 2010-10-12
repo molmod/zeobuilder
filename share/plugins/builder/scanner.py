@@ -195,8 +195,10 @@ class ConscanResultsWindow(GladeWrapper):
 
     def apply_normal(self):
         model, iter = self.tree_selection.get_selected()
-        old_transformation = self.frame2.transformation
-        transformation = self.frame1.get_frame_relative_to(self.frame2)
+        parent = self.frame2
+        if parent.parent is not None:
+            parent = parent.parent
+        transformation = self.frame1.get_frame_relative_to(parent)
         if self.cb_inverse.get_active() and len(model.get_value(iter, 3)[3]) > 0:
             transformation = model.get_value(iter, 3)[1].inv * transformation
         else:

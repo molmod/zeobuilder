@@ -34,7 +34,7 @@
 from application_test_case import ApplicationTestCase
 
 from zeobuilder import context
-from zeobuilder.actions.composed import Parameters
+from zeobuilder.actions.composed import Parameters, CustomAction
 from zeobuilder.undefined import Undefined
 from zeobuilder.expressions import Expression
 
@@ -203,10 +203,30 @@ class BuilderActions(ApplicationTestCase):
             context.application.model.file_open("output/tmp.zml")
 
             # Do some consistency tests on the connection scanner results:
-            for quality, transformation, pairs, inverse_pairs in context.application.model.folder.children[0].get_connections():
+            scan_results = context.application.model.folder.children[0]
+            for quality, transformation, pairs, inverse_pairs in scan_results.get_connections():
                 self.assert_(len(pairs)>=3)
                 if len(inverse_pairs) > 0:
                     self.assert_(len(pairs)==len(inverse_pairs))
+
+            # Test for the first case that the indicated atom pairs are indeed
+            # overlapping.
+            context.application.main.select_nodes([scan_results])
+            ShowConscanResultsWindow = context.application.plugins.get_action("ShowConscanResultsWindow")
+            self.assert_(ShowConscanResultsWindow.analyze_selection())
+            ShowConscanResultsWindow()
+            csrw = ShowConscanResultsWindow.conscan_results_window
+            csrw.tree_selection.select_path(0)
+            action = CustomAction("Apply connection")
+            csrw.apply_normal()
+            action.finish()
+            quality, transformation, pairs, inverse_pairs = scan_results.connections[0]
+            for atom1, atom2 in pairs:
+                f1 = atom1().get_absolute_frame()
+                f2 = atom2().get_absolute_frame()
+                d = numpy.linalg.norm(f1.t - f2.t)
+                self.assert_(d < 1e-5)
+            csrw.window.hide()
         self.run_test_application(fn)
 
     def test_pair_conscan(self):
