@@ -21,6 +21,7 @@
 
 
 import sys, cPickle
+import os
 
 from conscan import TriangleScanner, PairScanner
 

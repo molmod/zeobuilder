@@ -9,7 +9,7 @@ rm -vr debian/stamp-makefile-build
 rm -vr python-build-stamp-*
 
 rm -v test/zeobuilder
-rm -vr test/output
+rm -vr test/output/*
 rm -v test/*.so
 rm -v test/zeobuilder_script.py
 rm -v test/ZEOBUILDER-DIALOG-*

@@ -35,7 +35,7 @@ from zeobuilder import context
 from zeobuilder.application import TestApplication
 from zeobuilder.gui.simple import ok_error
 
-import gobject, gtk, subprocess, cPickle, gobject
+import gobject, gtk, subprocess, cPickle, gobject, os
 
 
 __all__ = ["ChildProcessDialog"]
@@ -56,10 +56,21 @@ class ChildProcessDialog(object):
         for button in self.buttons:
             button.set_sensitive(False)
 
+        # configure python path to include the current directory.
+        # this is needed for the tests.
+        env = dict(os.environ)
+        python_path = env.get('PYTHONPATH')
+        if python_path is None:
+            python_path = os.getcwd()
+        else:
+            python_path += ':' + os.getcwd()
+        env['PYTHONPATH'] = python_path
+
         #print >> sys.stderr, "ZEOBUILDER, spawn process"
         self.process = subprocess.Popen(
             args, bufsize=0, stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            env=env,
         )
         if self.pickle:
             cPickle.dump(input_data, self.process.stdin, -1)
