@@ -16,12 +16,8 @@ rm -v test/ZEOBUILDER-DIALOG-*
 
 rm -v profile/zeobuilder
 
-rm -v debug/zeobuilder
-rm -vr debug/output
-rm -v debug/*.so
-rm -v debug/zeobuilder_script.py
-rm -v debug/ZEOBUILDER-DIALOG-*
-
 rm -v MANIFEST
 rm -vr dist
 rm -vr build
+
+rm -vr doc/_build
