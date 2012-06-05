@@ -69,7 +69,7 @@ setup(
     package_dir = {
         'zeobuilder': 'zeobuilder',
         'conscan': 'conscan',
-        'iterative': 'iteratives',
+        'iterative': 'iterative',
     },
     data_files=[
         ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),
@@ -96,6 +96,11 @@ setup(
         'zeobuilder.gui',
         'zeobuilder.gui.fields',
         'zeobuilder.gui.visual',
+        'conscan',
+        'iterative',
+        'iterative.algorithms',
+        'iterative.expressions',
+        'iterative.variables',
     ],
     scripts=['scripts/zeobuilder'],
     classifiers=[
