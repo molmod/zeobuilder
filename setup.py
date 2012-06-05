@@ -69,6 +69,7 @@ setup(
     package_dir = {
         'zeobuilder': 'zeobuilder',
         'conscan': 'conscan',
+        'iterative': 'iteratives',
     },
     data_files=[
         ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),
