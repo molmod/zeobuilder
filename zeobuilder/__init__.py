@@ -31,16 +31,29 @@
 # --
 
 
-import os.path, glob
+import os, sys
+
+class Context(object):
+    def __init__(self):
+        self.title = "Zeobuilder"
+        self.user_dir = os.path.expanduser("~/.zeobuilder")
+        self.config_filename = os.path.join(self.user_dir, "settings")
+        fn_datadir = os.path.join(os.path.dirname(__file__), "datadir.txt")
+        if os.path.isfile(fn_datadir):
+            f = file(fn_datadir)
+            datadir = f.readline().strip()
+            f.close()
+            self.share_dir = os.path.join(datadir, "share", "zeobuilder")
+        else:
+            self.share_dir = "share" # When running from the build directory for the tests.
+
+    def get_share_filename(self, filename):
+        result = os.path.join(self.share_dir, filename)
+        if not os.path.exists(result):
+            raise ValueError("Data file '%s' not found." % result)
+        return result
 
 
-__all__ = ["init_files"]
-
-
-def init_files():
-    if not os.path.exists("zeobuilder"):
-        os.symlink("../src", "zeobuilder")
-    if not os.path.exists("output"):
-        os.mkdir("output")
+context = Context()
 
 

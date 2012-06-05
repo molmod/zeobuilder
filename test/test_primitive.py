@@ -31,39 +31,35 @@
 # --
 
 
-from application_test_case import ApplicationTestCase
+from common import *
 
 from zeobuilder import context
 import zeobuilder.actions.primitive as primitive
 
 
-__all__ = ["PrimitiveActions"]
+def test_set_extra():
+    def fn():
+        FileNew = context.application.plugins.get_action("FileNew")
+        FileNew()
+        universe = context.application.model.root[0]
+        context.application.action_manager.record_primitives = False
+        p = primitive.SetExtra(universe, "foo", "bar")
+        assert universe.extra["foo"] == "bar"
+        p.undo()
+        assert "foo" not in universe.extra
+    run_application(fn)
 
-
-class PrimitiveActions(ApplicationTestCase):
-    def test_set_extra(self):
-        def fn():
-            FileNew = context.application.plugins.get_action("FileNew")
-            FileNew()
-            universe = context.application.model.root[0]
-            context.application.action_manager.record_primitives = False
-            p = primitive.SetExtra(universe, "foo", "bar")
-            self.assert_(universe.extra["foo"] == "bar")
-            p.undo()
-            self.assert_("foo" not in universe.extra)
-        self.run_test_application(fn)
-
-    def test_unset_extra(self):
-        def fn():
-            FileNew = context.application.plugins.get_action("FileNew")
-            FileNew()
-            universe = context.application.model.root[0]
-            universe.extra["foo"] = "bar"
-            context.application.action_manager.record_primitives = False
-            p = primitive.UnsetExtra(universe, "foo")
-            self.assert_("foo" not in universe.extra)
-            p.undo()
-            self.assert_(universe.extra["foo"] == "bar")
-        self.run_test_application(fn)
+def test_unset_extra():
+    def fn():
+        FileNew = context.application.plugins.get_action("FileNew")
+        FileNew()
+        universe = context.application.model.root[0]
+        universe.extra["foo"] = "bar"
+        context.application.action_manager.record_primitives = False
+        p = primitive.UnsetExtra(universe, "foo")
+        assert "foo" not in universe.extra
+        p.undo()
+        assert universe.extra["foo"] == "bar"
+    run_application(fn)
 
 

@@ -66,7 +66,7 @@ setup(
     author_email='Toon.Verstraelen@UGent.be',
     url='http://molmod.ugent.be/code/',
     cmdclass={'install_data': MyInstallData},
-    package_dir = {'zeobuilder': 'lib'},
+    package_dir = {'zeobuilder': 'zeobuilder'},
     data_files=[
         ('share/mime/packages/', ["share/mime/zeobuilder.xml"]),
         ('share/applications/', ["share/desktop/zeobuilder.desktop"]),

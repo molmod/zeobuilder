@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # Zeobuilder is an extensible GUI-toolkit for molecular model construction.
 # Copyright (C) 2007 - 2010 Toon Verstraelen <Toon.Verstraelen@UGent.be>, Center
 # for Molecular Modeling (CMM), Ghent University, Ghent, Belgium; all rights
@@ -32,31 +31,13 @@
 # --
 
 
-import sys, os
+from common import *
 
-if '-i' in sys.argv:
-    # use the installed library for testing
-    sys.argv.remove('-i')
-else:
-    import glob
-    retcode = os.system("(cd ..; python setup.py build)")
-    if retcode != 0: sys.exit(retcode)
-    sys.path.insert(0, glob.glob("../build/lib*")[0])
-
-if not os.path.isdir("output"):
-    os.mkdir("output")
+from zeobuilder.conversion import express_measure
 
 
-import unittest
-
-from basic import *
-from builder import *
-from cache import *
-from core import *
-from filters import *
-from molecular import *
-from primitive import *
-
-unittest.main()
-
+def test_conversion():
+    def fn():
+        express_measure(0, "Mass")
+    run_application(fn)
 

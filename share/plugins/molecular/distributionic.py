@@ -122,33 +122,23 @@ class DistributionDialog(GladeWrapper):
         figure = pylab.figure(0)
         pylab.clf()
         pylab.axes([0.08, 0.1, 0.4, 0.85])
-        patches = []
-        labels = []
 
         patch_average = pylab.plot([to_unit[self.unit](self.average)]*2, [48, 52], "g-")
-        patches.append(patch_average)
-        labels.append("Average")
 
         xtmp = to_unit[self.unit](numpy.array([self.average - self.stdev, self.average + self.stdev]))
         patch_stdev = pylab.plot(xtmp, [50, 50], "m-")
-        patches.append(patch_stdev)
-        labels.append("+- Stdev")
 
         patch_line = pylab.plot(
             to_unit[self.unit](self.data),
             100*numpy.arange(len(self.data), dtype=float)/(len(self.data)-1),
             color="r",
         )
-        patches.append(patch_line)
-        labels.append("Cumulative")
 
         delta = self.bins[1] - self.bins[0]
         args = zip(self.bins, numpy.zeros(len(self.bins)), numpy.ones(len(self.bins))*delta, self.probs)
         for l, b, w, h in args:
             patch_hist = matplotlib.patches.Rectangle((l, b), w, h, facecolor="w", edgecolor="#AAAAAA")
             pylab.gca().add_patch(patch_hist)
-        patches.append([patch_hist])
-        labels.append("Histogram")
 
         pylab.xlim([self.bins[0], self.bins[-1]+delta])
         pylab.ylim([0, 100])
@@ -167,7 +157,6 @@ class DistributionDialog(GladeWrapper):
                 transform = pylab.gca().transAxes,
             )
 
-        pylab.legend(patches, labels, 0)
         self.mpl_widget.draw()
 
     def save_data(self, filename):

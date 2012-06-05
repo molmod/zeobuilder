@@ -31,29 +31,30 @@
 # --
 
 
-import os, sys
+from common import *
 
-class Context(object):
-    def __init__(self):
-        self.title = "Zeobuilder"
-        self.user_dir = os.path.expanduser("~/.zeobuilder")
-        self.config_filename = os.path.join(self.user_dir, "settings")
-        fn_datadir = os.path.join(os.path.dirname(__file__), "datadir.txt")
-        if os.path.isfile(fn_datadir):
-            f = file(fn_datadir)
-            datadir = f.readline().strip()
-            f.close()
-            self.share_dir = os.path.join(datadir, "share", "zeobuilder")
-        else:
-            self.share_dir = "../share" # When running from the build directory for the tests.
-
-    def get_share_filename(self, filename):
-        result = os.path.join(self.share_dir, filename)
-        if not os.path.exists(result):
-            raise ValueError("Data file '%s' not found." % result)
-        return result
+from zeobuilder import context
+import zeobuilder.actions.primitive as primitive
 
 
-context = Context()
+def test_add_box():
+    def fn():
+        FileNew = context.application.plugins.get_action("FileNew")
+        FileNew()
+        universe = context.application.model.root[0]
+        context.application.action_manager.record_primitives = False
+        # add some test objects
+        Box = context.application.plugins.get_node("Box")
+        Frame = context.application.plugins.get_node("Frame")
+        box1 = Box()
+        primitive.Add(box1, universe)
+        frame = Frame()
+        primitive.Add(frame, universe)
+        box2 = Box()
+        primitive.Add(box2, frame)
+        # test nodes_without_children
+        context.application.main.select_nodes([box1, box2])
+        assert context.application.cache.nodes_without_children == [box1, box2]
+    run_application(fn)
 
 
