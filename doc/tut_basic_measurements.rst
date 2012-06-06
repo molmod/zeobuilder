@@ -130,7 +130,7 @@ following figure:
 
 .. figure:: images/zeobuilder_si_o_bonds_analysis.png
     :align: center
-    
+
     The statistical analysis of all Si-O bond lengths.
 
 
@@ -164,7 +164,7 @@ The resulting distribution is shown in the next figure:
 
 
 .. warning::
-    
+
     The `API <http://en.wikipedia.org/wiki/API>`_ of the filter expressions is
     not settled yet, nor is it extensively documented. There is no guarantee
     that these example will work in all future versions of Zeobuilder.

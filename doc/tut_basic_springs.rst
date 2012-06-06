@@ -64,7 +64,7 @@ molecule are not altered.
       ``Select -> Children``.
 
  3. Activate the menu function ``Object -> Arrange -> Frame`` or press
-    ``Ctrl-F`` to place the THF molecule in a separate reference frame. 
+    ``Ctrl-F`` to place the THF molecule in a separate reference frame.
 
  4. Rename this reference frame from ``Frame`` to ``THF``:
 
@@ -92,10 +92,10 @@ molecule are not altered.
 
     For new users, it will seem very odd that the function `Edit -> Duplicate`
     places the copy in overlap with the original object. There are several
-    motivations for this implementation: 
+    motivations for this implementation:
 
     a. It is not trivial to develop an algorithm that is clever enough to find a
-       good position for the duplicate, without consuming too much CPU time. 
+       good position for the duplicate, without consuming too much CPU time.
 
     b. A simple (but predictable) feature is more user-friendly than a clever
        (but unpredictable) one.
@@ -117,11 +117,11 @@ intermolecular distances.
 
     * Set the rest length of the spring via the menu function ``Object ->
       Properties``.
-    
+
 8. Select all the springs and run the menu function ``Object -> Builder ->
    Optimize springs``. A dialog window will appear. Enter the same parameters as
    shown here:
-   
+
    .. figure:: images/optimization_parameters_dialog.png
        :align: center
 
@@ -186,7 +186,7 @@ The previous section discussed an example where two molecules where aligned into
 a non-bonding configuration. In this section, we will discuss some extra
 features that facilitate the applications of springs in various situations, and
 we will apply these concepts to condense two zeolite clusters into a single
-larger cluster. 
+larger cluster.
 
 
 The condensation algorithm
@@ -240,7 +240,7 @@ The starting point is a single sodalite cage model.
 
 4. We will now connect each pair of oxygen atoms (see figure above) by a
    spring. When many springs are involved, as in this example, one can take
-   advantage of the ``Geometric sketch tool``: 
+   advantage of the ``Geometric sketch tool``:
 
    * Click on the first toolbar button and select the ``Geometric sketch tool``.
 
@@ -300,7 +300,7 @@ When working whith springs, keep in mind the following rules:
 * Springs should always connect sub children of different reference frames.
 
 * Before the actual optimization starts, Zeobuilder will determine the common
-  parent frame of the objects that are connected by the selected springs. 
+  parent frame of the objects that are connected by the selected springs.
 
 * The term ``direct child`` is used here as the short name for a direct child of
   the common parent frame.
@@ -329,7 +329,7 @@ Exercises
 
 2. Place a pentane molecule in the center of a straight channel of a Sodalite-1
    unit cell. Make sure the pentane molecule is aligned with the straight
-   channel. You will need these files: 
+   channel. You will need these files:
    (:download:`sodalite1.zml <examples/sodalite1.zml>`)
    and
    (:download:`pentane.zml <examples/pentane.zml>`).

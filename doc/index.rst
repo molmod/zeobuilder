@@ -31,7 +31,7 @@ Tutorial
 .. toctree::
    :maxdepth: 2
    :numbered:
-    
+
    tut_install
    tut_support
    tut_basic

@@ -4,7 +4,7 @@ Getting started
 In this chapter, we often refer to two example model files:
 
 1. :download:`water.zml <examples/water.zml>`: a model of a single water molecule.
-2. :download:`dimer.zml <examples/water.zml>`: a dimer of tetrahydrofuran (THF) molecules}} 
+2. :download:`dimer.zml <examples/water.zml>`: a dimer of tetrahydrofuran (THF) molecules}}
 
 
 Installation
@@ -38,7 +38,7 @@ figure below.
 
 .. figure:: images/zeobuilder_water_zml.png
     :align: center
-    
+
     Zeobuilder showing the contents of ``water.zml``
 
 
@@ -79,7 +79,7 @@ figure below:
 
 .. figure:: images/zeobuilder_example_indicated.png
     :align: center
-    
+
     The four major components of the Zeobuilder main window.
 
 
@@ -240,14 +240,14 @@ menu (``Edit -> Delete``) when no proper selection is made, the Delete function 
 grayed out.
 
 .. note::
-    
+
     Through observation we learned that the average user has the tendency to
     make all selections in the 3D view. In many cases, it is much easier to make
     a selection in the tree view. In the beginning it might be instructive to
     think before making a selection.
 
 
-Adding and removing objects, fixing mistakes 
+Adding and removing objects, fixing mistakes
 ============================================
 
 From now on we will continue with the THF dimer model (:download:`dimer.zml
@@ -293,7 +293,7 @@ choice. One can set these preferred default units via the menu function ``Edit -
 Configuration``.
 
 .. note::
-    
+
     It is a good idea to set your favorite default units at this point in the
     tutorial.
 
@@ -375,7 +375,7 @@ c. Activate the desired function from the menu. This will show a dialog window
 d. Hit the `OK` button and enjoy the result.
 
 .. note::
-    
+
     The sub menu `Object -> Transform` hosts much more types of transformations
     than ordinary rotations and translations. Try them! Most functions are
     self-explaining.
@@ -407,7 +407,7 @@ have a fixed meaning. This is not the case! Each button in the toolbar shows
 which interactive function is associated with which modifier key(s). When one
 clicks such a button, a popup menu offers the list of all existing interactive
 functions. (See figure below.) The selected function from this popup menu will
-become associated with the corresponding modifier key(s). 
+become associated with the corresponding modifier key(s).
 
 .. figure:: images/zeobuilder_configuring_interactive.png
     :align: center
@@ -456,7 +456,7 @@ file formats are supported for saving files: ``.xyz``, ``.pdb``, ``.psf``, and
 
      * Loading psf files is not supported in Zeobuilder because a psf file only
        contains topology information and no atom coordinates.
-     
+
      * ZML stands for 'Zeobuilder Markup Language'. This file format is based on
      the `XML standard <http://www.w3.org/XML/ XML standard>`_. XML offers the
      advantage that one can design formats that will be forward-compatible with
@@ -490,5 +490,5 @@ Before you run away from your computer, here are some practical advices:
 * When using the 3D view to select all objects in the model by drawing a
   rectangle around them, one really selects everything, including the global
   reference frame. This might not always be what one expects. Make sure you
-  understand what you are doing. 
+  understand what you are doing.
 

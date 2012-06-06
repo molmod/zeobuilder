@@ -17,7 +17,7 @@ Adding bonds to the model
 Load the file :download:`dipropylether.xyz <examples/dipropylether.xyz>`. Your
 window should be similar to figure the figure below. Zeobuilder only shows the atoms and no
 bonds because the XYZ format only contains atomic coordinates. One can easily add
-bonds automatically based on a database of average bond lengths in two steps:}} 
+bonds automatically based on a database of average bond lengths in two steps:}}
 
 .. figure:: images/zeobuilder_dipropylether.png
     :align: center
@@ -37,7 +37,7 @@ One might wonder why bonds are explicit objects in Zeobuilder. At first sight it
 seems much simpler to draw them always automatically in the 3D view, without
 listing them in the tree view. These are the reasons to choose for explicit bond
 objects in Zeobuilder:
- 
+
 * The 'automatic' approach implies that the internal list of bonds has to be
   updated automatically each time one or more atoms are displaced. For small
   models (<100 atoms), this is OK, but for very large models (>1000 atoms), this
@@ -105,7 +105,7 @@ The first example is a rotation of a methyl top. Take the following steps:
     The methyl group after rotation.
 
 6. Select the methyl frame again in the tree view and activate the menu function
-   ``Object -> Arrange -> Unframe (absolute)`` or press ``Ctrl-Shift-F``. The 
+   ``Object -> Arrange -> Unframe (absolute)`` or press ``Ctrl-Shift-F``. The
 
 
 
@@ -149,13 +149,13 @@ keep this example a simple as possible, we will work with a THF model
 
     a. First add a box to the center of the reference frame: Select the global
        reference frame in the tree view and activate ``Object -> Add -> Box``.
-    
+
     b. The box is selected. For reasons of clarity, change to box color to
        orange via ``Object -> Properties`` or by pressing Ctrl-E. The color field
        is located in the ``Markup`` tab page. Click ``OK`` when done.
-    
+
     c. Select both the oxygen atom and the orange box.
-    
+
     d. Activate the function ``Object -> Connect -> Arrow``. This is our second
        rotation axis.
 
@@ -232,13 +232,13 @@ former expression is used.
 
 
 .. figure:: images/dialog_select_children_by_expression.png
-    :align: center 
+    :align: center
 
     The popup dialog of the menu function ``Select -> Children by expression``
 
 
 .. warning::
-    
+
     The `API <http://en.wikipedia.org/wiki/API>`_ of the filter expressions is
     not settled yet, nor is it extensively documented. There is no guarantee
     that these example will work in all future versions of Zeobuilder.

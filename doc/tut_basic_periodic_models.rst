@@ -148,12 +148,12 @@ Transformation of a cluster model into a periodic one
 =====================================================
 
 Continue with the cluster from the previous section or download the sodalite
-cage cluster model: 
+cage cluster model:
 :download:`sod_cage.zml <examples/sod_cage.zml>`.
 In this section, we will
 transform this model into the unit cell of Zeolite A. It is critical that you
 recognize the six (equivalent) 4T-rings in the sodalite cage. Take the following
-steps:}} 
+steps:}}
 
 1. Identify the two 4T-rings that are centered on the X-axis. Select a
    terminating oxygen atom from one ring and add a terminating oxygen atom from
@@ -194,7 +194,7 @@ However, the smallest unit cell of Faujasite is not cubic, contains only 48
 T-atoms, and is hence more attractive from the computational point of view. In
 this section we will describe how the cubic faujasite model can be transformed
 into the non-cubic variant:
- 
+
 1. Load the model :download:`fau.zml <examples/fau.zml>`. It contains the cubic
    model.
 

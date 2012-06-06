@@ -12,7 +12,7 @@ structural analysis too.
 
 .. figure:: images/zeobuilder.png
     :align: center
-    
+
     The graphical Zeobuilder user interface
 
 Most programs - Zeobuilder is no exception - have two sides: the user-experience
@@ -35,7 +35,7 @@ one may post questions to the `Mailing lists <https://groups.google.com/forum/#!
 or one may dive into `the source code of Zeobuilder <https://github.com/molmod/zeobuilder>`_
 
 
-How to read this tutorial 
+How to read this tutorial
 =========================
 
 The tutorial consists of two parts. Part A deals with all the topics every
