@@ -59,7 +59,7 @@ The following series of commands will download the latest version of Zeobuilder,
 and will then install it into your home directory. ::
 
     cd ~/build/
-    git clone git://github.com/molmod/Zeobuilder.git
+    git clone git://github.com/molmod/zeobuilder.git
     (cd zeobuilder; ./setup.py install --home=~)
 
 You are now ready to start using Zeobuilder!

@@ -7,8 +7,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>4.4. Measurements &mdash; Zeobuilder v0.0 documentation</title>
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '#',
@@ -18,9 +18,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
     <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
     <link rel="next" title="4.5. Working with springs" href="tut_basic_springs.html" />
@@ -58,7 +58,7 @@ internal coordinates in a molecule. It is activated as follows: Click on one of
 the tool bar buttons and select the <tt class="docutils literal"><span class="pre">Measurement</span> <span class="pre">tool</span></tt> from the popup menu.
 This is shown in the figure below.</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_measurement_tool_button.png" src="images/zeobuilder_measurement_tool_button.png" />
+<img alt="_images/zeobuilder_measurement_tool_button.png" src="_images/zeobuilder_measurement_tool_button.png" />
 <p class="caption">How to select another interactive tool.
 The inset shows the button after the new interactive tool is selected.</p>
 </div>
@@ -85,10 +85,10 @@ figure A4.2</li>
 </ul>
 <p>When done with the measurements, click on the toolbar button that displays the
 measurement icon, and select the <tt class="docutils literal"><span class="pre">Selection</span> <span class="pre">picker</span></tt>. Download the model
-<a href="downloads/glucose_phosphate.zml"><strong class="xref">glucose_phosphate.zml</strong></a> to experiment
+<a href="_downloads/glucose_phosphate.zml"><strong class="xref">glucose_phosphate.zml</strong></a> to experiment
 with the measurement tool.</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_measurement_types.png" src="images/zeobuilder_measurement_types.png" />
+<img alt="_images/zeobuilder_measurement_types.png" src="_images/zeobuilder_measurement_types.png" />
 <p class="caption">The four different measurement types: (a) the pair, (b) the triple, (c) the triangle and (d) the quadruple.</p>
 </div>
 </div>
@@ -99,7 +99,7 @@ current selection. This menu function is located at <tt class="docutils literal"
 <span class="pre">Chemical</span> <span class="pre">Formula</span></tt>. For the glucose phosphate molecule, the
 chemical formula is displayed as follows:</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_chemical_formula.png" src="images/zeobuilder_chemical_formula.png" />
+<img alt="_images/zeobuilder_chemical_formula.png" src="_images/zeobuilder_chemical_formula.png" />
 <p class="caption">The chemical formula function.</p>
 </div>
 </div>
@@ -112,7 +112,7 @@ are three (similar) analysis functions: <tt class="docutils literal"><span class
 <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Distribution</span> <span class="pre">of</span> <span class="pre">dihedral</span> <span class="pre">angles</span></tt>. We will demonstrate
 this feature by making a few distributions of bond lengths in a zeolite cluster
 geometry. This geometry is a snapshot from a molecular dynamics run. Open this
-file in Zeobuilder: <a href="downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a></p>
+file in Zeobuilder: <a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a></p>
 <div class="section" id="all-bond-lengths">
 <h3>4.4.3.1. All bond lengths<a class="headerlink" href="#all-bond-lengths" title="Permalink to this headline">¶</a></h3>
 <p>As a first example, we will make a statistical analysis of all the bond lengths:</p>
@@ -126,7 +126,7 @@ file in Zeobuilder: <a href="downloads/precursor.zml"><strong class="xref">precu
 given in figure below. Setting all filters to <cite>True</cite> means that all bonds will be
 processed.</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_bond_filter_dialog.png" src="images/zeobuilder_bond_filter_dialog.png" />
+<img alt="_images/zeobuilder_bond_filter_dialog.png" src="_images/zeobuilder_bond_filter_dialog.png" />
 <p class="caption">The filter dialog for the statistical analysis of the bond lengths.</p>
 </div>
 <p>The resulting analysis is shown in the following figure. The width of the
@@ -134,7 +134,7 @@ histogram bins is chosen automatically. The save button asks for a filename
 prefix. It saves the figure as a png bitmap and an svg vector drawing, and the
 list of bond lengths is written to a text file.</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_all_bonds_analysis.png" src="images/zeobuilder_all_bonds_analysis.png" />
+<img alt="_images/zeobuilder_all_bonds_analysis.png" src="_images/zeobuilder_all_bonds_analysis.png" />
 <p class="caption">The statistical analysis of all bond lengths.</p>
 </div>
 </div>
@@ -157,7 +157,7 @@ included in the analysis. The filter expressions are in fact boolean
 <a class="reference external" href="http://www.pythonn.org">Python</a> expressions. The result is given in the
 following figure:</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_si_o_bonds_analysis.png" src="images/zeobuilder_si_o_bonds_analysis.png" />
+<img alt="_images/zeobuilder_si_o_bonds_analysis.png" src="_images/zeobuilder_si_o_bonds_analysis.png" />
 <p class="caption">The statistical analysis of all Si-O bond lengths.</p>
 </div>
 <div class="admonition note">
@@ -180,7 +180,7 @@ following figure:</p>
 </blockquote>
 <p>The resulting distribution is shown in the next figure:</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_si_o_hydr_bonds_analysis.png" src="images/zeobuilder_si_o_hydr_bonds_analysis.png" />
+<img alt="_images/zeobuilder_si_o_hydr_bonds_analysis.png" src="_images/zeobuilder_si_o_hydr_bonds_analysis.png" />
 <p class="caption">The statistical analysis of all Si-O bond lengths, where the oxygen is part of an hydroxyl group.</p>
 </div>
 <div class="admonition warning">
@@ -222,7 +222,7 @@ that these example will work in all future versions of Zeobuilder.</p>
                         title="next chapter">4.5. Working with springs</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="sources/tut_basic_measurements.txt"
+    <li><a href="_sources/tut_basic_measurements.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">

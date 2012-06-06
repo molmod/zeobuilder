@@ -7,8 +7,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
     <title>4.5. Working with springs &mdash; Zeobuilder v0.0 documentation</title>
-    <link rel="stylesheet" href="static/default.css" type="text/css" />
-    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '#',
@@ -18,9 +18,9 @@
         HAS_SOURCE:  true
       };
     </script>
-    <script type="text/javascript" src="static/jquery.js"></script>
-    <script type="text/javascript" src="static/underscore.js"></script>
-    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
     <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
     <link rel="next" title="4.6. Periodic models" href="tut_basic_periodic_models.html" />
@@ -75,7 +75,7 @@ relative orientation.</p>
 <h2>4.5.1. A basic example: aligning two THF molecules<a class="headerlink" href="#a-basic-example-aligning-two-thf-molecules" title="Permalink to this headline">¶</a></h2>
 <p>Consider the dimer of two THF molecules depicted in the following figure:</p>
 <div align="center" class="figure">
-<img alt="images/schematic_dimer_distances.png" src="images/schematic_dimer_distances.png" />
+<img alt="_images/schematic_dimer_distances.png" src="_images/schematic_dimer_distances.png" />
 <p class="caption">The four prescribed distances in the THF dimer.</p>
 </div>
 <p>This dimer is hypothetical, but suppose that we want to prepare this structure
@@ -95,7 +95,7 @@ starting from a single THF molecule. The internal coordinates of the THF
 molecule are not altered.</p>
 <blockquote>
 <ol class="arabic simple">
-<li>Load the model <a href="downloads/thf.zml"><strong class="xref">thf.zml</strong></a>. It contains a single
+<li>Load the model <a href="_downloads/thf.zml"><strong class="xref">thf.zml</strong></a>. It contains a single
 THF molecule in the global reference frame.</li>
 <li>Select all the children of the global reference frame, not the global
 reference frame itself. The simplest way to make this selection consists of
@@ -123,7 +123,7 @@ Zeobuilder window should be similar to following figure:</li>
 </ol>
 </blockquote>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_dimer_handwaving.png" src="images/zeobuilder_dimer_handwaving.png" />
+<img alt="_images/zeobuilder_dimer_handwaving.png" src="_images/zeobuilder_dimer_handwaving.png" />
 <p class="caption">The initial configuration of the THF dimer.</p>
 </div>
 <div class="admonition note">
@@ -159,7 +159,7 @@ intermolecular distances.</p>
 <span class="pre">Optimize</span> <span class="pre">springs</span></tt>. A dialog window will appear. Enter the same parameters as
 shown here:</p>
 <div align="center" class="figure">
-<img alt="images/optimization_parameters_dialog.png" src="images/optimization_parameters_dialog.png" />
+<img alt="_images/optimization_parameters_dialog.png" src="_images/optimization_parameters_dialog.png" />
 <p class="caption">The parameters for the spring optimization.</p>
 </div>
 <p>The option <tt class="docutils literal"><span class="pre">Allow</span> <span class="pre">free</span> <span class="pre">rotation</span></tt> can be disabled, i.e.
@@ -168,7 +168,7 @@ parameters determine how the intermediate results are visualized. Click <tt clas
 </li>
 <li><p class="first">A second dialog window pops up that reports the optimization progress:</p>
 <div align="center" class="figure">
-<img alt="images/progress_optimization.png" src="images/progress_optimization.png" />
+<img alt="_images/progress_optimization.png" src="_images/progress_optimization.png" />
 <p class="caption">The progress dialog of the spring optimization.</p>
 </div>
 <p>The optimization should take only a fraction of a second. When
@@ -176,7 +176,7 @@ convergence is reached, one clicks the <cite>OK</cite> button to accept the fina
 structure, or <cite>Cancel</cite> to restore the initial situation. The final model is
 displayed below:</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_dimer_final.png" src="images/zeobuilder_dimer_final.png" />
+<img alt="_images/zeobuilder_dimer_final.png" src="_images/zeobuilder_dimer_final.png" />
 <p class="caption">The final configuration of the THF dimer.</p>
 </div>
 </li>
@@ -224,7 +224,7 @@ larger cluster.</p>
 <p>The following figure illustrates the geometrical abstraction of the condensation
 reaction.</p>
 <div align="center" class="figure">
-<img alt="images/condensation_abstraction.png" src="images/condensation_abstraction.png" />
+<img alt="_images/condensation_abstraction.png" src="_images/condensation_abstraction.png" />
 </div>
 <p>In the case of zeolite clusters, the hydrogen atoms of the terminating
 hydroxyl groups are hidden for reasons of clarity. This concept is easily
@@ -245,14 +245,14 @@ average coordinate of the original atoms.</li>
 The atom pairs that will join to form new Si-O-Si bridges are indicated in this
 figure:</p>
 <div align="center" class="figure">
-<img alt="images/sketch_2sodalite_cages.png" src="images/sketch_2sodalite_cages.png" />
+<img alt="_images/sketch_2sodalite_cages.png" src="_images/sketch_2sodalite_cages.png" />
 <p class="caption">Two sodalite cages that will be connected along their hexagonal
 faces. The pairs of hydroxyl groups that will undergo a condensation
 reaction, are marked with blue ellipses.</p>
 </div>
 <p>The starting point is a single sodalite cage model.</p>
 <ol class="arabic">
-<li><p class="first">Open the model <a href="downloads/sodalite_cage.zml"><strong class="xref">sodalite_cage.zml</strong></a>.</p>
+<li><p class="first">Open the model <a href="_downloads/sodalite_cage.zml"><strong class="xref">sodalite_cage.zml</strong></a>.</p>
 </li>
 <li><p class="first">Select all the hydrogen atoms and remove them with the function <tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span>
 <span class="pre">Delete</span></tt>. The bonds to these hydrogen atoms are removed automatically.</p>
@@ -270,7 +270,7 @@ advantage of the <tt class="docutils literal"><span class="pre">Geometric</span>
 <li><p class="first">A tool window will appear as in figure A5.8. Select <tt class="docutils literal"><span class="pre">spring</span></tt> from the
 <tt class="docutils literal"><span class="pre">connect</span> <span class="pre">with</span></tt> list.</p>
 <div align="center" class="figure">
-<img alt="images/geometric_sketcgh_tool.png" src="images/geometric_sketcgh_tool.png" />
+<img alt="_images/geometric_sketcgh_tool.png" src="_images/geometric_sketcgh_tool.png" />
 <p class="caption">The tool window of the <tt class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></tt>.</p>
 </div>
 </li>
@@ -305,7 +305,7 @@ position of the two original atoms.</p>
 oxygen bridges are too curved. When this &#8216;initial&#8217; structure is used as an input
 for an energy minimization, these Si-O-Si bends will become less curved.</p>
 <div align="center" class="figure">
-<img alt="images/zeobuilder_two_cages.png" src="images/zeobuilder_two_cages.png" />
+<img alt="_images/zeobuilder_two_cages.png" src="_images/zeobuilder_two_cages.png" />
 <p class="caption">Two sodalite cages connected along their hexagonal sides.</p>
 </div>
 </div>
@@ -350,13 +350,13 @@ the optimization.</li>
 <div class="section" id="exercises">
 <h2>4.5.4. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>Connect two sodalite cages (<a href="downloads/sodalite_cage.zml"><strong class="xref">sodalite_cage.zml</strong></a>) along the square faces.</li>
+<li>Connect two sodalite cages (<a href="_downloads/sodalite_cage.zml"><strong class="xref">sodalite_cage.zml</strong></a>) along the square faces.</li>
 <li>Place a pentane molecule in the center of a straight channel of a Sodalite-1
 unit cell. Make sure the pentane molecule is aligned with the straight
 channel. You will need these files:
-(<a href="downloads/sodalite1.zml"><strong class="xref">sodalite1.zml</strong></a>)
+(<a href="_downloads/sodalite1.zml"><strong class="xref">sodalite1.zml</strong></a>)
 and
-(<a href="downloads/pentane.zml"><strong class="xref">pentane.zml</strong></a>).
+(<a href="_downloads/pentane.zml"><strong class="xref">pentane.zml</strong></a>).
 Tip: The center of the Sodalite-1 unit cell does
 not lie in the middle of a straight channel. This is not the most practical
 situation for this exercise. Define a new origin as follows:<ul>
@@ -411,7 +411,7 @@ located at the center of the unit cell.</li>
                         title="next chapter">4.6. Periodic models</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="sources/tut_basic_springs.txt"
+    <li><a href="_sources/tut_basic_springs.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
