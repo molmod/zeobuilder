@@ -1,9 +1,10 @@
-Zeobuilder is a GUI toolkit for the interactive construction of complex
-molecular models. The objective of Zeobuilder, is to become the ultimate
-molecular editor through an open and community-oriented developemnt process.
-From the user perspective, we focus and user-friendly and efficient program,
-while from the developers perspective, we try to make it easy to extend
-Zeobuilder with new features.
+Zeobuilder is a user-friendly GUI toolkit for the construction of advanced
+molecular models. The program contains several advanced tools to build, align,
+manipulate and analyze molecular structures. Most of its novel functionality is
+based on a hierarchical data-structure of reference frames to represent a
+molecular structure. Furthermore, Zeobuilder is extensible. The core program is
+compact and nearly all of the functionality is implemented through a plug-in
+framework.
 
 More information about Zeobuilder can be found on the CMM Software website:
 http://molmod.ugent.be/software/

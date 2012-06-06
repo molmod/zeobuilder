@@ -1,11 +1,9 @@
 Installation
 ############
 
-This tutorial explains step by step how to install Zeobuilder on your computer.
 
-
-Preparing your mind
-===================
+Disclaimer
+==========
 
 Zeobuilder is developed and tested in modern Linux environments. The
 installation instructions below are given for a Linux system only. If you want
@@ -14,8 +12,18 @@ have a minimal computer geek status to get it working. We are always interested
 in hearing from your installation adventures.
 
 
-Preparing your Linux system
-===========================
+MolMod dependency
+=================
+
+`MolMod <http://molmod.github.com/molmod/>`_ is a Python library used by most
+Python programs developed at the CMM. It must be installed before Zeobuilder can
+be used or installed. Installation and download instructions can be found in the
+`molmod documentation <http://molmod.github.com/molmod/tutorial/install.html>`_.
+The instructions below only work of the MolMod package is installed.
+
+
+External dependencies
+=====================
 
 Some software packages should be installed before Zeobuilder can be installed or
 used. It is recommended to use the software package management of your Linux
@@ -37,43 +45,73 @@ command.
 
 * Ubuntu 12.4::
 
-    sudo apt-get install python-gtk python-opengl python-numpy python-gtkglext1 python-matplotlib python-numpy
+    sudo apt-get install python-gtk python-opengl python-numpy python-gtkglext1 python-matplotlib
 
 * Fedora 17::
 
     sudo yum install {TODO}
 
 
-MolMod dependency
-=================
+Installing the latest version of Zeobuilder
+===========================================
+
+The following series of commands will download the latest version of Zeobuilder,
+and will then install it into your home directory. ::
+
+    cd ~/build/
+    git clone git://github.com/molmod/zeobuilder.git
+    (cd zeobuilder; ./setup.py install --home=~)
+
+You are now ready to start using Zeobuilder!
 
 
-MolMod is a Python library used by most Python programs developed at the CMM.
-Installation instructions can be found in the molmod documentation: TODO
+Upgrading to the latest version of MolMod and Zeobuilder
+========================================================
+
+In case you want to upgrade Zeobuilder to the latests development version after
+a previous install, then execute the following commands (in the same directory
+that was originally used to install Zeobuilder)::
+
+    cd ~/build/
+    (cd molmod; git pull; rm -r ~/lib*/python/molmod*; ./setup.py install --home=~)
+    (cd zeobuilder; git pull; rm -r ~/lib*/python/zeobuilder*; ./setup.py install --home=~)
 
 
-Download the Zeobuilder source code
-===================================
+Testing your installation
+=========================
 
-The source of the latest Zeobuilder version can be downloaded here:
-https://github.com/molmod/zeobuilder/zipball/master
+For the development and testing one needs to install one additional package:
 
+* Nosetests >= 0.11: http://somethingaboutorange.com/mrl/projects/nose/0.11.2/
 
-Actual installation
-===================
+Most Linux distributions can install this software with just a single command on
+the command line by the administrator.
 
-If you have a previous installation of Zeobuilder, it is recommended to remove
-it first::
+* Ubuntu 10.4::
 
-    rm -v $HOME/bin/zeobuilder
-    rm -vr $HOME/share/zeobuilder
-    rm -vr $HOME/lib/python/zeobuilder
+    sudo apt-get install python-nose
 
-Change to the directory where the source code was downloaded. Then enter the
-following commands::
+* Debian 5::
 
-    unzip molmod-zeobuilder-*.zip
-    rm molmod-zeobuilder-*.zip
-    cd molmod-zeobuilder-*
-    ./setup.py install --home=~
+    su -
+    apt-get install python-nose
+    exit
+
+* Fedora 17::
+
+    sudo yum install python-nose
+
+* Suse 11.2::
+
+    sudo zypper install python-nose
+
+Once these dependencies are installed, execute the following commands to run the
+tests::
+
+    cd ~/build/
+    cd zeobuilder
+    nosetests -v
+
+If some tests fail, post the output of the tests on the `Zeobuilder
+mailing list <https://groups.google.com/forum/#!forum/zeobuilder>`_.
 
