@@ -62,8 +62,15 @@ https://github.com/molmod/zeobuilder/zipball/master
 Actual installation
 ===================
 
-Open a terminal and change to the directory where the source code was downloaded.
-Then enter the following commands::
+If you have a previous installation of Zeobuilder, it is recommended to remove
+it first::
+
+    rm -v $HOME/bin/zeobuilder
+    rm -vr $HOME/share/zeobuilder
+    rm -vr $HOME/lib/python/zeobuilder
+
+Change to the directory where the source code was downloaded. Then enter the
+following commands::
 
     unzip molmod-zeobuilder-*.zip
     rm molmod-zeobuilder-*.zip
