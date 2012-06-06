@@ -46,5 +46,4 @@ For Endnote users::
     M3  - doi: 10.1021/ci8000748
     UR  - http://dx.doi.org/10.1021/ci8000748
     Y2  - 2012/06/06
-    ER  -
 
