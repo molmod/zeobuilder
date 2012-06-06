@@ -1,0 +1,333 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4.6. Periodic models &mdash; Zeobuilder v0.0 documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
+    <link rel="next" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" />
+    <link rel="prev" title="4.5. Working with springs" href="tut_basic_springs.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tut_advanced.html" title="5. Zeobuilder Tutorial – Advanced"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tut_basic_springs.html" title="4.5. Working with springs"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="periodic-models">
+<h1>4.6. Periodic models<a class="headerlink" href="#periodic-models" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="visualization">
+<h2>4.6.1. Visualization<a class="headerlink" href="#visualization" title="Permalink to this headline">¶</a></h2>
+<p>Load the example file <a href="downloads/sod.zml"><strong class="xref">sod.zml</strong></a>. This file contains
+a model of the Sodalite unit cell. Rotate the model to get a better view on the
+structure. The Zeobuilder window should look like this figure:</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_sod.png" src="_images/zeobuilder_sod.png" />
+<p class="caption">A periodic model in Zeobuilder.</p>
+</div>
+<p>By default, Zeobuilder
+draws the unit cell as a white wire-framed box. Three ridges of this box are
+drawn in red, green and blue. They correspond the a, b and c cell vectors
+respectively.</p>
+<p>Several aspects of the visualization of periodic systems can be configured.
+Select the global reference frame and activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties</span></tt>.</p>
+<ul>
+<li><p class="first">In the tab <tt class="docutils literal"><span class="pre">Markup</span></tt>, one finds the option <tt class="docutils literal"><span class="pre">Clip</span> <span class="pre">the</span> <span class="pre">unit</span> <span class="pre">cell</span> <span class="pre">contents</span></tt>.
+When enabled, the parts that fall out of the periodic boundaries of the model,
+will be clipped and are drawn at the other end of the unit cell. A clipped
+visualization of the sodalite unit cell is shown below:</p>
+<blockquote>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_sod_clipping.png" src="_images/zeobuilder_sod_clipping.png" />
+<p class="caption">A periodic model in Zeobuilder, with clipping.</p>
+</div>
+</blockquote>
+</li>
+<li><p class="first">In the tab <tt class="docutils literal"><span class="pre">Unit</span> <span class="pre">cell</span></tt>, one can modify the number of times a unit cell is
+repeated in the a, b and c direction. This is only affects the visualization,
+and not the contents of the model. For example, when one selects an atom, it
+is highlighted in all periodic images. Any change in the model will also be
+visible in all periodic images. Effective super cells are discussed below. An
+example is given in the following figure, where the unit cell is repeated two
+times along the a and the b direction.</p>
+<blockquote>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_sod_repetitions.png" src="_images/zeobuilder_sod_repetitions.png" />
+<p class="caption">A periodic model in Zeobuilder, with cell repetitions.</p>
+</div>
+</blockquote>
+</li>
+</ul>
+<p>Now add a box to the model and move it out of the unit cell. The function
+<tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span> <span class="pre">Cell</span> <span class="pre">-&gt;</span> <span class="pre">Wrap</span> <span class="pre">cell</span> <span class="pre">contents</span></tt> will translate the box back into the
+unit cell. The new position of the box in fractional coordinates is equal to the
+old position in fractional coordinates, minus the integer part of the old
+fractional coordinates. This means that the new position relative to the central
+unit cell is the same as the old position relative to the periodic image in
+which the box was originally located. Add a second box and connect both boxes by
+a vector. Move both boxes around and observe the behavior of the vector. The
+exact position and direction of the vector in the 3D view is determined by the
+minimum image convention.</p>
+</div>
+<div class="section" id="the-empty-periodic-model">
+<h2>4.6.2. The empty periodic model<a class="headerlink" href="#the-empty-periodic-model" title="Permalink to this headline">¶</a></h2>
+<p>All information regarding the unit cell and its visualization is stored in the
+global reference frame object. To create an empty periodic model, take the
+following steps:</p>
+<ol class="arabic">
+<li><p class="first">Activate <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">New</span></tt>.</p>
+</li>
+<li><p class="first">Select the global reference frame.</p>
+</li>
+<li><p class="first">Activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties</span></tt> and open the tab <tt class="docutils literal"><span class="pre">Unit</span> <span class="pre">cell</span></tt>. One can enter
+the three cell vectors in Cartesian coordinates, the directions in which the
+system is periodic and the number of repetitions along each periodic
+directions.</p>
+</li>
+<li><p class="first">Click on the button next to the coordinates of the cell vectors:</p>
+<div align="center" class="figure">
+<img alt="images/popup_set_parameters.png" src="_images/popup_set_parameters.png" />
+<p class="caption">The popup menu with the function <tt class="docutils literal"><span class="pre">Set</span> <span class="pre">parameters</span> <span class="pre">...</span></tt>.</p>
+</div>
+<p>A popup menu appears. Select the last item: <tt class="docutils literal"><span class="pre">Set</span> <span class="pre">parameters</span>
+<span class="pre">...</span></tt>. A popup dialog appears in which one can enter the lengths of the cell
+vectors and the angles between the cell vectors. Enter some values and click
+<tt class="docutils literal"><span class="pre">OK</span></tt>. The following conditions are assumed when transforming these six
+numbers into cell vectors: The a-vector is parallel to the x-axis. The b
+vector lies in the x,y-plane and the the y-coordinate of the b-vector is
+positive. the z-coordinate of the c-vector is positive.</p>
+</li>
+<li><p class="first">Enable the tree check boxes that determine along which directions the model
+is assumed to be periodic. Click <tt class="docutils literal"><span class="pre">OK</span></tt>.</p>
+</li>
+</ol>
+<p>One can now use the menu function <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Import</span></tt> to fill the unit cell with molecules.</p>
+</div>
+<div class="section" id="transformation-of-a-periodic-model-into-a-cluster">
+<h2>4.6.3. Transformation of a periodic model into a cluster<a class="headerlink" href="#transformation-of-a-periodic-model-into-a-cluster" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we will transform the Sodalite unit cell <a href="downloads/sod.zml"><strong class="xref">sod.zml</strong></a> into a sodaliate cage cluster model. Such a transformation
+typically takes two steps:</p>
+<ol class="arabic simple">
+<li>Define a region in fractional coordinates that will be retained during the
+transformation.</li>
+<li>Remove superfluous atoms.</li>
+</ol>
+<p>For the first step, it is interesting to make good estimates of the retained
+region in fractional coordinates. For the sodalite cage, this is done in the
+following figure:</p>
+<div align="center" class="figure">
+<img alt="images/retained_region.png" src="_images/retained_region.png" />
+<p class="caption">An estimate of the region to be retained when transforming the periodic
+model into a cluster model.</p>
+</div>
+<p>Proceed along the following steps:</p>
+<ol class="arabic simple">
+<li>Select the global reference frame.</li>
+<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span> <span class="pre">cell</span> <span class="pre">-&gt;</span> <span class="pre">To</span> <span class="pre">cluster</span></tt>.</li>
+<li>Enter these fractional coordinates: <tt class="docutils literal"><span class="pre">a.min=-0.25</span></tt>, <tt class="docutils literal"><span class="pre">a.max=1.25</span></tt>,
+<tt class="docutils literal"><span class="pre">b.min=-0.25</span></tt>, <tt class="docutils literal"><span class="pre">b.max=1.25</span></tt>, <tt class="docutils literal"><span class="pre">c.min=-0.25</span></tt>, <tt class="docutils literal"><span class="pre">c.max=1.25</span></tt>. Click
+<tt class="docutils literal"><span class="pre">OK</span></tt>.</li>
+<li>Select and delete all atoms that are not part of the Sodalite cage. Use the
+<tt class="docutils literal"><span class="pre">Delete</span></tt> key on your keyboard and rotate the model to verify that no
+spurious atoms are left. Keep the oxygen atoms that terminate the cluster.</li>
+<li>When done, one might want to continue working with the structure in its
+center of mass frame. This is simply accomplished by selecting the global
+reference frame and activating the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Transform</span> <span class="pre">-&gt;</span>
+<span class="pre">Center</span> <span class="pre">of</span> <span class="pre">mass</span> <span class="pre">frame</span></tt>.</li>
+</ol>
+<p>The end result should be as follows:</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_sod_cluster.png" src="_images/zeobuilder_sod_cluster.png" />
+<p class="caption">The sodalite cage.</p>
+</div>
+</div>
+<div class="section" id="transformation-of-a-cluster-model-into-a-periodic-one">
+<h2>4.6.4. Transformation of a cluster model into a periodic one<a class="headerlink" href="#transformation-of-a-cluster-model-into-a-periodic-one" title="Permalink to this headline">¶</a></h2>
+<p>Continue with the cluster from the previous section or download the sodalite
+cage cluster model:
+<a href="downloads/sod_cage.zml"><strong class="xref">sod_cage.zml</strong></a>.
+In this section, we will
+transform this model into the unit cell of Zeolite A. It is critical that you
+recognize the six (equivalent) 4T-rings in the sodalite cage. Take the following
+steps:}}</p>
+<ol class="arabic simple">
+<li>Identify the two 4T-rings that are centered on the X-axis. Select a
+terminating oxygen atom from one ring and add a terminating oxygen atom from
+the other 4T-ring to the selection that has the same Y and Z coordinates, but
+an opposite X coordinate. Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Connect</span> <span class="pre">-&gt;</span>
+<span class="pre">Arrow</span></tt>. Do the same for the 4T rings centered on the Y-axis and the Z-axis.
+The result is a set of three orthogonal arrows.</li>
+<li>Select the three arrows and activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span> <span class="pre">cell</span>
+<span class="pre">-&gt;</span> <span class="pre">Define</span> <span class="pre">cell</span> <span class="pre">vector(s)</span></tt>.</li>
+<li>The current model contains overlapping oxygen atoms. Select the global
+reference frame and activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Merge</span> <span class="pre">overlapping</span>
+<span class="pre">atoms</span></tt>.</li>
+</ol>
+<p>It is clear that the resulting unit cell has the topology of Zeolite A, but the
+geometry of the structure and the size of the unit cell is not yet optimal. A
+relaxation of the structure with a NpT Molecular Dynamics simulation is the most
+reliable technique to optimize both the geometry and the cell size.
+(One could also use simulated annealing.)</p>
+</div>
+<div class="section" id="the-super-cell">
+<h2>4.6.5. The super cell<a class="headerlink" href="#the-super-cell" title="Permalink to this headline">¶</a></h2>
+<p>A super cell is a unit cell that is duplicated (or mutliplied) along one or more
+crystal directions. Super cells in Zeobuilder are created with the menu function
+<tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span> <span class="pre">cell</span> <span class="pre">-&gt;</span> <span class="pre">Super</span> <span class="pre">cell</span></tt>. Try to make a 2x2x2 supercell of the
+standard sodalite unit cell (<a href="downloads/sod.zml"><strong class="xref">sod.zml</strong></a>).</p>
+</div>
+<div class="section" id="unit-cell-reduction">
+<h2>4.6.6. Unit cell reduction<a class="headerlink" href="#unit-cell-reduction" title="Permalink to this headline">¶</a></h2>
+<p>The smallest cubic unit cell of the Faujasite structure contains 192 T-atoms.
+However, the smallest unit cell of Faujasite is not cubic, contains only 48
+T-atoms, and is hence more attractive from the computational point of view. In
+this section we will describe how the cubic faujasite model can be transformed
+into the non-cubic variant:</p>
+<ol class="arabic">
+<li><p class="first">Load the model <a href="downloads/fau.zml"><strong class="xref">fau.zml</strong></a>. It contains the cubic
+model.</p>
+</li>
+<li><p class="first">For the sake of clarity, remove all the bonds from the model. (Select the
+bonds in the tree view and hit the <tt class="docutils literal"><span class="pre">Delete</span></tt> key on your keyboard.)</p>
+</li>
+<li><p class="first">Transform the unit cell into a cluster model with <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span> <span class="pre">cell</span> <span class="pre">-&gt;</span> <span class="pre">To</span>
+<span class="pre">cluster</span></tt> and only retain the central unit cell, i.e <tt class="docutils literal"><span class="pre">a.min=0.0</span></tt>,
+<tt class="docutils literal"><span class="pre">a.max=1.0</span></tt>, <tt class="docutils literal"><span class="pre">b.min=0.0</span></tt>, <tt class="docutils literal"><span class="pre">b.max=</span> <span class="pre">1.0</span></tt>, <tt class="docutils literal"><span class="pre">c.min=0.0</span></tt>, <tt class="docutils literal"><span class="pre">c.max=1.0</span></tt>.
+Click <tt class="docutils literal"><span class="pre">OK</span></tt>.</p>
+</li>
+<li><p class="first">Define the new unit cell vectors of the reduced cell by connecting the
+appropriate atom pairs by arrows. The arrows are shown in the figure below:</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_fau_new_cell_vectors.png" src="_images/zeobuilder_fau_new_cell_vectors.png" />
+<p class="caption">The new unit cell vectors for the reduced Faujasite unit cell.</p>
+</div>
+<p>Each arrow connects equivalent atoms in next-nearest-neighbor sodalite cages.</p>
+</li>
+<li><p class="first">Select the three vectors.</p>
+</li>
+<li><p class="first">Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span> <span class="pre">cell</span> <span class="pre">-&gt;</span> <span class="pre">Define</span> <span class="pre">cell</span> <span class="pre">vector(s)</span></tt>.</p>
+</li>
+<li><p class="first">Zeobuilder wraps all the atoms that fall outside of the unit cell back into
+the cell volume, which results in many (exactly) coinciding atoms. To remove
+them, first select the global reference frame and activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
+<span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Merge</span> <span class="pre">overlapping</span> <span class="pre">atoms.</span></tt></p>
+</li>
+<li><p class="first">The labels of the atoms are all of the form <tt class="docutils literal"><span class="pre">Single</span> <span class="pre">X</span></tt>. Select the global
+reference frame and activate the function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Rearrange</span>
+<span class="pre">atoms</span></tt>. This function resets the atom labels and sorts the atoms.</p>
+</li>
+<li><p class="first">Add bonds to the model.</p>
+</li>
+</ol>
+<p>The final result is shown in the figure below:</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_fau_final.png" src="_images/zeobuilder_fau_final.png" />
+<p class="caption">The reduced Faujacite unit cell.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference external" href="#">4.6. Periodic models</a><ul>
+<li><a class="reference external" href="#visualization">4.6.1. Visualization</a></li>
+<li><a class="reference external" href="#the-empty-periodic-model">4.6.2. The empty periodic model</a></li>
+<li><a class="reference external" href="#transformation-of-a-periodic-model-into-a-cluster">4.6.3. Transformation of a periodic model into a cluster</a></li>
+<li><a class="reference external" href="#transformation-of-a-cluster-model-into-a-periodic-one">4.6.4. Transformation of a cluster model into a periodic one</a></li>
+<li><a class="reference external" href="#the-super-cell">4.6.5. The super cell</a></li>
+<li><a class="reference external" href="#unit-cell-reduction">4.6.6. Unit cell reduction</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tut_basic_springs.html"
+                        title="previous chapter">4.5. Working with springs</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tut_advanced.html"
+                        title="next chapter">5. Zeobuilder Tutorial &#8211; Advanced</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/tut_basic_periodic_models.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tut_advanced.html" title="5. Zeobuilder Tutorial – Advanced"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tut_basic_springs.html" title="4.5. Working with springs"
+             >previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>

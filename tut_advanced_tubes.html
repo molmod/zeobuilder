@@ -1,0 +1,164 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5.3. Constructing tubes &mdash; Zeobuilder v0.0 documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="up" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" />
+    <link rel="prev" title="5.2. Topological analysis" href="tut_advanced_topological_analysis.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tut_advanced_topological_analysis.html" title="5.2. Topological analysis"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="constructing-tubes">
+<h1>5.3. Constructing tubes<a class="headerlink" href="#constructing-tubes" title="Permalink to this headline">¶</a></h1>
+<p>This chapter demonstrates the tube generator in Zeobuilder. It is a generic tool
+that converts a two-dimensional (flat) molecular system into a tube-shaped
+periodic or aperiodic system. It can be used to generate carbon nano-tubes, but
+we will also demonstrate how it can be used for other kinds of (hypothetical)
+tubes. It might be instructive to refresh your background on
+<a class="reference external" href="http://en.wikipedia.org/wiki/Carbon_nanotube">nanotubes</a>.</p>
+<div class="section" id="the-carbon-nanotube">
+<h2>5.3.1. The carbon nanotube<a class="headerlink" href="#the-carbon-nanotube" title="Permalink to this headline">¶</a></h2>
+<p>The tube tool is relatively simple to use, so we immediately kick of with an
+example:</p>
+<ol class="arabic simple">
+<li>Load the model <a href="downloads/graphite_sheet.zml"><strong class="xref">graphite_sheet.zml</strong></a>. This is a
+two-dimensional periodic model of an infinite and flat graphite sheet.</li>
+<li>Select the global reference frame.</li>
+<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Create</span> <span class="pre">tube</span></tt>. A Popup
+dialog appears that looks like the top left window in the figure below.
+Several parameters have to be entered:<ul>
+<li>The parameters <strong>n</strong> and <strong>m</strong> define the chiral vector of the tube.</li>
+<li>When the <strong>flat</strong> option is checked, the extended graphite sheet is not
+folded into a tube.</li>
+<li>The tube tool can create periodic tubes, but it is hard to control the
+length of periodic tubes for certain combinations of n and m. Aperiodic
+tubes on the other hand, can be easily generated with a prescribed length.</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+Click <tt class="docutils literal"><span class="pre">OK</span></tt>.</blockquote>
+<ol class="arabic simple" start="4">
+<li>Now we can safely add bonds to the model: <tt class="docutils literal"><span class="pre">press</span> <span class="pre">Ctrl-B</span></tt>.</li>
+</ol>
+<p>An example of a carbon nanotube is presented in the figure below. Experiment
+with different parameters for the tube tool.</p>
+<div align="center" class="figure">
+<img alt="images/carbon_tube_overview.png" src="_images/carbon_tube_overview.png" />
+<p class="caption">Carbon applications of the tube tool. TOP-LEFT: The orignal model, a minimal
+two-dimensional unit cell of a graphite layer. TOP-RIGHT: The dialog window
+with the tube parameters. BOTTOM-LEFT: The result when the <cite>flat</cite> option is
+checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not checked.</p>
+</div>
+</div>
+<div class="section" id="the-silica-nanotube">
+<h2>5.3.2. The silica nanotube<a class="headerlink" href="#the-silica-nanotube" title="Permalink to this headline">¶</a></h2>
+<p>In this section we show the results of the tube tool when applied to an
+hexagonal silica layer: <a class="reference external" href="examples/silica_sheet.zml">silica_sheet.zml</a>. The
+tube parameters are the same as in the previous example.}}</p>
+<div align="center" class="figure">
+<img alt="images/silica_tube_overview.png" src="_images/silica_tube_overview.png" />
+<p class="caption">Silica applications of the tube tool. TOP-LEFT: The orignal model, a minimal
+two-dimensional unit cell of a silica layer. TOP-RIGHT: The dialog window
+with the tube parameters. BOTTOM-LEFT: The result when the <cite>flat</cite> option is
+checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not checked.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference external" href="#">5.3. Constructing tubes</a><ul>
+<li><a class="reference external" href="#the-carbon-nanotube">5.3.1. The carbon nanotube</a></li>
+<li><a class="reference external" href="#the-silica-nanotube">5.3.2. The silica nanotube</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tut_advanced_topological_analysis.html"
+                        title="previous chapter">5.2. Topological analysis</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/tut_advanced_tubes.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tut_advanced_topological_analysis.html" title="5.2. Topological analysis"
+             >previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>

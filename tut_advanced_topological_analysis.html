@@ -1,0 +1,195 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5.2. Topological analysis &mdash; Zeobuilder v0.0 documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="up" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" />
+    <link rel="next" title="5.3. Constructing tubes" href="tut_advanced_tubes.html" />
+    <link rel="prev" title="5.1. The connection scanner" href="tut_advanced_connection_scanner.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tut_advanced_tubes.html" title="5.3. Constructing tubes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tut_advanced_connection_scanner.html" title="5.1. The connection scanner"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="topological-analysis">
+<h1>5.2. Topological analysis<a class="headerlink" href="#topological-analysis" title="Permalink to this headline">¶</a></h1>
+<p>In the sections below, several zeolite models can be used:
+<a href="downloads/sod_cage.zml"><strong class="xref">sod_cage.zml</strong></a>, <a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a> and <a href="_downloads/silicalite1.zml"><strong class="xref">silicalite1.zml</strong></a>.</p>
+<div class="section" id="t-atom-coordination">
+<h2>5.2.1. T-atom coordination<a class="headerlink" href="#t-atom-coordination" title="Permalink to this headline">¶</a></h2>
+<p>The fraction of Q1, Q2, Q3 and Q4 T-atoms is conventional measure for the
+crystalinity of silica. In Zeobuilder, this information is obtained in two
+steps:</p>
+<ol class="arabic simple">
+<li>Open one of the example models and select the global reference frame.</li>
+<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">T-atom</span> <span class="pre">coordination</span></tt>. A
+popup dialog will appear, similar to this figure:</li>
+</ol>
+<div align="center" class="figure">
+<img alt="images/dialog_t_atom_coordination.png" src="_images/dialog_t_atom_coordination.png" />
+<p class="caption">The t-atom coordination dialog</p>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">Select</span></tt> buttons close the dialog and selects all the corresponding Qx
+atoms.</p>
+</div>
+<div class="section" id="strong-rings">
+<h2>5.2.2. Strong rings<a class="headerlink" href="#strong-rings" title="Permalink to this headline">¶</a></h2>
+<p>In addition to the previous analysis, the enumeration of the strong rings is an
+common method to clasify a zeolite model. For more information about rings in
+crystal topologies, read the book
+<a class="reference external" href="http://www.public.asu.edu/~rosebudx/book.htm">Crystal Structures</a> by
+<a class="reference external" href="http://www.public.asu.edu/~rosebudx/okeeffe.htm">M. O&#8217;Keeffe</a> and B. G. Hyde,
+in particular chapter 7. A few essential concepts are defined below:</p>
+<dl class="docutils">
+<dt>Vertex</dt>
+<dd>A node in a graph. Vertices are connected by edges. In molecular topologies,
+vertices are atoms.</dd>
+<dt>Edge</dt>
+<dd>A link in a graph. Edges connect vertices. In molecular topologies, edges
+are bonds.</dd>
+<dt>Path</dt>
+<dd>A consecutive series of edges. A path connects two end vertices, via one or
+more consecutive edges.</dd>
+<dt>Cycle</dt>
+<dd>A path where the end vertices coincide. It starts where it begins.</dd>
+<dt>Ring</dt>
+<dd>A cycle for which no short cuts exist in the topology. Note that the
+definition of a ring also uses vertices and edges that are not part of the
+ring itself.</dd>
+<dt>Strong ring</dt>
+<dd>A ring that can not be decomposed in smaller rings.</dd>
+</dl>
+<p>The enumeration of strong rings in Zeobuilder, takes the following steps:</p>
+<ol class="arabic simple">
+<li>Open one of the example models and select the global reference frame.</li>
+<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Strong</span> <span class="pre">ring</span>
+<span class="pre">distribution</span></tt>.</li>
+</ol>
+<p>The results are presented in a window as shown in the figure below. The first tab
+contains a histogram of the strong ring distribution, while the second tab
+explicitly lists all strong rings. When selecting a strong ring from this list,
+the corresponding atoms are selected (and hence highlighted in the 3D view).</p>
+<div align="center" class="figure">
+<img alt="images/strong_ring_distribution.png" src="_images/strong_ring_distribution.png" />
+<p class="caption">The strong ring distribution of the MFI precursor</p>
+</div>
+<p>We must give a few remarks here:</p>
+<ul class="simple">
+<li>The ring distribution code does not take into acount the periodicity of the
+system. For example, when the strong ring distribution is applied to the MFI
+structure, the analysis will list certain cycles that are clearly not strong
+rings.</li>
+<li>In the context of zeolites, a ring that contains 10 atoms, is actually a
+5T-ring. This annoyance can be circumvented, as shown in the following figure.
+Try to reproduce this.</li>
+</ul>
+<div align="center" class="figure">
+<img alt="images/strong_ring_distribution_si.png" src="_images/strong_ring_distribution_si.png" />
+<p class="caption">The strong ring distribution of the MFI precursor, without oxygen atoms.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference external" href="#">5.2. Topological analysis</a><ul>
+<li><a class="reference external" href="#t-atom-coordination">5.2.1. T-atom coordination</a></li>
+<li><a class="reference external" href="#strong-rings">5.2.2. Strong rings</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tut_advanced_connection_scanner.html"
+                        title="previous chapter">5.1. The connection scanner</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tut_advanced_tubes.html"
+                        title="next chapter">5.3. Constructing tubes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/tut_advanced_topological_analysis.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tut_advanced_tubes.html" title="5.3. Constructing tubes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tut_advanced_connection_scanner.html" title="5.1. The connection scanner"
+             >previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,557 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>4.2. Getting started &mdash; Zeobuilder v0.0 documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
+    <link rel="next" title="4.3. Common tasks" href="tut_basic_common_tasks.html" />
+    <link rel="prev" title="4.1. Introduction" href="tut_basic_introduction.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tut_basic_common_tasks.html" title="4.3. Common tasks"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tut_basic_introduction.html" title="4.1. Introduction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="getting-started">
+<h1>4.2. Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>In this chapter, we often refer to two example model files:</p>
+<ol class="arabic simple">
+<li><a href="downloads/water.zml"><strong class="xref">water.zml</strong></a>: a model of a single water molecule.</li>
+<li><a href="downloads/water.zml"><strong class="xref">dimer.zml</strong></a>: a dimer of tetrahydrofuran (THF) molecules}}</li>
+</ol>
+<div class="section" id="installation">
+<h2>4.2.1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The installation of Zeobuilder is discussed on a separate page: <a class="reference external" href="tut_install.html"><em>Installation</em></a>.</p>
+</div>
+<div class="section" id="starting-zeobuilder">
+<h2>4.2.2. Starting Zeobuilder<a class="headerlink" href="#starting-zeobuilder" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Windows users should first login to a Linux machine where Zeobuilder is
+installed with an SSH terminal client. Also make sure your XServer is
+running and configured properly.)</p>
+</div>
+<p>Zeobuilder is started by typing the <tt class="docutils literal"><span class="pre">zeobuilder</span></tt> command in the terminal.
+One can start Zeobuilder without arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">zeobuilder</span>
+</pre></div>
+</div>
+<p>The Zeobuilder user interface pops up and the initial model is empty. Optionally
+one can also pass the filename of a model as the first argument, e.g.</p>
+<div class="highlight-python"><pre>zeobuilder water.zml</pre>
+</div>
+<p>Now the model is initialized with the contents of <tt class="docutils literal"><span class="pre">water.zml</span></tt> as shown in the
+figure below.</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_water_zml.png" src="_images/zeobuilder_water_zml.png" />
+<p class="caption">Zeobuilder showing the contents of <tt class="docutils literal"><span class="pre">water.zml</span></tt></p>
+</div>
+</div>
+<div class="section" id="the-zeobuilder-gui">
+<h2>4.2.3. The Zeobuilder GUI<a class="headerlink" href="#the-zeobuilder-gui" title="Permalink to this headline">¶</a></h2>
+<p>The main window of Zeobuilder consists of four major parts, indicated in the
+figure below:</p>
+<ol class="arabic">
+<li><p class="first"><strong>Menu bar</strong>: The menu bar on top of the window gives access to all the
+features in Zeobuilder that do not require much user interaction. Some of these
+function ask for parameters first, but then continue autonomously.</p>
+</li>
+<li><p class="first"><strong>3D view</strong>: The big area in the bottom right of the window is the 3D
+visualization of the molecular model. In the remainder of the tutorial, we
+name it the &#8216;3D view&#8217;. Interactive functions are performed by clicking and
+dragging in the area with the left/middle/right mouse button, optionally
+holding some modifier keys pressed.</p>
+</li>
+<li><p class="first"><strong>Toolbar</strong>: The four toolbar buttons in the top left of the window define
+which interactive function in the 3D view is associated with each combination
+of <a class="reference external" href="http://en.wikipedia.org/wiki/Modifier_key">modifier keys</a>. The default
+settings for these buttons are</p>
+<blockquote>
+<ul class="simple">
+<li><strong>(no key)</strong>: Selection picker</li>
+<li><strong>Shift</strong>: Translate</li>
+<li><strong>Ctrl</strong>: Rotate</li>
+<li><strong>Ctrl+Shift</strong>: Translate rotation center</li>
+</ul>
+</blockquote>
+<p>The interactive functions will be discussed in more detail below.</p>
+</li>
+<li><p class="first"><strong>Tree view</strong>: Below the toolbar, one finds the tree view that visualizes the
+tree representation of the model.</p>
+</li>
+</ol>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_example_indicated.png" src="_images/zeobuilder_example_indicated.png" />
+<p class="caption">The four major components of the Zeobuilder main window.</p>
+</div>
+</div>
+<div class="section" id="the-anatomy-of-a-zeobuilder-model">
+<h2>4.2.4. The anatomy of a Zeobuilder model<a class="headerlink" href="#the-anatomy-of-a-zeobuilder-model" title="Permalink to this headline">¶</a></h2>
+<p>The goal of this section is to recognize and select several parts of the model.
+Open the model <a href="downloads/water.zml"><strong class="xref">water.zml</strong></a> in Zeobuilder. Two objects are
+visible in the tree view at the left of the window. The first object <tt class="docutils literal"><span class="pre">Universe</span></tt>
+is the global reference frame that contains the molecule. The second object is a
+folder that contains auxiliary data that is not visualized in the 3D view. It is
+most practical to maximize the Zeobuilder windows now. (The screen shots are
+kept small however.)</p>
+<p>Click on the small triangle at the left of to the universe object in the tree
+view. One sees that the <tt class="docutils literal"><span class="pre">Universe</span></tt> object acts as a <cite>Container</cite> that holds three
+atoms (two oxygens and one hydrogen), and two bonds. The folder contains a
+<tt class="docutils literal"><span class="pre">Notes</span></tt> object. Each bond has two references, one for each atom of the pair it
+connects. A fully unfolded tree view is shown in the figure below.</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_example_zml_unfolded.png" src="_images/zeobuilder_example_zml_unfolded.png" />
+<p class="caption">Zeobuilder showing the contents of water.zml. The whole tree is unfolded.</p>
+</div>
+<p>A single click on an object in the tree view selects that object. A double click
+activates the default action associated with the object. For most objects the
+default action pops up a dialog window in which one can inspect and edit the
+properties of that object. For reference objects, the default action is to
+select the target object.</p>
+</div>
+<div class="section" id="tree-structure-terminology">
+<h2>4.2.5. Tree structure terminology<a class="headerlink" href="#tree-structure-terminology" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial specifies several aspects and properties of the tree structure
+with a dedicated vocabulary. Here is a list of terms that are often used in this
+context.</p>
+<dl class="docutils">
+<dt>Node</dt>
+<dd>Each element in a tree structure is a node. There are two basic types of
+nodes: <em>references</em> and <em>objects</em>.</dd>
+<dt>Reference</dt>
+<dd>A node that refers to an object. For example, a bond objects contain two
+references to atom objects.</dd>
+<dt>Object</dt>
+<dd>A node that is not a reference, e.g and atom or a frame.</dd>
+<dt>Parent and Child</dt>
+<dd>These two terms describe the relative hierarchy of nodes in a tree
+structure. They are best explained on the basis of examples. In the water
+model, the oxygen atom is a child of <tt class="docutils literal"><span class="pre">Universe</span></tt>. Consequently, <tt class="docutils literal"><span class="pre">Universe</span></tt> is
+the parent of the oxygen atom.</dd>
+<dt>Root node</dt>
+<dd>A root node has no parent nodes, i.e it is located in the highest level of
+hierarchy in the tree structure. In Zeobuilder the <tt class="docutils literal"><span class="pre">Universe</span></tt> and the
+<tt class="docutils literal"><span class="pre">Folder</span></tt> objects are always the two only root nodes.</dd>
+<dt>Super parent and Sub child</dt>
+<dd>Super parents and sub children are more generic types of parents and
+children. For example, the bond objects the water model contain two
+references each. The <tt class="docutils literal"><span class="pre">Universe</span></tt> object is a super parent of these reference
+objects, while the references are sub children of the <tt class="docutils literal"><span class="pre">Universe</span></tt> object. The
+concepts &#8216;Super parent&#8217; and &#8216;Sub child&#8217; relate nodes that are separated by
+one or more hierarchical levels, while the ordinary &#8216;Parent&#8217; and &#8216;Child&#8217;
+only apply to consecutive levels of hierarchy. The ordinary &#8216;Parent&#8217; and
+&#8216;Child&#8217; are sometimes also called &#8216;Direct parent&#8217; and &#8216;Direct child&#8217; for
+reasons of clarity.</dd>
+<dt>Container</dt>
+<dd>An container object <em>can</em> contain child <em>objects</em>, e.g. <tt class="docutils literal"><span class="pre">Universe</span></tt> is a
+container. A bond object is not a container because it only has references
+as children.</dd>
+<dt>Common parent</dt>
+<dd><p class="first">The common parent of a set of objects satisfies two conditions:</p>
+<blockquote class="last">
+<ol class="arabic simple">
+<li>All the objects in the set are sub children of the common parent, i.e.
+the common parent is a super parent for all objects in the set.</li>
+<li>The common parent has no children that also satisfy the first
+condition. This means the following: In principle there can be multiple
+super parents that are common to all objects in a set. <em>The</em> common
+parent is the one with lowest hierarchical level.</li>
+</ol>
+</blockquote>
+</dd>
+</dl>
+</div>
+<div class="section" id="selections">
+<h2>4.2.6. Selections<a class="headerlink" href="#selections" title="Permalink to this headline">¶</a></h2>
+<p>There are three different techniques to select parts of the model. The current
+selection is always visualized in the tree view and the 3D view. The selections
+in both views are always synchronized.</p>
+<ol class="arabic simple">
+<li>Click on an object to select it. The previous selection is forgotten.</li>
+<li>Click on an object while holding the control key to add (remove) the object
+to (from) the current selection.</li>
+<li>Click on an object while holding the shift key to select a range of objects.</li>
+</ol>
+</div>
+<div class="section" id="selections-in-the-3d-view">
+<h2>4.2.7. Selections in the 3D view<a class="headerlink" href="#selections-in-the-3d-view" title="Permalink to this headline">¶</a></h2>
+<p>Selecting objects in the 3D view is somewhat different, mainly because we want
+to make efficient use of all possible <a class="reference external" href="http://en.wikipedia.org/wiki/Modifier_key">modifier keys</a> and mouse button combinations. By
+default, mouse operations in the 3D view (without modifier keys pressed), modify
+the current selection. These are the rules:</p>
+<ol class="arabic simple">
+<li>Click with the left mouse button (on an object) to set the current selection.
+The previous selection is forgotten.</li>
+<li>Click with the middle mouse button to add an object to the current selection.</li>
+<li>Click with the right mouse button to remove an object from the selection.</li>
+</ol>
+<p>Instead of just clicking on an object, one can also draw a rectangle by dragging
+the mouse while one of the three buttons is pressed. All objects inside the
+rectangle are affected.</p>
+</div>
+<div class="section" id="menu-functions-that-alter-the-current-selection">
+<h2>4.2.8. Menu functions that alter the current selection<a class="headerlink" href="#menu-functions-that-alter-the-current-selection" title="Permalink to this headline">¶</a></h2>
+<p>The menu bar contains a pull-down menu called &#8216;&#8217;Select&#8217;&#8216;. It contains all menu
+functions that alter the current selection. This is a short overview of the most
+relevant functions:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">None</span></tt>: Clears the current selection. One can also click in the
+background of the 3D view to obtain the same result.</li>
+<li><tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Parents</span></tt>: Select the parent nodes of the current selection.</li>
+<li><tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Children</span></tt>: Select the child nodes of the current selection.</li>
+<li><tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Bonded</span> <span class="pre">neighbors</span></tt>: Add the atoms to the selection that are
+connected to the currently select atoms.</li>
+<li><tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">Selection</span></tt>: Store the current selection in a
+&#8216;&#8217;!SavedSelection&#8217;&#8217; object that is placed in the root of the folder object.</li>
+<li><tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Restore</span> <span class="pre">saved</span> <span class="pre">selection</span></tt>: Apply a previously saved selection.
+This is also the default action of the &#8216;&#8217;!SavedSelection&#8217;&#8217; object.</li>
+</ul>
+</div>
+<div class="section" id="the-relevance-of-making-proper-selections">
+<h2>4.2.9. The relevance of making proper selections<a class="headerlink" href="#the-relevance-of-making-proper-selections" title="Permalink to this headline">¶</a></h2>
+<p>In the remainder of this tutorial, we will go through the basic operations in
+Zeobuilder. Not all operations are applicable to all selections. For example,
+one can not delete the root objects. If one looks up the delete function in the
+menu (<tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span> <span class="pre">Delete</span></tt>) when no proper selection is made, the Delete function is
+grayed out.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Through observation we learned that the average user has the tendency to
+make all selections in the 3D view. In many cases, it is much easier to make
+a selection in the tree view. In the beginning it might be instructive to
+think before making a selection.</p>
+</div>
+</div>
+<div class="section" id="adding-and-removing-objects-fixing-mistakes">
+<h2>4.2.10. Adding and removing objects, fixing mistakes<a class="headerlink" href="#adding-and-removing-objects-fixing-mistakes" title="Permalink to this headline">¶</a></h2>
+<p>From now on we will continue with the THF dimer model (<a href="downloads/water.zml"><strong class="xref">dimer.zml</strong></a>). A screen shot is given in figure below. The model
+contains three reference frames. The global reference frame is called
+<tt class="docutils literal"><span class="pre">Universe</span></tt>, while the two THF molecules also have their proper (relative)
+reference frames.</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_dimer_zml.png" src="_images/zeobuilder_dimer_zml.png" />
+<p class="caption">Figure A2.4: Zeobuilder with dimer.zml.</p>
+</div>
+<p>Click in the tree view on the first THF reference frame and press the <tt class="docutils literal"><span class="pre">Delete</span></tt>
+button on your keyboard. It is gone! One can revert this (and any other)
+operation with the undo function: <tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span> <span class="pre">Undo</span></tt> (<tt class="docutils literal"><span class="pre">Ctrl-Z</span></tt>). The undo function
+itself can be canceled with <tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span> <span class="pre">Redo</span></tt>.</p>
+<p>Now select the <tt class="docutils literal"><span class="pre">Universe</span></tt> object. Add a box object with <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Add</span> <span class="pre">-&gt;</span> <span class="pre">Box</span></tt>.
+The new object is placed at the origin of the
+selected reference frame. In the sections below, we will explain how the box can
+be translated to another position. It is also instructive to add a second box to
+the reference frame of the first THF molecule: Select this frame in the tree
+view and activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Add</span> <span class="pre">-&gt;</span> <span class="pre">Box</span></tt>. Although both boxes have the same
+translation vector [0,0,0], they have a different position in space because
+their parents are different reference frames. To inspect the translation vector
+of a box, select the box and activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties</span></tt>.</p>
+<p>Finally we will connect the two oxygen atoms by an arrow. Select only the two
+oxygen atoms and activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Connect</span> <span class="pre">-&gt;</span> <span class="pre">Arrow</span></tt>. Keep
+this arrow for the remainder of this chapter. It can be used as a rotation axis
+in the next section.</p>
+</div>
+<div class="section" id="default-units">
+<h2>4.2.11. Default units<a class="headerlink" href="#default-units" title="Permalink to this headline">¶</a></h2>
+<p>Internally, Zeobuilder represents all aspects of the model in atomic units.
+However, when numbers are displayed on screen, or when input is required from
+the user, Zeobuilder will make the necessary conversions to/from the units of
+choice. One can set these preferred default units via the menu function <tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span>
+<span class="pre">Configuration</span></tt>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It is a good idea to set your favorite default units at this point in the
+tutorial.</p>
+</div>
+</div>
+<div class="section" id="rotations-and-translations">
+<h2>4.2.12. Rotations and Translations<a class="headerlink" href="#rotations-and-translations" title="Permalink to this headline">¶</a></h2>
+<p>There are two ways to perform transformations (on objects) in Zeobuilder. One
+can use the interactive rotation and translation tools, or one can use the
+functions from the menu. In both cases, one optionally introduces assisting
+objects that will define or limit the transformation.</p>
+<div class="section" id="interactive-translations">
+<h3>4.2.12.1. Interactive translations<a class="headerlink" href="#interactive-translations" title="Permalink to this headline">¶</a></h3>
+<p>All interactive translations are activated by pressing the shift key while
+dragging with the mouse cursor in 3D view. The left mouse button will cause
+translations parallel to the projection plane of the viewer, the right button
+will translate orthogonal to this plane. There are two types of interactive
+translations:</p>
+<ul class="simple">
+<li><strong>When one object is selected</strong>, this object will be translated.</li>
+<li><strong>In all other cases</strong>, the whole model will be translated. Actually this is
+implemented by a translation of the viewer position in the opposite direction.</li>
+</ul>
+<p>Just try these interactive translations to move around the THF molecules.</p>
+</div>
+<div class="section" id="interactive-rotations">
+<h3>4.2.12.2. Interactive rotations<a class="headerlink" href="#interactive-rotations" title="Permalink to this headline">¶</a></h3>
+<p>Interactive rotations are similar to interactive translations. They are
+activated with the control key instead of the shift key. The left mouse button
+is associated with rotations about an axis parallel to the viewer projection
+plane. The right mouse button activates a rotation about an axis orthogonal to
+the viewer plane. There are four types of interactive rotations:</p>
+<ul class="simple">
+<li><strong>When only one object is selected</strong>, this object is rotated about its
+center/origin</li>
+<li><strong>When one object and an additional point-like object is selected</strong>, the
+second selected object serves as rotation center. The order of the selected
+objects matters! Nearly anything can serve as a rotation center: atoms, spheres,
+boxes, other reference frames, ...</li>
+<li><strong>When one object and an additional vector-like object is selected</strong>, the
+vector object serves as the rotation axis. First select the target object to
+be rotated, then select the rotation axis. Bonds, arrows and springs are all
+vector-like objects.</li>
+<li><strong>In all other cases</strong>, the whole model is rotated, but again this is actually
+implemented as a rotation of the viewer in the opposite direction. The
+rotation center is defined by the small grey cross in the 3D view.</li>
+</ul>
+<p>Try all these types of rotations on the THF dimer model. Have fun! Try to be
+creative! It also instructive in the end to press Ctrl-Z several times and to
+see how all your experiments are performed in reverse order!</p>
+</div>
+<div class="section" id="non-interactive-transformations">
+<h3>4.2.12.3. Non-interactive transformations<a class="headerlink" href="#non-interactive-transformations" title="Permalink to this headline">¶</a></h3>
+<p>All the interactive transformations have their non-interactive counterparts in
+the menu (see <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Transform</span></tt>). The workflow is similar to the
+interactive transformations:</p>
+<ol class="loweralpha simple">
+<li>Select the target object to be transformed.</li>
+<li>Optionally select assisting points/vectors that define rotation center,
+translation vector, rotation axes, ...</li>
+<li>Activate the desired function from the menu. This will show a dialog window
+(in most cases), where one enters the transformation parameters. When one
+works with assisting objects, some of these parameters are filled in
+automatically.</li>
+<li>Hit the <cite>OK</cite> button and enjoy the result.</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The sub menu <cite>Object -&gt; Transform</cite> hosts much more types of transformations
+than ordinary rotations and translations. Try them! Most functions are
+self-explaining.</p>
+</div>
+</div>
+</div>
+<div class="section" id="moving-the-global-rotation-center-zooming-in-and-out">
+<h2>4.2.13. Moving the global rotation center, zooming in and out<a class="headerlink" href="#moving-the-global-rotation-center-zooming-in-and-out" title="Permalink to this headline">¶</a></h2>
+<p>The global rotation center is the small grey cross in the center of the 3D view.
+It can be obscured by other objects. This point in space serves as a rotation
+center when the whole model is rotated with the interactive rotation tool, e.g.
+when no objects are selected. One can translate this point by dragging with the
+left mouse button in the 3D view while holding the control and the shift key
+pressed.</p>
+<p>The scale at which the molecules are drawn can be changed by zooming in and out.
+Hold the control and shift key pressed while you drag with the right mouse
+button from the left of the 3D view to the right of the 3D view. The effect is
+that the viewer zooms in to the center of the 3D view. When dragging in the
+opposite direction, one zooms out.</p>
+</div>
+<div class="section" id="configuring-the-interactive-functions">
+<h2>4.2.14. Configuring the interactive functions<a class="headerlink" href="#configuring-the-interactive-functions" title="Permalink to this headline">¶</a></h2>
+<p>Until now, we gave the impression that the control key is always associated with
+an interactive rotation, and similarly all other combinations of modifier keys
+have a fixed meaning. This is not the case! Each button in the toolbar shows
+which interactive function is associated with which modifier key(s). When one
+clicks such a button, a popup menu offers the list of all existing interactive
+functions. (See figure below.) The selected function from this popup menu will
+become associated with the corresponding modifier key(s).</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_configuring_interactive.png" src="_images/zeobuilder_configuring_interactive.png" />
+<p class="caption">The popup menu that offers all interactive functions.</p>
+</div>
+</div>
+<div class="section" id="changing-properties-of-objects">
+<h2>4.2.15. Changing properties of objects<a class="headerlink" href="#changing-properties-of-objects" title="Permalink to this headline">¶</a></h2>
+<p>This topic has been discussed previously, but we need to make a few additional
+remarks:</p>
+<ul class="simple">
+<li>One can always inspect/edit the properties of the selected object with the
+menu function <tt class="docutils literal"><span class="pre">`Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties`</span></tt>.</li>
+<li>When multiple objects are selected, this menu function pops up a similar
+dialog, but only those properties are shown that exist in all the selected
+objects. For example, when a sphere and a box are selected, the color is a
+property that both objects have, and consequently the color property will be
+shown in the <tt class="docutils literal"><span class="pre">Properties</span> <span class="pre">dialog</span></tt>. The quality property is only defined for a
+sphere, it will not be shown because the box does not have a quality property.
+When a property is set to a new value, all the selected objects are updated.
+This is useful, e.g. when changing the atom-type of many atoms.</li>
+</ul>
+</div>
+<div class="section" id="cut-copy-paste-and-duplicate">
+<h2>4.2.16. Cut, Copy, Paste and Duplicate<a class="headerlink" href="#cut-copy-paste-and-duplicate" title="Permalink to this headline">¶</a></h2>
+<p>The cut, copy, paste and duplicate functions work in the same way as any other
+regular editor program, e.g. a conventional word processor. The paste function
+in Zeobuilder works only when a reference frame (or another type of container)
+is selected where the pasted objects can be added.</p>
+</div>
+<div class="section" id="loading-and-saving-files">
+<h2>4.2.17. Loading and Saving files<a class="headerlink" href="#loading-and-saving-files" title="Permalink to this headline">¶</a></h2>
+<p>The menu functions <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Open</span></tt>, <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span></tt> and <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span>
+<span class="pre">as</span></tt> are again similar to those in conventional editors of any kind. Zeobuilder
+supports three formats for loading files: <tt class="docutils literal"><span class="pre">.xyz</span></tt>, <tt class="docutils literal"><span class="pre">.pdb</span></tt> and <tt class="docutils literal"><span class="pre">.zml</span></tt>. Four
+file formats are supported for saving files: <tt class="docutils literal"><span class="pre">.xyz</span></tt>, <tt class="docutils literal"><span class="pre">.pdb</span></tt>, <tt class="docutils literal"><span class="pre">.psf</span></tt>, and
+<tt class="docutils literal"><span class="pre">.zml</span></tt>. The <tt class="docutils literal"><span class="pre">.zml</span></tt> format is the internal format of Zeobuilder.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<ul class="last simple">
+<li>Loading psf files is not supported in Zeobuilder because a psf file only
+contains topology information and no atom coordinates.</li>
+<li>ZML stands for &#8216;Zeobuilder Markup Language&#8217;. This file format is based on
+the <a class="reference external" href="http://www.w3.org/XML/XMLstandard">XML standard</a>. XML offers the
+advantage that one can design formats that will be forward-compatible
+with future versions of Zeobuilder, even when new types of model objects
+are introduced.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="import-and-export">
+<h2>4.2.18. Import and Export<a class="headerlink" href="#import-and-export" title="Permalink to this headline">¶</a></h2>
+<p>The <tt class="docutils literal"><span class="pre">File</span></tt> menu also contains an <tt class="docutils literal"><span class="pre">Import</span></tt> and an <tt class="docutils literal"><span class="pre">Export</span></tt> function. The <tt class="docutils literal"><span class="pre">Import</span></tt>
+function loads a model from disk into the current model, without replacing the
+current model. This is a handy tool to collect several molecules in one model.
+The <tt class="docutils literal"><span class="pre">Export</span></tt> function does the reverse: It saves only the selected part of the
+model in a file. The <tt class="docutils literal"><span class="pre">Export</span></tt> function is only applicable when some objects are
+selected.</p>
+</div>
+<div class="section" id="concluding-remarks">
+<h2>4.2.19. Concluding remarks<a class="headerlink" href="#concluding-remarks" title="Permalink to this headline">¶</a></h2>
+<p>Congratulations! You reached the end of this chapter. Time for a coffee break!
+Before you run away from your computer, here are some practical advices:</p>
+<ul class="simple">
+<li>During your first Zeobuilder experiences, the interactive functions will be
+hard to handle. It will take some exercise before you fluently move around
+molecules and browse through your model. In the end you will be surprised by the
+practical default settings for the interactive functions. You will only rarely
+need to click the toolbar buttons.</li>
+<li>When using the 3D view to select all objects in the model by drawing a
+rectangle around them, one really selects everything, including the global
+reference frame. This might not always be what one expects. Make sure you
+understand what you are doing.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference external" href="#">4.2. Getting started</a><ul>
+<li><a class="reference external" href="#installation">4.2.1. Installation</a></li>
+<li><a class="reference external" href="#starting-zeobuilder">4.2.2. Starting Zeobuilder</a></li>
+<li><a class="reference external" href="#the-zeobuilder-gui">4.2.3. The Zeobuilder GUI</a></li>
+<li><a class="reference external" href="#the-anatomy-of-a-zeobuilder-model">4.2.4. The anatomy of a Zeobuilder model</a></li>
+<li><a class="reference external" href="#tree-structure-terminology">4.2.5. Tree structure terminology</a></li>
+<li><a class="reference external" href="#selections">4.2.6. Selections</a></li>
+<li><a class="reference external" href="#selections-in-the-3d-view">4.2.7. Selections in the 3D view</a></li>
+<li><a class="reference external" href="#menu-functions-that-alter-the-current-selection">4.2.8. Menu functions that alter the current selection</a></li>
+<li><a class="reference external" href="#the-relevance-of-making-proper-selections">4.2.9. The relevance of making proper selections</a></li>
+<li><a class="reference external" href="#adding-and-removing-objects-fixing-mistakes">4.2.10. Adding and removing objects, fixing mistakes</a></li>
+<li><a class="reference external" href="#default-units">4.2.11. Default units</a></li>
+<li><a class="reference external" href="#rotations-and-translations">4.2.12. Rotations and Translations</a><ul>
+<li><a class="reference external" href="#interactive-translations">4.2.12.1. Interactive translations</a></li>
+<li><a class="reference external" href="#interactive-rotations">4.2.12.2. Interactive rotations</a></li>
+<li><a class="reference external" href="#non-interactive-transformations">4.2.12.3. Non-interactive transformations</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#moving-the-global-rotation-center-zooming-in-and-out">4.2.13. Moving the global rotation center, zooming in and out</a></li>
+<li><a class="reference external" href="#configuring-the-interactive-functions">4.2.14. Configuring the interactive functions</a></li>
+<li><a class="reference external" href="#changing-properties-of-objects">4.2.15. Changing properties of objects</a></li>
+<li><a class="reference external" href="#cut-copy-paste-and-duplicate">4.2.16. Cut, Copy, Paste and Duplicate</a></li>
+<li><a class="reference external" href="#loading-and-saving-files">4.2.17. Loading and Saving files</a></li>
+<li><a class="reference external" href="#import-and-export">4.2.18. Import and Export</a></li>
+<li><a class="reference external" href="#concluding-remarks">4.2.19. Concluding remarks</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tut_basic_introduction.html"
+                        title="previous chapter">4.1. Introduction</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tut_basic_common_tasks.html"
+                        title="next chapter">4.3. Common tasks</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/tut_basic_getting_started.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tut_basic_common_tasks.html" title="4.3. Common tasks"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tut_basic_introduction.html" title="4.1. Introduction"
+             >previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>

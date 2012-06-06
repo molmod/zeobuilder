@@ -1,0 +1,65 @@
+<?xml version='1.0'?>
+<zml_file version='0.2'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <bool label="axes_visible">False</bool>
+   <list label="children">
+    <model_object id='1' class='Atom'>
+     <dict label="extra">
+      <int label="index">0</int>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>1.48123673015 -0.93019104601 -1.83695992527e-15 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='2' class='Atom'>
+     <dict label="extra">
+      <int label="index">1</int>
+     </dict>
+     <int label="number">8</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-8.881784197e-16 0.11720149042 2.31451852829e-16 </cells>
+      </array>
+     </translation>
+     <str label="name">O</str>
+    </model_object>
+    <model_object id='3' class='Atom'>
+     <dict label="extra">
+      <int label="index">2</int>
+     </dict>
+     <int label="number">1</int>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-1.48123673015 -0.93019104601 -1.83695992527e-15 </cells>
+      </array>
+     </translation>
+     <str label="name">H</str>
+    </model_object>
+    <model_object id='4' class='Bond'>
+     <str label="name">Bond 0</str>
+     <list label="targets">
+      <reference to='2' />
+      <reference to='3' />
+     </list>
+    </model_object>
+    <model_object id='5' class='Bond'>
+     <str label="name">Bond 1</str>
+     <list label="targets">
+      <reference to='1' />
+      <reference to='2' />
+     </list>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='6' class='Folder'>
+  </model_object>
+ </list>
+</zml_file>

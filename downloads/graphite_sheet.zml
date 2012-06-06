@@ -1,0 +1,36 @@
+<?xml version='1.0'?>
+<zml_file version='0.1'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <array label="cell">
+    <shape>3 3 </shape>
+    <cells>4.65061601558 2.32625287086 0.0 0.0 4.02700639138 0.0 0.0 0.0 18.8972613392 </cells>
+   </array>
+   <array label="cell_active">
+    <shape>3 </shape>
+    <cells>True True False </cells>
+   </array>
+   <bool label="axes_visible">False</bool>
+   <list label="children">
+    <model_object id='1' class='Atom'>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>0.0 0.0 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='2' class='Atom'>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.65061601558 2.6853008363 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='3' class='Folder'>
+  </model_object>
+ </list>
+</zml_file>

@@ -1,0 +1,288 @@
+<?xml version='1.0'?>
+<zml_file version='0.1'>
+ <list>
+  <model_object id='0' class='Universe'>
+   <list label="children">
+    <model_object id='1' class='Atom'>
+     <str label="name">C</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.23728448912 0.966880319296 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='2' class='Atom'>
+     <str label="name">C</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-1.08738263283e-07 -0.615118890216 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='3' class='Atom'>
+     <str label="name">C</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.23728416521 0.966880380903 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='4' class='Atom'>
+     <str label="name">C</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.47456876307 -0.615118828608 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='5' class='Atom'>
+     <str label="name">C</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.47456854559 -0.615118951823 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='6' class='Bond'>
+     <str label="name">Bond 1</str>
+     <list label="targets">
+      <reference to='5' />
+      <reference to='1' />
+     </list>
+    </model_object>
+    <model_object id='7' class='Bond'>
+     <str label="name">Bond 2</str>
+     <list label="targets">
+      <reference to='1' />
+      <reference to='2' />
+     </list>
+    </model_object>
+    <model_object id='8' class='Bond'>
+     <str label="name">Bond 3</str>
+     <list label="targets">
+      <reference to='2' />
+      <reference to='3' />
+     </list>
+    </model_object>
+    <model_object id='9' class='Bond'>
+     <str label="name">Bond 4</str>
+     <list label="targets">
+      <reference to='3' />
+      <reference to='4' />
+     </list>
+    </model_object>
+    <model_object id='10' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.23728469261 2.1561072617 1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='11' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='1' />
+      <reference to='10' />
+     </list>
+    </model_object>
+    <model_object id='12' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>2.23728469261 2.1561072617 -1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='13' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='1' />
+      <reference to='12' />
+     </list>
+    </model_object>
+    <model_object id='14' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.12226639654e-07 -1.80434583262 -1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='15' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='2' />
+      <reference to='14' />
+     </list>
+    </model_object>
+    <model_object id='16' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-3.12226639654e-07 -1.80434583262 1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='17' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='2' />
+      <reference to='16' />
+     </list>
+    </model_object>
+    <model_object id='18' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.23728396172 2.15610732331 1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='19' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='3' />
+      <reference to='18' />
+     </list>
+    </model_object>
+    <model_object id='20' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-2.23728396172 2.15610732331 -1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='21' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='3' />
+      <reference to='20' />
+     </list>
+    </model_object>
+    <model_object id='22' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-6.15638966881 0.574108064223 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='23' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='4' />
+      <reference to='22' />
+     </list>
+    </model_object>
+    <model_object id='24' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.47456872802 -1.80434577101 -1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='25' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='4' />
+      <reference to='24' />
+     </list>
+    </model_object>
+    <model_object id='26' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>-4.47456872802 -1.80434577101 1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='27' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='4' />
+      <reference to='26' />
+     </list>
+    </model_object>
+    <model_object id='28' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>6.15638960883 0.574107718283 0.0 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='29' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='5' />
+      <reference to='28' />
+     </list>
+    </model_object>
+    <model_object id='30' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.47456835305 -1.80434589423 1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='31' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='5' />
+      <reference to='30' />
+     </list>
+    </model_object>
+    <model_object id='32' class='Atom'>
+     <int label="number">1</int>
+     <str label="name">auto H</str>
+     <translation label="transformation">
+      <array label="translation_vector">
+       <shape>3 </shape>
+       <cells>4.47456835305 -1.80434589423 -1.68182087069 </cells>
+      </array>
+     </translation>
+    </model_object>
+    <model_object id='33' class='Bond'>
+     <str label="name">aut H bond</str>
+     <list label="targets">
+      <reference to='5' />
+      <reference to='32' />
+     </list>
+    </model_object>
+   </list>
+  </model_object>
+  <model_object id='34' class='Folder'>
+  </model_object>
+ </list>
+</zml_file>

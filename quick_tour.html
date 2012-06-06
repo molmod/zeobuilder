@@ -1,0 +1,352 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Zeobuilder Quick Tour &mdash; Zeobuilder v0.0 documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="zeobuilder-quick-tour">
+<h1>Zeobuilder Quick Tour<a class="headerlink" href="#zeobuilder-quick-tour" title="Permalink to this headline">¶</a></h1>
+<p>This page contains an (incomplete) illustrated overview of Zeobuilder&#8217;s capabilities.</p>
+<div class="section" id="a-slick-user-interface">
+<h2>A slick user interface<a class="headerlink" href="#a-slick-user-interface" title="Permalink to this headline">¶</a></h2>
+<p>The user interface of Zeobuilder is kept minimalistic to encourage new users and
+developers. As illustrated below, this straightforward design does not boycott
+the implementation advanced and powerfull features.</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_clean_compact.png" src="_images/zeobuilder_clean_compact.png" />
+<p class="caption">Figure 1: The clean and concise user interface of Zeobuilder.</p>
+</div>
+<p>The user interface consists of four parts:</p>
+<ol class="arabic simple">
+<li>The big frame at the right contains the 3D visualization of the molecular model</li>
+<li>The top of the window hosts the menu bar that offers many functions to
+manipulate/analyze the model.</li>
+<li>Below the menu bar four interactive toolbar buttons are available and can be
+assigned to pre-programmed short-cuts. Depending on the
+<a class="reference external" href="http://en.wikipedia.org/wiki/Modifier_key">modifier keys</a> pressed while
+working with the mouse in the 3D view, (parts of) the model are selected,
+translated, rotated or the rotation center is translated.</li>
+<li>The lower left part is a logical presentation of the model: It lists all
+items in the model in a hierarchical fashion.</li>
+</ol>
+<p>The 3D view uses the OpenGL standard for rendering the model. Zeobuilder makes
+extensive use of OpenGL display lists to unleash the full potential of 3D
+hardware acceleration. Manipulations like rotations and translations, even for
+thousands of atoms, are rendered fluently on screen.</p>
+</div>
+<div class="section" id="user-friendly">
+<h2>User friendly<a class="headerlink" href="#user-friendly" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">Any operation in Zeobuilder can be undone, redone or repeated if applicable.
+Humans make mistakes, so Zeobuilder offers the necessary tools to fix them.</p>
+<blockquote>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_user_friendly.png" src="_images/zeobuilder_user_friendly.png" />
+<p class="caption">Figure 2: Basic features that make Zeobuilder user-friendly.</p>
+</div>
+</blockquote>
+</li>
+<li><p class="first">Arbitrary parts of the model can be cut, copied, duplicated and pasted at new
+places in the model, or even in different instances of the Zeobuilder program.</p>
+</li>
+<li><p class="first">Most prominent menu functions are activated via a keyboard short-cut.</p>
+</li>
+<li><p class="first">Zeobuilder automatically detects which menu functions are applicable to the
+current selection, and only these menu functions are enabled.</p>
+</li>
+<li><p class="first">Selections in the 3D view and the logical view are always synchronized.
+Depending on your situation, the one is more practical than the other.</p>
+</li>
+<li><p class="first">Zeobuilder also has it&#8217;s proper file format (.zml) in which all model
+information can be stored. Zeobuilder also accepts external file formats such
+as the <cite>.xyz</cite> and the <cite>.pdb</cite> formats, but in the <cite>.zml</cite> format is designed to
+store all information in a Zeobuilder model.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="configurable">
+<h2>Configurable<a class="headerlink" href="#configurable" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">The interactive function buttons have no definite meaning. The user can
+associate different interactive functions with each combination of
+<a class="reference external" href="http://en.wikipedia.org/wiki/Modifier_key">modifier keys</a></p>
+<blockquote>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_interactive_functions.png" src="_images/zeobuilder_interactive_functions.png" />
+<p class="caption">Figure 3: One easily configures the interactive function associated with
+a given modifier key.</p>
+</div>
+</blockquote>
+</li>
+<li><p class="first">Internally Zeobuilder represents all information in atomic units. This
+facilitates the programming of many features. When displaying certain measures
+in the user-interface, they are converted to the default units select in the
+configuration dialog. When the user enters new values, a different unit can be
+appended to that number, or if the unit is omitted, the default unit is
+assumed.</p>
+<blockquote>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_configurable2.png" src="_images/zeobuilder_configurable2.png" />
+<p class="caption">Figure 4: Users can select their favorite units.</p>
+</div>
+</blockquote>
+</li>
+<li><p class="first">When a menu-bar function requires some parameters from the user (via a dialog
+box), Zeobuilder will remember the values which have been used as input during
+the last session of this menu function. These data are also stored in a
+configuration file, so Zeobuilder remembers them the next time you start the
+program.</p>
+</li>
+<li><p class="first">Some fields in the dialog boxes throughout Zeobuilder show an extra
+functionality when it comes to remembering previously used values. Zeobuilder
+records a history of the last 6 (or more) values. The user is free to save his
+favorite presets.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="advanced-analysis">
+<h2>Advanced analysis<a class="headerlink" href="#advanced-analysis" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first">An elementary analysis of a molecular structure includes the measurement of
+various types of internal coordinates. The &#8216;&#8217;Interactive measurement tool&#8217;&#8217;
+has been developed to make this task easy. Figure 3 shows how one selects the
+measurement tool. In figure 5, an example measurement is given on a zeolite
+structure. Zeobuilder does not only measure the conventional bond length,
+bending angle and dihedral angle, but also distances between points, lines and
+planes.</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_measurement.png" src="_images/zeobuilder_measurement.png" />
+<p class="caption">Figure 5: An example measurement of internal coordinates.</p>
+</div>
+</li>
+<li><p class="first">Instead of individual measurements, one can also make a statistical overview
+of the distribution of bond lengths, bending angles, ... An example for the
+Si-O-Si bending angle distribution in a zeolite cluster, is given in figure 6.</p>
+<blockquote>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_distribution.png" src="_images/zeobuilder_distribution.png" />
+<p class="caption">Figure 6: An example of a statistical analysis of bending angles.</p>
+</div>
+</blockquote>
+</li>
+<li><p class="first">Also a topological analysis is of interest in several fields, e.g. Zeobuilder
+can enumerate all &#8216;&#8217;strong rings&#8217;&#8217; in a molecular topology.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="powerful-building-tools">
+<h2>Powerful building tools<a class="headerlink" href="#powerful-building-tools" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="auxiliary-objects-and-related-functionality">
+<h3>Auxiliary objects and related functionality<a class="headerlink" href="#auxiliary-objects-and-related-functionality" title="Permalink to this headline">¶</a></h3>
+<p>A Zeobuilder model consists of much more than just atoms and bonds. In figure 7,
+an example is displayed that contains three reference frames (each containing a
+molecule), two spring objects that connect two molecules, a Lithium atom, and a
+user-defined rotation axis.</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_align.png" src="_images/zeobuilder_align.png" />
+<p class="caption">Figure 7: The alignment of several molecules is facilitated by rotation
+axes and spring objects.</p>
+</div>
+<p>A few basic concepts are explained in the following items:</p>
+<ul class="simple">
+<li>The selected reference frames are surrounded by a wire-framed box.</li>
+<li>At the origin of each reference frame, the X, Y and Z axes are visualized in
+red, green and blue color respectively. This also applies to the global
+reference frame.</li>
+<li>The reference frames (and their contents) can be individually rotated and
+translated. Each transformation can be performed interactively in the 3D view,
+or numerically by entering the transformation parameters. In both cases, one
+can define assisting objects in the model, e.g. one can connect two atoms to
+define a rotation axis.</li>
+<li>Springs (with a predefined rest length) facilitate the alignment of molecules
+or molecular building blocks. Zeobuilder comes with a rigid body optimizer
+that tries to find the energy minimum for these springs as a function of the
+translation and rotation of the molecules.</li>
+</ul>
+</div>
+<div class="section" id="the-connection-scanner-for-zeolite-building-blocks">
+<h3>The connection scanner for zeolite building blocks<a class="headerlink" href="#the-connection-scanner-for-zeolite-building-blocks" title="Permalink to this headline">¶</a></h3>
+<p>Several zeolite-oriented tools in Zeobuilder, including the connection scanner,
+use a geometrical abstraction of a condensation reaction. This is visualized in
+figure 8. The hydrogen atoms are hidden to keep the figure transparent. (a) One
+selects certain pairs of oxygen atoms that take part in the condensation
+reaction. (b) The spring optimization or the connection scanner translate and
+rotate one of the two molecules as to bring each pair of oxygen atoms into
+overlap. (c) Each (overlapping) pair is replaced by a single oxygen atom at the
+geometrical mean of the two original atoms.</p>
+<div align="center" class="figure">
+<img alt="images/condensation.png" src="_images/condensation.png" />
+<p class="caption">Figure 8: A schematic overview of the geometrical abstraction of a
+condensation reaction in Zeobuilder. See text for more details.</p>
+</div>
+<p>The connection scanner performs a deterministic search algorithm for all
+possible ways to connect two zeolite clusters through a polycondensation
+reaction. In order to limit the output to a manageable number of solutions, one
+can parameterize the scanner with several limiting factors. First of all, the
+connection scanner assumes that the two building blocks are rigid bodies.
+Internally the scanner compares triangles formed by terminating oxygen atoms in
+both structures. The minimum and maximum sizes of these triangles are important
+limiting ingredients. One can also define the mismatch tolerance when comparing
+triangles. A large mismatch tolerance will typically generate too many
+solutions. Finally a quality cost-function is used to discriminate between
+favorable and unrealistic solutions. The output is presented as in figure 9.</p>
+<div align="center" class="figure">
+<img alt="images/zeobuilder_conscan.png" src="_images/zeobuilder_conscan.png" />
+<p class="caption">Figure 9: The connection scanner: From left to right: (i) A screenshot of Zeobuilder after the connection scanner has analyzed the MFI precursor. (ii) The overview of the connection scanner results. (iii) Three examples of condensed pairs of MFI precursors generated with the connection scanner.</p>
+</div>
+</div>
+</div>
+<div class="section" id="developer-friendly">
+<h2>Developer friendly<a class="headerlink" href="#developer-friendly" title="Permalink to this headline">¶</a></h2>
+<p>At first instance Zeobuilder will (hopefully) be very helpful in one&#8217;s
+day-to-day molecular editing tasks. After a while, one might however imagine
+special features that are not implemented yet, but that would be very helpful.
+In this perspective Zeobuilder is the number-one framework for the
+implementation of dedicated features with a minimal effort. The reasons are
+outline below.</p>
+<div class="section" id="extensibility">
+<h3>Extensibility<a class="headerlink" href="#extensibility" title="Permalink to this headline">¶</a></h3>
+<p>Zeobuilder is designed to be extended with new features. The program consists of a small core and large amount of plugins. The core program has been kept as minimal as possible, while nearly all visible features of the program are implemented as plugins. These plugins do not interact with each other, so adding a new feature comes down to adding a new plugin. It is not necessary to interfere with the existing code base. Several types of plugins are supported:</p>
+<ul class="simple">
+<li><strong>nodes</strong>: New types of objects that make up the molecular model.</li>
+<li><strong>actions</strong>: New functionality, e.g. functions in the menu bar or interactive
+functions.</li>
+<li><strong>load_filters</strong>: New file formats to read from.</li>
+<li><strong>dump_filters</strong>: New file formats to write to.</li>
+<li>...</li>
+</ul>
+<p>There are a few other types of plugins that have more technical nature. It is
+even possible create new categories of plugins via the plugin framework.</p>
+</div>
+<div class="section" id="python">
+<h3>Python<a class="headerlink" href="#python" title="Permalink to this headline">¶</a></h3>
+<p>Zeobuilder is written in <cite>Python &lt;http://www.python.org&gt;</cite>, an easy to learn
+general-purpose language. Python rocks! It has given us the possibility to
+create a lot of special features that would be far from trivial in any other
+programming language. For example, plugins are self-contained python modules
+(text files) that can be installed in your home-directory. Compilation is not
+required and one can easily exchange plugins via email or web-pages.</p>
+</div>
+<div class="section" id="transferability">
+<h3>Transferability<a class="headerlink" href="#transferability" title="Permalink to this headline">¶</a></h3>
+<p>We do our best to implement each feature without making too much assumptions on
+how this feature is going to be used. This sounds awkward, but consider the
+spring optimization as a nice example. Initially the spring optimization was
+only meant to be used for connecting zeolite clusters via the geometerical
+abstraction of the condensation reaction. After a while we installed Zeobuilder
+on a dedicated desktop machine available to everyone in our research group. It
+turned out that the spring optimization was very popular for aligning organic
+molecules. This was not planned, but the generic nature of the spring objects
+resulted in unexpected applications.</p>
+</div>
+<div class="section" id="open-source">
+<h3>Open Source<a class="headerlink" href="#open-source" title="Permalink to this headline">¶</a></h3>
+<p>The whole Zeobuilder project only contains <strong>Free Software</strong>, distributed under
+the conditions of the GNU General Public License version 3. This choice removes
+all legal barriers for a collaborative development, while it still protects the
+copyrights and the credits of all authors. See <a class="reference external" href="http://www.gnu.org/licenses/gpl-3.0.html">GPL_License_v3</a> for technical details.</p>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference external" href="#">Zeobuilder Quick Tour</a><ul>
+<li><a class="reference external" href="#a-slick-user-interface">A slick user interface</a></li>
+<li><a class="reference external" href="#user-friendly">User friendly</a></li>
+<li><a class="reference external" href="#configurable">Configurable</a></li>
+<li><a class="reference external" href="#advanced-analysis">Advanced analysis</a></li>
+<li><a class="reference external" href="#powerful-building-tools">Powerful building tools</a><ul>
+<li><a class="reference external" href="#auxiliary-objects-and-related-functionality">Auxiliary objects and related functionality</a></li>
+<li><a class="reference external" href="#the-connection-scanner-for-zeolite-building-blocks">The connection scanner for zeolite building blocks</a></li>
+</ul>
+</li>
+<li><a class="reference external" href="#developer-friendly">Developer friendly</a><ul>
+<li><a class="reference external" href="#extensibility">Extensibility</a></li>
+<li><a class="reference external" href="#python">Python</a></li>
+<li><a class="reference external" href="#transferability">Transferability</a></li>
+<li><a class="reference external" href="#open-source">Open Source</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/quick_tour.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>

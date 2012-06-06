@@ -1,0 +1,309 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>5.1. The connection scanner &mdash; Zeobuilder v0.0 documentation</title>
+    <link rel="stylesheet" href="static/default.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '#',
+        VERSION:     '0.0',
+        COLLAPSE_MODINDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="up" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" />
+    <link rel="next" title="5.2. Topological analysis" href="tut_advanced_topological_analysis.html" />
+    <link rel="prev" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="tut_advanced_topological_analysis.html" title="5.2. Topological analysis"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="tut_advanced.html" title="5. Zeobuilder Tutorial – Advanced"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="the-connection-scanner">
+<h1>5.1. The connection scanner<a class="headerlink" href="#the-connection-scanner" title="Permalink to this headline">¶</a></h1>
+<p>Spring objects, as discussed in chapter A5, can be used to connect two or more
+zeolite clusters (building blocks), but one has to select manually the pairs of
+oxygen atoms that will join to form new Si-O-Si bridges. The Connection Scanner
+also automates the search for such pairs of oxygen atoms, given two molecular
+building blocks. In this chapter, we demonstrate the usage of the scanner on the
+basis of the MFI precursor (<a href="downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a>).</p>
+<p>One or two building blocks must be selected, before activating <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
+<span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Connection</span> <span class="pre">Scanner</span></tt>. A building block consists of a reference frame
+that contains the molecular structure of the building block. (This can not be
+the global reference frame. It must be a subframe.) When only one building
+block is selected, the scanner will search for possible ways to connect that
+building block and with an identical copy. After the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
+<span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Connection</span> <span class="pre">Scanner</span></tt> is activated, a dialog pops up where one can
+enter all the scanner parameters. This dialog contains three tabs: <tt class="docutils literal"><span class="pre">Geometry1</span></tt>,
+<tt class="docutils literal"><span class="pre">Geometry2</span></tt> and <tt class="docutils literal"><span class="pre">Parameters</span></tt>, which are shown in the figures below. The
+first two tabs are identical. The second is only applicable when two building
+blocks are selected. The third tab contains all the parameters that control the
+behavior of the Connection Scanner algorithm.</p>
+<div align="center" class="figure">
+<img alt="images/conscan_dialog_tab1.png" src="_images/conscan_dialog_tab1.png" />
+<p class="caption">The first tab of the Connection Scanner dialog</p>
+</div>
+<div align="center" class="figure">
+<img alt="images/conscan_dialog_tab3.png" src="_images/conscan_dialog_tab3.png" />
+<p class="caption">The third tab of the Connection Scanner dialog</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">It may be instructive to repeat the chapter discussing the springs,
+<a class="reference external" href="tut_basic_springs.html"><em>Working with springs</em></a>, where the condensation algorithm is explained in
+detail. The remainder of this chapter assumes that the reader is familiar
+with that concept.</p>
+</div>
+<div class="section" id="example-1-a-triangle-based-search">
+<h2>5.1.1. Example 1: A triangle-based search<a class="headerlink" href="#example-1-a-triangle-based-search" title="Permalink to this headline">¶</a></h2>
+<p>In this example, all possible connections between two zeolite building units
+are generated, in which a triangle of oxygen atoms in one unit geometrically
+overlaps with a matching triangle in a second building unit.</p>
+<p>We will first explain the steps to apply the connection scanner. Later on, the
+effect of the parameters and the end result is discussed.</p>
+<ol class="arabic">
+<li><p class="first">Load the model <a href="downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a> and select
+the frame that contains the building block.</p>
+</li>
+<li><p class="first">Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Connection</span> <span class="pre">Scanner</span></tt> and
+fill in the following parameters:</p>
+<ul class="simple">
+<li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">1</span></tt>:</li>
+</ul>
+<blockquote>
+<ul class="simple">
+<li><strong>Connecting points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">and</span> <span class="pre">node.num_bonds()</span> <span class="pre">==</span> <span class="pre">1</span></tt></li>
+<li><strong>Connecting points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()</span></tt></li>
+<li><strong>Repulsive points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">(node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">or</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">14)</span></tt></li>
+<li><strong>Repulsive points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()*1.5</span></tt></li>
+</ul>
+</blockquote>
+<ul class="simple">
+<li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">2</span></tt>: (disabled)</li>
+<li>Tab <tt class="docutils literal"><span class="pre">Parameters</span></tt>:</li>
+</ul>
+<blockquote>
+<ul class="simple">
+<li><strong>Action radius</strong>: <tt class="docutils literal"><span class="pre">8</span> <span class="pre">A</span></tt> (A stands for angstrom)</li>
+<li><strong>Distance tolerance</strong>: <tt class="docutils literal"><span class="pre">0.15</span> <span class="pre">A</span></tt></li>
+<li>Select <strong>Allow free rotations</strong></li>
+<li>Check <strong>Allow inversion rotations</strong></li>
+<li><strong>Minimum triangle size</strong>: <tt class="docutils literal"><span class="pre">0.15</span> <span class="pre">A</span></tt></li>
+</ul>
+</blockquote>
+<p>Click <cite>OK</cite></p>
+</li>
+<li><p class="first">A progress dialog appears as in this figure:</p>
+<div align="center" class="figure">
+<img alt="images/conscan_dialog_progress.png" src="_images/conscan_dialog_progress.png" />
+<p class="caption">The progress dialog of the connection scanner.</p>
+</div>
+</li>
+<li><p class="first">When the Connection Scanner has finished, Click <tt class="docutils literal"><span class="pre">OK</span></tt> again.</p>
+</li>
+<li><p class="first">A duplicate of the original building block is added to the model and an
+object <tt class="docutils literal"><span class="pre">ConscanResults</span></tt> is added to the folder. Double click on
+<tt class="docutils literal"><span class="pre">ConscanResults</span></tt> in the tree view. A tool window opens that lists all the
+results of the connection scanner, similar to the figure below. Select an
+item in the list, and the corresponding connection is displayed in the 3D
+view.</p>
+<div align="center" class="figure">
+<img alt="images/conscan_results.png" src="_images/conscan_results.png" />
+<p class="caption">The results of the connection scanner.</p>
+</div>
+</li>
+<li><p class="first">In the results window, the button <tt class="docutils literal"><span class="pre">Apply</span> <span class="pre">and</span> <span class="pre">optimize</span></tt> will further
+optimize the relative orientation of the building blocks, using springs.</p>
+</li>
+</ol>
+<p>This should already give a nice impression of the capabilities of the Connection
+Scanner. We will now discuss the signification of the parameters for the
+connection scanner in detail:</p>
+<ul class="simple">
+<li><strong>Connecting points - Filter expression</strong>: This python expression must be True
+when the variable <cite>node</cite> is one of the candidate atoms in the building block
+that should be brought into overlap with a similar atom in the other building
+block, in order to form a proper connection between the two blocks. In the
+case of Zeolites, where clusters join through a poly-condensation reaction,
+this expression must select the termination oxygen atoms.</li>
+<li><strong>Repulsive points - Filter expression</strong>: This is a similar python expression,
+but it must be True for the atoms in the building block that are not allowed
+to overlap when two blocks are connected. In the case of zeolite clusters,
+this includes the Silicon atoms and the internal Oxygen atoms. Note that the
+expression for the repulsive points is only evaluated for atoms that are not
+selected with the filter expressions for the connecting points.</li>
+<li><strong>Allow free rotations</strong> versus <strong>Use a fixed rotation</strong>: When free rotations
+are allowed, the connection scanner will search for matching connections, by
+enumerating and comparing all triangles formed by connecting points in the
+first and second building block. When two congruent triangles are found (one
+in the first block and the other one in the second block), a Galilean
+transformation must exist that, when applied to the second block, brings the
+the triangle in the first block into overlap with the triangle in the second
+block. When using a fixed rotation, the scanner search for pairs of connecting
+points in both blocks that have a matching relative position.</li>
+<li><strong>Action radius</strong>: This parameter determines the maximum length of the
+triangle edges when searching for matching triangles, or it is the upper limit
+for the pair distance when searching for matching atom pairs.</li>
+<li>The <strong>Distance tolerance</strong> is the maximum allowed mismatch between two inter
+atomic distances when searching for matching triangles or atom pairs.</li>
+<li>The option <strong>Allow inversion rotations</strong>, will also consider mirrored copies
+of the building blocks.</li>
+<li><strong>Minimum triangle size</strong>: This parameter is introduced to eliminate the
+(rare) situation where the triangle formed by three connecting points becomes
+degenerate. Internally this value is converted to a &#8216;minimum triangle area&#8217;
+and it eliminates cases where tree connecting points are co-linear. Such
+triangles do not properly define a relative orientation for the two building
+blocks.</li>
+<li><strong>Connecting points - Radius expression</strong> and <strong>Repulsive points - Radius
+expression</strong>: At a certain point, the Connection Scanner must determine the
+quality of each possible connection between two building blocks. The quality
+of a connection is determined by counting all pairs of overlapping connecting
+points. From that number, the amount of pairs of overlapping points that
+include at least one repulsive point, is subtracted. Overlapping pairs are
+counted on the basis of <a class="reference external" href="http://en.wikipedia.org/wiki/Fuzzy_logic">Fuzzy logic</a>: For each atom pair a score is
+determined based on their inter-atomic distance and their radii. The sum of
+all these scores represents the quality of a connection. An overlapping pair
+results in a score of plus (or minus) one when the two atoms exactly coincide.
+The score is zero when the distance between the two atoms is larger than the
+sum of their radii. For the intermediate cases, the score is interpolated
+between plus (or minus) one and zero, based on the inter-atomic distance.</li>
+</ul>
+</div>
+<div class="section" id="example-2-a-pair-based-search">
+<h2>5.1.2. Example 2: A pair-based search<a class="headerlink" href="#example-2-a-pair-based-search" title="Permalink to this headline">¶</a></h2>
+<p>In this example, all possible connections between two zeolite building units
+are generated, in which a pair of oxygen atoms in one unit geometrically
+overlaps with a matching pair in a second building unit.</p>
+<p>These are the straightforward instructions to perform this example:</p>
+<ol class="arabic">
+<li><p class="first">Load the model <a href="downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a> and select
+the frame that contains the building block.</p>
+</li>
+<li><p class="first">Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Connection</span> <span class="pre">Scanner</span></tt> and
+fill in the following parameters:</p>
+<ul class="simple">
+<li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">1</span></tt>:</li>
+</ul>
+<blockquote>
+<ul class="simple">
+<li><strong>Connecting points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">and</span> <span class="pre">node.num_bonds()</span> <span class="pre">==</span> <span class="pre">1</span></tt></li>
+<li><strong>Connecting points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()</span></tt></li>
+<li><strong>Repulsive points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">(node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">or</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">14)</span></tt></li>
+<li><strong>Repulsive points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()*1.5</span></tt></li>
+</ul>
+</blockquote>
+<ul class="simple">
+<li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">2</span></tt>: (disabled)</li>
+<li>Tab <tt class="docutils literal"><span class="pre">Parameters</span></tt>:</li>
+</ul>
+<blockquote>
+<ul class="simple">
+<li><strong>Action radius</strong>: <tt class="docutils literal"><span class="pre">8</span> <span class="pre">A</span></tt> (A stands for angstrom)</li>
+<li><strong>Distance tolerance</strong>: <tt class="docutils literal"><span class="pre">0.15</span> <span class="pre">A</span></tt></li>
+<li>Select <strong>Use a fixed rotation</strong></li>
+<li>Enter the following rotation parameters: angle=180°, n=(0,1,0), inversion=False</li>
+</ul>
+</blockquote>
+<p>Click <tt class="docutils literal"><span class="pre">OK</span></tt></p>
+</li>
+<li><p class="first">The remainder is similar to the previous section.</p>
+</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference external" href="#">5.1. The connection scanner</a><ul>
+<li><a class="reference external" href="#example-1-a-triangle-based-search">5.1.1. Example 1: A triangle-based search</a></li>
+<li><a class="reference external" href="#example-2-a-pair-based-search">5.1.2. Example 2: A pair-based search</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="tut_advanced.html"
+                        title="previous chapter">5. Zeobuilder Tutorial &#8211; Advanced</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="tut_advanced_topological_analysis.html"
+                        title="next chapter">5.2. Topological analysis</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="sources/tut_advanced_connection_scanner.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="tut_advanced_topological_analysis.html" title="5.2. Topological analysis"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="tut_advanced.html" title="5. Zeobuilder Tutorial – Advanced"
+             >previous</a> |</li>
+        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+          <li><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+    </div>
+  </body>
+</html>
