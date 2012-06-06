@@ -458,10 +458,10 @@ file formats are supported for saving files: ``.xyz``, ``.pdb``, ``.psf``, and
        contains topology information and no atom coordinates.
 
      * ZML stands for 'Zeobuilder Markup Language'. This file format is based on
-     the `XML standard <http://www.w3.org/XML/ XML standard>`_. XML offers the
-     advantage that one can design formats that will be forward-compatible with
-     future versions of Zeobuilder, even when new types of model objects are
-     introduced.
+       the `XML standard <http://www.w3.org/XML/ XML standard>`_. XML offers the
+       advantage that one can design formats that will be forward-compatible
+       with future versions of Zeobuilder, even when new types of model objects
+       are introduced.
 
 
 Import and Export

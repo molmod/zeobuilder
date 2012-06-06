@@ -15,7 +15,7 @@ The carbon nanotube
 The tube tool is relatively simple to use, so we immediately kick of with an
 example:
 
-1. Load the model :download:`graphite_sheet.zml <graphite_sheet.zml>`. This is a
+1. Load the model :download:`graphite_sheet.zml <examples/graphite_sheet.zml>`. This is a
    two-dimensional periodic model of an infinite and flat graphite sheet.
 
 2. Select the global reference frame.
