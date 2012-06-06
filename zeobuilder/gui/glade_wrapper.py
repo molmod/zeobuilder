@@ -29,7 +29,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, see <http://www.gnu.org/licenses/>
 #
-# --
+#--
 
 # this file contains a base class for all the objects that represent
 # a gtk window, dialog, or anything else you can load from a glade file
