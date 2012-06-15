@@ -19,7 +19,7 @@ M. *J. Chem. Inf. Model.* **2008**, 48, 1530-1541.
 
 For a quick visual introduction please visit:
 
-* Video deomstration of Zeobuilder on `youtube <http://www.youtube.com/watch?v=EqBMM1GTIrA>`_
+* Video demonstration of Zeobuilder on `youtube <http://www.youtube.com/watch?v=EqBMM1GTIrA>`_
 
 * :doc:`screenshots`
 
@@ -39,4 +39,7 @@ Tutorial
    tut_basic
    tut_advanced
 
+Links
+=====
 
+* `IZA frameworks in Zeobuilder format <http://users.ugent.be/~tovrstra/iza-frameworks.zip>`_

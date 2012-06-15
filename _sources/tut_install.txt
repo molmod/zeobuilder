@@ -19,7 +19,7 @@ MolMod dependency
 Python programs developed at the CMM. It must be installed before Zeobuilder can
 be used or installed. Installation and download instructions can be found in the
 `molmod documentation <http://molmod.github.com/molmod/tutorial/install.html>`_.
-The instructions below only work of the MolMod package is installed.
+The instructions below only work if the MolMod package is installed.
 
 
 External dependencies
@@ -31,7 +31,7 @@ distribution to install these dependencies.
 
 The following software must be installed:
 
-* Python 2.5, 2.6 or 2.7 (including the development files): http://www.python.org/
+* Python 2.5, 2.6 or 2.7: http://www.python.org/
 * Numpy >= 1.0: http://numpy.scipy.org/
 * PyGTK >= 2.8: http://www.pygtk.org/
 * PyOpenGL >= 2.0: http://pyopengl.sourceforge.net/
@@ -49,7 +49,7 @@ command.
 
 * Fedora 17::
 
-    sudo yum install {TODO}
+    sudo yum install pygtk2 pygtk2-libglade PyOpenGL numpy pygtkglext python-matplotlib
 
 
 Installing the latest version of Zeobuilder
@@ -73,43 +73,42 @@ a previous install, then execute the following commands (in the same directory
 that was originally used to install Zeobuilder)::
 
     cd ~/build/
-    (cd molmod; git pull; rm -r ~/lib*/python/molmod*; ./setup.py install --home=~)
-    (cd zeobuilder; git pull; rm -r ~/lib*/python/zeobuilder*; ./setup.py install --home=~)
+    (cd molmod; ./cleanfiles.sh; git pull; rm -r ~/lib*/python/molmod*; ./setup.py install --home=~)
+    (cd zeobuilder; ./cleanfiles.sh; git pull; rm -r ~/lib*/python/zeobuilder*; ./setup.py install --home=~)
 
 
 Testing your installation
 =========================
 
-For the development and testing one needs to install one additional package:
+For the development and testing one needs to install additional packages
 
 * Nosetests >= 0.11: http://somethingaboutorange.com/mrl/projects/nose/0.11.2/
+* Sphinx >= 1.0: http://sphinx.pocoo.org/
 
-Most Linux distributions can install this software with just a single command on
-the command line by the administrator.
+Most Linux distributions can install this software with just a single terminal command:
 
-* Ubuntu 10.4::
+* Ubuntu 12.4::
 
-    sudo apt-get install python-nose
+    sudo apt-get install python-nose python-sphinx
 
 * Debian 5::
 
     su -
-    apt-get install python-nose
+    apt-get install python-nose python-sphinx
     exit
 
 * Fedora 17::
 
-    sudo yum install python-nose
+    sudo yum install python-nose sphinx
 
 * Suse 11.2::
 
-    sudo zypper install python-nose
+    sudo zypper install python-nose sphinx
 
 Once these dependencies are installed, execute the following commands to run the
 tests::
 
-    cd ~/build/
-    cd zeobuilder
+    cd ~/build/zeobuilder
     nosetests -v
 
 If some tests fail, post the output of the tests on the `Zeobuilder
