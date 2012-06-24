@@ -205,6 +205,7 @@ class SketchOptions(GladeWrapper):
        return self.fragment_store.get_value(self.cb_fragment.get_active_iter(), 0)
 
     def on_window_delete_event(self, window, event):
+        self.window.hide()
         return True
 
     def on_bu_edit_erase_filter_clicked(self, button):
