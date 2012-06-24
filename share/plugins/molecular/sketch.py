@@ -334,7 +334,10 @@ class SketchOptions(GladeWrapper):
 
             # let the references to the replaced object point to the new object
             for reference in gl_object.references[::-1]:
-                reference.set_target(target_object)
+                try:
+                    primitive.SetTarget(reference, target_object)
+                except primitive.PrimitiveError:
+                    primitive.Delete(reference.parent)
             # delete the replaced object
             primitive.Delete(gl_object)
             if(self.current_object == "Fragment"):
