@@ -600,7 +600,7 @@ class RotateObjectBase(InteractiveWithMemory):
         elif len(cache.nodes) == 2:
             if cache.next_to_last.get_fixed(): return False
             if not isinstance(cache.next_to_last, GLTransformationMixin): return False
-            if not isinstance(cache.next_to_last.transformation, Complete): return False
+            if not isinstance(cache.next_to_last.transformation, Translation): return False
             if not (
                 isinstance(cache.last, Vector) or
                 (
