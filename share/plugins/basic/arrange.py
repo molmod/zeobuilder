@@ -69,10 +69,11 @@ class GroupBase(Immediate):
         primitive.Add(new_parent, old_parent, index=cache.lowest_index)
         for victim in nodes:
             primitive.Move(victim, new_parent)
+        return new_parent
 
 
 class GroupInFolder(GroupBase):
-    description = "Frame"
+    description = "Group"
     menu_info = MenuInfo("default/_Object:tools/A_rrange:group", "_Group in folder", order=(0, 4, 1, 1, 0, 0))
     authors = [authors.toon_verstraelen]
 
@@ -98,7 +99,10 @@ class Frame(GroupBase):
 
     def do(self):
         Frame = context.application.plugins.get_node("Frame")
-        GroupBase.do(self, Frame)
+        frame = GroupBase.do(self, Frame)
+        context.application.main.select_nodes([frame])
+        CenterOfMass = context.application.plugins.get_action("CenterOfMass")
+        CenterOfMass()
 
 
 class UngroupBase(Immediate):
