@@ -361,9 +361,16 @@ class Universe(GLPeriodicContainer, FrameAxes):
             vb.begin_list(self.total_list)
             if self.visible:
                 vb.push_name(self.draw_list)
+                if sum(self.cell.active) == 0:
+                    if self.selected:
+                        vb.call_list(self.boundingbox_list)
+                else:
+                    if self.selected:
+                        vb.set_bright(True)
+                    else:
+                        vb.set_bright(False)
+
                 if self.box_visible: vb.call_list(self.box_list)
-                if self.selected and sum(self.cell.active) == 0:
-                    vb.call_list(self.boundingbox_list)
 
                 # repeat the draw list for all the unit cell images.
                 if self.clipping:

@@ -86,6 +86,7 @@ class Scene(object):
         small = 0.1
         big = 0.3
         vb.begin_list(self.rotation_center_list)
+        vb.set_bright(False)
         vb.draw_polygon((
             numpy.array([1.0, 0.0, 0.0], float),
             numpy.array([
