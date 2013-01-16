@@ -5,7 +5,7 @@ Installation
 Disclaimer
 ==========
 
-Zeobuilder is developed and tested in modern Linux environments. The
+Zeobuilder is developed and tested on modern Linux environments. The
 installation instructions below are given for a Linux system only. If you want
 to use Zeobuilder on other operating systems such as Windows or OSX, you should
 have a minimal computer geek status to get it working. We are always interested

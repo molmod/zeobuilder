@@ -1,8 +1,2 @@
 include COPYING
 include README
-include debian/*
-include src/scalable/*
-include src/moldata/*.csv
-include src/moldata/*.sxc
-include src/glade/zeobuilder.glade
-include src/glade/zeobuilder.gladep
