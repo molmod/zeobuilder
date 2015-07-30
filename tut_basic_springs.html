@@ -1,19 +1,21 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4.5. Working with springs &mdash; Zeobuilder v0.0 documentation</title>
+    <title>4.5. Working with springs &mdash; Zeobuilder 0.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
+        URL_ROOT:    './',
         VERSION:     '0.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
@@ -21,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
     <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
     <link rel="next" title="4.6. Periodic models" href="tut_basic_periodic_models.html" />
     <link rel="prev" title="4.4. Measurements" href="tut_basic_measurements.html" /> 
@@ -39,7 +41,7 @@
         <li class="right" >
           <a href="tut_basic_measurements.html" title="4.4. Measurements"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>  
@@ -74,7 +76,7 @@ relative orientation.</p>
 <div class="section" id="a-basic-example-aligning-two-thf-molecules">
 <h2>4.5.1. A basic example: aligning two THF molecules<a class="headerlink" href="#a-basic-example-aligning-two-thf-molecules" title="Permalink to this headline">¶</a></h2>
 <p>Consider the dimer of two THF molecules depicted in the following figure:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/schematic_dimer_distances.png" src="_images/schematic_dimer_distances.png" />
 <p class="caption">The four prescribed distances in the THF dimer.</p>
 </div>
@@ -94,8 +96,8 @@ in the first THF molecule is also 6Å.</li>
 starting from a single THF molecule. The internal coordinates of the THF
 molecule are not altered.</p>
 <blockquote>
-<ol class="arabic simple">
-<li>Load the model <a href="_downloads/thf.zml"><strong class="xref">thf.zml</strong></a>. It contains a single
+<div><ol class="arabic simple">
+<li>Load the model <a class="reference download internal" href="_downloads/thf.zml"><tt class="xref download docutils literal"><span class="pre">thf.zml</span></tt></a>. It contains a single
 THF molecule in the global reference frame.</li>
 <li>Select all the children of the global reference frame, not the global
 reference frame itself. The simplest way to make this selection consists of
@@ -121,8 +123,8 @@ translate and rotate function in the 3D view to approximate the dimer
 sketched above. Some exercise is required to do this fluently. Your
 Zeobuilder window should be similar to following figure:</li>
 </ol>
-</blockquote>
-<div align="center" class="figure">
+</div></blockquote>
+<div class="figure align-center">
 <img alt="_images/zeobuilder_dimer_handwaving.png" src="_images/zeobuilder_dimer_handwaving.png" />
 <p class="caption">The initial configuration of the THF dimer.</p>
 </div>
@@ -147,18 +149,18 @@ intermolecular distances.</p>
 <ol class="arabic" start="7">
 <li><p class="first">Repeat the following steps for the four atom pairs:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li>Select the two atoms.</li>
 <li>Add a spring by activating the function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Connect</span> <span class="pre">-&gt;</span> <span class="pre">Spring</span></tt>.</li>
 <li>Set the rest length of the spring via the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
 <span class="pre">Properties</span></tt>.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 </li>
 <li><p class="first">Select all the springs and run the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span>
 <span class="pre">Optimize</span> <span class="pre">springs</span></tt>. A dialog window will appear. Enter the same parameters as
 shown here:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/optimization_parameters_dialog.png" src="_images/optimization_parameters_dialog.png" />
 <p class="caption">The parameters for the spring optimization.</p>
 </div>
@@ -167,7 +169,7 @@ the rigid bodies will not be rotated during the optimization. The two other
 parameters determine how the intermediate results are visualized. Click <tt class="docutils literal"><span class="pre">OK</span></tt>.</p>
 </li>
 <li><p class="first">A second dialog window pops up that reports the optimization progress:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/progress_optimization.png" src="_images/progress_optimization.png" />
 <p class="caption">The progress dialog of the spring optimization.</p>
 </div>
@@ -175,7 +177,7 @@ parameters determine how the intermediate results are visualized. Click <tt clas
 convergence is reached, one clicks the <cite>OK</cite> button to accept the final
 structure, or <cite>Cancel</cite> to restore the initial situation. The final model is
 displayed below:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_dimer_final.png" src="_images/zeobuilder_dimer_final.png" />
 <p class="caption">The final configuration of the THF dimer.</p>
 </div>
@@ -184,7 +186,7 @@ displayed below:</p>
 </li>
 </ol>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li>Execute <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></tt> and store the result as <tt class="docutils literal"><span class="pre">thf_dimer_aligned.zml</span></tt>.
 This file contains the complete model, including the springs.</li>
 <li>Execute <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></tt> again, but use a different filename:
@@ -198,7 +200,7 @@ for molecular mechanics simulations and for the analysis of molecular
 dynamics simulations. For example, the [[Tracks]] code often relies on
 topology files.</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>For this simple example, one could have used other software to create the dimer
 with the prescribed distances. Most ab initio and molecular mechanics codes
 support constraints and/or restraints to fix the four distances; For the THF
@@ -223,7 +225,7 @@ larger cluster.</p>
 <h3>4.5.2.1. The condensation algorithm<a class="headerlink" href="#the-condensation-algorithm" title="Permalink to this headline">¶</a></h3>
 <p>The following figure illustrates the geometrical abstraction of the condensation
 reaction.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/condensation_abstraction.png" src="_images/condensation_abstraction.png" />
 </div>
 <p>In the case of zeolite clusters, the hydrogen atoms of the terminating
@@ -244,7 +246,7 @@ average coordinate of the original atoms.</li>
 <p>The instructions below will join two sodalite cages along their hexagonal faces.
 The atom pairs that will join to form new Si-O-Si bridges are indicated in this
 figure:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/sketch_2sodalite_cages.png" src="_images/sketch_2sodalite_cages.png" />
 <p class="caption">Two sodalite cages that will be connected along their hexagonal
 faces. The pairs of hydroxyl groups that will undergo a condensation
@@ -252,7 +254,7 @@ reaction, are marked with blue ellipses.</p>
 </div>
 <p>The starting point is a single sodalite cage model.</p>
 <ol class="arabic">
-<li><p class="first">Open the model <a href="_downloads/sodalite_cage.zml"><strong class="xref">sodalite_cage.zml</strong></a>.</p>
+<li><p class="first">Open the model <a class="reference download internal" href="_downloads/sodalite_cage.zml"><tt class="xref download docutils literal"><span class="pre">sodalite_cage.zml</span></tt></a>.</p>
 </li>
 <li><p class="first">Select all the hydrogen atoms and remove them with the function <tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span>
 <span class="pre">Delete</span></tt>. The bonds to these hydrogen atoms are removed automatically.</p>
@@ -269,7 +271,7 @@ advantage of the <tt class="docutils literal"><span class="pre">Geometric</span>
 </li>
 <li><p class="first">A tool window will appear as in figure A5.8. Select <tt class="docutils literal"><span class="pre">spring</span></tt> from the
 <tt class="docutils literal"><span class="pre">connect</span> <span class="pre">with</span></tt> list.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/geometric_sketcgh_tool.png" src="_images/geometric_sketcgh_tool.png" />
 <p class="caption">The tool window of the <tt class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></tt>.</p>
 </div>
@@ -304,7 +306,7 @@ position of the two original atoms.</p>
 <p>The end results is displayed below. It is clear that the newly formed
 oxygen bridges are too curved. When this &#8216;initial&#8217; structure is used as an input
 for an energy minimization, these Si-O-Si bends will become less curved.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_two_cages.png" src="_images/zeobuilder_two_cages.png" />
 <p class="caption">Two sodalite cages connected along their hexagonal sides.</p>
 </div>
@@ -332,7 +334,7 @@ the common parent frame.</p>
 </li>
 <li><p class="first">There are two types of springs:</p>
 <blockquote>
-<ol class="arabic simple">
+<div><ol class="arabic simple">
 <li><em>A spring that connects two objects that are sub children of direct child
 frames:</em> During the optimization both end points of this spring can be moved
 (by rotation and translation of the direct child frames that contain the end
@@ -341,7 +343,7 @@ points).</li>
 child frame:</em> The position of the direct child object will not change during
 the optimization.</li>
 </ol>
-</blockquote>
+</div></blockquote>
 </li>
 <li><p class="first">The location of the spring objects in the tree structure is not relevant.</p>
 </li>
@@ -350,13 +352,13 @@ the optimization.</li>
 <div class="section" id="exercises">
 <h2>4.5.4. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>Connect two sodalite cages (<a href="_downloads/sodalite_cage.zml"><strong class="xref">sodalite_cage.zml</strong></a>) along the square faces.</li>
+<li>Connect two sodalite cages (<a class="reference download internal" href="_downloads/sodalite_cage.zml"><tt class="xref download docutils literal"><span class="pre">sodalite_cage.zml</span></tt></a>) along the square faces.</li>
 <li>Place a pentane molecule in the center of a straight channel of a Sodalite-1
 unit cell. Make sure the pentane molecule is aligned with the straight
 channel. You will need these files:
-(<a href="_downloads/sodalite1.zml"><strong class="xref">sodalite1.zml</strong></a>)
+(<a class="reference download internal" href="_downloads/sodalite1.zml"><tt class="xref download docutils literal"><span class="pre">sodalite1.zml</span></tt></a>)
 and
-(<a href="_downloads/pentane.zml"><strong class="xref">pentane.zml</strong></a>).
+(<a class="reference download internal" href="_downloads/pentane.zml"><tt class="xref download docutils literal"><span class="pre">pentane.zml</span></tt></a>).
 Tip: The center of the Sodalite-1 unit cell does
 not lie in the middle of a straight channel. This is not the most practical
 situation for this exercise. Define a new origin as follows:<ul>
@@ -393,15 +395,15 @@ located at the center of the unit cell.</li>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference external" href="#">4.5. Working with springs</a><ul>
-<li><a class="reference external" href="#a-basic-example-aligning-two-thf-molecules">4.5.1. A basic example: aligning two THF molecules</a></li>
-<li><a class="reference external" href="#the-condensation-of-two-zeolite-building-blocks">4.5.2. The condensation of two zeolite building blocks</a><ul>
-<li><a class="reference external" href="#the-condensation-algorithm">4.5.2.1. The condensation algorithm</a></li>
-<li><a class="reference external" href="#step-by-step-instructions">4.5.2.2. Step-by-step instructions</a></li>
+<li><a class="reference internal" href="#">4.5. Working with springs</a><ul>
+<li><a class="reference internal" href="#a-basic-example-aligning-two-thf-molecules">4.5.1. A basic example: aligning two THF molecules</a></li>
+<li><a class="reference internal" href="#the-condensation-of-two-zeolite-building-blocks">4.5.2. The condensation of two zeolite building blocks</a><ul>
+<li><a class="reference internal" href="#the-condensation-algorithm">4.5.2.1. The condensation algorithm</a></li>
+<li><a class="reference internal" href="#step-by-step-instructions">4.5.2.2. Step-by-step instructions</a></li>
 </ul>
 </li>
-<li><a class="reference external" href="#technical-details">4.5.3. Technical details</a></li>
-<li><a class="reference external" href="#exercises">4.5.4. Exercises</a></li>
+<li><a class="reference internal" href="#technical-details">4.5.3. Technical details</a></li>
+<li><a class="reference internal" href="#exercises">4.5.4. Exercises</a></li>
 </ul>
 </li>
 </ul>
@@ -420,7 +422,7 @@ located at the center of the unit cell.</li>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -446,13 +448,13 @@ located at the center of the unit cell.</li>
         <li class="right" >
           <a href="tut_basic_measurements.html" title="4.4. Measurements"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

@@ -1,19 +1,21 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4.4. Measurements &mdash; Zeobuilder v0.0 documentation</title>
+    <title>4.4. Measurements &mdash; Zeobuilder 0.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
+        URL_ROOT:    './',
         VERSION:     '0.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
@@ -21,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
     <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
     <link rel="next" title="4.5. Working with springs" href="tut_basic_springs.html" />
     <link rel="prev" title="4.3. Common tasks" href="tut_basic_common_tasks.html" /> 
@@ -39,7 +41,7 @@
         <li class="right" >
           <a href="tut_basic_common_tasks.html" title="4.3. Common tasks"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>  
@@ -57,7 +59,7 @@
 internal coordinates in a molecule. It is activated as follows: Click on one of
 the tool bar buttons and select the <tt class="docutils literal"><span class="pre">Measurement</span> <span class="pre">tool</span></tt> from the popup menu.
 This is shown in the figure below.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_measurement_tool_button.png" src="_images/zeobuilder_measurement_tool_button.png" />
 <p class="caption">How to select another interactive tool.
 The inset shows the button after the new interactive tool is selected.</p>
@@ -85,9 +87,9 @@ figure A4.2</li>
 </ul>
 <p>When done with the measurements, click on the toolbar button that displays the
 measurement icon, and select the <tt class="docutils literal"><span class="pre">Selection</span> <span class="pre">picker</span></tt>. Download the model
-<a href="_downloads/glucose_phosphate.zml"><strong class="xref">glucose_phosphate.zml</strong></a> to experiment
+<a class="reference download internal" href="_downloads/glucose_phosphate.zml"><tt class="xref download docutils literal"><span class="pre">glucose_phosphate.zml</span></tt></a> to experiment
 with the measurement tool.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_measurement_types.png" src="_images/zeobuilder_measurement_types.png" />
 <p class="caption">The four different measurement types: (a) the pair, (b) the triple, (c) the triangle and (d) the quadruple.</p>
 </div>
@@ -98,7 +100,7 @@ with the measurement tool.</p>
 current selection. This menu function is located at <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span>
 <span class="pre">Chemical</span> <span class="pre">Formula</span></tt>. For the glucose phosphate molecule, the
 chemical formula is displayed as follows:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_chemical_formula.png" src="_images/zeobuilder_chemical_formula.png" />
 <p class="caption">The chemical formula function.</p>
 </div>
@@ -112,20 +114,20 @@ are three (similar) analysis functions: <tt class="docutils literal"><span class
 <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Distribution</span> <span class="pre">of</span> <span class="pre">dihedral</span> <span class="pre">angles</span></tt>. We will demonstrate
 this feature by making a few distributions of bond lengths in a zeolite cluster
 geometry. This geometry is a snapshot from a molecular dynamics run. Open this
-file in Zeobuilder: <a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a></p>
+file in Zeobuilder: <a class="reference download internal" href="_downloads/precursor.zml"><tt class="xref download docutils literal"><span class="pre">precursor.zml</span></tt></a></p>
 <div class="section" id="all-bond-lengths">
 <h3>4.4.3.1. All bond lengths<a class="headerlink" href="#all-bond-lengths" title="Permalink to this headline">¶</a></h3>
 <p>As a first example, we will make a statistical analysis of all the bond lengths:</p>
 <blockquote>
-<ol class="arabic simple">
+<div><ol class="arabic simple">
 <li>Select the global reference frame.</li>
 <li>Activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Distribution</span> <span class="pre">of</span> <span class="pre">bond</span> <span class="pre">lengths</span></tt>.</li>
 </ol>
-</blockquote>
+</div></blockquote>
 <p>A Popup dialog shows up, asking for a few filter parameters. Fill in the values
 given in figure below. Setting all filters to <cite>True</cite> means that all bonds will be
 processed.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_bond_filter_dialog.png" src="_images/zeobuilder_bond_filter_dialog.png" />
 <p class="caption">The filter dialog for the statistical analysis of the bond lengths.</p>
 </div>
@@ -133,7 +135,7 @@ processed.</p>
 histogram bins is chosen automatically. The save button asks for a filename
 prefix. It saves the figure as a png bitmap and an svg vector drawing, and the
 list of bond lengths is written to a text file.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_all_bonds_analysis.png" src="_images/zeobuilder_all_bonds_analysis.png" />
 <p class="caption">The statistical analysis of all bond lengths.</p>
 </div>
@@ -143,12 +145,12 @@ list of bond lengths is written to a text file.</p>
 <p>The filters can be used to limit the analysis to a subset of bonds. As an
 example, we will repeat the analysis with the following filters:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>atom 1:</strong> <tt class="docutils literal"><span class="pre">atom.number</span> <span class="pre">==</span> <span class="pre">14</span></tt></li>
 <li><strong>atom 2:</strong> <tt class="docutils literal"><span class="pre">atom.number</span> <span class="pre">==</span> <span class="pre">8</span></tt></li>
-<li><strong>bond 1-2:</strong> <tt class="xref docutils literal"><span class="pre">True</span></tt></li>
+<li><strong>bond 1-2:</strong> <tt class="docutils literal"><span class="pre">True</span></tt></li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>Zeobuilder will consider all bonds in (the selected part of) the model. For each
 bond the filter expressions are evaluated. The first two expressions are applied
 to the atoms connected by a bond, and the last expressions is applied to the
@@ -156,14 +158,15 @@ bond object itself. Only when all expressions evaluate to True, the bond is
 included in the analysis. The filter expressions are in fact boolean
 <a class="reference external" href="http://www.pythonn.org">Python</a> expressions. The result is given in the
 following figure:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_si_o_bonds_analysis.png" src="_images/zeobuilder_si_o_bonds_analysis.png" />
 <p class="caption">The statistical analysis of all Si-O bond lengths.</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>Zeobuilder is clever enough to apply the filters in the following sense:</p>
-<div class="highlight-python"><pre>((filter_atom1(atom_a) and filter_atom2(atom_b)) or (filter_atom2(atom_a) and filter_atom1(atom_b)) and filter_bond12(bond_ab)</pre>
+<div class="highlight-python"><div class="highlight"><pre>((filter_atom1(atom_a) and filter_atom2(atom_b)) or (filter_atom2(atom_a) and filter_atom1(atom_b)) and filter_bond12(bond_ab)
+</pre></div>
 </div>
 <p class="last">for each pair of bonded atoms atom_a and atom_b. The code will not accidentally overlook a bond.</p>
 </div>
@@ -172,14 +175,14 @@ following figure:</p>
 <h3>4.4.3.3. All Si-O bonds, where the oxygen is part of an hydroxyl group<a class="headerlink" href="#all-si-o-bonds-where-the-oxygen-is-part-of-an-hydroxyl-group" title="Permalink to this headline">¶</a></h3>
 <p>The filter expressions can be made very complex. Try this:</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>atom 1:</strong> <tt class="docutils literal"><span class="pre">atom.number</span> <span class="pre">==</span> <span class="pre">14</span></tt></li>
 <li><strong>atom 2:</strong> <tt class="docutils literal"><span class="pre">atom.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">and</span> <span class="pre">reduce(lambda</span> <span class="pre">x,y:</span> <span class="pre">x</span> <span class="pre">or</span> <span class="pre">y,</span> <span class="pre">(neighbor.number</span> <span class="pre">==</span> <span class="pre">1</span> <span class="pre">for</span> <span class="pre">neighbor</span> <span class="pre">in</span> <span class="pre">atom.yield_neighbors()),</span> <span class="pre">False)</span></tt></li>
-<li><strong>bond 1-2:</strong> <tt class="xref docutils literal"><span class="pre">True</span></tt></li>
+<li><strong>bond 1-2:</strong> <tt class="docutils literal"><span class="pre">True</span></tt></li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>The resulting distribution is shown in the next figure:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_si_o_hydr_bonds_analysis.png" src="_images/zeobuilder_si_o_hydr_bonds_analysis.png" />
 <p class="caption">The statistical analysis of all Si-O bond lengths, where the oxygen is part of an hydroxyl group.</p>
 </div>
@@ -204,13 +207,13 @@ that these example will work in all future versions of Zeobuilder.</p>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference external" href="#">4.4. Measurements</a><ul>
-<li><a class="reference external" href="#the-interactive-measurement-tool">4.4.1. The Interactive measurement tool</a></li>
-<li><a class="reference external" href="#chemical-formula">4.4.2. Chemical formula</a></li>
-<li><a class="reference external" href="#statistical-analysis-of-internal-coordinates">4.4.3. Statistical analysis of internal coordinates</a><ul>
-<li><a class="reference external" href="#all-bond-lengths">4.4.3.1. All bond lengths</a></li>
-<li><a class="reference external" href="#all-si-o-bond-lengths">4.4.3.2. All Si-O bond lengths</a></li>
-<li><a class="reference external" href="#all-si-o-bonds-where-the-oxygen-is-part-of-an-hydroxyl-group">4.4.3.3. All Si-O bonds, where the oxygen is part of an hydroxyl group</a></li>
+<li><a class="reference internal" href="#">4.4. Measurements</a><ul>
+<li><a class="reference internal" href="#the-interactive-measurement-tool">4.4.1. The Interactive measurement tool</a></li>
+<li><a class="reference internal" href="#chemical-formula">4.4.2. Chemical formula</a></li>
+<li><a class="reference internal" href="#statistical-analysis-of-internal-coordinates">4.4.3. Statistical analysis of internal coordinates</a><ul>
+<li><a class="reference internal" href="#all-bond-lengths">4.4.3.1. All bond lengths</a></li>
+<li><a class="reference internal" href="#all-si-o-bond-lengths">4.4.3.2. All Si-O bond lengths</a></li>
+<li><a class="reference internal" href="#all-si-o-bonds-where-the-oxygen-is-part-of-an-hydroxyl-group">4.4.3.3. All Si-O bonds, where the oxygen is part of an hydroxyl group</a></li>
 </ul>
 </li>
 </ul>
@@ -231,7 +234,7 @@ that these example will work in all future versions of Zeobuilder.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -257,13 +260,13 @@ that these example will work in all future versions of Zeobuilder.</p>
         <li class="right" >
           <a href="tut_basic_common_tasks.html" title="4.3. Common tasks"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

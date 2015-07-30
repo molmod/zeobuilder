@@ -1,19 +1,21 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5.1. The connection scanner &mdash; Zeobuilder v0.0 documentation</title>
+    <title>5.1. The connection scanner &mdash; Zeobuilder 0.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
+        URL_ROOT:    './',
         VERSION:     '0.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
@@ -21,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
     <link rel="up" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" />
     <link rel="next" title="5.2. Topological analysis" href="tut_advanced_topological_analysis.html" />
     <link rel="prev" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" /> 
@@ -39,7 +41,7 @@
         <li class="right" >
           <a href="tut_advanced.html" title="5. Zeobuilder Tutorial – Advanced"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
       </ul>
     </div>  
@@ -56,7 +58,7 @@ zeolite clusters (building blocks), but one has to select manually the pairs of
 oxygen atoms that will join to form new Si-O-Si bridges. The Connection Scanner
 also automates the search for such pairs of oxygen atoms, given two molecular
 building blocks. In this chapter, we demonstrate the usage of the scanner on the
-basis of the MFI precursor (<a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a>).</p>
+basis of the MFI precursor (<a class="reference download internal" href="_downloads/precursor.zml"><tt class="xref download docutils literal"><span class="pre">precursor.zml</span></tt></a>).</p>
 <p>One or two building blocks must be selected, before activating <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
 <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Connection</span> <span class="pre">Scanner</span></tt>. A building block consists of a reference frame
 that contains the molecular structure of the building block. (This can not be
@@ -69,18 +71,18 @@ enter all the scanner parameters. This dialog contains three tabs: <tt class="do
 first two tabs are identical. The second is only applicable when two building
 blocks are selected. The third tab contains all the parameters that control the
 behavior of the Connection Scanner algorithm.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/conscan_dialog_tab1.png" src="_images/conscan_dialog_tab1.png" />
 <p class="caption">The first tab of the Connection Scanner dialog</p>
 </div>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/conscan_dialog_tab3.png" src="_images/conscan_dialog_tab3.png" />
 <p class="caption">The third tab of the Connection Scanner dialog</p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">It may be instructive to repeat the chapter discussing the springs,
-<a class="reference external" href="tut_basic_springs.html"><em>Working with springs</em></a>, where the condensation algorithm is explained in
+<a class="reference internal" href="tut_basic_springs.html"><em>Working with springs</em></a>, where the condensation algorithm is explained in
 detail. The remainder of this chapter assumes that the reader is familiar
 with that concept.</p>
 </div>
@@ -92,7 +94,7 @@ overlaps with a matching triangle in a second building unit.</p>
 <p>We will first explain the steps to apply the connection scanner. Later on, the
 effect of the parameters and the end result is discussed.</p>
 <ol class="arabic">
-<li><p class="first">Load the model <a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a> and select
+<li><p class="first">Load the model <a class="reference download internal" href="_downloads/precursor.zml"><tt class="xref download docutils literal"><span class="pre">precursor.zml</span></tt></a> and select
 the frame that contains the building block.</p>
 </li>
 <li><p class="first">Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Connection</span> <span class="pre">Scanner</span></tt> and
@@ -101,30 +103,30 @@ fill in the following parameters:</p>
 <li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">1</span></tt>:</li>
 </ul>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>Connecting points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">and</span> <span class="pre">node.num_bonds()</span> <span class="pre">==</span> <span class="pre">1</span></tt></li>
 <li><strong>Connecting points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()</span></tt></li>
 <li><strong>Repulsive points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">(node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">or</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">14)</span></tt></li>
 <li><strong>Repulsive points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()*1.5</span></tt></li>
 </ul>
-</blockquote>
+</div></blockquote>
 <ul class="simple">
 <li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">2</span></tt>: (disabled)</li>
 <li>Tab <tt class="docutils literal"><span class="pre">Parameters</span></tt>:</li>
 </ul>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>Action radius</strong>: <tt class="docutils literal"><span class="pre">8</span> <span class="pre">A</span></tt> (A stands for angstrom)</li>
 <li><strong>Distance tolerance</strong>: <tt class="docutils literal"><span class="pre">0.15</span> <span class="pre">A</span></tt></li>
 <li>Select <strong>Allow free rotations</strong></li>
 <li>Check <strong>Allow inversion rotations</strong></li>
 <li><strong>Minimum triangle size</strong>: <tt class="docutils literal"><span class="pre">0.15</span> <span class="pre">A</span></tt></li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>Click <cite>OK</cite></p>
 </li>
 <li><p class="first">A progress dialog appears as in this figure:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/conscan_dialog_progress.png" src="_images/conscan_dialog_progress.png" />
 <p class="caption">The progress dialog of the connection scanner.</p>
 </div>
@@ -137,7 +139,7 @@ object <tt class="docutils literal"><span class="pre">ConscanResults</span></tt>
 results of the connection scanner, similar to the figure below. Select an
 item in the list, and the corresponding connection is displayed in the 3D
 view.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/conscan_results.png" src="_images/conscan_results.png" />
 <p class="caption">The results of the connection scanner.</p>
 </div>
@@ -206,7 +208,7 @@ are generated, in which a pair of oxygen atoms in one unit geometrically
 overlaps with a matching pair in a second building unit.</p>
 <p>These are the straightforward instructions to perform this example:</p>
 <ol class="arabic">
-<li><p class="first">Load the model <a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a> and select
+<li><p class="first">Load the model <a class="reference download internal" href="_downloads/precursor.zml"><tt class="xref download docutils literal"><span class="pre">precursor.zml</span></tt></a> and select
 the frame that contains the building block.</p>
 </li>
 <li><p class="first">Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Connection</span> <span class="pre">Scanner</span></tt> and
@@ -215,25 +217,25 @@ fill in the following parameters:</p>
 <li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">1</span></tt>:</li>
 </ul>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>Connecting points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">and</span> <span class="pre">node.num_bonds()</span> <span class="pre">==</span> <span class="pre">1</span></tt></li>
 <li><strong>Connecting points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()</span></tt></li>
 <li><strong>Repulsive points - Filter expression</strong>: <tt class="docutils literal"><span class="pre">isinstance(node,</span> <span class="pre">Atom)</span> <span class="pre">and</span> <span class="pre">(node.number</span> <span class="pre">==</span> <span class="pre">8</span> <span class="pre">or</span> <span class="pre">node.number</span> <span class="pre">==</span> <span class="pre">14)</span></tt></li>
 <li><strong>Repulsive points - Radius expression</strong>: <tt class="docutils literal"><span class="pre">node.get_radius()*1.5</span></tt></li>
 </ul>
-</blockquote>
+</div></blockquote>
 <ul class="simple">
 <li>Tab <tt class="docutils literal"><span class="pre">Geometry</span> <span class="pre">2</span></tt>: (disabled)</li>
 <li>Tab <tt class="docutils literal"><span class="pre">Parameters</span></tt>:</li>
 </ul>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>Action radius</strong>: <tt class="docutils literal"><span class="pre">8</span> <span class="pre">A</span></tt> (A stands for angstrom)</li>
 <li><strong>Distance tolerance</strong>: <tt class="docutils literal"><span class="pre">0.15</span> <span class="pre">A</span></tt></li>
 <li>Select <strong>Use a fixed rotation</strong></li>
 <li>Enter the following rotation parameters: angle=180°, n=(0,1,0), inversion=False</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>Click <tt class="docutils literal"><span class="pre">OK</span></tt></p>
 </li>
 <li><p class="first">The remainder is similar to the previous section.</p>
@@ -253,9 +255,9 @@ fill in the following parameters:</p>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference external" href="#">5.1. The connection scanner</a><ul>
-<li><a class="reference external" href="#example-1-a-triangle-based-search">5.1.1. Example 1: A triangle-based search</a></li>
-<li><a class="reference external" href="#example-2-a-pair-based-search">5.1.2. Example 2: A pair-based search</a></li>
+<li><a class="reference internal" href="#">5.1. The connection scanner</a><ul>
+<li><a class="reference internal" href="#example-1-a-triangle-based-search">5.1.1. Example 1: A triangle-based search</a></li>
+<li><a class="reference internal" href="#example-2-a-pair-based-search">5.1.2. Example 2: A pair-based search</a></li>
 </ul>
 </li>
 </ul>
@@ -274,7 +276,7 @@ fill in the following parameters:</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -300,13 +302,13 @@ fill in the following parameters:</p>
         <li class="right" >
           <a href="tut_advanced.html" title="5. Zeobuilder Tutorial – Advanced"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

@@ -1,19 +1,21 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4.2. Getting started &mdash; Zeobuilder v0.0 documentation</title>
+    <title>4.2. Getting started &mdash; Zeobuilder 0.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
+        URL_ROOT:    './',
         VERSION:     '0.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
@@ -21,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
     <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
     <link rel="next" title="4.3. Common tasks" href="tut_basic_common_tasks.html" />
     <link rel="prev" title="4.1. Introduction" href="tut_basic_introduction.html" /> 
@@ -39,7 +41,7 @@
         <li class="right" >
           <a href="tut_basic_introduction.html" title="4.1. Introduction"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>  
@@ -53,12 +55,12 @@
 <h1>4.2. Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter, we often refer to two example model files:</p>
 <ol class="arabic simple">
-<li><a href="_downloads/water.zml"><strong class="xref">water.zml</strong></a>: a model of a single water molecule.</li>
-<li><a href="_downloads/water.zml"><strong class="xref">dimer.zml</strong></a>: a dimer of tetrahydrofuran (THF) molecules}}</li>
+<li><a class="reference download internal" href="_downloads/water.zml"><tt class="xref download docutils literal"><span class="pre">water.zml</span></tt></a>: a model of a single water molecule.</li>
+<li><a class="reference download internal" href="_downloads/water.zml"><tt class="xref download docutils literal"><span class="pre">dimer.zml</span></tt></a>: a dimer of tetrahydrofuran (THF) molecules}}</li>
 </ol>
 <div class="section" id="installation">
 <h2>4.2.1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>The installation of Zeobuilder is discussed on a separate page: <a class="reference external" href="tut_install.html"><em>Installation</em></a>.</p>
+<p>The installation of Zeobuilder is discussed on a separate page: <a class="reference internal" href="tut_install.html"><em>Installation</em></a>.</p>
 </div>
 <div class="section" id="starting-zeobuilder">
 <h2>4.2.2. Starting Zeobuilder<a class="headerlink" href="#starting-zeobuilder" title="Permalink to this headline">¶</a></h2>
@@ -75,11 +77,12 @@ One can start Zeobuilder without arguments:</p>
 </div>
 <p>The Zeobuilder user interface pops up and the initial model is empty. Optionally
 one can also pass the filename of a model as the first argument, e.g.</p>
-<div class="highlight-python"><pre>zeobuilder water.zml</pre>
+<div class="highlight-python"><div class="highlight"><pre>zeobuilder water.zml
+</pre></div>
 </div>
 <p>Now the model is initialized with the contents of <tt class="docutils literal"><span class="pre">water.zml</span></tt> as shown in the
 figure below.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_water_zml.png" src="_images/zeobuilder_water_zml.png" />
 <p class="caption">Zeobuilder showing the contents of <tt class="docutils literal"><span class="pre">water.zml</span></tt></p>
 </div>
@@ -104,20 +107,20 @@ which interactive function in the 3D view is associated with each combination
 of <a class="reference external" href="http://en.wikipedia.org/wiki/Modifier_key">modifier keys</a>. The default
 settings for these buttons are</p>
 <blockquote>
-<ul class="simple">
+<div><ul class="simple">
 <li><strong>(no key)</strong>: Selection picker</li>
 <li><strong>Shift</strong>: Translate</li>
 <li><strong>Ctrl</strong>: Rotate</li>
 <li><strong>Ctrl+Shift</strong>: Translate rotation center</li>
 </ul>
-</blockquote>
+</div></blockquote>
 <p>The interactive functions will be discussed in more detail below.</p>
 </li>
 <li><p class="first"><strong>Tree view</strong>: Below the toolbar, one finds the tree view that visualizes the
 tree representation of the model.</p>
 </li>
 </ol>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_example_indicated.png" src="_images/zeobuilder_example_indicated.png" />
 <p class="caption">The four major components of the Zeobuilder main window.</p>
 </div>
@@ -125,7 +128,7 @@ tree representation of the model.</p>
 <div class="section" id="the-anatomy-of-a-zeobuilder-model">
 <h2>4.2.4. The anatomy of a Zeobuilder model<a class="headerlink" href="#the-anatomy-of-a-zeobuilder-model" title="Permalink to this headline">¶</a></h2>
 <p>The goal of this section is to recognize and select several parts of the model.
-Open the model <a href="_downloads/water.zml"><strong class="xref">water.zml</strong></a> in Zeobuilder. Two objects are
+Open the model <a class="reference download internal" href="_downloads/water.zml"><tt class="xref download docutils literal"><span class="pre">water.zml</span></tt></a> in Zeobuilder. Two objects are
 visible in the tree view at the left of the window. The first object <tt class="docutils literal"><span class="pre">Universe</span></tt>
 is the global reference frame that contains the molecule. The second object is a
 folder that contains auxiliary data that is not visualized in the 3D view. It is
@@ -136,7 +139,7 @@ view. One sees that the <tt class="docutils literal"><span class="pre">Universe<
 atoms (two oxygens and one hydrogen), and two bonds. The folder contains a
 <tt class="docutils literal"><span class="pre">Notes</span></tt> object. Each bond has two references, one for each atom of the pair it
 connects. A fully unfolded tree view is shown in the figure below.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_example_zml_unfolded.png" src="_images/zeobuilder_example_zml_unfolded.png" />
 <p class="caption">Zeobuilder showing the contents of water.zml. The whole tree is unfolded.</p>
 </div>
@@ -186,7 +189,7 @@ as children.</dd>
 <dt>Common parent</dt>
 <dd><p class="first">The common parent of a set of objects satisfies two conditions:</p>
 <blockquote class="last">
-<ol class="arabic simple">
+<div><ol class="arabic simple">
 <li>All the objects in the set are sub children of the common parent, i.e.
 the common parent is a super parent for all objects in the set.</li>
 <li>The common parent has no children that also satisfy the first
@@ -194,7 +197,7 @@ condition. This means the following: In principle there can be multiple
 super parents that are common to all objects in a set. <em>The</em> common
 parent is the one with lowest hierarchical level.</li>
 </ol>
-</blockquote>
+</div></blockquote>
 </dd>
 </dl>
 </div>
@@ -261,11 +264,11 @@ think before making a selection.</p>
 </div>
 <div class="section" id="adding-and-removing-objects-fixing-mistakes">
 <h2>4.2.10. Adding and removing objects, fixing mistakes<a class="headerlink" href="#adding-and-removing-objects-fixing-mistakes" title="Permalink to this headline">¶</a></h2>
-<p>From now on we will continue with the THF dimer model (<a href="_downloads/water.zml"><strong class="xref">dimer.zml</strong></a>). A screen shot is given in figure below. The model
+<p>From now on we will continue with the THF dimer model (<a class="reference download internal" href="_downloads/water.zml"><tt class="xref download docutils literal"><span class="pre">dimer.zml</span></tt></a>). A screen shot is given in figure below. The model
 contains three reference frames. The global reference frame is called
 <tt class="docutils literal"><span class="pre">Universe</span></tt>, while the two THF molecules also have their proper (relative)
 reference frames.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_dimer_zml.png" src="_images/zeobuilder_dimer_zml.png" />
 <p class="caption">Figure A2.4: Zeobuilder with dimer.zml.</p>
 </div>
@@ -392,7 +395,7 @@ which interactive function is associated with which modifier key(s). When one
 clicks such a button, a popup menu offers the list of all existing interactive
 functions. (See figure below.) The selected function from this popup menu will
 become associated with the corresponding modifier key(s).</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_configuring_interactive.png" src="_images/zeobuilder_configuring_interactive.png" />
 <p class="caption">The popup menu that offers all interactive functions.</p>
 </div>
@@ -479,31 +482,31 @@ understand what you are doing.</li>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference external" href="#">4.2. Getting started</a><ul>
-<li><a class="reference external" href="#installation">4.2.1. Installation</a></li>
-<li><a class="reference external" href="#starting-zeobuilder">4.2.2. Starting Zeobuilder</a></li>
-<li><a class="reference external" href="#the-zeobuilder-gui">4.2.3. The Zeobuilder GUI</a></li>
-<li><a class="reference external" href="#the-anatomy-of-a-zeobuilder-model">4.2.4. The anatomy of a Zeobuilder model</a></li>
-<li><a class="reference external" href="#tree-structure-terminology">4.2.5. Tree structure terminology</a></li>
-<li><a class="reference external" href="#selections">4.2.6. Selections</a></li>
-<li><a class="reference external" href="#selections-in-the-3d-view">4.2.7. Selections in the 3D view</a></li>
-<li><a class="reference external" href="#menu-functions-that-alter-the-current-selection">4.2.8. Menu functions that alter the current selection</a></li>
-<li><a class="reference external" href="#the-relevance-of-making-proper-selections">4.2.9. The relevance of making proper selections</a></li>
-<li><a class="reference external" href="#adding-and-removing-objects-fixing-mistakes">4.2.10. Adding and removing objects, fixing mistakes</a></li>
-<li><a class="reference external" href="#default-units">4.2.11. Default units</a></li>
-<li><a class="reference external" href="#rotations-and-translations">4.2.12. Rotations and Translations</a><ul>
-<li><a class="reference external" href="#interactive-translations">4.2.12.1. Interactive translations</a></li>
-<li><a class="reference external" href="#interactive-rotations">4.2.12.2. Interactive rotations</a></li>
-<li><a class="reference external" href="#non-interactive-transformations">4.2.12.3. Non-interactive transformations</a></li>
+<li><a class="reference internal" href="#">4.2. Getting started</a><ul>
+<li><a class="reference internal" href="#installation">4.2.1. Installation</a></li>
+<li><a class="reference internal" href="#starting-zeobuilder">4.2.2. Starting Zeobuilder</a></li>
+<li><a class="reference internal" href="#the-zeobuilder-gui">4.2.3. The Zeobuilder GUI</a></li>
+<li><a class="reference internal" href="#the-anatomy-of-a-zeobuilder-model">4.2.4. The anatomy of a Zeobuilder model</a></li>
+<li><a class="reference internal" href="#tree-structure-terminology">4.2.5. Tree structure terminology</a></li>
+<li><a class="reference internal" href="#selections">4.2.6. Selections</a></li>
+<li><a class="reference internal" href="#selections-in-the-3d-view">4.2.7. Selections in the 3D view</a></li>
+<li><a class="reference internal" href="#menu-functions-that-alter-the-current-selection">4.2.8. Menu functions that alter the current selection</a></li>
+<li><a class="reference internal" href="#the-relevance-of-making-proper-selections">4.2.9. The relevance of making proper selections</a></li>
+<li><a class="reference internal" href="#adding-and-removing-objects-fixing-mistakes">4.2.10. Adding and removing objects, fixing mistakes</a></li>
+<li><a class="reference internal" href="#default-units">4.2.11. Default units</a></li>
+<li><a class="reference internal" href="#rotations-and-translations">4.2.12. Rotations and Translations</a><ul>
+<li><a class="reference internal" href="#interactive-translations">4.2.12.1. Interactive translations</a></li>
+<li><a class="reference internal" href="#interactive-rotations">4.2.12.2. Interactive rotations</a></li>
+<li><a class="reference internal" href="#non-interactive-transformations">4.2.12.3. Non-interactive transformations</a></li>
 </ul>
 </li>
-<li><a class="reference external" href="#moving-the-global-rotation-center-zooming-in-and-out">4.2.13. Moving the global rotation center, zooming in and out</a></li>
-<li><a class="reference external" href="#configuring-the-interactive-functions">4.2.14. Configuring the interactive functions</a></li>
-<li><a class="reference external" href="#changing-properties-of-objects">4.2.15. Changing properties of objects</a></li>
-<li><a class="reference external" href="#cut-copy-paste-and-duplicate">4.2.16. Cut, Copy, Paste and Duplicate</a></li>
-<li><a class="reference external" href="#loading-and-saving-files">4.2.17. Loading and Saving files</a></li>
-<li><a class="reference external" href="#import-and-export">4.2.18. Import and Export</a></li>
-<li><a class="reference external" href="#concluding-remarks">4.2.19. Concluding remarks</a></li>
+<li><a class="reference internal" href="#moving-the-global-rotation-center-zooming-in-and-out">4.2.13. Moving the global rotation center, zooming in and out</a></li>
+<li><a class="reference internal" href="#configuring-the-interactive-functions">4.2.14. Configuring the interactive functions</a></li>
+<li><a class="reference internal" href="#changing-properties-of-objects">4.2.15. Changing properties of objects</a></li>
+<li><a class="reference internal" href="#cut-copy-paste-and-duplicate">4.2.16. Cut, Copy, Paste and Duplicate</a></li>
+<li><a class="reference internal" href="#loading-and-saving-files">4.2.17. Loading and Saving files</a></li>
+<li><a class="reference internal" href="#import-and-export">4.2.18. Import and Export</a></li>
+<li><a class="reference internal" href="#concluding-remarks">4.2.19. Concluding remarks</a></li>
 </ul>
 </li>
 </ul>
@@ -522,7 +525,7 @@ understand what you are doing.</li>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -548,13 +551,13 @@ understand what you are doing.</li>
         <li class="right" >
           <a href="tut_basic_introduction.html" title="4.1. Introduction"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>

@@ -4,7 +4,7 @@
  *
  * Sphinx stylesheet -- nature theme.
  *
- * :copyright: Copyright 2007-2010 by the Sphinx team, see AUTHORS.
+ * :copyright: Copyright 2007-2014 by the Sphinx team, see AUTHORS.
  * :license: BSD, see LICENSE for details.
  *
  */
@@ -232,4 +232,14 @@ tt {
     /* padding: 1px 2px; */
     font-size: 1.1em;
     font-family: monospace;
+}
+
+.viewcode-back {
+    font-family: Arial, sans-serif;
+}
+
+div.viewcode-block:target {
+    background-color: #f4debf;
+    border-top: 1px solid #ac9;
+    border-bottom: 1px solid #ac9;
 }

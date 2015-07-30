@@ -1,19 +1,21 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4.3. Common tasks &mdash; Zeobuilder v0.0 documentation</title>
+    <title>4.3. Common tasks &mdash; Zeobuilder 0.0 documentation</title>
+    
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    '#',
+        URL_ROOT:    './',
         VERSION:     '0.0',
-        COLLAPSE_MODINDEX: false,
+        COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
       };
@@ -21,7 +23,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder v0.0 documentation" href="index.html" />
+    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
     <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
     <link rel="next" title="4.4. Measurements" href="tut_basic_measurements.html" />
     <link rel="prev" title="4.2. Getting started" href="tut_basic_getting_started.html" /> 
@@ -39,7 +41,7 @@
         <li class="right" >
           <a href="tut_basic_getting_started.html" title="4.2. Getting started"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>  
@@ -52,20 +54,20 @@
   <div class="section" id="common-tasks">
 <h1>4.3. Common tasks<a class="headerlink" href="#common-tasks" title="Permalink to this headline">¶</a></h1>
 <p>In this chapter, we use a model of dipropylether
-(<a href="_downloads/dipropylether.xyz"><strong class="xref">dipropylether.xyz</strong></a>),
+(<a class="reference download internal" href="_downloads/dipropylether.xyz"><tt class="xref download docutils literal"><span class="pre">dipropylether.xyz</span></tt></a>),
 Silicalite-1
-(<a href="_downloads/silicalite1.zml"><strong class="xref">silicalite1.zml</strong></a>),
+(<a class="reference download internal" href="_downloads/silicalite1.zml"><tt class="xref download docutils literal"><span class="pre">silicalite1.zml</span></tt></a>),
 THF
-(<a href="_downloads/thf.xyz"><strong class="xref">thf.xyz</strong></a>),
+(<a class="reference download internal" href="_downloads/thf.xyz"><tt class="xref download docutils literal"><span class="pre">thf.xyz</span></tt></a>),
 and an MFI precursor model
-(<a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a>).</p>
+(<a class="reference download internal" href="_downloads/precursor.zml"><tt class="xref download docutils literal"><span class="pre">precursor.zml</span></tt></a>).</p>
 <div class="section" id="adding-bonds-to-the-model">
 <h2>4.3.1. Adding bonds to the model<a class="headerlink" href="#adding-bonds-to-the-model" title="Permalink to this headline">¶</a></h2>
-<p>Load the file <a href="_downloads/dipropylether.xyz"><strong class="xref">dipropylether.xyz</strong></a>. Your
+<p>Load the file <a class="reference download internal" href="_downloads/dipropylether.xyz"><tt class="xref download docutils literal"><span class="pre">dipropylether.xyz</span></tt></a>. Your
 window should be similar to figure the figure below. Zeobuilder only shows the atoms and no
 bonds because the XYZ format only contains atomic coordinates. One can easily add
 bonds automatically based on a database of average bond lengths in two steps:}}</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_dipropylether.png" src="_images/zeobuilder_dipropylether.png" />
 <p class="caption">Zeobuilder with dipropylether.xyz</p>
 </div>
@@ -95,10 +97,10 @@ at a slightly larger scale. When visualizing Zeolite models, this is a common
 practice. In the figure below, the oxygen atoms are omitted and the neighboring
 silicon atoms are connected by bond objects. This has been accomplished with
 the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Add</span> <span class="pre">bonds</span> <span class="pre">(parameters)</span></tt>. Try
-this, starting from the original MFI model (<a href="_downloads/silicalite1.zml"><strong class="xref">silicalite1.zml</strong></a>). The mfi model is based on the data from the
+this, starting from the original MFI model (<a class="reference download internal" href="_downloads/silicalite1.zml"><tt class="xref download docutils literal"><span class="pre">silicalite1.zml</span></tt></a>). The mfi model is based on the data from the
 <a class="reference external" href="http://www.iza-structure.org/databases/">Zeolite atlas</a>.</li>
 </ul>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/mfi_abstract.png" src="_images/mfi_abstract.png" />
 </div>
 </div>
@@ -106,7 +108,7 @@ this, starting from the original MFI model (<a href="_downloads/silicalite1.zml"
 <h2>4.3.2. Internal rotations<a class="headerlink" href="#internal-rotations" title="Permalink to this headline">¶</a></h2>
 <p>In this section we will demonstrate how the hierarchical data structure of
 Zeobuilder proofs to be helpful when performing internal rotations in a
-molecule. Open the model <a href="_downloads/dipropylether.xyz"><strong class="xref">dipropylether.xyz</strong></a> in Zeobuilder and
+molecule. Open the model <a class="reference download internal" href="_downloads/dipropylether.xyz"><tt class="xref download docutils literal"><span class="pre">dipropylether.xyz</span></tt></a> in Zeobuilder and
 add the bonds as explained in the previous section. Two types of internal
 rotations will be demonstrated.</p>
 <p>The first example is a rotation of a methyl top. Take the following steps:</p>
@@ -122,7 +124,7 @@ reference frame.</li>
 <li>Select the reference frame that contains the methyl group (in the tree view).
 Your window should look like this figure:</li>
 </ol>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_internal_rotation1.png" src="_images/zeobuilder_internal_rotation1.png" />
 <p class="caption">The methyl group in its proper reference frame.</p>
 </div>
@@ -134,7 +136,7 @@ while holding the <tt class="docutils literal"><span class="pre">Ctrl</span></tt
 before you start dragging.) You will notice that the methyl group rotates
 about the C-C axis. You should get something similar to the following figure:</li>
 </ol>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_internal_rotation1_done.png" src="_images/zeobuilder_internal_rotation1_done.png" />
 <p class="caption">The methyl group after rotation.</p>
 </div>
@@ -165,9 +167,9 @@ press <tt class="docutils literal"><span class="pre">Ctrl-Shift-F</span></tt>.</
 supported in many similar programs (?), this section describes more complex
 cases that demonstrate the advantage of having multiple reference frames. To
 keep this example a simple as possible, we will work with a THF model
-(<a href="_downloads/thf.xyz"><strong class="xref">thf.xyz</strong></a>). Proceed along the following lines:</p>
+(<a class="reference download internal" href="_downloads/thf.xyz"><tt class="xref download docutils literal"><span class="pre">thf.xyz</span></tt></a>). Proceed along the following lines:</p>
 <ol class="arabic">
-<li><p class="first">Load <a href="_downloads/thf.xyz"><strong class="xref">thf.xyz</strong></a> and add the bonds.</p>
+<li><p class="first">Load <a class="reference download internal" href="_downloads/thf.xyz"><tt class="xref download docutils literal"><span class="pre">thf.xyz</span></tt></a> and add the bonds.</p>
 </li>
 <li><dl class="first docutils">
 <dt>Select the two carbon atoms next to the oxygen atom. Activate the function</dt>
@@ -177,7 +179,7 @@ keep this example a simple as possible, we will work with a THF model
 </li>
 <li><p class="first">The second rotation axis is a bit more complex.</p>
 <blockquote>
-<ol class="loweralpha simple">
+<div><ol class="loweralpha simple">
 <li>First add a box to the center of the reference frame: Select the global
 reference frame in the tree view and activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Add</span> <span class="pre">-&gt;</span> <span class="pre">Box</span></tt>.</li>
 <li>The box is selected. For reasons of clarity, change to box color to
@@ -187,7 +189,7 @@ is located in the <tt class="docutils literal"><span class="pre">Markup</span></
 <li>Activate the function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Connect</span> <span class="pre">-&gt;</span> <span class="pre">Arrow</span></tt>. This is our second
 rotation axis.</li>
 </ol>
-</blockquote>
+</div></blockquote>
 </li>
 <li><p class="first">Next we will put the part of the molecule we want to rotate in a separate
 reference frame. Therefore select the oxygen atom, the neighboring carbon
@@ -196,7 +198,7 @@ between them. Press <tt class="docutils literal"><span class="pre">Ctfl-F</span>
 </li>
 </ol>
 <p>At this point your model should be similar to this figure:</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/zeobuilder_pseudo_rotation1.png" src="_images/zeobuilder_pseudo_rotation1.png" />
 <p class="caption">THF, an orange box and two rotation axes.</p>
 </div>
@@ -221,7 +223,7 @@ the work done.</p>
 <p>When working with large models, manually selecting a specific set of atoms (or
 other objects) quickly becomes an intractable task. Zeobuilder can automatically
 make complex selections based on filter expressions to surmount this potential
-difficulty. Load the model <a href="_downloads/precursor.zml"><strong class="xref">precursor.zml</strong></a>.
+difficulty. Load the model <a class="reference download internal" href="_downloads/precursor.zml"><tt class="xref download docutils literal"><span class="pre">precursor.zml</span></tt></a>.
 Select the global reference frame and activate the menu function <tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span>
 <span class="pre">Children</span> <span class="pre">by</span> <span class="pre">expression</span></tt>. A popup dialog will appear that looks similar to figure
 A3.6. One can enter a valid python expression in the big (white) text entry that
@@ -249,7 +251,7 @@ means that the following expression will not work in general:</p>
 <p>For example, when the selected frame also contains bond objects, which don&#8217;t
 have a <tt class="docutils literal"><span class="pre">number</span></tt> attribute, Zeobuilder will generate an error message when the
 former expression is used.</p>
-<div align="center" class="figure">
+<div class="figure align-center">
 <img alt="_images/dialog_select_children_by_expression.png" src="_images/dialog_select_children_by_expression.png" />
 <p class="caption">The popup dialog of the menu function <tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Children</span> <span class="pre">by</span> <span class="pre">expression</span></tt></p>
 </div>
@@ -273,11 +275,11 @@ that these example will work in all future versions of Zeobuilder.</p>
             </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference external" href="#">4.3. Common tasks</a><ul>
-<li><a class="reference external" href="#adding-bonds-to-the-model">4.3.1. Adding bonds to the model</a></li>
-<li><a class="reference external" href="#internal-rotations">4.3.2. Internal rotations</a></li>
-<li><a class="reference external" href="#pseudo-rotations">4.3.3. Pseudo rotations</a></li>
-<li><a class="reference external" href="#advanced-selections">4.3.4. Advanced selections</a></li>
+<li><a class="reference internal" href="#">4.3. Common tasks</a><ul>
+<li><a class="reference internal" href="#adding-bonds-to-the-model">4.3.1. Adding bonds to the model</a></li>
+<li><a class="reference internal" href="#internal-rotations">4.3.2. Internal rotations</a></li>
+<li><a class="reference internal" href="#pseudo-rotations">4.3.3. Pseudo rotations</a></li>
+<li><a class="reference internal" href="#advanced-selections">4.3.4. Advanced selections</a></li>
 </ul>
 </li>
 </ul>
@@ -296,7 +298,7 @@ that these example will work in all future versions of Zeobuilder.</p>
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -322,13 +324,13 @@ that these example will work in all future versions of Zeobuilder.</p>
         <li class="right" >
           <a href="tut_basic_getting_started.html" title="4.2. Getting started"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder v0.0 documentation</a> &raquo;</li>
+        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
           <li><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
     </div>
   </body>
 </html>
