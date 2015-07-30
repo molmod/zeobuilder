@@ -45,7 +45,7 @@ command.
 
 * Ubuntu 12.4::
 
-    sudo apt-get install python-gtk python-opengl python-numpy python-gtkglext1 python-matplotlib
+    sudo apt-get install python-gtk2 python-opengl python-numpy python-gtkglext1 python-matplotlib
 
 * Fedora 17::
 
