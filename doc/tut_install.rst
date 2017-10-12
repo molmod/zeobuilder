@@ -43,13 +43,13 @@ The following software must be installed:
 Most Linux distributions can install this software with just a single terminal
 command.
 
-* Ubuntu 12.4::
+* Ubuntu 14.4 and up::
 
-    sudo apt-get install python-gtk2 python-opengl python-numpy python-gtkglext1 python-matplotlib
+    sudo apt-get install python-gtk2 python-opengl python-numpy python-gtkglext1 python-matplotlib python-rsvg
 
-* Fedora 17::
+* Fedora 21 and up::
 
-    sudo yum install pygtk2 pygtk2-libglade PyOpenGL numpy pygtkglext python-matplotlib
+    sudo yum install pygtk2 pygtk2-libglade PyOpenGL numpy pygtkglext python-matplotlib gnome-python2-rsvg
 
 
 Installing the latest version of Zeobuilder
@@ -60,21 +60,12 @@ and will then install it into your home directory. ::
 
     cd ~/build/
     git clone git://github.com/molmod/zeobuilder.git
-    (cd zeobuilder; ./setup.py install --home=~)
+    (cd zeobuilder; ./setup.py install --user)
+
+The option ``--user`` can be ommitted when you are installing into a conda
+envirnoment or a pip virtual environment.
 
 You are now ready to start using Zeobuilder!
-
-
-Upgrading to the latest version of MolMod and Zeobuilder
-========================================================
-
-In case you want to upgrade Zeobuilder to the latests development version after
-a previous install, then execute the following commands (in the same directory
-that was originally used to install Zeobuilder)::
-
-    cd ~/build/
-    (cd molmod; ./cleanfiles.sh; git pull; rm -r ~/lib*/python/molmod*; ./setup.py install --home=~)
-    (cd zeobuilder; ./cleanfiles.sh; git pull; rm -r ~/lib*/python/zeobuilder*; ./setup.py install --home=~)
 
 
 Testing your installation
