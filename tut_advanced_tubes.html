@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5.3. Constructing tubes &mdash; Zeobuilder 0.0 documentation</title>
+    <title>5.3. Constructing tubes &#8212; Zeobuilder 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,18 +17,19 @@
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
-    <link rel="up" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="prev" title="5.2. Topological analysis" href="tut_advanced_topological_analysis.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -37,15 +38,15 @@
         <li class="right" >
           <a href="tut_advanced_topological_analysis.html" title="5.2. Topological analysis"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
-          <li><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="constructing-tubes">
 <h1>5.3. Constructing tubes<a class="headerlink" href="#constructing-tubes" title="Permalink to this headline">¶</a></h1>
@@ -60,10 +61,10 @@ tubes. It might be instructive to refresh your background on
 <p>The tube tool is relatively simple to use, so we immediately kick of with an
 example:</p>
 <ol class="arabic simple">
-<li>Load the model <a class="reference download internal" href="_downloads/graphite_sheet.zml"><tt class="xref download docutils literal"><span class="pre">graphite_sheet.zml</span></tt></a>. This is a
+<li>Load the model <a class="reference download internal" href="_downloads/graphite_sheet.zml" download=""><code class="xref download docutils literal"><span class="pre">graphite_sheet.zml</span></code></a>. This is a
 two-dimensional periodic model of an infinite and flat graphite sheet.</li>
 <li>Select the global reference frame.</li>
-<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Create</span> <span class="pre">tube</span></tt>. A Popup
+<li>Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Create</span> <span class="pre">tube</span></code>. A Popup
 dialog appears that looks like the top left window in the figure below.
 Several parameters have to be entered:<ul>
 <li>The parameters <strong>n</strong> and <strong>m</strong> define the chiral vector of the tube.</li>
@@ -76,18 +77,18 @@ tubes on the other hand, can be easily generated with a prescribed length.</li>
 </li>
 </ol>
 <blockquote>
-<div>Click <tt class="docutils literal"><span class="pre">OK</span></tt>.</div></blockquote>
+<div>Click <code class="docutils literal"><span class="pre">OK</span></code>.</div></blockquote>
 <ol class="arabic simple" start="4">
-<li>Now we can safely add bonds to the model: <tt class="docutils literal"><span class="pre">press</span> <span class="pre">Ctrl-B</span></tt>.</li>
+<li>Now we can safely add bonds to the model: <code class="docutils literal"><span class="pre">press</span> <span class="pre">Ctrl-B</span></code>.</li>
 </ol>
 <p>An example of a carbon nanotube is presented in the figure below. Experiment
 with different parameters for the tube tool.</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id1">
 <img alt="_images/carbon_tube_overview.png" src="_images/carbon_tube_overview.png" />
-<p class="caption">Carbon applications of the tube tool. TOP-LEFT: The orignal model, a minimal
+<p class="caption"><span class="caption-text">Carbon applications of the tube tool. TOP-LEFT: The orignal model, a minimal
 two-dimensional unit cell of a graphite layer. TOP-RIGHT: The dialog window
 with the tube parameters. BOTTOM-LEFT: The result when the <cite>flat</cite> option is
-checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not checked.</p>
+checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not checked.</span></p>
 </div>
 </div>
 <div class="section" id="the-silica-nanotube">
@@ -95,12 +96,12 @@ checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not check
 <p>In this section we show the results of the tube tool when applied to an
 hexagonal silica layer: <a class="reference external" href="examples/silica_sheet.zml">silica_sheet.zml</a>. The
 tube parameters are the same as in the previous example.}}</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id2">
 <img alt="_images/silica_tube_overview.png" src="_images/silica_tube_overview.png" />
-<p class="caption">Silica applications of the tube tool. TOP-LEFT: The orignal model, a minimal
+<p class="caption"><span class="caption-text">Silica applications of the tube tool. TOP-LEFT: The orignal model, a minimal
 two-dimensional unit cell of a silica layer. TOP-RIGHT: The dialog window
 with the tube parameters. BOTTOM-LEFT: The result when the <cite>flat</cite> option is
-checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not checked.</p>
+checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not checked.</span></p>
 </div>
 </div>
 </div>
@@ -109,7 +110,7 @@ checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not check
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
@@ -126,29 +127,28 @@ checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not check
   <h4>Previous topic</h4>
   <p class="topless"><a href="tut_advanced_topological_analysis.html"
                         title="previous chapter">5.2. Topological analysis</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/tut_advanced_tubes.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tut_advanced_tubes.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -157,13 +157,13 @@ checked. BOTTOM-RIGHT: The result when the <cite>flat</cite> option is not check
         <li class="right" >
           <a href="tut_advanced_topological_analysis.html" title="5.2. Topological analysis"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
-          <li><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
   </body>
 </html>

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>5.2. Topological analysis &mdash; Zeobuilder 0.0 documentation</title>
+    <title>5.2. Topological analysis &#8212; Zeobuilder 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,19 +17,20 @@
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
-    <link rel="up" title="5. Zeobuilder Tutorial – Advanced" href="tut_advanced.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="5.3. Constructing tubes" href="tut_advanced_tubes.html" />
     <link rel="prev" title="5.1. The connection scanner" href="tut_advanced_connection_scanner.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -41,20 +42,20 @@
         <li class="right" >
           <a href="tut_advanced_connection_scanner.html" title="5.1. The connection scanner"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
-          <li><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tut_advanced.html" accesskey="U">5. Zeobuilder Tutorial &#8211; Advanced</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="topological-analysis">
 <h1>5.2. Topological analysis<a class="headerlink" href="#topological-analysis" title="Permalink to this headline">¶</a></h1>
 <p>In the sections below, several zeolite models can be used:
-<a class="reference download internal" href="_downloads/sod_cage.zml"><tt class="xref download docutils literal"><span class="pre">sod_cage.zml</span></tt></a>, <a class="reference download internal" href="_downloads/precursor.zml"><tt class="xref download docutils literal"><span class="pre">precursor.zml</span></tt></a> and <a class="reference download internal" href="_downloads/silicalite1.zml"><tt class="xref download docutils literal"><span class="pre">silicalite1.zml</span></tt></a>.</p>
+<a class="reference download internal" href="_downloads/sod_cage.zml" download=""><code class="xref download docutils literal"><span class="pre">sod_cage.zml</span></code></a>, <a class="reference download internal" href="_downloads/precursor.zml" download=""><code class="xref download docutils literal"><span class="pre">precursor.zml</span></code></a> and <a class="reference download internal" href="_downloads/silicalite1.zml" download=""><code class="xref download docutils literal"><span class="pre">silicalite1.zml</span></code></a>.</p>
 <div class="section" id="t-atom-coordination">
 <h2>5.2.1. T-atom coordination<a class="headerlink" href="#t-atom-coordination" title="Permalink to this headline">¶</a></h2>
 <p>The fraction of Q1, Q2, Q3 and Q4 T-atoms is conventional measure for the
@@ -62,14 +63,14 @@ crystalinity of silica. In Zeobuilder, this information is obtained in two
 steps:</p>
 <ol class="arabic simple">
 <li>Open one of the example models and select the global reference frame.</li>
-<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">T-atom</span> <span class="pre">coordination</span></tt>. A
+<li>Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">T-atom</span> <span class="pre">coordination</span></code>. A
 popup dialog will appear, similar to this figure:</li>
 </ol>
-<div class="figure align-center">
+<div class="figure align-center" id="id1">
 <img alt="_images/dialog_t_atom_coordination.png" src="_images/dialog_t_atom_coordination.png" />
-<p class="caption">The t-atom coordination dialog</p>
+<p class="caption"><span class="caption-text">The t-atom coordination dialog</span></p>
 </div>
-<p>The <tt class="docutils literal"><span class="pre">Select</span></tt> buttons close the dialog and selects all the corresponding Qx
+<p>The <code class="docutils literal"><span class="pre">Select</span></code> buttons close the dialog and selects all the corresponding Qx
 atoms.</p>
 </div>
 <div class="section" id="strong-rings">
@@ -102,16 +103,16 @@ ring itself.</dd>
 <p>The enumeration of strong rings in Zeobuilder, takes the following steps:</p>
 <ol class="arabic simple">
 <li>Open one of the example models and select the global reference frame.</li>
-<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Strong</span> <span class="pre">ring</span>
-<span class="pre">distribution</span></tt>.</li>
+<li>Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Strong</span> <span class="pre">ring</span>
+<span class="pre">distribution</span></code>.</li>
 </ol>
 <p>The results are presented in a window as shown in the figure below. The first tab
 contains a histogram of the strong ring distribution, while the second tab
 explicitly lists all strong rings. When selecting a strong ring from this list,
 the corresponding atoms are selected (and hence highlighted in the 3D view).</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id2">
 <img alt="_images/strong_ring_distribution.png" src="_images/strong_ring_distribution.png" />
-<p class="caption">The strong ring distribution of the MFI precursor</p>
+<p class="caption"><span class="caption-text">The strong ring distribution of the MFI precursor</span></p>
 </div>
 <p>We must give a few remarks here:</p>
 <ul class="simple">
@@ -123,9 +124,9 @@ rings.</li>
 5T-ring. This annoyance can be circumvented, as shown in the following figure.
 Try to reproduce this.</li>
 </ul>
-<div class="figure align-center">
+<div class="figure align-center" id="id3">
 <img alt="_images/strong_ring_distribution_si.png" src="_images/strong_ring_distribution_si.png" />
-<p class="caption">The strong ring distribution of the MFI precursor, without oxygen atoms.</p>
+<p class="caption"><span class="caption-text">The strong ring distribution of the MFI precursor, without oxygen atoms.</span></p>
 </div>
 </div>
 </div>
@@ -134,7 +135,7 @@ Try to reproduce this.</li>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
@@ -154,29 +155,28 @@ Try to reproduce this.</li>
   <h4>Next topic</h4>
   <p class="topless"><a href="tut_advanced_tubes.html"
                         title="next chapter">5.3. Constructing tubes</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/tut_advanced_topological_analysis.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tut_advanced_topological_analysis.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -188,13 +188,13 @@ Try to reproduce this.</li>
         <li class="right" >
           <a href="tut_advanced_connection_scanner.html" title="5.1. The connection scanner"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
-          <li><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tut_advanced.html" >5. Zeobuilder Tutorial &#8211; Advanced</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
   </body>
 </html>

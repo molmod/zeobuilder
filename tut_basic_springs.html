@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>4.5. Working with springs &mdash; Zeobuilder 0.0 documentation</title>
+    <title>4.5. Working with springs &#8212; Zeobuilder 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,19 +17,20 @@
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
-    <link rel="up" title="4. Zeobuilder Tutorial – Getting started" href="tut_basic.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="4.6. Periodic models" href="tut_basic_periodic_models.html" />
     <link rel="prev" title="4.4. Measurements" href="tut_basic_measurements.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -41,15 +42,15 @@
         <li class="right" >
           <a href="tut_basic_measurements.html" title="4.4. Measurements"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
-          <li><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tut_basic.html" accesskey="U">4. Zeobuilder Tutorial &#8211; Getting started</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="working-with-springs">
 <h1>4.5. Working with springs<a class="headerlink" href="#working-with-springs" title="Permalink to this headline">¶</a></h1>
@@ -60,8 +61,8 @@ orientations with the interactive tools, but they are not suitable for very
 precise positioning. One encounters similar difficulties when connecting
 molecules, as if a chemical reaction took place. Such tasks become even more
 challenging when more than two molecules are involved. For this type of work,
-Zeobuilder introduces <tt class="docutils literal"><span class="pre">Spring</span></tt> objects, which are suitable for accurate
-positioning. <tt class="docutils literal"><span class="pre">Springs</span></tt> complement the interactive tools in the model building
+Zeobuilder introduces <code class="docutils literal"><span class="pre">Spring</span></code> objects, which are suitable for accurate
+positioning. <code class="docutils literal"><span class="pre">Springs</span></code> complement the interactive tools in the model building
 process.</p>
 <p>The applications of springs always follow a fixed work flow: The first task is
 to put the distinct molecules at an initial estimate of the final configuration.
@@ -76,9 +77,9 @@ relative orientation.</p>
 <div class="section" id="a-basic-example-aligning-two-thf-molecules">
 <h2>4.5.1. A basic example: aligning two THF molecules<a class="headerlink" href="#a-basic-example-aligning-two-thf-molecules" title="Permalink to this headline">¶</a></h2>
 <p>Consider the dimer of two THF molecules depicted in the following figure:</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id1">
 <img alt="_images/schematic_dimer_distances.png" src="_images/schematic_dimer_distances.png" />
-<p class="caption">The four prescribed distances in the THF dimer.</p>
+<p class="caption"><span class="caption-text">The four prescribed distances in the THF dimer.</span></p>
 </div>
 <p>This dimer is hypothetical, but suppose that we want to prepare this structure
 for further research. A THF molecule has two types of carbon atoms that differ
@@ -97,26 +98,26 @@ starting from a single THF molecule. The internal coordinates of the THF
 molecule are not altered.</p>
 <blockquote>
 <div><ol class="arabic simple">
-<li>Load the model <a class="reference download internal" href="_downloads/thf.zml"><tt class="xref download docutils literal"><span class="pre">thf.zml</span></tt></a>. It contains a single
+<li>Load the model <a class="reference download internal" href="_downloads/thf.zml" download=""><code class="xref download docutils literal"><span class="pre">thf.zml</span></code></a>. It contains a single
 THF molecule in the global reference frame.</li>
 <li>Select all the children of the global reference frame, not the global
 reference frame itself. The simplest way to make this selection consists of
 two steps:<ul>
 <li>Select the global reference frame in the tree view.</li>
 <li>Push the <cite>Page down</cite> button on the keyboard, or activate the menu function
-<tt class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Children</span></tt>.</li>
+<code class="docutils literal"><span class="pre">Select</span> <span class="pre">-&gt;</span> <span class="pre">Children</span></code>.</li>
 </ul>
 </li>
-<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Arrange</span> <span class="pre">-&gt;</span> <span class="pre">Frame</span></tt> or press
-<tt class="docutils literal"><span class="pre">Ctrl-F</span></tt> to place the THF molecule in a separate reference frame.</li>
-<li>Rename this reference frame from <tt class="docutils literal"><span class="pre">Frame</span></tt> to <tt class="docutils literal"><span class="pre">THF</span></tt>:<ul>
+<li>Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Arrange</span> <span class="pre">-&gt;</span> <span class="pre">Frame</span></code> or press
+<code class="docutils literal"><span class="pre">Ctrl-F</span></code> to place the THF molecule in a separate reference frame.</li>
+<li>Rename this reference frame from <code class="docutils literal"><span class="pre">Frame</span></code> to <code class="docutils literal"><span class="pre">THF</span></code>:<ul>
 <li>Select the frame.</li>
-<li>Activate <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties</span></tt>. Enter the new name in the popup dialog
-and click <tt class="docutils literal"><span class="pre">OK</span></tt>.</li>
+<li>Activate <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties</span></code>. Enter the new name in the popup dialog
+and click <code class="docutils literal"><span class="pre">OK</span></code>.</li>
 </ul>
 </li>
 <li>Select the frame and activate the menu function <cite>Edit -&gt; Duplicate</cite>, or
-press <tt class="docutils literal"><span class="pre">Ctrl-D</span></tt>. By default, the duplicate is placed at exactly the same
+press <code class="docutils literal"><span class="pre">Ctrl-D</span></code>. By default, the duplicate is placed at exactly the same
 position as the original molecule.</li>
 <li>Select one of the two THF frames (in the tree view) and use the interactive
 translate and rotate function in the 3D view to approximate the dimer
@@ -124,9 +125,9 @@ sketched above. Some exercise is required to do this fluently. Your
 Zeobuilder window should be similar to following figure:</li>
 </ol>
 </div></blockquote>
-<div class="figure align-center">
+<div class="figure align-center" id="id2">
 <img alt="_images/zeobuilder_dimer_handwaving.png" src="_images/zeobuilder_dimer_handwaving.png" />
-<p class="caption">The initial configuration of the THF dimer.</p>
+<p class="caption"><span class="caption-text">The initial configuration of the THF dimer.</span></p>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
@@ -139,7 +140,7 @@ good position for the duplicate, without consuming too much CPU time.</li>
 <li>A simple (but predictable) feature is more user-friendly than a clever
 (but unpredictable) one.</li>
 <li>Starting from an exact overlap, one can use the functions in the sub menu
-<tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Transformation</span></tt> to define a precise relative position and
+<code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Transformation</span></code> to define a precise relative position and
 orientation between the duplicate and the original. For some
 applications, this is a practical technique.</li>
 </ol>
@@ -151,35 +152,35 @@ intermolecular distances.</p>
 <blockquote>
 <div><ul class="simple">
 <li>Select the two atoms.</li>
-<li>Add a spring by activating the function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Connect</span> <span class="pre">-&gt;</span> <span class="pre">Spring</span></tt>.</li>
-<li>Set the rest length of the spring via the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
-<span class="pre">Properties</span></tt>.</li>
+<li>Add a spring by activating the function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Connect</span> <span class="pre">-&gt;</span> <span class="pre">Spring</span></code>.</li>
+<li>Set the rest length of the spring via the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
+<span class="pre">Properties</span></code>.</li>
 </ul>
 </div></blockquote>
 </li>
-<li><p class="first">Select all the springs and run the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span>
-<span class="pre">Optimize</span> <span class="pre">springs</span></tt>. A dialog window will appear. Enter the same parameters as
+<li><p class="first">Select all the springs and run the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span>
+<span class="pre">Optimize</span> <span class="pre">springs</span></code>. A dialog window will appear. Enter the same parameters as
 shown here:</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id3">
 <img alt="_images/optimization_parameters_dialog.png" src="_images/optimization_parameters_dialog.png" />
-<p class="caption">The parameters for the spring optimization.</p>
+<p class="caption"><span class="caption-text">The parameters for the spring optimization.</span></p>
 </div>
-<p>The option <tt class="docutils literal"><span class="pre">Allow</span> <span class="pre">free</span> <span class="pre">rotation</span></tt> can be disabled, i.e.
+<p>The option <code class="docutils literal"><span class="pre">Allow</span> <span class="pre">free</span> <span class="pre">rotation</span></code> can be disabled, i.e.
 the rigid bodies will not be rotated during the optimization. The two other
-parameters determine how the intermediate results are visualized. Click <tt class="docutils literal"><span class="pre">OK</span></tt>.</p>
+parameters determine how the intermediate results are visualized. Click <code class="docutils literal"><span class="pre">OK</span></code>.</p>
 </li>
 <li><p class="first">A second dialog window pops up that reports the optimization progress:</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id4">
 <img alt="_images/progress_optimization.png" src="_images/progress_optimization.png" />
-<p class="caption">The progress dialog of the spring optimization.</p>
+<p class="caption"><span class="caption-text">The progress dialog of the spring optimization.</span></p>
 </div>
 <p>The optimization should take only a fraction of a second. When
 convergence is reached, one clicks the <cite>OK</cite> button to accept the final
 structure, or <cite>Cancel</cite> to restore the initial situation. The final model is
 displayed below:</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id5">
 <img alt="_images/zeobuilder_dimer_final.png" src="_images/zeobuilder_dimer_final.png" />
-<p class="caption">The final configuration of the THF dimer.</p>
+<p class="caption"><span class="caption-text">The final configuration of the THF dimer.</span></p>
 </div>
 </li>
 <li><p class="first">Save your work:</p>
@@ -187,15 +188,15 @@ displayed below:</p>
 </ol>
 <blockquote>
 <div><ul class="simple">
-<li>Execute <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></tt> and store the result as <tt class="docutils literal"><span class="pre">thf_dimer_aligned.zml</span></tt>.
+<li>Execute <code class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></code> and store the result as <code class="docutils literal"><span class="pre">thf_dimer_aligned.zml</span></code>.
 This file contains the complete model, including the springs.</li>
-<li>Execute <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></tt> again, but use a different filename:
-<tt class="docutils literal"><span class="pre">thf_dimer_aligned.xyz</span></tt> The <tt class="docutils literal"><span class="pre">.xyz</span></tt> format is an input file format for many
+<li>Execute <code class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></code> again, but use a different filename:
+<code class="docutils literal"><span class="pre">thf_dimer_aligned.xyz</span></code> The <code class="docutils literal"><span class="pre">.xyz</span></code> format is an input file format for many
 ab initio and molecular mechanics simulation software. All atom coordinates
-in the <tt class="docutils literal"><span class="pre">.xyz</span></tt> file are given with respect to the global reference frame.</li>
-<li>Optionally execute <tt class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></tt> with <tt class="docutils literal"><span class="pre">thf_dimer_aligned.psf</span></tt> as
+in the <code class="docutils literal"><span class="pre">.xyz</span></code> file are given with respect to the global reference frame.</li>
+<li>Optionally execute <code class="docutils literal"><span class="pre">File</span> <span class="pre">-&gt;</span> <span class="pre">Save</span> <span class="pre">as</span></code> with <code class="docutils literal"><span class="pre">thf_dimer_aligned.psf</span></code> as
 filename. This file describes the molecular topology, i.e. bonds, bending
-angles, and so on. <tt class="docutils literal"><span class="pre">.psf</span></tt> files are often required as an additional input
+angles, and so on. <code class="docutils literal"><span class="pre">.psf</span></code> files are often required as an additional input
 for molecular mechanics simulations and for the analysis of molecular
 dynamics simulations. For example, the [[Tracks]] code often relies on
 topology files.</li>
@@ -246,18 +247,18 @@ average coordinate of the original atoms.</li>
 <p>The instructions below will join two sodalite cages along their hexagonal faces.
 The atom pairs that will join to form new Si-O-Si bridges are indicated in this
 figure:</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id6">
 <img alt="_images/sketch_2sodalite_cages.png" src="_images/sketch_2sodalite_cages.png" />
-<p class="caption">Two sodalite cages that will be connected along their hexagonal
+<p class="caption"><span class="caption-text">Two sodalite cages that will be connected along their hexagonal
 faces. The pairs of hydroxyl groups that will undergo a condensation
-reaction, are marked with blue ellipses.</p>
+reaction, are marked with blue ellipses.</span></p>
 </div>
 <p>The starting point is a single sodalite cage model.</p>
 <ol class="arabic">
-<li><p class="first">Open the model <a class="reference download internal" href="_downloads/sodalite_cage.zml"><tt class="xref download docutils literal"><span class="pre">sodalite_cage.zml</span></tt></a>.</p>
+<li><p class="first">Open the model <a class="reference download internal" href="_downloads/sodalite_cage.zml" download=""><code class="xref download docutils literal"><span class="pre">sodalite_cage.zml</span></code></a>.</p>
 </li>
-<li><p class="first">Select all the hydrogen atoms and remove them with the function <tt class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span>
-<span class="pre">Delete</span></tt>. The bonds to these hydrogen atoms are removed automatically.</p>
+<li><p class="first">Select all the hydrogen atoms and remove them with the function <code class="docutils literal"><span class="pre">Edit</span> <span class="pre">-&gt;</span>
+<span class="pre">Delete</span></code>. The bonds to these hydrogen atoms are removed automatically.</p>
 </li>
 <li><p class="first">Arrange the sodalite cage in a dedicated reference frame. Duplicate this
 frame and translate it to a new position. By now, you should now how to do
@@ -265,50 +266,50 @@ this.</p>
 </li>
 <li><p class="first">We will now connect each pair of oxygen atoms (see figure above) by a
 spring. When many springs are involved, as in this example, one can take
-advantage of the <tt class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></tt>:</p>
+advantage of the <code class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></code>:</p>
 <ul>
-<li><p class="first">Click on the first toolbar button and select the <tt class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></tt>.</p>
+<li><p class="first">Click on the first toolbar button and select the <code class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></code>.</p>
 </li>
-<li><p class="first">A tool window will appear as in figure A5.8. Select <tt class="docutils literal"><span class="pre">spring</span></tt> from the
-<tt class="docutils literal"><span class="pre">connect</span> <span class="pre">with</span></tt> list.</p>
-<div class="figure align-center">
+<li><p class="first">A tool window will appear as in figure A5.8. Select <code class="docutils literal"><span class="pre">spring</span></code> from the
+<code class="docutils literal"><span class="pre">connect</span> <span class="pre">with</span></code> list.</p>
+<div class="figure align-center" id="id7">
 <img alt="_images/geometric_sketcgh_tool.png" src="_images/geometric_sketcgh_tool.png" />
-<p class="caption">The tool window of the <tt class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></tt>.</p>
+<p class="caption"><span class="caption-text">The tool window of the <code class="docutils literal"><span class="pre">Geometric</span> <span class="pre">sketch</span> <span class="pre">tool</span></code>.</span></p>
 </div>
 </li>
 <li><p class="first">Now connect the oxygen pairs by dragging with the left mouse button in the
 3D view from the one oxygen atom to the other .</p>
 </li>
-<li><p class="first">When done, select the <tt class="docutils literal"><span class="pre">Selection</span> <span class="pre">picker</span></tt> again by clicking on the first
+<li><p class="first">When done, select the <code class="docutils literal"><span class="pre">Selection</span> <span class="pre">picker</span></code> again by clicking on the first
 toolbar button.</p>
 </li>
 </ul>
 </li>
 <li><p class="first">Select all spring objects (in the tree view).</p>
 </li>
-<li><p class="first">Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Optimize</span> <span class="pre">springs</span></tt>. The
+<li><p class="first">Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Optimize</span> <span class="pre">springs</span></code>. The
 (default) rest lengths of the springs is zero, so the optimizer will bring each
 pair of oxygen atom into overlap.</p>
 </li>
-<li><p class="first">Make sure the springs remain selected. Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
-<span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Merge</span> <span class="pre">atoms</span> <span class="pre">connected</span> <span class="pre">by</span> <span class="pre">springs</span></tt>. This will remove the spring
+<li><p class="first">Make sure the springs remain selected. Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span>
+<span class="pre">Builder</span> <span class="pre">-&gt;</span> <span class="pre">Merge</span> <span class="pre">atoms</span> <span class="pre">connected</span> <span class="pre">by</span> <span class="pre">springs</span></code>. This will remove the spring
 objects, and each pair of atoms is replaced by a single atom at the average
 position of the two original atoms.</p>
 </li>
 <li><p class="first">Finally, one must restore the hydrogen atoms:</p>
 <ul class="simple">
 <li>Select the global reference in the tree view.</li>
-<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Saturate</span> <span class="pre">with</span>
-<span class="pre">Hydrogens</span></tt>.</li>
+<li>Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Molecular</span> <span class="pre">-&gt;</span> <span class="pre">Saturate</span> <span class="pre">with</span>
+<span class="pre">Hydrogens</span></code>.</li>
 </ul>
 </li>
 </ol>
 <p>The end results is displayed below. It is clear that the newly formed
 oxygen bridges are too curved. When this &#8216;initial&#8217; structure is used as an input
 for an energy minimization, these Si-O-Si bends will become less curved.</p>
-<div class="figure align-center">
+<div class="figure align-center" id="id8">
 <img alt="_images/zeobuilder_two_cages.png" src="_images/zeobuilder_two_cages.png" />
-<p class="caption">Two sodalite cages connected along their hexagonal sides.</p>
+<p class="caption"><span class="caption-text">Two sodalite cages connected along their hexagonal sides.</span></p>
 </div>
 </div>
 </div>
@@ -327,7 +328,7 @@ for an energy minimization, these Si-O-Si bends will become less curved.</p>
 <li><p class="first">Before the actual optimization starts, Zeobuilder will determine the common
 parent frame of the objects that are connected by the selected springs.</p>
 </li>
-<li><p class="first">The term <tt class="docutils literal"><span class="pre">direct</span> <span class="pre">child</span></tt> is used here as the short name for a direct child of
+<li><p class="first">The term <code class="docutils literal"><span class="pre">direct</span> <span class="pre">child</span></code> is used here as the short name for a direct child of
 the common parent frame.</p>
 </li>
 <li><p class="first">The optimization code will only translate (and rotate) direct child frames.</p>
@@ -352,32 +353,32 @@ the optimization.</li>
 <div class="section" id="exercises">
 <h2>4.5.4. Exercises<a class="headerlink" href="#exercises" title="Permalink to this headline">¶</a></h2>
 <ol class="arabic simple">
-<li>Connect two sodalite cages (<a class="reference download internal" href="_downloads/sodalite_cage.zml"><tt class="xref download docutils literal"><span class="pre">sodalite_cage.zml</span></tt></a>) along the square faces.</li>
+<li>Connect two sodalite cages (<a class="reference download internal" href="_downloads/sodalite_cage.zml" download=""><code class="xref download docutils literal"><span class="pre">sodalite_cage.zml</span></code></a>) along the square faces.</li>
 <li>Place a pentane molecule in the center of a straight channel of a Sodalite-1
 unit cell. Make sure the pentane molecule is aligned with the straight
 channel. You will need these files:
-(<a class="reference download internal" href="_downloads/sodalite1.zml"><tt class="xref download docutils literal"><span class="pre">sodalite1.zml</span></tt></a>)
+(<a class="reference download internal" href="_downloads/sodalite1.zml" download=""><code class="xref download docutils literal"><span class="pre">sodalite1.zml</span></code></a>)
 and
-(<a class="reference download internal" href="_downloads/pentane.zml"><tt class="xref download docutils literal"><span class="pre">pentane.zml</span></tt></a>).
+(<a class="reference download internal" href="_downloads/pentane.zml" download=""><code class="xref download docutils literal"><span class="pre">pentane.zml</span></code></a>).
 Tip: The center of the Sodalite-1 unit cell does
 not lie in the middle of a straight channel. This is not the most practical
 situation for this exercise. Define a new origin as follows:<ul>
-<li>Reset the current view with the menu function <tt class="docutils literal"><span class="pre">View</span> <span class="pre">-&gt;</span> <span class="pre">Reset</span></tt>.</li>
+<li>Reset the current view with the menu function <code class="docutils literal"><span class="pre">View</span> <span class="pre">-&gt;</span> <span class="pre">Reset</span></code>.</li>
 <li>Select the two oxygen atoms that are the closest to the rotation center of
 the model, i.e. the gray cross.</li>
-<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Add</span> <span class="pre">-&gt;</span> <span class="pre">Point</span> <span class="pre">at</span> <span class="pre">average</span></tt>. This new
+<li>Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Add</span> <span class="pre">-&gt;</span> <span class="pre">Point</span> <span class="pre">at</span> <span class="pre">average</span></code>. This new
 point coincides with the rotation center. It is selected automatically, do
 not change the selection.</li>
-<li>Change the coordinates of this point with <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties</span></tt>. Go to
-the <tt class="docutils literal"><span class="pre">Translation</span></tt> tab and change the t.z value to zero. Click <cite>OK</cite> The
+<li>Change the coordinates of this point with <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Properties</span></code>. Go to
+the <code class="docutils literal"><span class="pre">Translation</span></code> tab and change the t.z value to zero. Click <cite>OK</cite> The
 point will lie at the center of a straight channel. Make sure the point
 remains selected.</li>
-<li>Activate the menu function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Transform</span> <span class="pre">-&gt;</span> <span class="pre">Define</span> <span class="pre">origin</span></tt>. The
+<li>Activate the menu function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Transform</span> <span class="pre">-&gt;</span> <span class="pre">Define</span> <span class="pre">origin</span></code>. The
 contents of the unit cell will be translated as to bring this point in the
 origin of the global reference frame. One of the two straight channels is now
 located at the center of the unit cell.</li>
-<li>Select the global reference frame and apply the function <tt class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span>
-<span class="pre">cell</span> <span class="pre">-&gt;</span> <span class="pre">Wrap</span> <span class="pre">cell</span> <span class="pre">contents</span></tt>, or press <tt class="docutils literal"><span class="pre">Ctrl-W</span></tt>.</li>
+<li>Select the global reference frame and apply the function <code class="docutils literal"><span class="pre">Object</span> <span class="pre">-&gt;</span> <span class="pre">Unit</span>
+<span class="pre">cell</span> <span class="pre">-&gt;</span> <span class="pre">Wrap</span> <span class="pre">cell</span> <span class="pre">contents</span></code>, or press <code class="docutils literal"><span class="pre">Ctrl-W</span></code>.</li>
 </ul>
 </li>
 </ol>
@@ -388,7 +389,7 @@ located at the center of the unit cell.</li>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
@@ -414,29 +415,28 @@ located at the center of the unit cell.</li>
   <h4>Next topic</h4>
   <p class="topless"><a href="tut_basic_periodic_models.html"
                         title="next chapter">4.6. Periodic models</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/tut_basic_springs.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tut_basic_springs.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -448,13 +448,13 @@ located at the center of the unit cell.</li>
         <li class="right" >
           <a href="tut_basic_measurements.html" title="4.4. Measurements"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li>
-          <li><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="tut_basic.html" >4. Zeobuilder Tutorial &#8211; Getting started</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
   </body>
 </html>

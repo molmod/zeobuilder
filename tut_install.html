@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>1. Installation &mdash; Zeobuilder 0.0 documentation</title>
+    <title>1. Installation &#8212; Zeobuilder 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/nature.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -17,18 +17,20 @@
         VERSION:     '0.0',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
       };
     </script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Zeobuilder 0.0 documentation" href="index.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="2. If you encounter a problem" href="tut_support.html" />
     <link rel="prev" title="Zeobuilder documentation" href="index.html" /> 
   </head>
-  <body>
-    <div class="related">
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -40,14 +42,14 @@
         <li class="right" >
           <a href="index.html" title="Zeobuilder documentation"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
   <div class="section" id="installation">
 <h1>1. Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
@@ -86,13 +88,13 @@ distribution to install these dependencies.</p>
 <p>Most Linux distributions can install this software with just a single terminal
 command.</p>
 <ul>
-<li><p class="first">Ubuntu 12.4:</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo apt-get install python-gtk2 python-opengl python-numpy python-gtkglext1 python-matplotlib
+<li><p class="first">Ubuntu 14.4 and up:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">gtk2</span> <span class="n">python</span><span class="o">-</span><span class="n">opengl</span> <span class="n">python</span><span class="o">-</span><span class="n">numpy</span> <span class="n">python</span><span class="o">-</span><span class="n">gtkglext1</span> <span class="n">python</span><span class="o">-</span><span class="n">matplotlib</span> <span class="n">python</span><span class="o">-</span><span class="n">rsvg</span>
 </pre></div>
 </div>
 </li>
-<li><p class="first">Fedora 17:</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo yum install pygtk2 pygtk2-libglade PyOpenGL numpy pygtkglext python-matplotlib
+<li><p class="first">Fedora 21 and up:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">pygtk2</span> <span class="n">pygtk2</span><span class="o">-</span><span class="n">libglade</span> <span class="n">PyOpenGL</span> <span class="n">numpy</span> <span class="n">pygtkglext</span> <span class="n">python</span><span class="o">-</span><span class="n">matplotlib</span> <span class="n">gnome</span><span class="o">-</span><span class="n">python2</span><span class="o">-</span><span class="n">rsvg</span>
 </pre></div>
 </div>
 </li>
@@ -102,26 +104,17 @@ command.</p>
 <h2>1.4. Installing the latest version of Zeobuilder<a class="headerlink" href="#installing-the-latest-version-of-zeobuilder" title="Permalink to this headline">¶</a></h2>
 <p>The following series of commands will download the latest version of Zeobuilder,
 and will then install it into your home directory.</p>
-<div class="highlight-python"><div class="highlight"><pre>cd ~/build/
-git clone git://github.com/molmod/zeobuilder.git
-(cd zeobuilder; ./setup.py install --home=~)
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">build</span><span class="o">/</span>
+<span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">molmod</span><span class="o">/</span><span class="n">zeobuilder</span><span class="o">.</span><span class="n">git</span>
+<span class="p">(</span><span class="n">cd</span> <span class="n">zeobuilder</span><span class="p">;</span> <span class="o">./</span><span class="n">setup</span><span class="o">.</span><span class="n">py</span> <span class="n">install</span> <span class="o">--</span><span class="n">user</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The option <code class="docutils literal"><span class="pre">--user</span></code> can be ommitted when you are installing into a conda
+envirnoment or a pip virtual environment.</p>
 <p>You are now ready to start using Zeobuilder!</p>
 </div>
-<div class="section" id="upgrading-to-the-latest-version-of-molmod-and-zeobuilder">
-<h2>1.5. Upgrading to the latest version of MolMod and Zeobuilder<a class="headerlink" href="#upgrading-to-the-latest-version-of-molmod-and-zeobuilder" title="Permalink to this headline">¶</a></h2>
-<p>In case you want to upgrade Zeobuilder to the latests development version after
-a previous install, then execute the following commands (in the same directory
-that was originally used to install Zeobuilder):</p>
-<div class="highlight-python"><div class="highlight"><pre>cd ~/build/
-(cd molmod; ./cleanfiles.sh; git pull; rm -r ~/lib*/python/molmod*; ./setup.py install --home=~)
-(cd zeobuilder; ./cleanfiles.sh; git pull; rm -r ~/lib*/python/zeobuilder*; ./setup.py install --home=~)
-</pre></div>
-</div>
-</div>
 <div class="section" id="testing-your-installation">
-<h2>1.6. Testing your installation<a class="headerlink" href="#testing-your-installation" title="Permalink to this headline">¶</a></h2>
+<h2>1.5. Testing your installation<a class="headerlink" href="#testing-your-installation" title="Permalink to this headline">¶</a></h2>
 <p>For the development and testing one needs to install additional packages</p>
 <ul class="simple">
 <li>Nosetests &gt;= 0.11: <a class="reference external" href="http://somethingaboutorange.com/mrl/projects/nose/0.11.2/">http://somethingaboutorange.com/mrl/projects/nose/0.11.2/</a></li>
@@ -130,32 +123,32 @@ that was originally used to install Zeobuilder):</p>
 <p>Most Linux distributions can install this software with just a single terminal command:</p>
 <ul>
 <li><p class="first">Ubuntu 12.4:</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo apt-get install python-nose python-sphinx
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">nose</span> <span class="n">python</span><span class="o">-</span><span class="n">sphinx</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Debian 5:</p>
-<div class="highlight-python"><div class="highlight"><pre>su -
-apt-get install python-nose python-sphinx
-exit
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">su</span> <span class="o">-</span>
+<span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">nose</span> <span class="n">python</span><span class="o">-</span><span class="n">sphinx</span>
+<span class="n">exit</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Fedora 17:</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo yum install python-nose sphinx
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">nose</span> <span class="n">sphinx</span>
 </pre></div>
 </div>
 </li>
 <li><p class="first">Suse 11.2:</p>
-<div class="highlight-python"><div class="highlight"><pre>sudo zypper install python-nose sphinx
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">zypper</span> <span class="n">install</span> <span class="n">python</span><span class="o">-</span><span class="n">nose</span> <span class="n">sphinx</span>
 </pre></div>
 </div>
 </li>
 </ul>
 <p>Once these dependencies are installed, execute the following commands to run the
 tests:</p>
-<div class="highlight-python"><div class="highlight"><pre>cd ~/build/zeobuilder
-nosetests -v
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">build</span><span class="o">/</span><span class="n">zeobuilder</span>
+<span class="n">nosetests</span> <span class="o">-</span><span class="n">v</span>
 </pre></div>
 </div>
 <p>If some tests fail, post the output of the tests on the <a class="reference external" href="https://groups.google.com/forum/#!forum/zeobuilder">Zeobuilder
@@ -167,7 +160,7 @@ mailing list</a>.</p>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
             <p class="logo"><a href="index.html">
               <img class="logo" src="_static/logo.png" alt="Logo"/>
@@ -179,8 +172,7 @@ mailing list</a>.</p>
 <li><a class="reference internal" href="#molmod-dependency">1.2. MolMod dependency</a></li>
 <li><a class="reference internal" href="#external-dependencies">1.3. External dependencies</a></li>
 <li><a class="reference internal" href="#installing-the-latest-version-of-zeobuilder">1.4. Installing the latest version of Zeobuilder</a></li>
-<li><a class="reference internal" href="#upgrading-to-the-latest-version-of-molmod-and-zeobuilder">1.5. Upgrading to the latest version of MolMod and Zeobuilder</a></li>
-<li><a class="reference internal" href="#testing-your-installation">1.6. Testing your installation</a></li>
+<li><a class="reference internal" href="#testing-your-installation">1.5. Testing your installation</a></li>
 </ul>
 </li>
 </ul>
@@ -191,29 +183,28 @@ mailing list</a>.</p>
   <h4>Next topic</h4>
   <p class="topless"><a href="tut_support.html"
                         title="next chapter">2. If you encounter a problem</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/tut_install.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/tut_install.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
-      <input type="submit" value="Go" />
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -225,12 +216,12 @@ mailing list</a>.</p>
         <li class="right" >
           <a href="index.html" title="Zeobuilder documentation"
              >previous</a> |</li>
-        <li><a href="index.html">Zeobuilder 0.0 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html">Zeobuilder 0.0 documentation</a> &#187;</li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2012, Toon Verstraelen.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2012, Toon Verstraelen.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.2.
     </div>
   </body>
 </html>
