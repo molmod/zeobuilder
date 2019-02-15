@@ -43,13 +43,17 @@ The following software must be installed:
 Most Linux distributions can install this software with just a single terminal
 command.
 
-* Ubuntu 14.4 and up::
+* Ubuntu 14.4 to 17.10::
 
-    sudo apt-get install python-gtk2 python-opengl python-numpy python-gtkglext1 python-matplotlib python-rsvg
+    sudo apt-get install python-gtk2 python-glade2 python-opengl python-numpy python-gtkglext1 python-matplotlib python-rsvg git
+
+* Ubuntu 18.04 and up::
+
+    sudo apt-get install python-gtk2 python-glade2 python-opengl python-numpy python-gtkglext1 python-matplotlib git
 
 * Fedora 21 and up::
 
-    sudo yum install pygtk2 pygtk2-libglade PyOpenGL numpy pygtkglext python-matplotlib gnome-python2-rsvg
+    sudo yum install pygtk2 pygtk2-libglade PyOpenGL numpy pygtkglext python-matplotlib gnome-python2-rsvg git
 
 
 Installing the latest version of Zeobuilder
@@ -58,14 +62,23 @@ Installing the latest version of Zeobuilder
 The following series of commands will download the latest version of Zeobuilder,
 and will then install it into your home directory. ::
 
-    cd ~/build/
+    mkdir ~/build
+    cd ~/build
     git clone git://github.com/molmod/zeobuilder.git
     (cd zeobuilder; ./setup.py install --user)
 
-The option ``--user`` can be ommitted when you are installing into a conda
-envirnoment or a pip virtual environment.
+When using these instructions, Zeobuilder is installed in your home directory, under
+`${HOME}/.local`. If not the case yet, you should add `${HOME}/.local/bin` to your `PATH`
+variable, e.g. by adding the following line to the end of the file `~/.bashrc`:
 
-You are now ready to start using Zeobuilder!
+    export PATH=${PATH}:${HOME}/.local/bin
+
+The option ``--user`` can be ommitted when you are installing into a conda
+envirnoment or a pip virtual environment. In this case, you should be aware that other
+mechanisms are used to set the `PATH` variable.
+
+You are now ready to start using Zeobuilder! Open a new terminal and enter the command
+`zeobuilder`.
 
 
 Testing your installation
